@@ -32,6 +32,8 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `ALLREDUCE_RESULTS.md` | those stages (38 rows in the private DB, 2026-11-10): probe, rows, scaling, repeatability and its limits, TP1/TP2/TP4 predictions, provenance |
 | `run_allreduce_diag.sh`, `allreduce_diag.py`, `allreduce_diag_report.py` | Phase 2D: diagnostic re-measurement of the all-reduce rows below 16 MiB (five fresh rank groups, three batches each, per-rank and host-side samples); writes no profile database |
 | `PHASE2D_RESULTS.md`, `phase2d/` | Phase 2D results: timing semantics of a stored row, per-row stability (12 of 24 pass), old against new, prediction sensitivity, recommendation |
+| `run_allreduce_semantics.sh`, `allreduce_semantics.py` | Phase 2E: runner timing against GPU kernel records, synchronised calls and CUDA-graph replay at 8 KiB, 512 KiB and 8 MiB; writes no profile database |
+| `PHASE2E_RESULTS.md`, `phase2e/` | Phase 2E results: the small-message floor is host launch cost; simulator cost-model inspection; integration policy |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 

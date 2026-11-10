@@ -1,0 +1,1394 @@
+[
+ {
+  "num_gpus": 2,
+  "message_size_bytes": 8192,
+  "groups": [
+   {
+    "runner_us": 46.70559883117676,
+    "runner_batches_us": [
+     48.0134391784668,
+     46.70559883117676,
+     46.681599617004395
+    ],
+    "in_call_us": 44.657,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     44.657,
+     45.664
+    ],
+    "sync_us": 69.664,
+    "kernel_us_rank0": 7.3599999999999,
+    "kernel_p10": 7.10399999999936,
+    "kernel_p90": 7.679999999999836,
+    "kernel_min_us": 6.912000000000262,
+    "kernel_us_by_rank": [
+     7.3599999999999,
+     65.3125
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.07672339390593359,
+    "profiled_host_us_per_call": 133.21132
+   },
+   {
+    "runner_us": 47.06079959869385,
+    "runner_batches_us": [
+     51.387200355529785,
+     46.87392234802246,
+     47.06079959869385
+    ],
+    "in_call_us": 46.032,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     46.032,
+     37.824
+    ],
+    "sync_us": 68.96,
+    "kernel_us_rank0": 96.1759999999997,
+    "kernel_p10": 73.60000000000014,
+    "kernel_p90": 110.17599999999948,
+    "kernel_min_us": 7.712000000000444,
+    "kernel_us_by_rank": [
+     96.1759999999997,
+     8.096000000000458
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9357324774626932,
+    "profiled_host_us_per_call": 149.78033
+   },
+   {
+    "runner_us": 38.01951885223389,
+    "runner_batches_us": [
+     38.268799781799316,
+     36.89120054244995,
+     38.01951885223389
+    ],
+    "in_call_us": 36.176,
+    "between_us": 0.288,
+    "in_call_us_by_rank": [
+     36.176,
+     32.816
+    ],
+    "sync_us": 61.392,
+    "kernel_us_rank0": 32.07999999999993,
+    "kernel_p10": 7.2960000000002765,
+    "kernel_p90": 75.55200000000013,
+    "kernel_min_us": 6.912000000000262,
+    "kernel_us_by_rank": [
+     32.07999999999993,
+     8.192000000000007
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.4391515752741959,
+    "profiled_host_us_per_call": 139.96077
+   },
+   {
+    "runner_us": 47.15616226196289,
+    "runner_batches_us": [
+     49.3071985244751,
+     47.15616226196289,
+     46.966400146484375
+    ],
+    "in_call_us": 46.016,
+    "between_us": 0.384,
+    "in_call_us_by_rank": [
+     46.016,
+     46.6885
+    ],
+    "sync_us": 69.616,
+    "kernel_us_rank0": 50.191999999999325,
+    "kernel_p10": 34.719999999999345,
+    "kernel_p90": 65.56800000000021,
+    "kernel_min_us": 7.6799999999993815,
+    "kernel_us_by_rank": [
+     50.191999999999325,
+     8.063999999999282
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.5176182626143084,
+    "profiled_host_us_per_call": 130.80523
+   },
+   {
+    "runner_us": 47.645440101623535,
+    "runner_batches_us": [
+     48.3625602722168,
+     47.645440101623535,
+     46.14272117614746
+    ],
+    "in_call_us": 36.352,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     36.352,
+     45.856
+    ],
+    "sync_us": 70.912,
+    "kernel_us_rank0": 7.359999999999786,
+    "kernel_p10": 7.040000000000873,
+    "kernel_p90": 7.679999999999836,
+    "kernel_min_us": 6.94399999999996,
+    "kernel_us_by_rank": [
+     7.359999999999786,
+     91.69650000000047
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.07874544638298081,
+    "profiled_host_us_per_call": 129.03114
+   }
+  ],
+  "graph": {
+   "capture": "ok",
+   "all_ranks_captured": true,
+   "replay_mismatches": 0,
+   "all_ranks_replay_correct": true,
+   "graph_replay_time_ms": 0.01417764462530613
+  },
+  "summary": {
+   "runner_us": [
+    46.7,
+    47.1,
+    38.0,
+    47.2,
+    47.6
+   ],
+   "in_call_us": [
+    44.7,
+    46.0,
+    36.2,
+    46.0,
+    36.4
+   ],
+   "between_us": [
+    0.4,
+    0.4,
+    0.3,
+    0.4,
+    0.3
+   ],
+   "sync_us": [
+    69.7,
+    69.0,
+    61.4,
+    69.6,
+    70.9
+   ],
+   "kernel_us_rank0": [
+    7.4,
+    96.2,
+    32.1,
+    50.2,
+    7.4
+   ],
+   "kernel_min_us": [
+    6.9,
+    7.7,
+    6.9,
+    7.7,
+    6.9
+   ]
+  }
+ },
+ {
+  "num_gpus": 2,
+  "message_size_bytes": 524288,
+  "groups": [
+   {
+    "runner_us": 49.62912082672119,
+    "runner_batches_us": [
+     49.62912082672119,
+     51.121602058410645,
+     48.65312099456787
+    ],
+    "in_call_us": 46.72,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     46.72,
+     48.24
+    ],
+    "sync_us": 72.96,
+    "kernel_us_rank0": 9.311999999999898,
+    "kernel_p10": 9.152000000000044,
+    "kernel_p90": 9.503999999998996,
+    "kernel_min_us": 9.024999999999636,
+    "kernel_us_by_rank": [
+     9.311999999999898,
+     51.391999999999825
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.21883155931459333,
+    "profiled_host_us_per_call": 141.92718
+   },
+   {
+    "runner_us": 48.57855796813965,
+    "runner_batches_us": [
+     49.32032108306885,
+     48.57855796813965,
+     47.82112121582031
+    ],
+    "in_call_us": 47.536,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     47.536,
+     38.704
+    ],
+    "sync_us": 71.9045,
+    "kernel_us_rank0": 84.51199999999949,
+    "kernel_p10": 77.02400000000125,
+    "kernel_p90": 94.6880000000001,
+    "kernel_min_us": 9.087999999999738,
+    "kernel_us_by_rank": [
+     84.51199999999949,
+     9.343999999999994
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9261374542320209,
+    "profiled_host_us_per_call": 120.20134999999999
+   },
+   {
+    "runner_us": 38.00512075424194,
+    "runner_batches_us": [
+     38.00512075424194,
+     38.29632043838501,
+     37.44352102279663
+    ],
+    "in_call_us": 36.432,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     36.432,
+     33.168
+    ],
+    "sync_us": 65.152,
+    "kernel_us_rank0": 9.311999999999898,
+    "kernel_p10": 9.152000000000044,
+    "kernel_p90": 43.42399999999998,
+    "kernel_min_us": 8.99200000000019,
+    "kernel_us_by_rank": [
+     9.311999999999898,
+     44.84800000000041
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.18419004513299542,
+    "profiled_host_us_per_call": 111.80517
+   },
+   {
+    "runner_us": 49.238080978393555,
+    "runner_batches_us": [
+     49.238080978393555,
+     48.42048168182373,
+     79.01055812835693
+    ],
+    "in_call_us": 46.2405,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     46.2405,
+     47.248
+    ],
+    "sync_us": 71.041,
+    "kernel_us_rank0": 9.344000000000051,
+    "kernel_p10": 9.184000000001106,
+    "kernel_p90": 39.42399999999998,
+    "kernel_min_us": 9.087999999999965,
+    "kernel_us_by_rank": [
+     9.344000000000051,
+     59.024499999999534
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.17352242999682232,
+    "profiled_host_us_per_call": 120.87271
+   },
+   {
+    "runner_us": 48.375678062438965,
+    "runner_batches_us": [
+     49.55103874206543,
+     48.375678062438965,
+     47.554240226745605
+    ],
+    "in_call_us": 37.6485,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     37.6485,
+     47.312
+    ],
+    "sync_us": 72.9765,
+    "kernel_us_rank0": 9.280500000000302,
+    "kernel_p10": 9.183999999999287,
+    "kernel_p90": 9.44000000000051,
+    "kernel_min_us": 9.023999999999887,
+    "kernel_us_by_rank": [
+     9.280500000000302,
+     41.23250000000007
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.10719077347165808,
+    "profiled_host_us_per_call": 120.4007
+   }
+  ],
+  "graph": {
+   "capture": "ok",
+   "all_ranks_captured": true,
+   "replay_mismatches": 0,
+   "all_ranks_replay_correct": true,
+   "graph_replay_time_ms": 0.014518443495035172
+  },
+  "summary": {
+   "runner_us": [
+    49.6,
+    48.6,
+    38.0,
+    49.2,
+    48.4
+   ],
+   "in_call_us": [
+    46.7,
+    47.5,
+    36.4,
+    46.2,
+    37.6
+   ],
+   "between_us": [
+    0.4,
+    0.4,
+    0.3,
+    0.4,
+    0.3
+   ],
+   "sync_us": [
+    73.0,
+    71.9,
+    65.2,
+    71.0,
+    73.0
+   ],
+   "kernel_us_rank0": [
+    9.3,
+    84.5,
+    9.3,
+    9.3,
+    9.3
+   ],
+   "kernel_min_us": [
+    9.0,
+    9.1,
+    9.0,
+    9.1,
+    9.0
+   ]
+  }
+ },
+ {
+  "num_gpus": 2,
+  "message_size_bytes": 8388608,
+  "groups": [
+   {
+    "runner_us": 47.336320877075195,
+    "runner_batches_us": [
+     47.336320877075195,
+     96.02560043334961,
+     46.44256114959717
+    ],
+    "in_call_us": 44.88,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     44.88,
+     45.6
+    ],
+    "sync_us": 87.0725,
+    "kernel_us_rank0": 76.27249999999981,
+    "kernel_p10": 40.99299999999994,
+    "kernel_p90": 83.74299999999994,
+    "kernel_min_us": 38.81600000000003,
+    "kernel_us_by_rank": [
+     76.27249999999981,
+     41.58399999999983
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.8894444548900152,
+    "profiled_host_us_per_call": 111.96581
+   },
+   {
+    "runner_us": 46.74015998840332,
+    "runner_batches_us": [
+     46.92192077636719,
+     46.74015998840332,
+     46.10335826873779
+    ],
+    "in_call_us": 45.312,
+    "between_us": 0.352,
+    "in_call_us_by_rank": [
+     45.312,
+     36.784
+    ],
+    "sync_us": 85.2645,
+    "kernel_us_rank0": 40.927999999999884,
+    "kernel_p10": 38.97600000000011,
+    "kernel_p90": 42.208000000000084,
+    "kernel_min_us": 37.92000000000007,
+    "kernel_us_by_rank": [
+     40.927999999999884,
+     59.680500000000166
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.45380884402962324,
+    "profiled_host_us_per_call": 139.24653
+   },
+   {
+    "runner_us": 43.78015995025635,
+    "runner_batches_us": [
+     44.07584190368652,
+     43.67072105407715,
+     43.78015995025635
+    ],
+    "in_call_us": 34.9605,
+    "between_us": 0.192,
+    "in_call_us_by_rank": [
+     34.9605,
+     32.4165
+    ],
+    "sync_us": 82.768,
+    "kernel_us_rank0": 40.847999999999956,
+    "kernel_p10": 38.974999999999454,
+    "kernel_p90": 42.24000000000024,
+    "kernel_min_us": 38.14400000000023,
+    "kernel_us_by_rank": [
+     40.847999999999956,
+     71.904
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.5428639435603293,
+    "profiled_host_us_per_call": 106.67842
+   },
+   {
+    "runner_us": 49.20703887939453,
+    "runner_batches_us": [
+     50.1094388961792,
+     49.20703887939453,
+     47.21695899963379
+    ],
+    "in_call_us": 45.3925,
+    "between_us": 0.384,
+    "in_call_us_by_rank": [
+     45.3925,
+     46.848
+    ],
+    "sync_us": 85.808,
+    "kernel_us_rank0": 66.7365000000002,
+    "kernel_p10": 53.88799999999992,
+    "kernel_p90": 83.9359999999997,
+    "kernel_min_us": 38.495999999999185,
+    "kernel_us_by_rank": [
+     66.7365000000002,
+     41.52050000000003
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.8323723974355764,
+    "profiled_host_us_per_call": 113.10052
+   },
+   {
+    "runner_us": 48.9027214050293,
+    "runner_batches_us": [
+     48.9027214050293,
+     49.23168182373047,
+     47.70751953125
+    ],
+    "in_call_us": 35.1525,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     35.1525,
+     47.392
+    ],
+    "sync_us": 87.28,
+    "kernel_us_rank0": 77.45600000000013,
+    "kernel_p10": 42.048,
+    "kernel_p90": 84.0630000000001,
+    "kernel_min_us": 38.623999999999796,
+    "kernel_us_by_rank": [
+     77.45600000000013,
+     41.760000000000105
+    ],
+    "kernel_count": [
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9241350662141185,
+    "profiled_host_us_per_call": 112.265
+   }
+  ],
+  "graph": {
+   "capture": "ok",
+   "all_ranks_captured": true,
+   "replay_mismatches": 0,
+   "all_ranks_replay_correct": true,
+   "graph_replay_time_ms": 0.046397268772125244
+  },
+  "summary": {
+   "runner_us": [
+    47.3,
+    46.7,
+    43.8,
+    49.2,
+    48.9
+   ],
+   "in_call_us": [
+    44.9,
+    45.3,
+    35.0,
+    45.4,
+    35.2
+   ],
+   "between_us": [
+    0.4,
+    0.4,
+    0.2,
+    0.4,
+    0.3
+   ],
+   "sync_us": [
+    87.1,
+    85.3,
+    82.8,
+    85.8,
+    87.3
+   ],
+   "kernel_us_rank0": [
+    76.3,
+    40.9,
+    40.8,
+    66.7,
+    77.5
+   ],
+   "kernel_min_us": [
+    38.8,
+    37.9,
+    38.1,
+    38.5,
+    38.6
+   ]
+  }
+ },
+ {
+  "num_gpus": 4,
+  "message_size_bytes": 8192,
+  "groups": [
+   {
+    "runner_us": 50.7919979095459,
+    "runner_batches_us": [
+     51.72544002532959,
+     50.7919979095459,
+     49.22016143798828
+    ],
+    "in_call_us": 35.216,
+    "between_us": 0.288,
+    "in_call_us_by_rank": [
+     35.216,
+     31.6,
+     41.088,
+     49.216
+    ],
+    "sync_us": 73.7765,
+    "kernel_us_rank0": 63.200000000000045,
+    "kernel_p10": 59.13599999999951,
+    "kernel_p90": 71.61599999999999,
+    "kernel_min_us": 11.199999999999818,
+    "kernel_us_by_rank": [
+     63.200000000000045,
+     11.840000000000146,
+     62.80000000000018,
+     62.89599999999973
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9653343611212005,
+    "profiled_host_us_per_call": 104.56128
+   },
+   {
+    "runner_us": 44.61023807525635,
+    "runner_batches_us": [
+     46.29568099975586,
+     44.61023807525635,
+     44.03007984161377
+    ],
+    "in_call_us": 36.0325,
+    "between_us": 0.288,
+    "in_call_us_by_rank": [
+     36.0325,
+     43.84,
+     40.064,
+     33.1525
+    ],
+    "sync_us": 67.521,
+    "kernel_us_rank0": 89.47249999999985,
+    "kernel_p10": 43.680000000000064,
+    "kernel_p90": 96.096,
+    "kernel_min_us": 11.231999999999971,
+    "kernel_us_by_rank": [
+     89.47249999999985,
+     12.079999999999927,
+     89.71249999999964,
+     73.68049999999994
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.8998550364854643,
+    "profiled_host_us_per_call": 133.16968
+   },
+   {
+    "runner_us": 47.357120513916016,
+    "runner_batches_us": [
+     47.357120513916016,
+     46.9484806060791,
+     73.93983840942383
+    ],
+    "in_call_us": 42.688,
+    "between_us": 0.288,
+    "in_call_us_by_rank": [
+     42.688,
+     43.472,
+     36.192,
+     45.8565
+    ],
+    "sync_us": 69.1525,
+    "kernel_us_rank0": 93.9844999999998,
+    "kernel_p10": 86.625,
+    "kernel_p90": 104.2569999999996,
+    "kernel_min_us": 11.359999999998763,
+    "kernel_us_by_rank": [
+     93.9844999999998,
+     92.75250000000051,
+     93.4404999999997,
+     12.47999999999979
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.971435370585418,
+    "profiled_host_us_per_call": 135.54729
+   },
+   {
+    "runner_us": 48.06111812591553,
+    "runner_batches_us": [
+     49.7599983215332,
+     48.06111812591553,
+     47.54464149475098
+    ],
+    "in_call_us": 32.448,
+    "between_us": 0.224,
+    "in_call_us_by_rank": [
+     32.448,
+     33.312,
+     45.936,
+     38.0325
+    ],
+    "sync_us": 71.4245,
+    "kernel_us_rank0": 90.91249999999991,
+    "kernel_p10": 84.64100000000053,
+    "kernel_p90": 96.96099999999979,
+    "kernel_min_us": 11.519999999999982,
+    "kernel_us_by_rank": [
+     90.91249999999991,
+     90.25600000000009,
+     65.2480000000005,
+     12.44799999999941
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9683319109813348,
+    "profiled_host_us_per_call": 133.31912
+   },
+   {
+    "runner_us": 44.78975772857666,
+    "runner_batches_us": [
+     52.337918281555176,
+     44.78975772857666,
+     44.751038551330566
+    ],
+    "in_call_us": 34.144,
+    "between_us": 0.288,
+    "in_call_us_by_rank": [
+     34.144,
+     43.76,
+     44.2405,
+     35.216
+    ],
+    "sync_us": 69.2,
+    "kernel_us_rank0": 85.82449999999972,
+    "kernel_p10": 11.55199999999968,
+    "kernel_p90": 98.11200000000099,
+    "kernel_min_us": 10.847999999999956,
+    "kernel_us_by_rank": [
+     85.82449999999972,
+     88.46399999999994,
+     12.368000000000393,
+     82.91200000000003
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.653000535570259,
+    "profiled_host_us_per_call": 138.37833
+   }
+  ],
+  "graph": {
+   "capture": "ok",
+   "all_ranks_captured": true,
+   "replay_mismatches": 0,
+   "all_ranks_replay_correct": true,
+   "graph_replay_time_ms": 0.019299261271953583
+  },
+  "summary": {
+   "runner_us": [
+    50.8,
+    44.6,
+    47.4,
+    48.1,
+    44.8
+   ],
+   "in_call_us": [
+    35.2,
+    36.0,
+    42.7,
+    32.4,
+    34.1
+   ],
+   "between_us": [
+    0.3,
+    0.3,
+    0.3,
+    0.2,
+    0.3
+   ],
+   "sync_us": [
+    73.8,
+    67.5,
+    69.2,
+    71.4,
+    69.2
+   ],
+   "kernel_us_rank0": [
+    63.2,
+    89.5,
+    94.0,
+    90.9,
+    85.8
+   ],
+   "kernel_min_us": [
+    11.2,
+    11.2,
+    11.4,
+    11.5,
+    10.8
+   ]
+  }
+ },
+ {
+  "num_gpus": 4,
+  "message_size_bytes": 524288,
+  "groups": [
+   {
+    "runner_us": 50.41344165802002,
+    "runner_batches_us": [
+     51.59327983856201,
+     50.41344165802002,
+     50.090880393981934
+    ],
+    "in_call_us": 36.5605,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     36.5605,
+     33.3445,
+     38.656,
+     49.424
+    ],
+    "sync_us": 76.576,
+    "kernel_us_rank0": 13.808500000000095,
+    "kernel_p10": 13.632000000000062,
+    "kernel_p90": 14.04800000000023,
+    "kernel_min_us": 13.471999999999753,
+    "kernel_us_by_rank": [
+     13.808500000000095,
+     67.71299999999997,
+     67.24799999999982,
+     67.10449999999992
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.19544841338673055,
+    "profiled_host_us_per_call": 107.46561
+   },
+   {
+    "runner_us": 72.68064022064209,
+    "runner_batches_us": [
+     46.199679374694824,
+     72.68064022064209,
+     83.1488037109375
+    ],
+    "in_call_us": 37.168,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     37.168,
+     45.2,
+     39.36,
+     35.392
+    ],
+    "sync_us": 71.44,
+    "kernel_us_rank0": 85.95299999999997,
+    "kernel_p10": 78.43299999999908,
+    "kernel_p90": 97.44100000000026,
+    "kernel_min_us": 13.66399999999976,
+    "kernel_us_by_rank": [
+     85.95299999999997,
+     13.983999999999469,
+     86.73599999999897,
+     86.7204999999999
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9598705547711485,
+    "profiled_host_us_per_call": 127.70311
+   },
+   {
+    "runner_us": 48.795199394226074,
+    "runner_batches_us": [
+     52.2822380065918,
+     48.795199394226074,
+     46.40063762664795
+    ],
+    "in_call_us": 47.248,
+    "between_us": 0.32,
+    "in_call_us_by_rank": [
+     47.248,
+     45.1205,
+     37.648,
+     46.336
+    ],
+    "sync_us": 70.0645,
+    "kernel_us_rank0": 82.17600000000039,
+    "kernel_p10": 77.2159999999999,
+    "kernel_p90": 89.18399999999974,
+    "kernel_min_us": 13.664000000000215,
+    "kernel_us_by_rank": [
+     82.17600000000039,
+     13.952000000000226,
+     82.38500000000022,
+     82.06450000000041
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9633644987873865,
+    "profiled_host_us_per_call": 122.29701
+   },
+   {
+    "runner_us": 72.7888011932373,
+    "runner_batches_us": [
+     53.84223937988281,
+     109.47104454040527,
+     72.7888011932373
+    ],
+    "in_call_us": 33.92,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     33.92,
+     38.064,
+     50.192,
+     38.672
+    ],
+    "sync_us": 79.2485,
+    "kernel_us_rank0": 80.57600000000002,
+    "kernel_p10": 72.38400000000001,
+    "kernel_p90": 89.53600000000006,
+    "kernel_min_us": 13.503999999999905,
+    "kernel_us_by_rank": [
+     80.57600000000002,
+     55.55200000000002,
+     56.28800000000001,
+     74.30450000000019
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9628761696902428,
+    "profiled_host_us_per_call": 133.9844
+   },
+   {
+    "runner_us": 66.48128032684326,
+    "runner_batches_us": [
+     51.78112030029297,
+     77.49631881713867,
+     66.48128032684326
+    ],
+    "in_call_us": 33.296,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     33.296,
+     50.8,
+     46.2725,
+     39.616
+    ],
+    "sync_us": 71.488,
+    "kernel_us_rank0": 87.55200000000013,
+    "kernel_p10": 81.92000000000007,
+    "kernel_p90": 95.90500000000065,
+    "kernel_min_us": 13.440000000000055,
+    "kernel_us_by_rank": [
+     87.55200000000013,
+     88.1279999999997,
+     13.728000000000065,
+     87.02399999999989
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9693231556346295,
+    "profiled_host_us_per_call": 127.6759
+   }
+  ],
+  "graph": {
+   "capture": "ok",
+   "all_ranks_captured": true,
+   "replay_mismatches": 0,
+   "all_ranks_replay_correct": true,
+   "graph_replay_time_ms": 0.020535752177238464
+  },
+  "summary": {
+   "runner_us": [
+    50.4,
+    72.7,
+    48.8,
+    72.8,
+    66.5
+   ],
+   "in_call_us": [
+    36.6,
+    37.2,
+    47.2,
+    33.9,
+    33.3
+   ],
+   "between_us": [
+    0.3,
+    0.3,
+    0.3,
+    0.3,
+    0.3
+   ],
+   "sync_us": [
+    76.6,
+    71.4,
+    70.1,
+    79.2,
+    71.5
+   ],
+   "kernel_us_rank0": [
+    13.8,
+    86.0,
+    82.2,
+    80.6,
+    87.6
+   ],
+   "kernel_min_us": [
+    13.5,
+    13.7,
+    13.7,
+    13.5,
+    13.4
+   ]
+  }
+ },
+ {
+  "num_gpus": 4,
+  "message_size_bytes": 8388608,
+  "groups": [
+   {
+    "runner_us": 140.3439998626709,
+    "runner_batches_us": [
+     48.307199478149414,
+     149.41311836242676,
+     140.3439998626709
+    ],
+    "in_call_us": 34.8,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     34.8,
+     33.472,
+     38.752,
+     50.608
+    ],
+    "sync_us": 91.345,
+    "kernel_us_rank0": 41.66400000000067,
+    "kernel_p10": 41.40800000000036,
+    "kernel_p90": 41.983999999999924,
+    "kernel_min_us": 41.24800000000005,
+    "kernel_us_by_rank": [
+     41.66400000000067,
+     66.54400000000032,
+     66.70399999999972,
+     66.76849999999922
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.5875014261989582,
+    "profiled_host_us_per_call": 105.21857
+   },
+   {
+    "runner_us": 46.77023887634277,
+    "runner_batches_us": [
+     50.317440032958984,
+     46.77023887634277,
+     45.89024066925049
+    ],
+    "in_call_us": 36.176,
+    "between_us": 0.224,
+    "in_call_us_by_rank": [
+     36.176,
+     45.792,
+     41.616,
+     36.208
+    ],
+    "sync_us": 87.392,
+    "kernel_us_rank0": 77.26400000000012,
+    "kernel_p10": 72.16100000000006,
+    "kernel_p90": 85.66399999999976,
+    "kernel_min_us": 41.2480000000005,
+    "kernel_us_by_rank": [
+     77.26400000000012,
+     41.85599999999977,
+     77.03999999999996,
+     75.61649999999986
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9727574020928959,
+    "profiled_host_us_per_call": 119.3866
+   },
+   {
+    "runner_us": 46.88032150268555,
+    "runner_batches_us": [
+     46.33471965789795,
+     46.88032150268555,
+     48.481597900390625
+    ],
+    "in_call_us": 43.456,
+    "between_us": 0.288,
+    "in_call_us_by_rank": [
+     43.456,
+     43.904,
+     34.864,
+     45.617
+    ],
+    "sync_us": 86.1125,
+    "kernel_us_rank0": 74.07999999999902,
+    "kernel_p10": 68.79999999999927,
+    "kernel_p90": 80.22400000000016,
+    "kernel_min_us": 41.24799999999959,
+    "kernel_us_by_rank": [
+     74.07999999999902,
+     41.76000000000022,
+     74.67200000000048,
+     74.28850000000011
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9489038163197999,
+    "profiled_host_us_per_call": 137.64009
+   },
+   {
+    "runner_us": 57.13247776031494,
+    "runner_batches_us": [
+     67.55072116851807,
+     54.79104042053223,
+     57.13247776031494
+    ],
+    "in_call_us": 34.784,
+    "between_us": 0.224,
+    "in_call_us_by_rank": [
+     34.784,
+     38.032,
+     53.488,
+     39.632
+    ],
+    "sync_us": 90.593,
+    "kernel_us_rank0": 74.6239999999998,
+    "kernel_p10": 54.30399999999986,
+    "kernel_p90": 81.50600000000031,
+    "kernel_min_us": 41.152000000000044,
+    "kernel_us_by_rank": [
+     74.6239999999998,
+     74.79999999999995,
+     41.697000000000116,
+     75.75999999999999
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9294037042287153,
+    "profiled_host_us_per_call": 116.02562
+   },
+   {
+    "runner_us": 49.96543884277344,
+    "runner_batches_us": [
+     49.96543884277344,
+     48.42720031738281,
+     96.19359970092773
+    ],
+    "in_call_us": 35.2,
+    "between_us": 0.256,
+    "in_call_us_by_rank": [
+     35.2,
+     46.784,
+     46.224,
+     36.784
+    ],
+    "sync_us": 87.233,
+    "kernel_us_rank0": 77.28049999999939,
+    "kernel_p10": 72.0,
+    "kernel_p90": 87.80799999999908,
+    "kernel_min_us": 41.24800000000141,
+    "kernel_us_by_rank": [
+     77.28049999999939,
+     76.00050000000033,
+     41.67999999999938,
+     78.20800000000054
+    ],
+    "kernel_count": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "kernel_names": [
+     "ncclDevKernel_AllReduce_Sum_bf16_RING_LL"
+    ],
+    "gpu_busy_frac_under_profiler": 0.9725561474686889,
+    "profiled_host_us_per_call": 149.68461
+   }
+  ],
+  "graph": {
+   "capture": "ok",
+   "all_ranks_captured": true,
+   "replay_mismatches": 0,
+   "all_ranks_replay_correct": true,
+   "graph_replay_time_ms": 0.04833070933818817
+  },
+  "summary": {
+   "runner_us": [
+    140.3,
+    46.8,
+    46.9,
+    57.1,
+    50.0
+   ],
+   "in_call_us": [
+    34.8,
+    36.2,
+    43.5,
+    34.8,
+    35.2
+   ],
+   "between_us": [
+    0.3,
+    0.2,
+    0.3,
+    0.2,
+    0.3
+   ],
+   "sync_us": [
+    91.3,
+    87.4,
+    86.1,
+    90.6,
+    87.2
+   ],
+   "kernel_us_rank0": [
+    41.7,
+    77.3,
+    74.1,
+    74.6,
+    77.3
+   ],
+   "kernel_min_us": [
+    41.2,
+    41.2,
+    41.2,
+    41.2,
+    41.2
+   ]
+  }
+ }
+]
