@@ -19,9 +19,17 @@ project=(--project "$here")
 echo "[bootstrap] venv at $UV_PROJECT_ENVIRONMENT"
 [ -x "$UV_PROJECT_ENVIRONMENT/bin/python" ] || uv venv --python 3.12 "$UV_PROJECT_ENVIRONMENT"
 echo "[bootstrap] torch for DeepGEMM's metadata build"
+# torch alone from the cu130 index: with PyPI as an extra index uv prefers it
+# and installs the CPU-only aarch64 wheel PyPI serves under the same version.
 uv pip install --python "$UV_PROJECT_ENVIRONMENT/bin/python" \
-    --index-url https://download.pytorch.org/whl/cu130 --extra-index-url https://pypi.org/simple \
-    "torch==2.10.0" "setuptools>=81.0.0" "wheel>=0.46.0" "packaging>=26.0"
+    --index-url https://download.pytorch.org/whl/cu130 "torch==2.10.0"
+uv pip install --python "$UV_PROJECT_ENVIRONMENT/bin/python" \
+    "setuptools>=81.0.0" "wheel>=0.46.0" "packaging>=26.0" "numpy>=2.0.0"
+"$UV_PROJECT_ENVIRONMENT/bin/python" - <<'PY'
+import torch
+assert torch.version.cuda, f"CPU-only torch {torch.__version__}: the cu130 index was not used"
+print("[bootstrap] torch", torch.__version__, "cuda", torch.version.cuda)
+PY
 echo "[bootstrap] lock"
 uv lock "${project[@]}"
 echo "[bootstrap] sync (all but DeepGEMM)"
