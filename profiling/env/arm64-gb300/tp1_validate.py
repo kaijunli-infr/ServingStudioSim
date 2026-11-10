@@ -201,6 +201,11 @@ def repeat(args) -> int:
     rel = [abs(r - 1) for r in ratios]
     report = {"kind": table, "backend": args.backend, "pairs": len(pairs), "ratio_fresh_over_stored": dist(ratios),
               "abs_rel_diff": dist(rel), "worst": sorted(pairs, key=lambda p: -abs(p["ratio"] - 1))[:5]}
+    if "message_size_bytes" in cols:
+        # Collectives: latency floor (host-paced, below 16 MiB) and bandwidth-bound range, reported apart.
+        for name, keep in (("floor_below_16MiB", lambda b: b < 16 << 20), ("bandwidth_from_16MiB", lambda b: b >= 16 << 20)):
+            part = [abs(p["ratio"] - 1) for p in pairs if keep(p["args"]["message_size_bytes"])]
+            report[f"abs_rel_diff_{name}"] = dist(part)
     report["verdict"] = "PASS" if pairs and (q(rel, 0.5) or 0) < 0.05 and max(rel) < 0.25 else ("ANOMALY" if pairs else "FAIL")
     Path(args.report).write_text(json.dumps(report, indent=2, default=str) + "\n")
     print(json.dumps({k: report[k] for k in ("kind", "backend", "pairs", "ratio_fresh_over_stored", "abs_rel_diff", "verdict")}, default=str))

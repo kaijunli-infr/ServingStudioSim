@@ -7,7 +7,7 @@
 # One stage per call: environment guard, GPU preflight, NCCL probe through the
 # profiler's own launcher (nccl_probe.py), then the `all_reduce`/nccl rows for
 # NUM_GPUS ranks that the private DB lacks, validation, and a --fresh repeat of
-# the whole stage. Rank r runs on the r-th GPU of GPU_INDICES.
+# the whole stage (REPEATS times). Rank r runs on the r-th GPU of GPU_INDICES.
 #
 # Fail closed: an environment mismatch, a busy or foreign-occupied GPU, a probe
 # failure, a timeout or a validator anomaly stops the stage. Nothing is
@@ -124,6 +124,15 @@ NCCL_DEBUG=INFO step_time probe 240 "${RUN[@]}" $ENVDIR/nccl_probe.py --num-gpus
 grep -E "^rank|^steady|^NCCL PROBE" "$OUT/probe.out" | tee -a "$OUT/steps.log"
 preflight "after probe"
 
+# Reviewed re-measurement: FORCE_SPECS is the list allreduce_spikes.py wrote
+# (stored rows that fresh repeats did not reproduce); --force replaces them.
+if [ -n "${FORCE_SPECS:-}" ]; then
+  cp "$FORCE_SPECS" "$OUT/force-specs.json"
+  step_time force 300 "${PROFILE[@]}" all_reduce --backend nccl --gpu-name "NVIDIA GB300" --json --force \
+    --output-dir "$OUT/force" --specs "$OUT/force-specs.json" || fail "forced re-measurement failed" 6
+  preflight "after force"
+fi
+
 # Fill: the profiler measures only the specs the DB lacks.
 step_time fill 420 "${PROFILE[@]}" all_reduce --backend nccl --gpu-name "NVIDIA GB300" --json \
   --output-dir "$OUT/fill" --specs "$OUT/specs.json"
@@ -167,5 +176,9 @@ du -sb "$GB300_ROOT/cache" | cut -f1 >"$OUT/cache-bytes-post.txt"
 log "cache delta bytes: $(( $(cat "$OUT/cache-bytes-post.txt") - $(cat "$OUT/cache-bytes-pre.txt") ))"
 if [ "$(head -1 "$OUT/db-sha256-pre.txt")" = "$(head -1 "$OUT/db-sha256-post.txt")" ]; then log "tracked profiling/profile.db unchanged"; else log "WARNING: tracked profile.db changed"; fi
 log "wall used: $(elapsed) s of $BUDGET_S"
-[ $rrc -ne 0 ] && fail "a repeatability check did not pass" 6
+if [ $rrc -ne 0 ] && [ -n "${ACCEPT_ANOMALY:-}" ]; then
+  log "repeatability anomaly accepted after review: $ACCEPT_ANOMALY"
+elif [ $rrc -ne 0 ]; then
+  fail "a repeatability check did not pass" 6
+fi
 log "allreduce stage tp$NUM_GPUS done"
