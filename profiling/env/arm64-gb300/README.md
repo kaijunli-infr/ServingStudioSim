@@ -24,6 +24,8 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `TP1_RESULTS.md` | the TP1 fill: first batch (1166 rows), Phase 2C (fa3 gate, the 70 vLLM kv_cache_append rows), final validation; 0 / 1236 specs missing in the private DB (2026-11-10) |
 | `vllm-shim/` | the fork's `reshape_and_cache_flash` kernel built unmodified as a torch extension, with a `vllm` package shim the `vllm_cuda` runner imports; `build_shim.py` pins the fork commit and file hashes, `probe_shim.py` checks correctness, kernel identity and CUPTI timing on the GPU |
 | `run_kv_fill.sh` | Phase 2C driver: shim probe gate, worker-vs-probe gate, the 70-row fill, validation, repeat sample, manifests |
+| `MERGE_RESULTS.md`, `merge/` | the merge of the 1236 GB300 rows into the tracked `profiling/profile.db` (2026-11-10): checksums, row counts, checks, regression results, prediction parity, measurement provenance; the profiler's merge report and the check report |
+| `TP2_TP4_PROPOSAL.md` | proposal only: missing TP2 / TP4 configurations, the NCCL blocker on arm64 torch, topology, GPU allocation, runtime and disk estimates |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 

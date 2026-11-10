@@ -1,0 +1,163 @@
+{
+ "before": {
+  "path": "profile.db.pre-merge-backup",
+  "sha256": "e2d80ff89da29c5a4e85288009724969a198c0bd0ddd3b47e970a24f24b41431",
+  "integrity_check": "ok"
+ },
+ "after": {
+  "path": "profile-merged.db",
+  "sha256": "41c9cbe58d571e61fc7b1a7a0e86ae5e493aef0487001d944a270afc87bd82af",
+  "integrity_check": "ok"
+ },
+ "gpu": "NVIDIA GB300",
+ "tables": {
+  "_profile_run": {
+   "before": 344,
+   "after": 348,
+   "lost_or_changed": 0,
+   "added": 4,
+   "added_run_keys": [
+    -3578181256767274026,
+    2966529427265600984,
+    5463676852194560196,
+    5900564075621638478
+   ]
+  },
+  "elementwise": {
+   "before": 9154,
+   "after": 9280,
+   "lost_or_changed": 0,
+   "added": 126,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.002300583,
+   "added_time_ms_max": 0.7665450229007634,
+   "added_by_backend": {
+    "triton": 126
+   },
+   "added_outliers": 0
+  },
+  "flashinfer_attn_decode": {
+   "before": 3888,
+   "after": 4050,
+   "lost_or_changed": 0,
+   "added": 162,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.0061461269999999995,
+   "added_time_ms_max": 2.5667893589743587,
+   "added_by_backend": {
+    "fa2": 162
+   },
+   "added_outliers": 0
+  },
+  "flashinfer_attn_prefill": {
+   "before": 2835,
+   "after": 2970,
+   "lost_or_changed": 0,
+   "added": 135,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.008356481,
+   "added_time_ms_max": 74.73447159999999,
+   "added_by_backend": {
+    "fa2": 135
+   },
+   "added_outliers": 0
+  },
+  "kv_cache_append": {
+   "before": 1131,
+   "after": 1201,
+   "lost_or_changed": 0,
+   "added": 70,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.002889445,
+   "added_time_ms_max": 0.31779117142857144,
+   "added_by_backend": {
+    "vllm_cuda": 70
+   },
+   "added_outliers": 0
+  },
+  "rms_norm": {
+   "before": 756,
+   "after": 819,
+   "lost_or_changed": 0,
+   "added": 63,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.003098798,
+   "added_time_ms_max": 0.14880214391691393,
+   "added_by_backend": {
+    "flashinfer": 63
+   },
+   "added_outliers": 0
+  },
+  "single_gemm": {
+   "before": 15677,
+   "after": 16357,
+   "lost_or_changed": 0,
+   "added": 680,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.009171434,
+   "added_time_ms_max": 41.548383799999996,
+   "added_by_backend": {
+    "torch": 340,
+    "torch_linear": 340
+   },
+   "added_outliers": 0
+  }
+ },
+ "added_runs": [
+  {
+   "id": 358,
+   "run_key": -3578181256767274026,
+   "profiler_git_hash": "e897db56971c5f4f0813fb916475ac6d8477e2ce",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": "2.10.0+cu130"
+  },
+  {
+   "id": 359,
+   "run_key": 2966529427265600984,
+   "profiler_git_hash": "e897db56971c5f4f0813fb916475ac6d8477e2ce",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": "3.6.0"
+  },
+  {
+   "id": 360,
+   "run_key": 5463676852194560196,
+   "profiler_git_hash": "3b17315d3b77d6e4acdc8f647ca8162be5377815-dirty",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  },
+  {
+   "id": 361,
+   "run_key": 5900564075621638478,
+   "profiler_git_hash": "e897db56971c5f4f0813fb916475ac6d8477e2ce",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  }
+ ],
+ "rows_per_gpu": {
+  "NVIDIA B200": {
+   "before": 129826,
+   "after": 129826
+  },
+  "NVIDIA GB300": {
+   "before": 0,
+   "after": 1236
+  },
+  "NVIDIA H200": {
+   "before": 54857,
+   "after": 54857
+  }
+ },
+ "added_rows": 1236,
+ "problems": [],
+ "verdict": "PASS"
+}
