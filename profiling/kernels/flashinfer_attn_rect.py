@@ -68,9 +68,7 @@ _SUPPORTS = {
         kv=frozenset({DType.BF16, DType.FP8_E4M3}),
         sm_targets=frozenset({"sm_90a"}),
     ),
-    "cudnn": BackendSupport(
-        compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16})
-    ),
+    "cudnn": BackendSupport(compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16})),
 }
 
 

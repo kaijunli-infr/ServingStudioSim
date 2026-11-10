@@ -69,9 +69,7 @@ _SUPPORTS = {
         kv=frozenset({DType.BF16, DType.FP8_E4M3}),
         sm_targets=frozenset({"sm_90a"}),
     ),
-    "cudnn": BackendSupport(
-        compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16})
-    ),
+    "cudnn": BackendSupport(compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16})),
 }
 
 
@@ -104,8 +102,7 @@ DOC = KernelDoc(
     formula=(
         "O = softmax(Q · Kᵀ / √head_dim, causal mask) · V, per query head",
         "q_len = append_len, kv_len = prefix_len + append_len",
-        "TFLOPS = 2 · append_len · (2·prefix_len + append_len) · num_qo_heads ·"
-        " head_dim / time",
+        "TFLOPS = 2 · append_len · (2·prefix_len + append_len) · num_qo_heads · head_dim / time",
         "GB/s = bytes of Q, K, V and O / time",
     ),
     default_metric="tflops",

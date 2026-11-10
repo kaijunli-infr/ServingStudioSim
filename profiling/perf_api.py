@@ -18,6 +18,7 @@ import logging
 import os
 from pathlib import Path
 
+from profiling.db.args import DType
 from profiling.db.metadata import (
     DbMetadata,
     ProfilerVersion,
@@ -28,10 +29,9 @@ from profiling.db.metadata import (
 from profiling.db.metadata import (
     get_profiler_versions as _get_profiler_versions,
 )
+from profiling.db.registry import iter_kernel_profiler_specs
 from profiling.facade import build_kind_facades
 from profiling.facade import get_current_gpu_name as _get_current_gpu_name
-from profiling.db.args import DType
-from profiling.db.registry import iter_kernel_profiler_specs
 from profiling.gpu_catalog import gpu_compute_capability
 from profiling.plan import WorkCollector
 
