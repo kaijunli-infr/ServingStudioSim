@@ -17,6 +17,9 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `bootstrap.sh` | creates or reproduces the venv (the one supported procedure) |
 | `gb300.env` | `source` it: venv path, caches, CUDA toolkit, profile DB copy |
 | `collect_manifest.py` | provenance manifest of a run, collected without CUDA |
+| `SMOKE_PLAN.md`, `run_smoke.sh`, `smoke_checks.py` | the Phase 2B GPU smoke test: plan, orchestrator (one GPU, `--fresh`, manifests, sampler, deltas), correctness and latency checks |
+| `SMOKE_RESULTS.md` | what the smoke test measured on tray12 GPU 1 (2026-11-10) and what broke on the way |
+| `PROPOSALS.md` | not implemented: fa3 SM90 gate, kv_cache_append torch-vs-vLLM equivalence, the first TP1 fill batch |
 
 ## What is pinned (first bootstrap, tray12, 2026-11-10)
 
@@ -64,7 +67,14 @@ uv run --no-sync python profiling/env/arm64-gb300/collect_manifest.py --out "$GB
 ```
 
 `gb300.env` sets `UV_PROJECT_ENVIRONMENT`, so `uv run --no-sync` from the
-repository root uses this venv, not `.venv`. It also sets
+repository root uses this venv, not `.venv`. The profiler's *workers* are a
+different matter: `profiling.exec.env` makes `default_env` the checkout's
+`.venv/bin/python` whenever that file exists (CPU-only torch here), so run
+profiling from a checkout **without** a `.venv`; on rack 3 that is the worktree
+`ServingStudioSim-gb300` next to the main checkout (`git worktree add --detach
+… gb300-support`, re-detach after each push). The CUPTI timer builds its
+extension against the `nvidia-cuda-cupti` 13 wheel (`nvidia/cu13/`), into
+`MOESIM_CUPTI_BUILD_DIR` (set by `gb300.env`). It also sets
 `VIBESIM_PROFILE_RUNTIME=host` (workers run in this venv; the x86 images are
 not usable here) and `VIBESIM_PROFILE_DB` to a copy of `profiling/profile.db`
 under `GB300_ROOT/db`, so no run writes the tracked database.
@@ -77,6 +87,7 @@ under `GB300_ROOT/db`, so no run writes the tracked database.
 | Triton, FlashInfer, torch extension, DeepGEMM, driver JIT caches | `$GB300_ROOT/cache/{triton,flashinfer,torch-extensions,deepgemm,nv-compute}` | `TRITON_CACHE_DIR`, `FLASHINFER_WORKSPACE_BASE`, `TORCH_EXTENSIONS_DIR`, `DG_JIT_CACHE_DIR`, `CUDA_CACHE_PATH` |
 | Hugging Face hub | `$GB300_ROOT/cache/huggingface` | `HF_HOME` |
 | profiler worker cache | `$GB300_ROOT/cache/vibesim-profiler` | `VIBESIM_PROFILE_CACHE_DIR` |
+| CUPTI timer extension build | `$GB300_ROOT/cache/cupti-ext` | `MOESIM_CUPTI_BUILD_DIR` (default would be `/tmp`) |
 | profile rows | `$GB300_ROOT/db/profile-gb300.db` | `VIBESIM_PROFILE_DB` (a copy; merge is a separate step) |
 | artifacts, manifests, logs | `$GB300_ROOT/artifacts`, `$GB300_ROOT/logs` | `--output-dir`, `collect_manifest.py --out` |
 | GPUs | the one GPU a run is approved for | `CUDA_VISIBLE_DEVICES=<index>` and `VIBESIM_PROFILE_GPUS=<index>`; `CUDA_VISIBLE_DEVICES=` (empty) for CPU-only work |
