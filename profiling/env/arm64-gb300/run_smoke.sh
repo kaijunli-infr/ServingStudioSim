@@ -11,6 +11,8 @@ SIM_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 cd "$SIM_ROOT"
 # shellcheck disable=SC1091
 source profiling/env/arm64-gb300/gb300.env
+# Non-interactive shells (ssh, setsid) do not read ~/.bashrc, where uv's dir is added.
+command -v uv >/dev/null 2>&1 || export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
 GPU_INDEX="${1:-1}"
 EXPECT_UUID="${2:-}"
