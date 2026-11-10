@@ -106,11 +106,13 @@ def main() -> int:
     report = {"groups": GROUPS, "tolerance": TOLERANCE, "spike_threshold": SPIKE, "rows": rows}
     Path(args.out).write_text(json.dumps(report, indent=1) + "\n")
     for r in rows:
+        groups = [round(e, 1) for e in r["group_estimates_us"]]
         print(
-            f"tp{r['num_gpus']} {r['message_size_bytes']:>8} stored {r['stored_us']:6.1f} new {r['estimate_us']:6.1f} "
-            f"({r['change_pct']:+5.1f}%) groups {[round(e, 1) for e in r['group_estimates_us']]} "
-            f"cv {r['cv_pct']:.1f}% in10 {r['groups_within_10pct']}/5 {'PASS' if r['stable'] else 'FAIL'} "
-            f"spikes {len(r['spikes'])} enq {r['host_enqueue_share_median']:.2f} gap {r['max_call_gap_us']:.0f}us"
+            f"tp{r['num_gpus']} {r['message_size_bytes']:>8} stored {r['stored_us']:6.1f} "
+            f"new {r['estimate_us']:6.1f} ({r['change_pct']:+5.1f}%) groups {groups} "
+            f"cv {r['cv_pct']:.1f}% in10 {r['groups_within_10pct']}/5 "
+            f"{'PASS' if r['stable'] else 'FAIL'} spikes {len(r['spikes'])} "
+            f"enq {r['host_enqueue_share_median']:.2f} gap {r['max_call_gap_us']:.0f}us"
         )
     print(f"stable {sum(r['stable'] for r in rows)}/{len(rows)}")
     return 0

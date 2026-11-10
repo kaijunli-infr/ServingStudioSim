@@ -30,6 +30,8 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `TP24_RESULTS.md` | that fill (1854 rows in the private DB, 2026-11-10): coverage, gates, latency distributions, repeatability, provenance |
 | `run_allreduce_fill.sh`, `nccl_probe.py`, `env_guard.py`, `allreduce_spikes.py` | the TP2/TP4 all-reduce stages: fail-closed environment guard, GPU identity and isolation preflight, NCCL rank-group probe (rank-to-GPU mapping, SUM check, init vs steady state), fill, validation, fresh repeats, rule-based re-measurement of non-reproduced rows |
 | `ALLREDUCE_RESULTS.md` | those stages (38 rows in the private DB, 2026-11-10): probe, rows, scaling, repeatability and its limits, TP1/TP2/TP4 predictions, provenance |
+| `run_allreduce_diag.sh`, `allreduce_diag.py`, `allreduce_diag_report.py` | Phase 2D: diagnostic re-measurement of the all-reduce rows below 16 MiB (five fresh rank groups, three batches each, per-rank and host-side samples); writes no profile database |
+| `PHASE2D_RESULTS.md`, `phase2d/` | Phase 2D results: timing semantics of a stored row, per-row stability (12 of 24 pass), old against new, prediction sensitivity, recommendation |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 
