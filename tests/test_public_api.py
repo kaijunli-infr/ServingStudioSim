@@ -231,6 +231,22 @@ def test_a_backends_gpus_follow_its_compute_capability() -> None:
     assert "L40S" in fp8["gpus"] and not any(gpu.startswith("A100") for gpu in fp8["gpus"])
 
 
+def test_gb300_rows_take_the_b300_spec_sheet_peaks() -> None:
+    """profile.db rows measured on a GB300 tray are keyed by the name the GPU
+    reports, "NVIDIA GB300"; the catalog's `gpus` entry for that key draws its
+    spec-sheet ceilings from the B300 entry the name is an alias of."""
+    spec = library.resolve_gpu_spec("NVIDIA GB300")
+    assert spec is not None and spec.canonical_name == "B300-SXM-288GB"
+    peaks = library._peaks(spec, ["bf16", "fp8_e4m3", "nvfp4_e2m1"])
+    assert peaks["tflops"] == {
+        "by_dtype": {"bf16": 2500.0, "fp8_e4m3": 5000.0, "nvfp4_e2m1": 13125.0},
+        "note": "dense",
+    }
+    assert peaks["memory_bandwidth_gbps"] == {"value": 8000.0, "note": "HBM"}
+    assert peaks["busbw_gbps"] == {"value": 900.0, "note": "NVLink 5.0, one direction"}
+    assert library.KernelLibrary._peaks("NVIDIA GB300", ["bf16"]) == library._peaks(spec, ["bf16"])
+
+
 # The FP8 block-scale backend of this kind takes FP8 weights in 128-wide blocks.
 _FP8_BLOCK_BACKEND = "flashinfer_trtllm_fp8_block_sm100"
 _MXFP4_BACKEND = "flashinfer_trtllm_sm100_mxfp4"
