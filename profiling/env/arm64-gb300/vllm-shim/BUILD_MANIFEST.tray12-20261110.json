@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "purpose": "GB300 vllm shim: _C_cache_ops.reshape_and_cache_flash from the pinned fork kernel",
+  "fork": {
+    "remote": "https://github.com/serendipity-zk/vllm.git",
+    "commit": "e1423a4d7496dc6535862ae11bab8cb4d87b155f",
+    "files": {
+      "csrc/libtorch_stable/cache_kernels.cu": "5ea4d65b32a10949bddc01fa788a78a5ab6532ee4fa62946f217806a8e754c12",
+      "csrc/libtorch_stable/torch_bindings.cpp": "67f3806cca8a5ca3b9f12e7e418e902a587a3cfb18a39a2fe2a7f0129284c6f7",
+      "vllm/utils/torch_utils.py": "31e8a695f7efa52584ce20cc33edfb643b70c28ce83d273feb34326c61ab631c",
+      "vllm/_custom_ops.py": "5788e575730631725ba05f0756d39958174a5381c790020ba6af07ca5309c078"
+    }
+  },
+  "shim": {
+    "shim_bindings.cpp": "8030a24a837109f4dc6dbb1df909f537df7bd057f3b0c30642a275d1c980d827",
+    "build_shim.py": "7fa04931d29ebe482cdade71716a87d97cd07bbaf33897e5d4df1eee5ce76582",
+    "vllm_package": {
+      "vllm/__init__.py": "71bf153ecf2b781d70e3c3549c0efd31ee22ed5847351b9721b51301347a6edd",
+      "vllm/_custom_ops.py": "ea9f52aab3a8909b670c6c4a677bff723260ffd7a7d3446edda4218cf600c05d",
+      "vllm/utils/__init__.py": "bfa5b784c84e510af5e56a0344b00edc990a8ffd77fcf1dedfa9d9b11ba16781",
+      "vllm/utils/torch_utils.py": "391e3d0311e7a74f31cec07b22c71afc5eea68d1e4f740f686998c4b7efc5c1d"
+    }
+  },
+  "toolchain": {
+    "python": "3.12.3",
+    "torch": "2.10.0+cu130",
+    "torch_cuda": "13.0",
+    "cuda_home": "/usr/local/cuda-13.1",
+    "nvcc": [
+      "Cuda compilation tools, release 13.1, V13.1.115",
+      "Build cuda_13.1.r13.1/compiler.37061995_0"
+    ],
+    "arch_list": "10.3",
+    "cflags": [
+      "-O2",
+      "-std=c++20",
+      "-DUSE_CUDA",
+      "-DTORCH_TARGET_VERSION=0x020A000000000000ULL"
+    ],
+    "cuda_cflags": [
+      "-O3",
+      "-std=c++20",
+      "-DENABLE_FP8",
+      "-DUSE_CUDA",
+      "-DTORCH_TARGET_VERSION=0x020A000000000000ULL",
+      "-U__CUDA_NO_HALF_OPERATORS__",
+      "-U__CUDA_NO_HALF_CONVERSIONS__",
+      "-U__CUDA_NO_BFLOAT16_CONVERSIONS__",
+      "-U__CUDA_NO_HALF2_OPERATORS__"
+    ],
+    "ldflags": [
+      "-L/usr/local/cuda-13.1/lib64/stubs",
+      "-lcuda",
+      "-L/mnt/shared/home/kevin/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/torch/lib",
+      "-lc10",
+      "-lc10_cuda",
+      "-ltorch_cpu",
+      "-ltorch_cuda",
+      "-ltorch",
+      "-ltorch_python",
+      "-L/usr/local/cuda-13.1/lib64",
+      "-lcudart"
+    ],
+    "sources": [
+      "/mnt/shared/home/kevin/workspace/serving-studio/gb300/src/vllm-fork/csrc/libtorch_stable/cache_kernels.cu",
+      "/mnt/shared/home/kevin/workspace/serving-studio/gb300/vllm-shim/shim_bindings.cpp"
+    ],
+    "include_paths": [
+      "/mnt/shared/home/kevin/workspace/serving-studio/gb300/src/vllm-fork/csrc"
+    ]
+  },
+  "library": {
+    "path": "build/vllm_shim_cache_ops.so",
+    "sha256": "ca75929ffacd03a0b3335c587f589f988e402afbf0011e028b042b36af900abc",
+    "bytes": 2266536
+  },
+  "built_at": "2026-11-10T09:52:08Z",
+  "build_seconds": 0.4,
+  "host": "pod4-gb300-3-tray12-f3",
+  "machine": "aarch64"
+}

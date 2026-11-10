@@ -74,3 +74,17 @@ CUDA_VISIBLE_DEVICES=1 PYTHONPATH=$GB300_ROOT/vllm-shim:$PWD \
 ```
 
 Results of the probe and of the 70-row fill: `../TP1_RESULTS.md`.
+
+## Provenance of the measured rows
+
+`BUILD_MANIFEST.tray12-20261110.json` is the verbatim `manifest.json` of the
+build whose library measured the 70 GB300 `kv_cache_append` / `vllm_cuda` rows
+(tray12, 2026-11-10): the fork commit and the sha256 of each fork file used,
+the sha256 of the shim sources (`build_shim.py` and `shim_bindings.cpp` as of
+commit `3b17315d`), the compiler and linker flags, torch and nvcc versions,
+and the library's sha256 (`ca75929f…`, 2,266,536 bytes). The run directory's
+`shim-manifest.json` is the same file. `build_seconds` is 0.4 because that
+invocation reused the objects of the first successful compile (16 s) a few
+minutes earlier with identical inputs. The library itself is not committed;
+`install_shim.sh` rebuilds it and `build_shim.py` refuses a fork checkout
+whose commit or file hashes differ from the pinned ones.
