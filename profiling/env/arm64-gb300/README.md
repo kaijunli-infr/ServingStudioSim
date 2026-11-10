@@ -25,7 +25,9 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `vllm-shim/` | the fork's `reshape_and_cache_flash` kernel built unmodified as a torch extension, with a `vllm` package shim the `vllm_cuda` runner imports; `build_shim.py` pins the fork commit and file hashes, `probe_shim.py` checks correctness, kernel identity and CUPTI timing on the GPU |
 | `run_kv_fill.sh` | Phase 2C driver: shim probe gate, worker-vs-probe gate, the 70-row fill, validation, repeat sample, manifests |
 | `MERGE_RESULTS.md`, `merge/` | the merge of the 1236 GB300 rows into the tracked `profiling/profile.db` (2026-11-10): checksums, row counts, checks, regression results, prediction parity, measurement provenance; the profiler's merge report and the check report |
-| `TP2_TP4_PROPOSAL.md` | proposal only: missing TP2 / TP4 configurations, the NCCL blocker on arm64 torch, topology, GPU allocation, runtime and disk estimates |
+| `TP2_TP4_PROPOSAL.md` | TP2 / TP4 plan: missing configurations, the all-reduce route (torch's NCCL backend is available), topology, GPU allocation, estimates, and the idle-GPU-memory investigation |
+| `run_tp24_fill.sh`, `tp_new_specs.py` | the TP2/TP4 single-GPU fill: spec export (TP cells minus TP1's), checkpointed validated batches, budget and isolation guards |
+| `TP24_RESULTS.md` | that fill (1854 rows in the private DB, 2026-11-10): coverage, gates, latency distributions, repeatability, provenance; 38 all-reduce rows remain |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 
@@ -86,6 +88,36 @@ extension against the `nvidia-cuda-cupti` 13 wheel (`nvidia/cu13/`), into
 `VIBESIM_PROFILE_RUNTIME=host` (workers run in this venv; the x86 images are
 not usable here) and `VIBESIM_PROFILE_DB` to a copy of `profiling/profile.db`
 under `GB300_ROOT/db`, so no run writes the tracked database.
+
+## Environment incident, 2026-11-10 (found and repaired the same day)
+
+At 10:06:35 UTC a full `timing-predict` was run with `gb300.env` sourced. Its
+analyze stage (Rust) spawns plain `uv run python …` commands; with
+`UV_PROJECT_ENVIRONMENT` pointing at this venv, uv synced the **repository's
+root lock** into it: `torch 2.10.0+cpu` over `2.10.0+cu130`, `transformers`
+5.13.0 over 5.22.2, and the cu12 NVSHMEM packages added. It went unnoticed
+for five hours because everything run in between was CPU-only.
+
+- **Measurements are not affected.** Every GPU row of the day was measured
+  before 10:04:47 UTC (the last fill's manifests record `torch 2.10.0+cu130`);
+  the database merge, the predictions and the public API checks do not use
+  torch's CUDA side.
+- **One wrong conclusion came out of it:** a CPU-only check during those hours
+  read `USE_NCCL=OFF` and was reported as "the arm64 torch wheel has no NCCL".
+  The real wheel has it (`TP2_TP4_PROPOSAL.md`).
+- **Found** when the TP2/TP4 driver's identity probe stopped with `Torch not
+  compiled with CUDA enabled` before any measurement.
+- **Repaired** with `bootstrap.sh` (now pinning `torch==2.10.0+cu130`, so a
+  same-version CPU wheel is replaced) plus a reinstall of
+  `nvidia-nvshmem-cu13` / `nvshmem4py-cu13`, whose files the cu12 packages
+  had overwritten. Afterwards: every file of every installed distribution
+  present (45,107 checked), `uv sync --locked --dry-run` proposes nothing but a
+  same-version reinstall of `nvidia-cusparselt-cu13`, torch is
+  `2.10.0+cu130` with CUDA 13.0 and NCCL, the shim library hash is unchanged,
+  and the identity, Triton, correctness and shim probes pass on the GPU.
+  Log: `$GB300_ROOT/logs/bootstrap-restore-20261110.log`.
+- **Prevented** by `export UV_NO_SYNC=1` in `gb300.env`: no `uv run` may sync
+  this venv; only `bootstrap.sh` does.
 
 ## Isolation
 
