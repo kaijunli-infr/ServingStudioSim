@@ -191,6 +191,16 @@ miss={g['name']:sorted(req-set(g)) for g in d['gpus'] if req-set(g)}; \
 print('missing keys:', miss or 'none')"
 ```
 
+7. **Superchip GPU names:** a GB300 tray's GPUs report themselves as
+   `NVIDIA GB300` (nvidia-smi, `torch.cuda.get_device_name`). The GPU is a B300
+   (compute capability 10.3, 288 GB HBM3e, 8 TB/s, 1400 W), so that name is an
+   **alias of `B300-SXM-288GB`**, not a second entry: profile.db rows measured
+   there stay keyed by the reported name (`NVIDIA GB300`), and the alias only
+   lets the identity check, backend gating and the public API's peaks resolve
+   it. (`GB200-Superchip` predates this and is a combined two-GPU entry; do not
+   copy that shape for GB300.) A GB300 NVL72 preset sets `nvl_num_gpu: 72`
+   itself; the entry keeps the HGX `nvl_domain_size` 8.
+
 ## Provenance
 
 - **Specs:** NVIDIA datacenter docs, AMD Instinct docs, Intel Gaudi docs
