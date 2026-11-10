@@ -20,6 +20,8 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `SMOKE_PLAN.md`, `run_smoke.sh`, `smoke_checks.py` | the Phase 2B GPU smoke test: plan, orchestrator (one GPU, `--fresh`, manifests, sampler, deltas), correctness and latency checks |
 | `SMOKE_RESULTS.md` | what the smoke test measured on tray12 GPU 1 (2026-11-10) and what broke on the way |
 | `PROPOSALS.md` | not implemented: fa3 SM90 gate, kv_cache_append torch-vs-vLLM equivalence, the first TP1 fill batch |
+| `run_tp1_fill.sh`, `tp1_probe.py`, `tp1_specs.py`, `tp1_validate.py`, `tp1_report.py` | the TP1 fill campaign: probe gate, spec export from `simulator cost-trees --kernel-configs`, per-batch validation, repeatability, summary |
+| `TP1_RESULTS.md` | the first fill (1166 rows in the private DB, 2026-11-10), remaining gaps, the plan for the 70 vLLM kv_cache_append rows |
 
 ## What is pinned (first bootstrap, tray12, 2026-11-10)
 
