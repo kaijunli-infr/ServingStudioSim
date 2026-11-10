@@ -28,8 +28,14 @@ import torch.nn.functional as F
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT))
 
-HEADS, KV_HEADS, HEAD_DIM = 32, 8, 128  # Llama 3.1 8B
-GEMM_N, GEMM_K = 6144, 4096  # Llama 3.1 8B fused QKV projection
+# Llama 3.1 8B; the env overrides select a tensor-parallel rank's shapes
+# (TP2: 16 / 4 heads, TP4: 8 / 2) for the TP2/TP4 campaign's correctness gate.
+HEADS = int(os.environ.get("GB300_CHECK_HEADS", "32"))
+KV_HEADS = int(os.environ.get("GB300_CHECK_KV_HEADS", "8"))
+HEAD_DIM = 128
+# Fused QKV projection by default; a TP rank's projections via the overrides.
+GEMM_N = int(os.environ.get("GB300_CHECK_GEMM_N", "6144"))
+GEMM_K = int(os.environ.get("GB300_CHECK_GEMM_K", "4096"))
 HIDDEN = 4096
 EPS = 1e-6
 

@@ -36,7 +36,9 @@ from pathlib import Path
 
 import torch
 
-NUM_KV_HEADS, HEAD_DIM, BLOCK_SIZE, LAYOUT = 8, 128, 16, "NHD"
+# 8 KV heads is Llama 3.1 8B at TP1; a tensor-parallel rank holds 4 (TP2) or 2 (TP4).
+NUM_KV_HEADS = int(os.environ.get("GB300_PROBE_KV_HEADS", "8"))
+HEAD_DIM, BLOCK_SIZE, LAYOUT = 128, 16, "NHD"
 KERNEL = "reshape_and_cache_flash_kernel"
 
 
