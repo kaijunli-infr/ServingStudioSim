@@ -243,7 +243,10 @@
       "aliases": [
         "NVIDIA B300",
         "B300",
-        "B300-SXM"
+        "B300-SXM",
+        "NVIDIA GB300",
+        "GB300",
+        "GB300-NVL72"
       ],
       "vendor": "NVIDIA",
       "architecture": "Blackwell",
@@ -263,7 +266,7 @@
       "interconnect_bandwidth_gbps": 1800,
       "nvl_domain_size": 8,
       "dollar_per_hour": 8.63,
-      "notes": "Blackwell Ultra - optimized for FP4 inference, reduced FP64 (1.25 TFLOPS)"
+      "notes": "Blackwell Ultra - optimized for FP4 inference, reduced FP64 (1.25 TFLOPS). Also the GPU of the GB300 Superchip (1 Grace CPU + 2 B300 GPUs): each GPU reports itself as \"NVIDIA GB300\" (nvidia-smi/torch on a GB300 NVL72 tray: compute capability 10.3, 284208 MiB, 1400 W power limit, 18 NVLink 5 links), so that name is an alias here and its profile.db rows stay keyed \"NVIDIA GB300\". Per-GPU fields apply unchanged; nvl_domain_size is 72 in a GB300 NVL72 rack (set nvl_num_gpu per preset)."
     },
     {
       "name": "GB200-Superchip",

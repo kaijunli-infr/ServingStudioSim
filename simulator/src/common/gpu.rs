@@ -63,6 +63,8 @@ mod tests {
         assert_eq!(compute_capability("NVIDIA H200"), Some((9, 0)));
         assert_eq!(compute_capability("B200-SXM-180GB"), Some((10, 0)));
         assert_eq!(compute_capability("NVIDIA B300"), Some((10, 3)));
+        // The GB300 Superchip's GPUs report this name; the catalog aliases it to B300.
+        assert_eq!(compute_capability("NVIDIA GB300"), Some((10, 3)));
         assert_eq!(compute_capability("  nvidia h200 "), Some((9, 0)));
         assert_eq!(compute_capability("AMD MI300X"), None);
         assert_eq!(compute_capability("No Such GPU"), None);

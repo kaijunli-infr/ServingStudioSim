@@ -170,6 +170,7 @@ def test_catalog_aliases_resolve_to_compute_capability():
     assert gpu_compute_capability("H100") == (9, 0)
     assert gpu_compute_capability("NVIDIA B200") == (10, 0)
     assert gpu_compute_capability("NVIDIA B300") == (10, 3)
+    assert gpu_compute_capability("NVIDIA GB300") == (10, 3)
     assert gpu_compute_capability("NVIDIA L40S") == (8, 9)
     assert gpu_compute_capability("AMD MI300X") is None
     assert gpu_compute_capability("Some Future GPU") is None
@@ -203,3 +204,21 @@ def test_validate_registry_rejects_empty_dtype_set():
     )
     with pytest.raises(ValueError, match="empty compute dtype set"):
         _validate_registry([bad])
+
+
+def test_gb300_is_the_b300_sku_but_its_own_profile_key():
+    """A GB300 tray's GPUs report "NVIDIA GB300" (nvidia-smi / torch). The
+    catalog aliases that name to B300-SXM-288GB, so profiling's identity check
+    accepts rows measured there under the "NVIDIA GB300" key; the key itself is
+    never rewritten (profile.db rows are looked up by the exact gpu_name), and
+    the name must not resolve to B200."""
+    from profiling.gpu_catalog import resolve_gpu_spec, same_canonical_sku
+
+    spec = resolve_gpu_spec("NVIDIA GB300")
+    assert spec is not None
+    assert spec.canonical_name == "B300-SXM-288GB"
+    assert spec.matched_alias == "NVIDIA GB300"
+    assert spec.compute_capability == (10, 3)
+    assert same_canonical_sku("NVIDIA GB300", "NVIDIA B300")
+    assert not same_canonical_sku("NVIDIA GB300", "NVIDIA B200")
+    assert not same_canonical_sku("NVIDIA GB300", "NVIDIA GB200")
