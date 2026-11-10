@@ -134,17 +134,27 @@ step_time validate 120 "${RUN[@]}" $ENVDIR/tp1_validate.py batch --db "$VIBESIM_
   --results "$OUT/fill/results.json" --stderr "$OUT/fill.err" --report "$OUT/validate.json"
 vrc=$?
 tee -a "$OUT/steps.log" <"$OUT/validate.out"
-[ $vrc -ne 0 ] && fail "validation returned $vrc (fill rc=$rc)" "$vrc"
+# rc 1 = anomaly (rows complete, a ratio or shape outside the validator's
+# thresholds): stops the stage unless a reviewed rerun sets ACCEPT_ANOMALY to
+# the written reason. rc 2 = missing or invalid rows: always stops.
+if [ $vrc -eq 1 ] && [ -n "${ACCEPT_ANOMALY:-}" ]; then
+  log "validator anomaly accepted after review: $ACCEPT_ANOMALY"
+elif [ $vrc -ne 0 ]; then
+  fail "validation returned $vrc (fill rc=$rc)" "$vrc"
+fi
 [ $rc -ne 0 ] && fail "fill returned $rc although validation passed" "$rc"
 preflight "after fill"
 
-# Repeatability: the whole stage again in a fresh rank group, no DB write.
-step_time repeat 420 "${PROFILE[@]}" all_reduce --backend nccl --gpu-name "NVIDIA GB300" --json --fresh \
-  --output-dir "$OUT/repeat" --specs "$OUT/specs.json" || fail "repeat run failed" 6
-step_time validate-repeat 120 "${RUN[@]}" $ENVDIR/tp1_validate.py repeat --db "$VIBESIM_PROFILE_DB" \
-  --kind all_reduce --backend nccl --results "$OUT/repeat/results.json" --report "$OUT/validate-repeat.json"
-rrc=$?
-tee -a "$OUT/steps.log" <"$OUT/validate-repeat.out"
+# Repeatability: the whole stage again in fresh rank groups (REPEATS, default
+# 2), no DB write.
+rrc=0
+for i in $(seq 1 "${REPEATS:-2}"); do
+  step_time "repeat$i" 420 "${PROFILE[@]}" all_reduce --backend nccl --gpu-name "NVIDIA GB300" --json --fresh \
+    --output-dir "$OUT/repeat$i" --specs "$OUT/specs.json" || fail "repeat run $i failed" 6
+  step_time "validate-repeat$i" 120 "${RUN[@]}" $ENVDIR/tp1_validate.py repeat --db "$VIBESIM_PROFILE_DB" \
+    --kind all_reduce --backend nccl --results "$OUT/repeat$i/results.json" --report "$OUT/validate-repeat$i.json" || rrc=1
+  tee -a "$OUT/steps.log" <"$OUT/validate-repeat$i.out"
+done
 preflight "after repeat"
 
 kill $SAMPLER 2>/dev/null; wait $SAMPLER 2>/dev/null; trap - EXIT
@@ -157,5 +167,5 @@ du -sb "$GB300_ROOT/cache" | cut -f1 >"$OUT/cache-bytes-post.txt"
 log "cache delta bytes: $(( $(cat "$OUT/cache-bytes-post.txt") - $(cat "$OUT/cache-bytes-pre.txt") ))"
 if [ "$(head -1 "$OUT/db-sha256-pre.txt")" = "$(head -1 "$OUT/db-sha256-post.txt")" ]; then log "tracked profiling/profile.db unchanged"; else log "WARNING: tracked profile.db changed"; fi
 log "wall used: $(elapsed) s of $BUDGET_S"
-[ $rrc -ne 0 ] && fail "repeatability check returned $rrc" 6
+[ $rrc -ne 0 ] && fail "a repeatability check did not pass" 6
 log "allreduce stage tp$NUM_GPUS done"
