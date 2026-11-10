@@ -68,9 +68,12 @@ def check_bindings_verbatim(fork: Path, shim_bindings: Path) -> None:
     fork's torch_bindings.cpp: the shim registers what the fork registers."""
     fork_text = (fork / "csrc/libtorch_stable/torch_bindings.cpp").read_text()
     shim_text = shim_bindings.read_text()
-    literals = re.findall(r'"([^"\n]*)"', shim_text)
+    schema = re.search(r"ops\.def\((.*?)\);", shim_text, re.S)
     impl = re.search(r"ops\.impl\(.*\);", shim_text)
-    for literal in literals + ([impl.group(0)] if impl else []):
+    if not schema or not impl:
+        sys.exit("shim_bindings.cpp: no ops.def(...) / ops.impl(...) found")
+    literals = re.findall(r'"([^"\n]*)"', schema.group(1))
+    for literal in literals + [impl.group(0)]:
         if literal not in fork_text:
             sys.exit(f"shim_bindings.cpp text not found verbatim in the fork's torch_bindings.cpp: {literal!r}")
 
@@ -98,8 +101,17 @@ def main() -> None:
     build_dir = out / "build"
     build_dir.mkdir(parents=True, exist_ok=True)
     sources = [str(fork / "csrc/libtorch_stable/cache_kernels.cu"), str(shim_bindings)]
-    include_paths = [str(fork / "csrc/libtorch_stable"), str(fork / "csrc")]
-    cflags = ["-O2", "-std=c++20"]
+    # Only csrc/, as the fork's CMake: quoted includes then resolve exactly as in
+    # its build (cache_kernels.cu finds libtorch_stable/torch_utils.h beside
+    # itself, csrc/attention/dtype_fp8.cuh finds csrc/torch_utils.h).
+    include_paths = [str(fork / "csrc")]
+    # The fork's CMake compiles its libtorch-stable target with USE_CUDA (the
+    # stable shim headers guard their CUDA entry points on it) and a
+    # TORCH_TARGET_VERSION: the oldest torch whose stable ABI the library may
+    # assume. The fork pins 2.11 (its torch); this build runs on exactly the
+    # torch it compiles against, 2.10, so it targets 2.10's ABI.
+    abi_defs = ["-DUSE_CUDA", "-DTORCH_TARGET_VERSION=0x020A000000000000ULL"]
+    cflags = ["-O2", "-std=c++20", *abi_defs]
     # The fork's CMake (cmake/utils.cmake get_torch_gpu_compiler_flags): torch's
     # COMMON_NVCC_FLAGS, plus -DENABLE_FP8, minus the __CUDA_NO_HALF_* defines on
     # CUDA >= 12. cpp_extension adds COMMON_NVCC_FLAGS itself; -U undoes those four.
@@ -107,11 +119,16 @@ def main() -> None:
         "-O3",
         "-std=c++20",
         "-DENABLE_FP8",
+        *abi_defs,
         "-U__CUDA_NO_HALF_OPERATORS__",
         "-U__CUDA_NO_HALF_CONVERSIONS__",
         "-U__CUDA_NO_BFLOAT16_CONVERSIONS__",
         "-U__CUDA_NO_HALF2_OPERATORS__",
     ]
+    # cache_kernels.cu uses the CUDA driver API (cuda.h) besides the runtime, so
+    # the library needs libcuda at load time: link it through the toolkit's stub
+    # (the fork's CMake links CUDA::cuda_driver); the real driver resolves at run time.
+    ldflags = [f"-L{Path(cpp_extension.CUDA_HOME) / 'lib64' / 'stubs'}", "-lcuda"]
     started = time.time()
     cpp_extension.load(
         name=EXT_NAME,
@@ -119,6 +136,7 @@ def main() -> None:
         extra_include_paths=include_paths,
         extra_cflags=cflags,
         extra_cuda_cflags=cuda_cflags,
+        extra_ldflags=ldflags,
         build_directory=str(build_dir),
         is_python_module=False,
         with_cuda=True,
@@ -154,6 +172,7 @@ def main() -> None:
             "arch_list": args.arch,
             "cflags": cflags,
             "cuda_cflags": cuda_cflags,
+            "ldflags": ldflags,
             "sources": sources,
             "include_paths": include_paths,
         },

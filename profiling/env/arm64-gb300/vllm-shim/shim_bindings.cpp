@@ -12,8 +12,11 @@
 // (lines 961-966 and 1140); build_shim.py checks that they still occur there.
 #include <torch/csrc/stable/library.h>
 
-// The fork's own declaration of the host entry point (csrc/libtorch_stable/ops.h).
-#include "ops.h"
+// The fork's own declaration of the host entry point. The include root is the
+// fork's csrc/, as in its CMake build, so every "torch_utils.h" resolves as the
+// fork resolves it (csrc/torch_utils.h for the attention headers, the
+// libtorch_stable one for the files in that directory).
+#include "libtorch_stable/ops.h"
 
 STABLE_TORCH_LIBRARY_FRAGMENT(_C_cache_ops, ops) {
   ops.def(

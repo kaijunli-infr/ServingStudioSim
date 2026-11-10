@@ -18,5 +18,7 @@ ln -sfn "$GB300_ROOT/venv" "$DEST/.venv"
 rm -rf "$DEST/vllm"
 cp -r "$HERE/vllm" "$DEST/vllm"
 cp "$HERE/shim_bindings.cpp" "$HERE/build_shim.py" "$HERE/probe_shim.py" "$DEST/"
+# torch.utils.cpp_extension shells out to `ninja`, which lives in the venv's bin.
+export PATH="$GB300_ROOT/venv/bin:$PATH"
 "$GB300_ROOT/venv/bin/python" "$DEST/build_shim.py" --fork "$FORK" --out "$DEST" "$@"
 echo "shim ready at $DEST; export VIBESIM_VLLM_FORK_ROOT=$DEST (gb300.env does)"

@@ -20,6 +20,8 @@ BACKENDS = {
     "elementwise": ["triton"],
     "flashinfer_attn_prefill": ["fa2"],
     "flashinfer_attn_decode": ["fa2"],
+    # Phase 2C: the vLLM KV-cache append rows, through the vllm shim.
+    "kv_cache_append": ["vllm_cuda"],
 }
 
 
