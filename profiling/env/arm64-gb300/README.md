@@ -34,6 +34,8 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `PHASE2D_RESULTS.md`, `phase2d/` | Phase 2D results: timing semantics of a stored row, per-row stability (12 of 24 pass), old against new, prediction sensitivity, recommendation |
 | `run_allreduce_semantics.sh`, `allreduce_semantics.py` | Phase 2E: runner timing against GPU kernel records, synchronised calls and CUDA-graph replay at 8 KiB, 512 KiB and 8 MiB; writes no profile database |
 | `PHASE2E_RESULTS.md`, `phase2e/` | Phase 2E results: the small-message floor is host launch cost; simulator cost-model inspection; integration policy |
+| `run_allreduce_graph.sh`, `allreduce_graph.py`, `allreduce_graph_report.py` | Phase 2F: `dist.all_reduce` timed by CUDA-graph replay with the FlashInfer collective runners' conventions, method identifiers and provenance per observation; writes no profile database |
+| `PHASE2F_RESULTS.md`, `phase2f/` | Phase 2F results: 24 staged graph-replay rows (all stable), eager against graph, 16 MiB boundary, prediction and ranking changes, integration policy |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 
