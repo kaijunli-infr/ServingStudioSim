@@ -21,8 +21,10 @@ echo "[bootstrap] venv at $UV_PROJECT_ENVIRONMENT"
 echo "[bootstrap] torch for DeepGEMM's metadata build"
 # torch alone from the cu130 index: with PyPI as an extra index uv prefers it
 # and installs the CPU-only aarch64 wheel PyPI serves under the same version.
+# The local version is pinned so that a venv holding that CPU-only wheel (same
+# public version, so `torch==2.10.0` would be satisfied) is repaired, not kept.
 uv pip install --python "$UV_PROJECT_ENVIRONMENT/bin/python" \
-    --index-url https://download.pytorch.org/whl/cu130 "torch==2.10.0"
+    --index-url https://download.pytorch.org/whl/cu130 "torch==2.10.0+cu130"
 uv pip install --python "$UV_PROJECT_ENVIRONMENT/bin/python" \
     "setuptools>=81.0.0" "wheel>=0.46.0" "packaging>=26.0" "numpy>=2.0.0"
 "$UV_PROJECT_ENVIRONMENT/bin/python" - <<'PY'
