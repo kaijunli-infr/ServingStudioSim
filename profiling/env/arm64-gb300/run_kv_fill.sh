@@ -16,6 +16,10 @@ cd "$SIM_ROOT"
 # shellcheck disable=SC1091
 source profiling/env/arm64-gb300/gb300.env
 command -v uv >/dev/null 2>&1 || export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+# The CUPTI timer builds its extension per interpreter path with ninja, which lives
+# in the venv's bin: both the probe and the vllm_env workers run the shim's
+# `.venv/bin/python`, a path the earlier TP1 fill never used.
+export PATH="$GB300_ROOT/venv/bin:$PATH"
 
 GPU_INDEX="${1:-1}"
 EXPECT_UUID="${2:-}"
@@ -67,7 +71,9 @@ step_time manifest-pre 120 "${RUN[@]}" $ENVDIR/collect_manifest.py --out "$OUT/m
   --run-config phase=2C-kv-fill "gpu=tray12:$GPU_INDEX" preset=predict_llama3_8b_gb300_iter.json || fail "manifest-pre" 2
 
 # Gate 1: the shim probe on the shim's interpreter (what vllm_env workers run).
-step_time probe-shim 900 env PYTHONPATH="$SHIM:$SIM_ROOT" "$SHIM/.venv/bin/python" $ENVDIR/vllm-shim/probe_shim.py \
+# -P: do not put the script's directory first on sys.path, or the repository's copy
+# of the shim package (no manifest, no library) would shadow the installed one.
+step_time probe-shim 900 env PYTHONPATH="$SHIM:$SIM_ROOT" "$SHIM/.venv/bin/python" -P $ENVDIR/vllm-shim/probe_shim.py \
   --out "$OUT/probe-shim.json" ${EXPECT_UUID:+--expect-uuid "$EXPECT_UUID"} --num-tokens 64 8192 \
   || fail "shim probe failed; see probe-shim.out/err" 3
 cat "$OUT/probe-shim.out" | tee -a "$OUT/steps.log"

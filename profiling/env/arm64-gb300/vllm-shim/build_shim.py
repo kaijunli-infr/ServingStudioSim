@@ -75,13 +75,18 @@ def check_bindings_verbatim(fork: Path, shim_bindings: Path) -> None:
     literals = re.findall(r'"([^"\n]*)"', schema.group(1))
     for literal in literals + [impl.group(0)]:
         if literal not in fork_text:
-            sys.exit(f"shim_bindings.cpp text not found verbatim in the fork's torch_bindings.cpp: {literal!r}")
+            sys.exit(
+                "shim_bindings.cpp text not found verbatim in the fork's torch_bindings.cpp: "
+                f"{literal!r}"
+            )
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fork", required=True, type=Path, help="fork checkout at the pinned commit")
-    ap.add_argument("--out", required=True, type=Path, help="shim root (gets build/ and manifest.json)")
+    ap.add_argument(
+        "--out", required=True, type=Path, help="shim root (gets build/ and manifest.json)"
+    )
     ap.add_argument("--arch", default=os.environ.get("TORCH_CUDA_ARCH_LIST", "10.3"))
     args = ap.parse_args()
     here = Path(__file__).resolve().parent
@@ -148,20 +153,30 @@ def main() -> None:
     # Loaded by cpp_extension.load (torch.ops.load_library): the op must exist.
     if not hasattr(torch.ops._C_cache_ops, "reshape_and_cache_flash"):
         sys.exit("the built library did not register _C_cache_ops.reshape_and_cache_flash")
-    nvcc = subprocess.run(
-        [str(Path(cpp_extension.CUDA_HOME) / "bin" / "nvcc"), "--version"],
-        capture_output=True, text=True, check=True,
-    ).stdout.strip().splitlines()[-2:]
+    nvcc = (
+        subprocess.run(
+            [str(Path(cpp_extension.CUDA_HOME) / "bin" / "nvcc"), "--version"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        .stdout.strip()
+        .splitlines()[-2:]
+    )
     manifest = {
         "schema": 1,
-        "purpose": "GB300 vllm shim: _C_cache_ops.reshape_and_cache_flash from the pinned fork kernel",
+        "purpose": (
+            "GB300 vllm shim: _C_cache_ops.reshape_and_cache_flash from the pinned fork kernel"
+        ),
         "fork": provenance,
         "shim": {
             "shim_bindings.cpp": sha256(shim_bindings),
             "build_shim.py": sha256(Path(__file__).resolve()),
             "vllm_package": {
                 str(p.relative_to(out)): sha256(p) for p in sorted((out / "vllm").rglob("*.py"))
-            } if (out / "vllm").exists() else {},
+            }
+            if (out / "vllm").exists()
+            else {},
         },
         "toolchain": {
             "python": sys.version.split()[0],
@@ -176,14 +191,20 @@ def main() -> None:
             "sources": sources,
             "include_paths": include_paths,
         },
-        "library": {"path": str(library.relative_to(out)), "sha256": sha256(library), "bytes": library.stat().st_size},
+        "library": {
+            "path": str(library.relative_to(out)),
+            "sha256": sha256(library),
+            "bytes": library.stat().st_size,
+        },
         "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "build_seconds": round(time.time() - started, 1),
         "host": platform.node(),
         "machine": platform.machine(),
     }
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    print(f"built {library} ({manifest['library']['bytes']} bytes) in {manifest['build_seconds']} s")
+    print(
+        f"built {library} ({manifest['library']['bytes']} bytes) in {manifest['build_seconds']} s"
+    )
     print(f"manifest: {out / 'manifest.json'}")
 
 

@@ -27,7 +27,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import platform
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -76,8 +78,16 @@ def probe(num_tokens: int, ops, create_kv_caches_with_random_flash, cupti, Timer
     k_scale = torch.ones(1, dtype=torch.float32, device="cuda")
     v_scale = torch.ones_like(k_scale)
     key_caches, value_caches = create_kv_caches_with_random_flash(
-        nb, BLOCK_SIZE, 1, NUM_KV_HEADS, HEAD_DIM, "auto", torch.bfloat16,
-        seed=42, device="cuda", cache_layout=LAYOUT,
+        nb,
+        BLOCK_SIZE,
+        1,
+        NUM_KV_HEADS,
+        HEAD_DIM,
+        "auto",
+        torch.bfloat16,
+        seed=42,
+        device="cuda",
+        cache_layout=LAYOUT,
     )
     key_cache, value_cache = key_caches[0], value_caches[0]
     before_k, before_v = key_cache.clone(), value_cache.clone()
@@ -114,25 +124,28 @@ def probe(num_tokens: int, ops, create_kv_caches_with_random_flash, cupti, Timer
         "k_rows_changed": k_rows_changed,
         "v_rows_changed": v_rows_changed,
         "written_rows_equal_inputs": written_k and written_v,
-        "pass": k_equal and v_equal and written_k and written_v
-        and k_rows_changed == num_tokens and v_rows_changed == num_tokens,
+        # rows are (block, offset, head) vectors of head_dim: one per token per KV head.
+        "expected_rows_changed": num_tokens * NUM_KV_HEADS,
+        "pass": k_equal
+        and v_equal
+        and written_k
+        and written_v
+        and k_rows_changed == num_tokens * NUM_KV_HEADS
+        and v_rows_changed == num_tokens * NUM_KV_HEADS,
     }
 
-    # 2. kernel identity through torch.profiler (Kineto)
-    from torch.profiler import ProfilerActivity, profile
-
-    kernel()
-    torch.cuda.synchronize()
-    with profile(activities=[ProfilerActivity.CUDA, ProfilerActivity.CPU]) as prof:
-        kernel()
-        torch.cuda.synchronize()
-    cuda_kernels = sorted(
-        {
-            e.name
-            for e in prof.events()
-            if str(e.device_type).endswith("CUDA") and "Memcpy" not in e.name and "Memset" not in e.name
-        }
+    # 2. kernel identity through torch.profiler (Kineto), in a child process:
+    #    Kineto's CUPTI subscription would leave the repository's CUPTI extension
+    #    (step 3, same process) without records, so each runs in its own process.
+    child = subprocess.run(
+        [sys.executable, "-P", __file__, "--kineto-child", str(num_tokens)],
+        capture_output=True,
+        text=True,
+        env=os.environ.copy(),
     )
+    if child.returncode != 0:
+        raise RuntimeError(f"kineto child failed: {child.stderr[-2000:]}")
+    cuda_kernels = json.loads(child.stdout.strip().splitlines()[-1])
     result["kineto_cuda_kernels"] = cuda_kernels
     result["kernel_identity_pass"] = len(cuda_kernels) == 1 and KERNEL in cuda_kernels[0]
 
@@ -167,11 +180,68 @@ def probe(num_tokens: int, ops, create_kv_caches_with_random_flash, cupti, Timer
     return result
 
 
+def kineto_child(num_tokens: int) -> None:
+    """List the CUDA kernels one `reshape_and_cache_flash` call launches (JSON on
+    the last stdout line). Same geometry and allocator as `probe`."""
+    from torch.profiler import ProfilerActivity, profile
+    from vllm import _custom_ops as ops
+    from vllm.utils.torch_utils import create_kv_caches_with_random_flash
+
+    nb = num_blocks(num_tokens)
+    key = torch.randn(num_tokens, NUM_KV_HEADS, HEAD_DIM, dtype=torch.bfloat16, device="cuda")
+    value = torch.randn(num_tokens, NUM_KV_HEADS, HEAD_DIM, dtype=torch.bfloat16, device="cuda")
+    slot_mapping = torch.randperm(nb * BLOCK_SIZE, device="cuda", dtype=torch.int64)[:num_tokens]
+    k_scale = torch.ones(1, dtype=torch.float32, device="cuda")
+    v_scale = torch.ones_like(k_scale)
+    key_caches, value_caches = create_kv_caches_with_random_flash(
+        nb,
+        BLOCK_SIZE,
+        1,
+        NUM_KV_HEADS,
+        HEAD_DIM,
+        "auto",
+        torch.bfloat16,
+        seed=42,
+        device="cuda",
+        cache_layout=LAYOUT,
+    )
+    key_cache, value_cache = key_caches[0], value_caches[0]
+
+    def kernel():
+        ops.reshape_and_cache_flash(
+            key, value, key_cache, value_cache, slot_mapping, "auto", k_scale, v_scale
+        )
+
+    kernel()
+    torch.cuda.synchronize()
+    with profile(activities=[ProfilerActivity.CUDA, ProfilerActivity.CPU]) as prof:
+        kernel()
+        torch.cuda.synchronize()
+    names = sorted(
+        {
+            e.name
+            for e in prof.events()
+            if str(e.device_type).endswith("CUDA")
+            and "Memcpy" not in e.name
+            and "Memset" not in e.name
+        }
+    )
+    print(json.dumps(names))
+
+
 def fp8_refused(create_kv_caches_with_random_flash) -> dict:
     try:
         create_kv_caches_with_random_flash(
-            256, BLOCK_SIZE, 1, NUM_KV_HEADS, HEAD_DIM, "fp8", torch.bfloat16,
-            seed=42, device="cuda", cache_layout=LAYOUT,
+            256,
+            BLOCK_SIZE,
+            1,
+            NUM_KV_HEADS,
+            HEAD_DIM,
+            "fp8",
+            torch.bfloat16,
+            seed=42,
+            device="cuda",
+            cache_layout=LAYOUT,
         )
     except NotImplementedError as exc:
         return {"explicit_failure": True, "error": str(exc)}
@@ -180,10 +250,16 @@ def fp8_refused(create_kv_caches_with_random_flash) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--out", type=Path, help="report JSON (required unless --kineto-child)")
     ap.add_argument("--expect-uuid")
     ap.add_argument("--num-tokens", type=int, nargs="+", default=[64, 8192])
+    ap.add_argument("--kineto-child", type=int, help=argparse.SUPPRESS)
     args = ap.parse_args()
+    if args.kineto_child is not None:
+        kineto_child(args.kineto_child)
+        return
+    if args.out is None:
+        ap.error("--out is required")
     t0 = time.time()
     report: dict = {
         "host": platform.node(),
@@ -192,28 +268,36 @@ def main() -> None:
         "torch_cuda": torch.version.cuda,
         "started": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
-    report["identity"] = identity(args.expect_uuid)
-    import vllm
-    from vllm import _custom_ops as ops
-    from vllm.utils.torch_utils import create_kv_caches_with_random_flash
+    report["specs"] = []
+    report["pass"] = False
+    try:
+        report["identity"] = identity(args.expect_uuid)
+        import vllm
+        from vllm import _custom_ops as ops
+        from vllm.utils.torch_utils import create_kv_caches_with_random_flash
 
-    from profiling.profilers import cupti_kernel_profiler as cupti
-    from profiling.profilers.timer import Timer
+        from profiling.profilers import cupti_kernel_profiler as cupti
+        from profiling.profilers.timer import Timer
 
-    report["shim"] = {
-        "vllm_file": vllm.__file__,
-        "library": ops.MANIFEST["library"],
-        "fork_commit": ops.MANIFEST["fork"]["commit"],
-    }
-    report["specs"] = [
-        probe(n, ops, create_kv_caches_with_random_flash, cupti, Timer) for n in args.num_tokens
-    ]
-    report["fp8_path"] = fp8_refused(create_kv_caches_with_random_flash)
-    report["pass"] = all(s["pass"] for s in report["specs"]) and report["fp8_path"]["explicit_failure"]
-    report["seconds"] = round(time.time() - t0, 1)
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(report, indent=2) + "\n")
-    print(json.dumps({k: report[k] for k in ("identity", "pass", "seconds")}))
+        report["shim"] = {
+            "vllm_file": vllm.__file__,
+            "library": ops.MANIFEST["library"],
+            "fork_commit": ops.MANIFEST["fork"]["commit"],
+        }
+        for n in args.num_tokens:
+            report["specs"].append(probe(n, ops, create_kv_caches_with_random_flash, cupti, Timer))
+        report["fp8_path"] = fp8_refused(create_kv_caches_with_random_flash)
+        report["pass"] = (
+            all(s["pass"] for s in report["specs"]) and report["fp8_path"]["explicit_failure"]
+        )
+    except Exception as exc:  # noqa: BLE001 - the report must record the failure
+        report["error"] = f"{type(exc).__name__}: {exc}"
+        raise
+    finally:
+        report["seconds"] = round(time.time() - t0, 1)
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(json.dumps(report, indent=2) + "\n")
+    print(json.dumps({k: report.get(k) for k in ("identity", "pass", "seconds")}))
     for s in report["specs"]:
         print(
             f"num_tokens={s['num_tokens']}: correctness={s['correctness']['pass']} "

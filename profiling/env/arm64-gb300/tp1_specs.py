@@ -60,7 +60,11 @@ def main(cost_trees: Path, out_dir: Path) -> int:
         (out_dir / f"{kind}.json").write_text(json.dumps({"specs": specs}, indent=1) + "\n")
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     for kind, s in summary.items():
-        print(f"{kind:26s} configs={s['configs']} cells={s['cells']} infeasible={s['infeasible']} specs={s['specs']} backends={s.get('backends')} rows={s.get('rows')}")
+        print(
+            f"{kind:26s} configs={s['configs']} cells={s['cells']} "
+            f"infeasible={s['infeasible']} specs={s['specs']} "
+            f"backends={s.get('backends')} rows={s.get('rows')}"
+        )
     return 0
 
 
