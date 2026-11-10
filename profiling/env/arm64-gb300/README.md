@@ -21,7 +21,10 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `SMOKE_RESULTS.md` | what the smoke test measured on tray12 GPU 1 (2026-11-10) and what broke on the way |
 | `PROPOSALS.md` | fa3 SM90 gate (implemented in Phase 2C, with the `Kernel::build` device gate), kv_cache_append torch-vs-vLLM equivalence, the first TP1 fill batch |
 | `run_tp1_fill.sh`, `tp1_probe.py`, `tp1_specs.py`, `tp1_validate.py`, `tp1_report.py` | the TP1 fill campaign: probe gate, spec export from `simulator cost-trees --kernel-configs`, per-batch validation, repeatability, summary |
-| `TP1_RESULTS.md` | the first fill (1166 rows in the private DB, 2026-11-10), remaining gaps, the plan for the 70 vLLM kv_cache_append rows |
+| `TP1_RESULTS.md` | the TP1 fill: first batch (1166 rows), Phase 2C (fa3 gate, the 70 vLLM kv_cache_append rows), final validation; 0 / 1236 specs missing in the private DB (2026-11-10) |
+| `vllm-shim/` | the fork's `reshape_and_cache_flash` kernel built unmodified as a torch extension, with a `vllm` package shim the `vllm_cuda` runner imports; `build_shim.py` pins the fork commit and file hashes, `probe_shim.py` checks correctness, kernel identity and CUPTI timing on the GPU |
+| `run_kv_fill.sh` | Phase 2C driver: shim probe gate, worker-vs-probe gate, the 70-row fill, validation, repeat sample, manifests |
+| `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 
 ## What is pinned (first bootstrap, tray12, 2026-11-10)
 

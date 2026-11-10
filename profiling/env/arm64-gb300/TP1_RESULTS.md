@@ -1,4 +1,11 @@
-# GB300 Llama 3.1 8B BF16 TP1 fill, first batch (2026-11-10)
+# GB300 Llama 3.1 8B BF16 TP1 fill (2026-11-10)
+
+Two batches: the first fill of 1166 rows (this section through
+"Smallest separate plan"), then Phase 2C, which closed the remaining 70
+kv_cache_append rows and the fa3 gap (last section). Final state: **0 / 1236
+specs missing** for Llama 3.1 8B BF16 TP1 on `NVIDIA GB300`.
+
+## First batch
 
 Run directory: `$GB300_ROOT/artifacts/tp1/run-20261110-075407` (`run-latest`),
 log `$GB300_ROOT/logs/tp1-fill-run1.log`. Source: fork commit `e897db56`
@@ -116,7 +123,7 @@ missing row under `--no-gpu`. The 297 fa3 rows need no measurement, only the
 §A gate (or a per-run backend map without fa3); the 70 kv_cache_append rows
 need the plan below.
 
-## Smallest separate plan for the 70 vLLM kv_cache_append rows
+## Smallest separate plan for the 70 vLLM kv_cache_append rows (as proposed; executed in Phase 2C below)
 
 Goal: measure `reshape_and_cache_flash_kernel` (vLLM's CUDA kernel) on the
 GB300 for the 70 specs (8 KV heads, head_dim 128, block 16, bf16/bf16, NHD,
@@ -155,3 +162,113 @@ with no substitution.
 
 Then the dry run reports 297 missing, all fa3, and the §A gate decision
 unblocks prediction.
+
+## Phase 2C: fa3 gate and the 70 vLLM kv_cache_append rows (2026-11-10)
+
+Approved scope: (A) make FA3 Hopper-only and filter every kernel's declared
+backends by the device at build time; (B) run the fork's own
+`reshape_and_cache_flash` kernel on arm64 through a minimal shim and fill the
+70 rows. Nothing else was measured.
+
+### A. FA3 gate and device filter (commits `83551cdc`, `87fccb80`)
+
+- `fa3` in `flashinfer_attn_{prefill,decode,rect}` declares
+  `sm_targets={"sm_90a"}`; `BackendSupport.allows_compute_capability` already
+  excluded a declared `sm_targets` set on other architectures.
+- `Kernel::build` (Rust, `simulator/src/timing/kernels/engine.rs`) now asks
+  `perf_api.supported_backend_subset(kind, backends, compute, kv, gpu_name)`
+  and keeps only the backends that run the kernel's dtypes on that GPU. An
+  empty subset is `BuildError::NoSupportedBackend`, a hard error naming the
+  kernel, dtypes, GPU and declared list. The reduction is logged:
+  `kernel unified.attn.attn.prefill (flashinfer_attn_prefill) backends ["fa2",
+  "fa3"] -> ["fa2"]: the rest cannot run compute=bf16, kv=bf16 on NVIDIA GB300`.
+  Enumerate mode (`cost-trees`) is untouched, so spec export still lists fa3
+  and the GPU-specific filter happens only where rows are looked up.
+- Checks: 189 pytest (capability + launcher), 574 Rust `timing::` tests; H200
+  dry run unchanged (0 / 1533 missing, 270 / 324 attention rows = fa2 + fa3);
+  GB300 dry run 70 / 1236 missing before the fill (attention 135 / 162 rows =
+  fa2 only). Forcing `"backends": {"main": {"attn": ["fa3"]}}` on the GB300
+  preset fails at the binary with `… has no backend that runs compute=bf16,
+  kv=bf16 on NVIDIA GB300: declared ["fa3"], none supported on this device`
+  (`$GB300_ROOT/artifacts/phase2c/predict_gb300_force_fa3.json`).
+- FP8: the Llama arch hardcodes attention compute to bf16, so FP8 attention
+  cannot be requested from the preset. At registry level
+  `supported_backends("flashinfer_attn_prefill", fp8, fp8, gpu="NVIDIA GB300")`
+  is `[]` (tested), and the shim refuses fp8 KV caches with an explicit
+  `NotImplementedError` (below). No silent substitution path exists.
+
+### B. The vLLM shim (commits `9f25a680`, `3b17315d`; `vllm-shim/README.md`)
+
+- Source: fork `serendipity-zk/vllm` @ `e1423a4d` (the repository's pin),
+  `csrc/libtorch_stable/cache_kernels.cu` compiled **unmodified** (sha256
+  pinned in `build_shim.py`, byte-identical to upstream `04730e82`), with a
+  40-line binding file that registers the same op schema (the `ops.def`
+  literal is checked verbatim against the fork's `torch_bindings.cpp`) via the
+  libtorch stable ABI. `vllm/_custom_ops.py` and `vllm/utils/torch_utils.py`
+  carry the fork's own lines for the two functions the runner imports.
+- Why not the official aarch64 wheel: every published arm64 vLLM wheel pins a
+  different torch (2.11 / 2.13 / 2.14) than this env (2.10.0+cu130), so the
+  `_C` library cannot load here, and the pinned fork is not a release.
+- Build: `cpp_extension.load`, 16 s, into `$GB300_ROOT/vllm-shim/build`
+  (4.8 MB total, `manifest.json` with every input hash). Gotchas recorded in
+  the shim README: include root must be `csrc/` only; `-DUSE_CUDA
+  -DTORCH_TARGET_VERSION=0x020A000000000000ULL`; link `-lcuda` from the
+  toolkit stubs; `ninja` from the env venv on PATH; run the probe with
+  `python -P` (the repository copy of `vllm/` would otherwise shadow the
+  installed shim); Kineto and the repository's CUPTI extension cannot share a
+  process.
+- `gb300.env` sets `VIBESIM_VLLM_FORK_ROOT=$GB300_ROOT/vllm-shim`, whose
+  `.venv` is a symlink to the env venv, so `profiling.exec.env.vllm_env`
+  resolves without a source change.
+
+### B. Probe, fill, validation (`run_kv_fill.sh`, run `run-20261110-100407-kv`)
+
+Run directory `$GB300_ROOT/artifacts/tp1/run-20261110-100407-kv`
+(`run-latest-kv`), log `$GB300_ROOT/logs/kv-fill-run7.log` (runs 1–6 stopped at
+the probe gate on driver/probe bugs, all fixed in the driver before any fill;
+none wrote rows). Same GPU as the first batch (tray12 physical GPU 1,
+`GPU-9574ced0…`, UUID asserted; 0 compute apps before and after; power 177 W
+idle, 596 W peak, SM clock 2070 MHz busy; the same 111–129 MiB foreign context
+with no visible process as during the first batch). Source: worktree at
+`3b17315d` plus the driver/probe fixes committed next (`profiler_git_hash`
+`3b17315d…-dirty`). Wall: 40 s for the whole run, 10.3 s of fill.
+
+| gate | result |
+| --- | --- |
+| shim identity | `NVIDIA GB300`, cc 10.3, 152 SMs, uuid match |
+| correctness, 64 and 8192 tokens | key/value caches **bitwise equal** to the torch reference (`[num_blocks, block, heads, head_dim]`, NHD, bf16); rows changed = tokens × 8 KV heads |
+| kernel identity (Kineto, child process) | exactly one `vllm::reshape_and_cache_flash_kernel<__nv_bfloat16, __nv_bfloat16, (vllm::Fp8KVCacheDataType)0>` per launch |
+| CUPTI | matched 1 kernel per iteration; 64 tokens 3.37 µs, 8192 tokens 41.85 µs; `Timer.cupti` 3.45 / 42.00 µs; warm CUDA events 13.69 / 28.38 µs (launch-bound at small sizes, as expected: CUPTI reports kernel time) |
+| fp8 KV cache | explicit `NotImplementedError` (the shim builds no `convert_fp8`) |
+| worker vs probe (`--fresh`, through the profiler) | 3.44 µs vs 3.37 (ratio 1.022), 41.74 vs 41.85 (0.997); gate 0.8–1.25 |
+
+Fill: `kv_cache_append` / `vllm_cuda`, 70 specs → 70 rows, status ok for all.
+`tp1_validate.py batch`: **PASS**, time min 2.89 µs, p50 18.9 µs, p90 70.9 µs,
+max 317.8 µs (65536 tokens); 0 monotonic violations, 0 outliers; vs H200
+`vllm_cuda` over the 70 common rows GB300/H200 p50 0.657, max 1.049.
+Repeat (`specs[3::7]`, 10 specs, `--fresh`, not inserted): **PASS**, fresh/stored
+p50 1.0015, max |Δ| 2.4 %. Cache delta 0 bytes, tracked `profiling/profile.db`
+unchanged. `_profile_run` id 361: cuda 13.0 (torch's), driver 610.57.04,
+`backend_version` NULL (the shim is not an installed distribution; the H200
+`vllm_cuda` rows carry NULL too).
+
+### Final validation (CPU only, private DB)
+
+| check | result |
+| --- | --- |
+| dry run `predict_llama3_8b_gb300_iter` | **0 / 1236 specs missing** (`logs/dryrun-phase2c-gb300-final.log`) |
+| GB300 rows in `$GB300_ROOT/db/profile-gb300.db` | single_gemm 680 (torch 340, torch_linear 340), rms_norm 63, elementwise 126, flashinfer_attn_prefill 135 (fa2), flashinfer_attn_decode 162 (fa2), kv_cache_append 70 (vllm_cuda) = **1236**; file 74,207,232 B, sha256 `f2dae6e9…0365b` |
+| end-to-end `timing-predict --no-gpu` | rc 0, 31 s; `logs/predict_llama3_8b_gb300_iter/`; cost manifest shows every slot on `NVIDIA GB300` with backends triton / flashinfer / torch+torch_linear / vllm_cuda / fa2 / fa2 |
+| per-kernel breakdown | prefill iter (2048 tokens) 21.18 ms: up_gate_proj 39 %, down_proj 20 %, attention prefill 18 % (fa2), qkv 8 %, o_proj 6 %, kv_cache_append 2.0 %; decode iter (64 requests, 38400 cached tokens) 4.17 ms: up_gate 27 %, attention decode 27 % (fa2), down 17 %, kv_cache_append 2.7 % |
+| public API, local (`public_api_check.py`) | health ok; catalog lists `NVIDIA GB300` with 1236 rows and the B300 spec peaks (bf16 2500 TFLOPS dense, fp8 5000, nvfp4 13125, HBM 8000 GB/s, NVLink 900 GB/s one-way); `kv_cache_append` rows 70, num_tokens 1 … 65536, 2.89 … 317.8 µs, provenance present (`$GB300_ROOT/artifacts/phase2c/public_api_check.json`) |
+
+### Remaining unsupported paths (by design, not gaps)
+
+- `fa3` on GB300: Hopper-only build, filtered at build time; forcing it is an
+  explicit error.
+- FP8 attention and FP8 KV caches on GB300: not requestable from the Llama
+  arch, `[]` at registry level, refused by the shim. Not profiled.
+- `convert_fp8` and every other vLLM op: not built; only
+  `reshape_and_cache_flash` exists on arm64.
+- TP2 / TP4 / TP8 and FP8 GEMM profiling: not started (not approved).
+- The private DB is not merged into `profiling/profile.db`; nothing is deployed.
