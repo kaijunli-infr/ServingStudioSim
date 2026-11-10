@@ -60,9 +60,9 @@ dependencies = [
 package = false
 # DeepGEMM's setup.py imports torch at build time (see the repository pyproject).
 no-build-isolation-package = ["deep-gemm"]
-# ... and uv must have that torch (and the setuptools stack) in the build env
-# already when it resolves DeepGEMM's metadata for the lock.
-extra-build-dependencies = { deep-gemm = ["torch", "setuptools", "wheel", "packaging"] }
+# ... so torch must already be in $UV_PROJECT_ENVIRONMENT when uv resolves
+# DeepGEMM's metadata (`uv lock`) and when it builds it (`uv sync`); run
+# bootstrap.sh, which installs torch first, instead of a bare `uv lock`.
 environments = ["sys_platform == 'linux' and platform_machine == 'aarch64'"]
 
 [[tool.uv.index]]
