@@ -39,15 +39,20 @@ def dist(values):
 def arg_columns(con, table):
     cols = [r[1] for r in con.execute(f"pragma table_info({table})")]
     skip = {"id", "gpu_name", "backend", "args_hash", "run_key", "profiler_run_at", "verified", "time_ms",
-            "tflops", "memory_bandwidth_gbps", "energy_j", "is_outlier", "retry_count", "outlier_reason", "created_at"}
+            "tflops", "memory_bandwidth_gbps", "algbw_gbps", "busbw_gbps", "energy_j", "is_outlier", "retry_count",
+            "outlier_reason", "created_at"}
     return [c for c in cols if c not in skip]
 
 
 def rows_for(con, table, gpu, backend, cols):
     sel = ", ".join(cols)
     out = {}
+    # Communication tables carry algbw/busbw instead of tflops/memory bandwidth.
+    have = {r[1] for r in con.execute(f"pragma table_info({table})")}
+    tflops = "tflops" if "tflops" in have else "null"
+    gbps = "memory_bandwidth_gbps" if "memory_bandwidth_gbps" in have else ("busbw_gbps" if "busbw_gbps" in have else "null")
     for row in con.execute(
-        f"select {sel}, time_ms, tflops, memory_bandwidth_gbps, is_outlier, retry_count, outlier_reason, profiler_run_at "
+        f"select {sel}, time_ms, {tflops}, {gbps}, is_outlier, retry_count, outlier_reason, profiler_run_at "
         f"from {table} where gpu_name = ? and backend = ?", (gpu, backend)):
         key = tuple(row[: len(cols)])
         out[key] = {"time_ms": row[len(cols)], "tflops": row[len(cols) + 1], "gbps": row[len(cols) + 2],
@@ -117,7 +122,11 @@ def batch(args) -> int:
     gbps = [gb[k]["gbps"] for k in covered if gb[k]["gbps"]]
     report["gbps_distribution"] = dist(gbps)
     # monotonic sanity along the sweep axis, per static config
-    axis = next((c for c in ("m", "num_tokens", "total_tokens", "append_len", "input_size_bytes") if c in cols), None)
+    axis = next((c for c in ("m", "num_tokens", "total_tokens", "append_len", "input_size_bytes", "message_size_bytes")
+                 if c in cols), None)
+    # A collective's small-message latency is a protocol floor that is not ordered by size (the B200 and H200
+    # rows dip by up to 45 % below 4 MiB); only the bandwidth-bound range is expected to be monotonic.
+    axis_min = 4 << 20 if axis == "message_size_bytes" else 256
     if axis is not None:
         ai = cols.index(axis)
         groups = {}
@@ -127,7 +136,7 @@ def batch(args) -> int:
         for g, pts in groups.items():
             pts.sort()
             for (x0, t0), (x1, t1) in zip(pts, pts[1:]):
-                if x0 >= 256 and t1 < 0.85 * t0:  # time dropped >15 % while the sweep axis grew
+                if x0 >= axis_min and t1 < 0.85 * t0:  # time dropped >15 % while the sweep axis grew
                     violations.append({"static": g, axis: [x0, x1], "time_ms": [t0, t1]})
         report["sweep_axis"] = axis
         report["monotonic_violations"] = len(violations)
