@@ -3,8 +3,9 @@ the four smoke kernels against fp32 references, first-call (JIT) time, and
 steady-state latency distributions.
 
 Mirrors the profiler's runners (shapes, layouts, FlashInfer wrappers), but
-times with CUDA events over back-to-back launches (warm L2), so the numbers
-are a sanity band next to the profiler's CUPTI measurements, not a replacement.
+times with in-stream CUDA events over back-to-back launches (warm L2, no cache
+flush), so the numbers are a sanity band next to the profiler's CUPTI
+measurements, not a replacement.
 
     smoke_checks.py --expect-uuid GPU-... --only identity   # abort gate
     smoke_checks.py --expect-uuid GPU-... --out checks.json  # everything
@@ -56,20 +57,22 @@ def timed_first_call(fn):
 
 
 def latency_us(fn, warmup: int = 10, iters: int = 200) -> dict:
+    """Per-launch GPU time from events recorded in-stream between back-to-back
+    launches, with no host sync inside the loop: the GPU stays busy, so each
+    interval is kernel time plus any inter-kernel gap, not launch latency."""
     for _ in range(warmup):
         fn()
     torch.cuda.synchronize()
-    samples = []
-    for _ in range(iters):
-        start, end = torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True)
-        start.record()
+    events = [torch.cuda.Event(enable_timing=True) for _ in range(iters + 1)]
+    events[0].record()
+    for i in range(iters):
         fn()
-        end.record()
-        end.synchronize()
-        samples.append(start.elapsed_time(end) * 1000.0)
-    samples.sort()
+        events[i + 1].record()
+    torch.cuda.synchronize()
+    samples = sorted(events[i].elapsed_time(events[i + 1]) * 1000.0 for i in range(iters))
     q = lambda p: samples[min(len(samples) - 1, int(round(p * (len(samples) - 1))))]
     return {
+        "method": "in-stream cuda events, back-to-back launches",
         "iters": iters,
         "min": samples[0],
         "p50": q(0.50),
