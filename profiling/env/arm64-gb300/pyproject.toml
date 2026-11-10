@@ -1,0 +1,71 @@
+# Isolated ARM64 (Grace) + CUDA 13 environment for profiling on GB300 trays.
+#
+# The repository's own uv.lock resolves a CPU-only torch on aarch64 (its CUDA
+# wheels and nvidia-* runtime packages are pinned for x86_64), so the standard
+# `just sync` env and the profiler container images cannot run kernels on a
+# GB300 (Grace + B300) host. This project is the same dependency set as the
+# repository's default groups (dev, profiling, launcher, analyze, public-api)
+# with the CUDA stack taken from arm64-capable sources:
+#   - torch 2.10.0+cu130 from download.pytorch.org/whl/cu130 (manylinux_2_28_aarch64)
+#   - nvshmem4py-cu13 in place of nvshmem4py-cu12 (CUDA 13 driver on the trays)
+#   - flashinfer-python / flashinfer-cubin at the repository's locked version
+#   - DeepGEMM at the repository's pinned commit, built against the env torch
+# causal-conv1d (an x86_64-only wheel in the default image) is not included.
+#
+# Use it from the repository root without touching the repository's own venv:
+#   source profiling/env/arm64-gb300/gb300.env      # paths, caches, CUDA_HOME
+#   uv sync --project profiling/env/arm64-gb300    # creates $UV_PROJECT_ENVIRONMENT
+#   uv run --no-sync python -m launcher ...        # the Sim, on this env
+# The lock file next to this pyproject is the record of exact versions, wheel
+# URLs/hashes and source commits.
+[project]
+name = "vibesim-env-arm64-gb300"
+version = "0.1.0"
+description = "Isolated ARM64 + CUDA 13 profiling environment for ServingStudio Sim on GB300 trays"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # [project].dependencies
+    "transformers>=5.13.0",
+    # dev
+    "duckdb>=1.5.3",
+    "pyarrow>=24.0.0",
+    "pytest>=9.0.0",
+    "pytest-xdist>=3.6",
+    "ruff>=0.14.0",
+    # analyze
+    "matplotlib>=3.9",
+    # launcher
+    "asteval>=1.0.0",
+    "prometheus-client>=0.20.0",
+    "pyyaml>=6.0",
+    # public-api
+    "fastapi>=0.115",
+    "httpx>=0.28",
+    "uvicorn>=0.30",
+    # profiling
+    "numpy>=2.0.0",
+    "nvidia-ml-py>=12.0.0",
+    "packaging>=26.0",
+    "setuptools>=81.0.0",
+    "wheel>=0.46.0",
+    "torch==2.10.0",
+    "triton==3.6.0",
+    "flashinfer-python==0.6.11.post3",
+    "flashinfer-cubin==0.6.11.post3",
+    "nvshmem4py-cu13>=0.3.0",
+    "deep-gemm @ git+https://github.com/serendipity-zk/DeepGEMM.git@891d57b4db1071624b5c8fa0d1e51cb317fa709f",
+]
+
+[tool.uv]
+package = false
+# DeepGEMM's setup.py imports torch at build time (see the repository pyproject).
+no-build-isolation-package = ["deep-gemm"]
+environments = ["sys_platform == 'linux' and platform_machine == 'aarch64'"]
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu130" }
