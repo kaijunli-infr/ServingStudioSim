@@ -27,7 +27,9 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `MERGE_RESULTS.md`, `merge/` | the merge of the 1236 GB300 rows into the tracked `profiling/profile.db` (2026-11-10): checksums, row counts, checks, regression results, prediction parity, measurement provenance; the profiler's merge report and the check report |
 | `TP2_TP4_PROPOSAL.md` | TP2 / TP4 plan: missing configurations, the all-reduce route (torch's NCCL backend is available), topology, GPU allocation, estimates, and the idle-GPU-memory investigation |
 | `run_tp24_fill.sh`, `tp_new_specs.py` | the TP2/TP4 single-GPU fill: spec export (TP cells minus TP1's), checkpointed validated batches, budget and isolation guards |
-| `TP24_RESULTS.md` | that fill (1854 rows in the private DB, 2026-11-10): coverage, gates, latency distributions, repeatability, provenance; 38 all-reduce rows remain |
+| `TP24_RESULTS.md` | that fill (1854 rows in the private DB, 2026-11-10): coverage, gates, latency distributions, repeatability, provenance |
+| `run_allreduce_fill.sh`, `nccl_probe.py`, `env_guard.py`, `allreduce_spikes.py` | the TP2/TP4 all-reduce stages: fail-closed environment guard, GPU identity and isolation preflight, NCCL rank-group probe (rank-to-GPU mapping, SUM check, init vs steady state), fill, validation, fresh repeats, rule-based re-measurement of non-reproduced rows |
+| `ALLREDUCE_RESULTS.md` | those stages (38 rows in the private DB, 2026-11-10): probe, rows, scaling, repeatability and its limits, TP1/TP2/TP4 predictions, provenance |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 
