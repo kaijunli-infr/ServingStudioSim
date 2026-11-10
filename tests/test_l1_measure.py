@@ -559,6 +559,62 @@ def test_measure_worker_uses_container_and_mounts_output(tmp_path, monkeypatch):
     assert response["measure"]["consumed"] is True
 
 
+def _fake_cupti_layout(root: Path, *parts: str, lib_name: str = "libcupti.so.12") -> None:
+    include_dir = root.joinpath(*parts, "include")
+    lib_dir = root.joinpath(*parts, "lib")
+    include_dir.mkdir(parents=True)
+    lib_dir.mkdir(parents=True)
+    (include_dir / "cupti.h").write_text("")
+    (lib_dir / lib_name).write_text("")
+
+
+@pytest.mark.parametrize(
+    ("torch_major", "expected"),
+    [
+        (13, ("nvidia", "cu13")),
+        (12, ("nvidia", "cuda_cupti")),
+        # Unknown Torch CUDA: any wheel still beats Triton's bundled copy.
+        (None, ("nvidia", "cuda_cupti")),
+    ],
+)
+def test_resolve_cupti_paths_prefers_the_wheel_matching_torch_cuda(
+    tmp_path, monkeypatch, torch_major, expected
+):
+    from profiling.profilers import cupti_kernel_profiler as cupti
+
+    _fake_cupti_layout(tmp_path, "nvidia", "cuda_cupti")
+    _fake_cupti_layout(tmp_path, "nvidia", "cu13", lib_name="libcupti.so.13")
+    triton_root = tmp_path / "triton" / "backends" / "nvidia"
+    (triton_root / "include").mkdir(parents=True)
+    (triton_root / "include" / "cupti.h").write_text("")
+    (triton_root / "lib" / "cupti").mkdir(parents=True)
+    (triton_root / "lib" / "cupti" / "libcupti.so.12").write_text("")
+    monkeypatch.setattr(cupti, "_site_roots", lambda: [tmp_path])
+    monkeypatch.setattr(cupti, "_torch_cuda_major", lambda: torch_major)
+
+    include_dir, lib_dir = cupti._resolve_cupti_paths()
+    assert include_dir == tmp_path.joinpath(*expected, "include")
+    assert lib_dir == tmp_path.joinpath(*expected, "lib")
+
+
+def test_resolve_cupti_paths_falls_back_to_triton_then_fails(tmp_path, monkeypatch):
+    from profiling.profilers import cupti_kernel_profiler as cupti
+
+    monkeypatch.setattr(cupti, "_site_roots", lambda: [tmp_path])
+    monkeypatch.setattr(cupti, "_torch_cuda_major", lambda: 13)
+    with pytest.raises(RuntimeError, match="Could not locate CUPTI"):
+        cupti._resolve_cupti_paths()
+
+    triton_root = tmp_path / "triton" / "backends" / "nvidia"
+    (triton_root / "include").mkdir(parents=True)
+    (triton_root / "include" / "cupti.h").write_text("")
+    (triton_root / "lib" / "cupti").mkdir(parents=True)
+    (triton_root / "lib" / "cupti" / "libcupti.so.12").write_text("")
+    include_dir, lib_dir = cupti._resolve_cupti_paths()
+    assert include_dir == triton_root / "include"
+    assert lib_dir == triton_root / "lib" / "cupti"
+
+
 # ── GPU tier: real end-to-end smoke ──────────────────────────────────────────
 
 

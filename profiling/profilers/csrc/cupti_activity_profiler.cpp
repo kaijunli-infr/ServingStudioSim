@@ -1,5 +1,14 @@
 #include <cupti.h>
 
+// CUPTI 13 (CUDA 13.0) retired CUpti_ActivityKernel9; CUpti_ActivityKernel10 is
+// its superset (one trailing isDeviceLaunched byte). Every field read here
+// (kind, start, end, name) sits at the same offset in both.
+#if CUPTI_API_VERSION >= 130000
+using CuptiKernelActivity = CUpti_ActivityKernel10;
+#else
+using CuptiKernelActivity = CUpti_ActivityKernel9;
+#endif
+
 #include <atomic>
 #include <cstdlib>
 #include <cstring>
@@ -50,7 +59,7 @@ void throw_on_cupti_error(CUptiResult result, const char* expr) {
 
 #define CUPTI_CHECK(expr) throw_on_cupti_error((expr), #expr)
 
-void record_kernel_activity(const CUpti_ActivityKernel9& kernel) {
+void record_kernel_activity(const CuptiKernelActivity& kernel) {
     if (!g_capture_active) {
         return;
     }
@@ -90,7 +99,7 @@ void CUPTIAPI buffer_completed(CUcontext, uint32_t, uint8_t* buffer, size_t size
         switch (record->kind) {
             case CUPTI_ACTIVITY_KIND_KERNEL:
             case CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL:
-                record_kernel_activity(*reinterpret_cast<const CUpti_ActivityKernel9*>(record));
+                record_kernel_activity(*reinterpret_cast<const CuptiKernelActivity*>(record));
                 break;
             default:
                 break;

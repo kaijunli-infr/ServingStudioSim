@@ -107,24 +107,54 @@ def _site_roots() -> list[Path]:
     return [path for path in roots if path.exists()]
 
 
+def _torch_cuda_major() -> int | None:
+    version = getattr(getattr(torch, "version", None), "cuda", None) if torch is not None else None
+    if not version:
+        return None
+    try:
+        return int(str(version).split(".")[0])
+    except ValueError:
+        return None
+
+
+# Where the CUPTI pip wheels put headers and libraries, by CUDA major:
+# ``nvidia-cuda-cupti-cu12`` installs ``nvidia/cuda_cupti/{include,lib}``,
+# ``nvidia-cuda-cupti`` (CUDA 13 onward) installs ``nvidia/cu13/{include,lib}``.
+_CUPTI_WHEEL_LAYOUTS: tuple[tuple[int, tuple[str, ...]], ...] = (
+    (12, ("nvidia", "cuda_cupti")),
+    (13, ("nvidia", "cu13")),
+)
+
+
 def _resolve_cupti_paths() -> tuple[Path, Path]:
-    candidates: list[tuple[Path, Path]] = []
+    """The ``(include_dir, lib_dir)`` of the CUPTI the extension builds against.
+
+    The wheel whose CUDA major matches Torch's wins, then any other CUPTI wheel,
+    then Triton's bundled copy. Triton's CUPTI tracks Triton's own CUDA (12.8 in
+    Triton 3.6), so on a CUDA 13 Torch it is older than the driver and refuses
+    newer devices with ``CUPTI_ERROR_INVALID_DEVICE`` (seen on GB300).
+    """
+    preferred_major = _torch_cuda_major()
+    ranked: list[tuple[int, Path, Path]] = []
     for root in _site_roots():
-        include_dir = root / "nvidia" / "cuda_cupti" / "include"
-        lib_dir = root / "nvidia" / "cuda_cupti" / "lib"
-        if (include_dir / "cupti.h").exists() and any(lib_dir.glob("libcupti.so*")):
-            candidates.append((include_dir, lib_dir))
+        for major, parts in _CUPTI_WHEEL_LAYOUTS:
+            include_dir = root.joinpath(*parts, "include")
+            lib_dir = root.joinpath(*parts, "lib")
+            if (include_dir / "cupti.h").exists() and any(lib_dir.glob("libcupti.so*")):
+                rank = 0 if major == preferred_major else 1
+                ranked.append((rank, include_dir, lib_dir))
 
         triton_include = root / "triton" / "backends" / "nvidia" / "include"
         triton_lib = root / "triton" / "backends" / "nvidia" / "lib" / "cupti"
         if (triton_include / "cupti.h").exists() and any(triton_lib.glob("libcupti.so*")):
-            candidates.append((triton_include, triton_lib))
+            ranked.append((2, triton_include, triton_lib))
 
-    if not candidates:
+    if not ranked:
         raise RuntimeError(
             "Could not locate CUPTI headers and libraries in the current environment"
         )
-    return candidates[0]
+    ranked.sort(key=lambda item: item[0])
+    return ranked[0][1], ranked[0][2]
 
 
 def _load_extension() -> Any:
