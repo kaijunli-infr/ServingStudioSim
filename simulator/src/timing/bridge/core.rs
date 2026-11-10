@@ -227,7 +227,15 @@ pub struct PerfApiBridge {
     /// `Some(..)` makes `Kernel::build` record each config it builds, in any
     /// mode (see [`enable_config_records`](Self::enable_config_records)).
     config_records: RefCell<Option<ConfigRecords>>,
+    /// Memo of [`supported_backend_subset`](Self::supported_backend_subset):
+    /// every layer's kernels ask the same (kind, backends, dtypes, GPU) question,
+    /// so each distinct one crosses into Python once.
+    device_filter: RefCell<HashMap<DeviceFilterKey, Vec<&'static str>>>,
 }
+
+/// One distinct device-gate question: kernel kind, declared candidate backends
+/// (in order), compute and KV dtypes, GPU name.
+type DeviceFilterKey = (KernelKind, Vec<&'static str>, Option<DType>, Option<DType>, String);
 
 impl PerfApiBridge {
     pub fn new() -> Result<Self, PerfApiError> {
@@ -237,6 +245,7 @@ impl PerfApiBridge {
             active_pool: RefCell::new(None),
             enumerate: RefCell::new(None),
             config_records: RefCell::new(None),
+            device_filter: RefCell::new(HashMap::new()),
         };
         bridge.disable_jit_profiling()?;
         Ok(bridge)
@@ -252,6 +261,7 @@ impl PerfApiBridge {
             active_pool: RefCell::new(None),
             enumerate: RefCell::new(Some(Vec::new())),
             config_records: RefCell::new(None),
+            device_filter: RefCell::new(HashMap::new()),
         }
     }
 
@@ -595,6 +605,58 @@ impl PerfApiBridge {
         })
     }
 
+    /// The subset of `backends` that the profiling registry allows for `kind`
+    /// at these dtypes on `gpu_name`, in the declared order — the registry's
+    /// `BackendSupport.allows`: compute / KV dtype axes plus the device's compute
+    /// capability (`sm_targets`, `min_compute_capability`), resolved from the GPU
+    /// name through `gpu/spec.json`. A GPU the catalog does not know skips the
+    /// device axis; a backend the registry does not know is kept (other paths
+    /// report it). `Kernel::build` applies this before the dry-run count and the
+    /// cache fit, so an unsupported backend is neither counted missing nor fitted.
+    /// Python facade `supported_backend_subset`; memoized per distinct question.
+    pub fn supported_backend_subset(
+        &self,
+        kind: KernelKind,
+        backends: &[&'static str],
+        compute_dtype: Option<DType>,
+        kv_dtype: Option<DType>,
+        gpu_name: &str,
+    ) -> Result<Vec<&'static str>, PerfApiError> {
+        let key: DeviceFilterKey = (
+            kind,
+            backends.to_vec(),
+            compute_dtype,
+            kv_dtype,
+            gpu_name.to_string(),
+        );
+        if let Some(kept) = self.device_filter.borrow().get(&key) {
+            return Ok(kept.clone());
+        }
+        let kept: Vec<String> = Python::with_gil(|py| {
+            let perf_api = PyModule::import(py, "profiling.perf_api").py_err()?;
+            let kwargs = PyDict::new(py);
+            kwargs
+                .set_item("compute_dtype", compute_dtype.map(DType::as_str))
+                .py_err()?;
+            kwargs.set_item("kv_dtype", kv_dtype.map(DType::as_str)).py_err()?;
+            kwargs.set_item("gpu_name", gpu_name).py_err()?;
+            perf_api
+                .getattr("supported_backend_subset")
+                .and_then(|func| func.call((kind, backends.to_vec()), Some(kwargs)))
+                .and_then(|value| value.extract::<Vec<String>>())
+                .py_err()
+        })?;
+        // Re-intern against the declared slice so the result stays `&'static str`
+        // and keeps the declared order whatever Python returned.
+        let kept: Vec<&'static str> = backends
+            .iter()
+            .copied()
+            .filter(|backend| kept.iter().any(|k| k == backend))
+            .collect();
+        self.device_filter.borrow_mut().insert(key, kept.clone());
+        Ok(kept)
+    }
+
     /// Resolve the current CUDA device's DB `gpu_name` key via the Python
     /// facade. Source of truth for the `gpu_name` threaded through worklet / op
     /// / kernel inputs (L3 INV-13); callers targeting a non-current or remote
@@ -692,6 +754,7 @@ impl PerfApiBridge {
             active_pool: RefCell::new(None),
             enumerate: RefCell::new(None),
             config_records: RefCell::new(None),
+            device_filter: RefCell::new(HashMap::new()),
         }
     }
 }

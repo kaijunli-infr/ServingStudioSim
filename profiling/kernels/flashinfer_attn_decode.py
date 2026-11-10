@@ -67,9 +67,14 @@ _SUPPORTS = {
     "fa2_cudagraph": BackendSupport(
         compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16, DType.FP8_E4M3})
     ),
+    # FlashInfer compiles its FA3 kernels for sm_90a only (Hopper: the kernels
+    # use wgmma/TMA through CUTLASS's SM90 collectives, and FlashInfer's JIT
+    # refuses the backend on any other arch). An SM10x GPU (B200, GB300) runs
+    # attention on fa2, or on the Blackwell-native backends, never on fa3.
     "fa3": BackendSupport(
         compute=frozenset({DType.BF16, DType.FP8_E4M3}),
         kv=frozenset({DType.BF16, DType.FP8_E4M3}),
+        sm_targets=frozenset({"sm_90a"}),
     ),
     "cudnn": BackendSupport(
         compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16})

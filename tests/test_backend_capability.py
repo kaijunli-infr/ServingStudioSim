@@ -102,6 +102,50 @@ def test_supported_backends_filters_options_by_dtype():
     }
 
 
+def test_fa3_is_hopper_only():
+    """FlashInfer builds FA3 for sm_90a only: H200 keeps the backend, B200 and
+    GB300 exclude it on every attention kind, at every dtype pair it handles."""
+    bf16, fp8 = DType.BF16, DType.FP8_E4M3
+    for kind in ("flashinfer_attn_prefill", "flashinfer_attn_decode", "flashinfer_attn_rect"):
+        assert backend_supports(kind, "fa3", bf16, bf16, gpu="NVIDIA H200")
+        assert backend_supports(kind, "fa3", fp8, fp8, gpu="NVIDIA H200")
+        assert backend_supports(kind, "fa3", bf16, bf16)  # gpu=None → skip the axis
+        for gpu in ("NVIDIA B200", "NVIDIA GB300"):
+            assert not backend_supports(kind, "fa3", bf16, bf16, gpu=gpu)
+            assert not backend_supports(kind, "fa3", fp8, fp8, gpu=gpu)
+            assert "fa3" not in supported_backends(kind, bf16, bf16, gpu=gpu)
+            # fa2 stays: GB300 BF16 attention has a backend, and it is fa2.
+            assert supported_backends(kind, bf16, bf16, gpu=gpu)[0] == "fa2"
+            # fp8 *compute* attention has no backend on these kinds there: fa2 is
+            # bf16-compute, fa3 is Hopper-only. Nothing is substituted.
+            assert supported_backends(kind, fp8, fp8, gpu=gpu) == []
+        assert supported_backends(kind, fp8, fp8, gpu="NVIDIA H200") == ["fa3"]
+
+
+def test_perf_api_subsets_a_kernels_declared_backends_by_device():
+    """The facade `Kernel::build` calls before counting or fitting: the arch's
+    candidate list, filtered by dtype and device, order kept."""
+    from profiling.perf_api import supported_backend_subset
+
+    attn = ["fa2", "fa3"]
+    assert supported_backend_subset("flashinfer_attn_prefill", attn, "bf16", "bf16", "NVIDIA H200") == attn
+    assert supported_backend_subset("flashinfer_attn_decode", attn, "bf16", "bf16", "NVIDIA GB300") == ["fa2"]
+    assert supported_backend_subset("flashinfer_attn_prefill", attn, "bf16", "bf16", "NVIDIA B200") == ["fa2"]
+    assert supported_backend_subset("flashinfer_attn_prefill", attn, "fp8_e4m3", "fp8_e4m3", "NVIDIA GB300") == []
+    # Declared order is kept, whatever the registry's order.
+    assert supported_backend_subset("flashinfer_attn_prefill", ["fa3", "fa2"], "bf16", "bf16", "NVIDIA H200") == ["fa3", "fa2"]
+    # No GPU → dtype axes only; unknown GPU → device axis skipped.
+    assert supported_backend_subset("flashinfer_attn_prefill", attn, "bf16", "bf16", None) == attn
+    assert supported_backend_subset("flashinfer_attn_prefill", attn, "bf16", "bf16", "NVIDIA Unknown9000") == attn
+    # Dtype-agnostic kernels (no compute dtype) keep every backend the device runs.
+    assert supported_backend_subset("all_reduce", known_backends("all_reduce"), None, None, "NVIDIA GB300") == known_backends("all_reduce")
+    # A backend the registry does not know passes through for the DB lookup to report.
+    assert supported_backend_subset("flashinfer_attn_prefill", ["fa2", "not_a_backend"], "bf16", "bf16", "NVIDIA GB300") == ["fa2", "not_a_backend"]
+    # The dry-run arithmetic this exists for: Llama 3.1 8B BF16 on GB300 keeps
+    # fa2 only, and its vLLM KV-cache append keeps its single backend.
+    assert supported_backend_subset("kv_cache_append", ["vllm_cuda"], "bf16", "bf16", "NVIDIA GB300") == ["vllm_cuda"]
+
+
 def test_trtllm_gen_paged_attention_is_blackwell_gated():
     # trtllm-gen cubins ship for the SM10x family (sm_100f), so fp8 is legal on
     # B200/B300 but NOT on H200. An unknown GPU (None) skips the axis.

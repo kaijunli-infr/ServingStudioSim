@@ -54,15 +54,20 @@ _BACKENDS = ("fa2", "fa3", "cudnn")
 
 # Per-backend capability on TWO axes — compute (q_dtype) and kv-cache (kv_dtype):
 #   fa2   : bf16 compute, but fp8 KV is fine (bf16-q / fp8-kv is a prod config).
-#   fa3   : fp8 compute + fp8 KV.
+#   fa3   : fp8 compute + fp8 KV; sm_90a build (Hopper only).
 #   cudnn : bf16 only on both axes (no fp8 at all).
 _SUPPORTS = {
     "fa2": BackendSupport(
         compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16, DType.FP8_E4M3})
     ),
+    # FlashInfer compiles its FA3 kernels for sm_90a only (Hopper: the kernels
+    # use wgmma/TMA through CUTLASS's SM90 collectives, and FlashInfer's JIT
+    # refuses the backend on any other arch). An SM10x GPU (B200, GB300) runs
+    # attention on fa2, or on the Blackwell-native backends, never on fa3.
     "fa3": BackendSupport(
         compute=frozenset({DType.BF16, DType.FP8_E4M3}),
         kv=frozenset({DType.BF16, DType.FP8_E4M3}),
+        sm_targets=frozenset({"sm_90a"}),
     ),
     "cudnn": BackendSupport(
         compute=frozenset({DType.BF16}), kv=frozenset({DType.BF16})

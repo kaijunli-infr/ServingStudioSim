@@ -51,6 +51,23 @@ pub enum BuildError {
     #[error("cache fit failed for {kind}: {reason}")]
     FitFailed { kind: KernelKind, reason: String },
 
+    /// None of a kernel's candidate backends can run on the deployment's GPU at
+    /// the kernel's dtypes (the profiling registry's `BackendSupport` gate: dtype
+    /// axes plus the device's compute capability). The build stops instead of
+    /// fitting a backend that cannot run there or substituting another backend
+    /// or precision.
+    #[error(
+        "{name} ({kind}) has no backend that runs {dtypes} on {gpu}: declared {declared:?}, \
+         none supported on this device"
+    )]
+    NoSupportedBackend {
+        kind: KernelKind,
+        name: String,
+        gpu: String,
+        dtypes: String,
+        declared: Vec<&'static str>,
+    },
+
     /// A config's grid cells map to different profile.db args under two of its
     /// backends in a column other than `backend`. A kernel-config record holds
     /// one set of args per cell, so this would record the wrong rows.

@@ -5,6 +5,19 @@ proposal for approval, with the evidence it rests on.
 
 ## A. Gate the `fa3` attention backends to SM90
 
+**Status (2026-11-10, Phase 2C): implemented.** The `sm_targets={"sm_90a"}`
+lines below are in the three attention kinds, with `test_fa3_is_hopper_only`.
+The gate alone changed nothing in a prediction or a dry run: the Rust
+`Kernel::build` took an arch's const-default backends (`["fa2", "fa3"]` for
+Llama) as given, and only the profiling worker (`unsupported_device`, at
+profile time) and the launcher's `--emit-backends` options column consulted
+`BackendSupport`. So `Kernel::build` now asks the registry which of the
+declared backends run on the deployment's GPU at the kernel's dtypes
+(`profiling.perf_api.supported_backend_subset`, memoized on the bridge) before
+it counts missing rows or fits caches, logs what it dropped, and fails with
+`BuildError::NoSupportedBackend` when nothing survives. Dry run after this:
+70 missing (the vLLM KV-cache append rows), see `TP1_RESULTS.md`.
+
 **Evidence.** FlashInfer builds its FA3 path only for Hopper: the wrappers pick
 it when `is_sm90a_supported` holds, the JIT target is `sm90a`, and on GB300 the
 smoke probe compiled the kernel for 60 s and then failed with `no kernel image

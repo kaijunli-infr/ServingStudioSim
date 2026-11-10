@@ -280,6 +280,45 @@ impl<S: KernelSpec> Kernel<S> {
             });
         }
 
+        // Device gate: keep only the candidate backends the profiling registry
+        // says can run on this GPU at this kernel's dtypes (`BackendSupport`:
+        // dtype axes + compute capability; e.g. `fa3` is an sm_90a build, so on
+        // a GB300 it is not a candidate). Dropped backends are neither counted
+        // missing by the dry run nor fitted, so the arch's const-default list
+        // never prices a backend the deployment's GPU cannot run. Zero
+        // survivors is an error here: the build must fail, not substitute
+        // another backend or precision. After the enumerate return above, so
+        // the Python-free `structure_only` bridge never reaches this call.
+        let supported = bridge
+            .supported_backend_subset(
+                S::profile_kind(),
+                config.backends(),
+                config.compute_dtype(),
+                config.kv_dtype(),
+                config.gpu_name(),
+            )
+            .map_err(BuildError::BridgeError)?;
+        if supported.is_empty() {
+            return Err(BuildError::NoSupportedBackend {
+                kind: S::KIND,
+                name,
+                gpu: config.gpu_name().to_string(),
+                dtypes: describe_dtypes(config.compute_dtype(), config.kv_dtype()),
+                declared: config.backends().to_vec(),
+            });
+        }
+        if supported.len() != config.backends().len() {
+            tracing::info!(
+                "[build]   kernel {name} ({}) backends {:?} -> {:?}: the rest cannot run {} on {}",
+                S::KIND,
+                config.backends(),
+                supported,
+                describe_dtypes(config.compute_dtype(), config.kv_dtype()),
+                config.gpu_name(),
+            );
+            config.set_backends(supported);
+        }
+
         let sweep_grid = S::sweep_grid(&config);
         let backends = config.backends();
 
@@ -902,6 +941,17 @@ fn config_grid<S: KernelSpec>(config: &S::Config) -> Result<ConfigGrid, BuildErr
         cells,
         infeasible,
     })
+}
+
+/// The dtypes a device-gate message names: `"compute=bf16, kv=fp8_e4m3"`,
+/// `"compute=bf16"`, or `"any dtype"` for a dtype-agnostic kernel.
+fn describe_dtypes(compute: Option<DType>, kv: Option<DType>) -> String {
+    match (compute, kv) {
+        (None, None) => "any dtype".to_string(),
+        (Some(c), None) => format!("compute={}", c.as_str()),
+        (None, Some(k)) => format!("kv={}", k.as_str()),
+        (Some(c), Some(k)) => format!("compute={}, kv={}", c.as_str(), k.as_str()),
+    }
 }
 
 fn ensure_has_backends(

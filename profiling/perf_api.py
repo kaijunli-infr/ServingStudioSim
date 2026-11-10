@@ -30,6 +30,9 @@ from profiling.db.metadata import (
 )
 from profiling.facade import build_kind_facades
 from profiling.facade import get_current_gpu_name as _get_current_gpu_name
+from profiling.db.args import DType
+from profiling.db.registry import iter_kernel_profiler_specs
+from profiling.gpu_catalog import gpu_compute_capability
 from profiling.plan import WorkCollector
 
 DB_PATH = Path(os.environ.get("VIBESIM_PROFILE_DB", Path(__file__).resolve().parent / "profile.db"))
@@ -176,6 +179,40 @@ def measure_kernel(
 
 def get_current_gpu_name() -> str:
     return _get_current_gpu_name()
+
+
+def supported_backend_subset(
+    kind: str,
+    backends: list[str],
+    compute_dtype: str | None = None,
+    kv_dtype: str | None = None,
+    gpu_name: str | None = None,
+) -> list[str]:
+    """The backends of ``backends`` that the registry allows for ``kind`` at these
+    dtypes on ``gpu_name``, in the given order — the device gate the simulator's
+    ``Kernel::build`` applies to a kernel's candidate list before it counts
+    missing rows or fits caches (``PerfApiBridge::supported_backend_subset``).
+
+    Dtypes arrive as the Rust ``DType`` wire literals (``"bf16"``, ``"fp8_e4m3"``);
+    ``None`` is a dtype-agnostic kernel, which skips the dtype axes and keeps the
+    device axis. A GPU the catalog does not know skips the device axis. A backend
+    the registry does not know is kept: the DB lookup that follows reports it.
+    """
+    compute = DType(compute_dtype) if compute_dtype else None
+    kv = DType(kv_dtype) if kv_dtype else None
+    capability = gpu_compute_capability(gpu_name) if gpu_name else None
+    supports = {spec.backend: spec.supports for spec in iter_kernel_profiler_specs(kind)}
+    kept = []
+    for backend in backends:
+        support = supports.get(backend)
+        if support is None:
+            kept.append(backend)
+        elif compute is None:
+            if support.allows_compute_capability(capability):
+                kept.append(backend)
+        elif support.allows(compute, kv, gpu_name):
+            kept.append(backend)
+    return kept
 
 
 def get_db_metadata() -> DbMetadata:
