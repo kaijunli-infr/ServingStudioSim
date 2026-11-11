@@ -1,0 +1,80 @@
+{
+ "embed_input_norm": {
+  "raw_us": 5.632,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 5.632,
+  "calls": 1
+ },
+ "qkv_proj": {
+  "raw_us": 328.833,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 328.833,
+  "calls": 32
+ },
+ "rope": {
+  "raw_us": 56.384,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 56.384,
+  "calls": 32
+ },
+ "kv_cache_append": {
+  "raw_us": 71.264,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 71.264,
+  "calls": 32
+ },
+ "attention_aux_fill": {
+  "raw_us": 26.431,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 26.431,
+  "calls": 32
+ },
+ "attention": {
+  "raw_us": 285.569,
+  "overlap_with_previous_us": 4.768,
+  "exclusive_us": 280.801,
+  "calls": 32
+ },
+ "o_proj": {
+  "raw_us": 342.722,
+  "overlap_with_previous_us": 48.128,
+  "exclusive_us": 294.497,
+  "calls": 64
+ },
+ "post_norm": {
+  "raw_us": 102.593,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 102.593,
+  "calls": 32
+ },
+ "up_gate_proj": {
+  "raw_us": 1215.971,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 1215.971,
+  "calls": 32
+ },
+ "activation": {
+  "raw_us": 42.848,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 42.848,
+  "calls": 32
+ },
+ "down_proj": {
+  "raw_us": 736.993,
+  "overlap_with_previous_us": 34.656,
+  "exclusive_us": 702.114,
+  "calls": 64
+ },
+ "input_norm": {
+  "raw_us": 64.832,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 64.832,
+  "calls": 31
+ },
+ "final_norm": {
+  "raw_us": 1.952,
+  "overlap_with_previous_us": 0.0,
+  "exclusive_us": 1.952,
+  "calls": 1
+ }
+}
