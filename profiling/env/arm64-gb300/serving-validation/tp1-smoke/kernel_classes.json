@@ -1,0 +1,62 @@
+{
+ "name_column": "demangledName",
+ "classes": {
+  "attention_trtllm": {
+   "kernels": 6624,
+   "time_ms": 62.728678,
+   "graph_replayed_share": 0.9130434782608695,
+   "examples": [
+    "fmhaSm100fKernel_QkvBfloat16OBfloat16H128PagedKvCausalP16MultiCtasKvCgaVarSeqQ8Kv256StaticGroupedSwapsAbForGen",
+    "fmhaSm103aKernel_QkvBfloat16OBfloat16H128PagedKvCausalP16VarSeqQ256Kv128PersistentContext"
+   ]
+  },
+  "gemm_cublas": {
+   "kernels": 38025,
+   "time_ms": 638.312577,
+   "graph_replayed_share": 0.9745167652859961,
+   "examples": [
+    "nvjet_sm103_tst_112x64_64x14_1x2_2cta_h_bz_TNN",
+    "nvjet_sm103_tst_128x64_64x10_2x2_2cta_h_bz_TNT",
+    "nvjet_sm103_tst_192x128_64x6_2x1_2cta_v_bz_TNT"
+   ]
+  },
+  "inductor_triton": {
+   "kernels": 25929,
+   "time_ms": 67.619041,
+   "graph_replayed_share": 0.9701492537313433,
+   "examples": [
+    "triton_poi_fused_mul_silu_slice_1",
+    "triton_red_fused_fused_add_rms_norm_0",
+    "triton_red_fused_fused_add_rms_norm_2"
+   ]
+  },
+  "kv_append": {
+   "kernels": 6432,
+   "time_ms": 15.960803,
+   "graph_replayed_share": 0.9402985074626866,
+   "examples": [
+    "void vllm::reshape_and_cache_flash_kernel<__nv_bfloat16, __nv_bfloat16, (vllm::Fp8KVCacheDataType)0>(const T1 *, const T1 *, T2 *, T2 *, const long *, long, long, long, long, long, int, int, int, cons"
+   ]
+  },
+  "torch_aten": {
+   "kernels": 8523,
+   "time_ms": 9.325859,
+   "graph_replayed_share": 0.7096092925026399,
+   "examples": [
+    "void <unnamed>::elementwise_kernel_with_index<int, at::native::arange_cuda_out(const c10::Scalar &, const c10::Scalar &, const c10::Scalar &, at::Tensor &)::[lambda() (instance 1)]::operator ()() cons",
+    "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<bool>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+    "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::array<char *, (unsigned long)1>>(int, T2, T3)"
+   ]
+  },
+  "vllm_runtime_triton": {
+   "kernels": 1503,
+   "time_ms": 5.183341,
+   "graph_replayed_share": 0.0,
+   "examples": [
+    "_apply_write_kernel",
+    "_prepare_pos_seq_lens_kernel",
+    "_prepare_prefill_inputs_kernel"
+   ]
+  }
+ }
+}

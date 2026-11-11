@@ -42,6 +42,7 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `SERVING_VALIDATION_PROPOSAL.md` | proposal (nothing run) to compare TP1/TP2/TP4 predictions with real vLLM serving of Llama 3.1 8B on GB300 |
 | `SERVING_VALIDATION_STAGE_A.md`, `serving-validation/` | Stage A (CPU-only): vLLM fork's actual TP all-reduce (FlashInfer fused AR+RMSNorm by default) and CUDA-graph behaviour with source references, isolated aarch64 engine environment, model access status, comparison method, revised GPU experiment; supersedes the proposal |
 | `SERVING_READINESS.md` | readiness for the TP1 smoke test: load generator built, serving worktree, validated TP1/TP2 configs and exact engine command lines, NCCL-forcing switches confirmed, NCCL 2.28.9 pin ruled out, kernel classes, latency levels, remaining blockers |
+| `TP1_SMOKE_RESULTS.md`, `serving-validation/tp1-smoke/` | TP1 serving smoke test on GPU 1 (2026-11-11): versions, attempts and GPU time, guards, token counts, iteration records, CUDA-graph mode per iteration shape, kernel classes; no prediction error |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 

@@ -7,8 +7,9 @@ safetensors shards and their index, `config.json`, `generation_config.json`
 and the tokenizer files. The `original/` checkpoint is skipped. The
 credential is whatever `huggingface_hub` finds by itself; it is never read,
 printed or stored here. Every downloaded file is then checked against the
-hub's metadata for the same revision: size for all files, and the LFS sha256
-for the weights. The exit status is non-zero on any mismatch.
+hub's metadata for the same revision: size for all files, the LFS sha256 for
+the weights, and the git blob id for the config and tokenizer files. The exit
+status is non-zero on any mismatch.
 """
 
 from __future__ import annotations
@@ -52,9 +53,7 @@ def main() -> int:
         print(f"revision resolves to {info.sha}, not {REVISION}")
         return 2
     path = Path(
-        snapshot_download(
-            REPO, revision=REVISION, cache_dir=args.cache, allow_patterns=PATTERNS
-        )
+        snapshot_download(REPO, revision=REVISION, cache_dir=args.cache, allow_patterns=PATTERNS)
     )
     expected = {s.rfilename: s for s in info.siblings}
     files, problems = {}, []
@@ -69,6 +68,13 @@ def main() -> int:
             entry["expected_sha256"] = meta.lfs.sha256
             if entry["sha256"] != entry["expected_sha256"]:
                 problems.append(f"{local.name}: sha256 mismatch")
+        else:
+            # Plain git files (config, tokenizer): the hub records their git blob id.
+            data = local.read_bytes()
+            entry["git_blob_sha1"] = hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+            entry["expected_git_blob_sha1"] = meta.blob_id
+            if entry["git_blob_sha1"] != entry["expected_git_blob_sha1"]:
+                problems.append(f"{local.name}: git blob mismatch")
         if entry["bytes"] != entry["expected_bytes"]:
             problems.append(f"{local.name}: size mismatch")
         files[local.name] = entry
@@ -85,7 +91,11 @@ def main() -> int:
         "pass": not problems and path.name == REVISION,
     }
     args.out.write_text(json.dumps(report, indent=1) + "\n")
-    print(json.dumps({k: report[k] for k in ("snapshot_dir_revision", "weight_bytes", "problems", "pass")}))
+    print(
+        json.dumps(
+            {k: report[k] for k in ("snapshot_dir_revision", "weight_bytes", "problems", "pass")}
+        )
+    )
     return 0 if report["pass"] else 1
 
 

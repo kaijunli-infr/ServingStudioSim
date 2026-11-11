@@ -1,0 +1,6 @@
+/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/guard/tp1-smoke-20261111-091351
+2026-11-11T09:13:51Z run tp1-smoke devices=1 limit_s=600 root_pid=3570501 out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/guard/tp1-smoke-20261111-091351
+2026-11-11T09:13:53Z other compute processes on the tray at pre: GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3145113, python3, 790 MiB;GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3146111, sglang::scheduler, 249514 MiB;
+2026-11-11T09:13:53Z launch
+2026-11-11T09:18:03Z launcher rc=0
+2026-11-11T09:18:06Z done; artifacts in /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke

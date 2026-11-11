@@ -1,0 +1,48 @@
+{
+  "profile_kind": "nsys",
+  "engine": "vllm",
+  "log_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke",
+  "sqlite": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/nsys/llama31_8b_gb300_tp1_smoke.sqlite",
+  "metrics_jsonl": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/vllm/llama31_8b_gb300_tp1_smoke_metrics.jsonl",
+  "request_timings_jsonl": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/vllm/llama31_8b_gb300_tp1_smoke_request_timings.jsonl",
+  "request_timing_count": 27,
+  "parsed_nsys": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/parsed.json",
+  "parsed_kernel_rows": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/parsed.kernels.parquet",
+  "kernel_sequences": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/kernel_sequences.json",
+  "host_timeline": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/host_timeline.json",
+  "server_log": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/vllm/llama31_8b_gb300_tp1_smoke_server.log",
+  "gpu": "NVIDIA GB300",
+  "server_tp_size": 1,
+  "server_dp_size": 1,
+  "cuda_visible_devices": "1",
+  "parsed_device_ids": [
+    0
+  ],
+  "parsed_dp_rank_by_device": {
+    "0": 0
+  },
+  "replay_result": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/load_generator/replay.jsonl",
+  "drive_summary": {
+    "source_trace": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/configs/tp1-smoke.csv",
+    "frontend_type": "independent",
+    "backend_type": "vllm_tokens",
+    "log_path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/load_generator/replay.jsonl",
+    "summary_path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/runs/tp1-smoke/load_generator/summary.json",
+    "warmup": false,
+    "routed_experts_dir": null,
+    "replay_start_monotonic_ns": 3551079160315479,
+    "replay_end_monotonic_ns": 3551084764999157,
+    "measurement_log_offset": 32458,
+    "reached_idle": true
+  },
+  "validation": {
+    "nvtx_forward_ranges": 201,
+    "kernel_rows": 87036,
+    "kernel_span_ms": 5211.584273,
+    "ok": true
+  },
+  "nsys_profiler": {
+    "executable": "/opt/nvidia/nsight-systems/2026.3.2/target-linux-sbsa-armv8/nsys",
+    "version": "NVIDIA Nsight Systems version 2026.3.2.239-263238426747v0"
+  }
+}

@@ -20,15 +20,19 @@ The rules come from source (FlashInfer 0.7.0 headers under
 | attention_trtllm | `fmha`, `trtllm` or `Fmha` in the name |
 | attention_flashinfer | `BatchPrefill`, `BatchDecode` or `flashinfer::` without the above |
 | kv_append | `reshape_and_cache` |
+| gemm_cublas | `nvjet_*`, `cublasLt::*` (including `splitKreduce_kernel`) |
+| inductor_triton | `triton_*`: kernels torch.compile generated (fused add + RMSNorm, SiLU-and-mul, embedding) |
+| vllm_runtime_triton | `_<name>_kernel`: the model runner's own Triton kernels (slot mapping, sampling, bookkeeping) |
+| torch_aten | `at::native::*`, `at_cuda_detail::*`: PyTorch's own elementwise, index, fill and scan kernels |
 
 `twoshotAllreduceKernel` is followed by `rmsNormLamport` when fused, so a
 run's fused count is read from the latter. With `--sqlite`, kernels are read
 from Nsight Systems' export (`CUPTI_ACTIVITY_KIND_KERNEL`, names from
 `StringIds`); a kernel launched from a CUDA graph has a non-null
 `graphNodeId`, which gives the graph-replay share per class. The sqlite path
-has not been run yet: no serving trace exists on this machine. The sample
-names in `_SAMPLES` are written from the kernel templates, not copied from a
-trace; the first trace confirms or corrects them.
+ran first on the TP1 smoke trace of 2026-11-11. The communication samples in
+`_SAMPLES` are still written from kernel templates, since a TP1 run has no
+collective; a TP2 run confirms or corrects them.
 """
 
 # Kernel names and the rule table are quoted whole, so lines may be long.
@@ -84,6 +88,14 @@ def classify(name: str) -> str:
         return "attention_trtllm"
     if re.search(r"BatchPrefill|BatchDecode|flashinfer::", name):
         return "attention_flashinfer"
+    if name.startswith("nvjet_") or "cublasLt::" in name or "splitKreduce" in name:
+        return "gemm_cublas"
+    if name.startswith("triton_"):
+        return "inductor_triton"
+    if re.fullmatch(r"_\w+_kernel", name):
+        return "vllm_runtime_triton"
+    if "at::native::" in name or "at_cuda_detail::" in name:
+        return "torch_aten"
     return "other"
 
 
@@ -109,10 +121,19 @@ _SAMPLES = {
     "vllm::Signal*, __nv_bfloat16*, int, int)": "vllm_custom_ar",
     "void vllm::reshape_and_cache_flash_kernel<__nv_bfloat16, __nv_bfloat16, "
     "(vllm::Fp8KVCacheDataType)0>(...)": "kv_append",
-    "fmhaSm100fKernel_QkvBfloat16OBfloat16H128PagedKvCausalP64VarSeqQ128Kv128PersistentContext": "attention_trtllm",
+    # Names below this line are copied from the TP1 smoke trace (2026-11-11).
+    "fmhaSm100fKernel_QkvBfloat16OBfloat16H128PagedKvCausalP16MultiCtasKvCgaVarSeqQ8Kv256StaticGroupedSwapsAbForGen": "attention_trtllm",
+    "fmhaSm103aKernel_QkvBfloat16OBfloat16H128PagedKvCausalP16VarSeqQ256Kv128PersistentContext": "attention_trtllm",
+    "void vllm::reshape_and_cache_flash_kernel<__nv_bfloat16, __nv_bfloat16, (vllm::Fp8KVCacheDataType)0>(const T1 *, const T1 *, T2 *, T2 *, const long *, long, long, long, long, long, int, int, int, const float *, const float *, int)": "kv_append",
+    "nvjet_sm103_tst_192x8_64x8_2x1_v_bz_TNT": "gemm_cublas",
+    "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16, (bool)0, float, __nv_bfloat16, __nv_bfloat16>(...)": "gemm_cublas",
+    "triton_red_fused_fused_add_rms_norm_0": "inductor_triton",
+    "triton_poi_fused_mul_silu_slice_1": "inductor_triton",
+    "_compute_slot_mappings_kernel": "vllm_runtime_triton",
+    "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::array<char *, (unsigned long)1>>(int, T2, T3)": "torch_aten",
     "void flashinfer::BatchPrefillWithPagedKVCacheKernel<...>(...)": "attention_flashinfer",
     "void vllm::cross_device_reduce_scatter<__nv_bfloat16, 4>(...)": "vllm_custom_reduce_scatter",
-    "nvjet_tst_128x256_64x4_2x1_v_bz_coopA_NTN": "other",
+    "some_unknown_kernel": "other",
 }
 
 
