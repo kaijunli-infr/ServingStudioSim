@@ -1,0 +1,37 @@
+Traceback (most recent call last):
+  File "/mnt/shared/home/kevin/workspace/serving-studio/ServingStudioSim-gb300/profiling/env/arm64-gb300/serving-validation/pilot3b2/pilot_driver2.py", line 948, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/ServingStudioSim-gb300/profiling/env/arm64-gb300/serving-validation/pilot3b2/pilot_driver2.py", line 915, in main
+    case = build()
+           ^^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/ServingStudioSim-gb300/profiling/env/arm64-gb300/serving-validation/pilot3b2/pilot_driver2.py", line 613, in <lambda>
+    lambda s=short, k=kind, a=args, c=cls: attention_pair(dev, s, k, a, c),
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/ServingStudioSim-gb300/profiling/env/arm64-gb300/serving-validation/pilot3b2/pilot_driver2.py", line 453, in attention_pair
+    built[p][1]()
+  File "/mnt/shared/home/kevin/workspace/serving-studio/ServingStudioSim-gb300/profiling/runners/attention/paged_attn_batch_trtllm_gen.py", line 388, in run
+    return decode.trtllm_batch_decode_with_kv_cache(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer/api_logging.py", line 2348, in _auto_dump_wrapper
+    return _inner(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer/decode.py", line 3572, in trtllm_batch_decode_with_kv_cache
+    run_func = get_trtllm_gen_fmha_module().trtllm_paged_attention_decode
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer/decode.py", line 461, in get_trtllm_gen_fmha_module
+    op = mod.build_and_load()
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer/jit/core.py", line 335, in build_and_load
+    self.build()
+  File "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer/jit/core.py", line 569, in build
+    run_ninja(self.build_dir, self.ninja_path, verbose)
+  File "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer/jit/cpp_ext.py", line 406, in run_ninja
+    subprocess.run(
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1196, in communicate
+    stdout = self.stdout.read()
+             ^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

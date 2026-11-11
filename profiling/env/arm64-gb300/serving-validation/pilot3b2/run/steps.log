@@ -1,0 +1,19 @@
+2026-11-11T17:43:48Z pilot out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/pilot/run-20261111-174348 test_mode=0 subreaper=1 prior_s=0 rerun_budget_s=600 root_pid=879010
+2026-11-11T17:43:48Z capacity: source cache 482765540 B (cap 700000000 B), free 24768568885248 B (need 5000000000 B)
+2026-11-11T17:43:49Z private CUDA cache initial: 482765540 bytes, 38 files
+2026-11-11T17:43:50Z cupti extension ready
+2026-11-11T17:43:50Z pre: GPU 1 util 0 % mem 89 MiB; other compute processes: GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3145113, python3, 790 MiB;GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3146111, sglang::scheduler, 249514 MiB;
+2026-11-11T17:43:51Z pass timing start (timeout 430 s)
+2026-11-11T17:44:38Z artifacts 311090739 B above 300000000 B
+2026-11-11T17:44:38Z STOP: disk, cache or trace budget exceeded
+2026-11-11T17:44:41Z pass timing occupancy 50.3 s; rerun total 50.3 s of 600; aggregate 50.3 s of 600
+2026-11-11T17:44:41Z GPU 1 back to baseline: GPU 1 util 0 % mem 87 MiB
+2026-11-11T17:44:41Z serving env fingerprint unchanged
+2026-11-11T17:44:41Z databases unchanged
+2026-11-11T17:44:41Z artifacts (excluding the private cache) 311098272 bytes; peak sampled 311090739 bytes
+2026-11-11T17:44:41Z private CUDA cache final: 656943648 bytes, 45 files
+private CUDA cache grew by 174178108 bytes, 7 files
+2026-11-11T17:44:41Z source cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/cache/nv-compute unchanged
+2026-11-11T17:44:42Z deleted private cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/pilot/scratch-20261111-174348
+2026-11-11T17:44:42Z local temporary files at the end: 266327464 bytes
+2026-11-11T17:44:42Z deleted /tmp/pilot3b2-20261111-174348

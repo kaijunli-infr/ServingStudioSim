@@ -1,0 +1,5 @@
+index, uuid, utilization.gpu [%], memory.used [MiB], power.draw [W], clocks.current.sm [MHz], temperature.gpu
+0, GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c, 0 %, 119 MiB, 176.88 W, 120 MHz, 31
+1, GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb, 0 %, 89 MiB, 176.76 W, 120 MHz, 31
+2, GPU-d2cef419-102a-b229-7832-70f157a02dc1, 0 %, 250457 MiB, 230.60 W, 2070 MHz, 33
+3, GPU-098db872-19a4-a98b-2793-9ea752f88553, 0 %, 3 MiB, 176.03 W, 120 MHz, 32
