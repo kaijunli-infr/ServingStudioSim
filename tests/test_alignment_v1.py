@@ -127,6 +127,16 @@ def test_bounded_nsys_capture_requires_positive_cuda_profiler_window():
         NsysConfig(capture_mode="full", capture_duration_seconds=30.0).validate()
 
 
+def test_delayed_nsys_capture_requires_positive_cuda_profiler_delay():
+    NsysConfig(capture_start_delay_seconds=10.0, capture_duration_seconds=60.0).validate()
+    NsysConfig(capture_start_delay_seconds=10.0).validate()
+
+    with pytest.raises(ValueError, match="must be positive"):
+        NsysConfig(capture_start_delay_seconds=0.0).validate()
+    with pytest.raises(ValueError, match="requires capture_mode=cuda_profiler_api"):
+        NsysConfig(capture_mode="nvtx", capture_start_delay_seconds=10.0).validate()
+
+
 def test_nsys_cuda_flush_interval_must_be_positive():
     NsysConfig(cuda_flush_interval_ms=10_000).validate()
 

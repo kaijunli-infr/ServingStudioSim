@@ -405,7 +405,10 @@ EPLB step.
 For long multi-GPU workloads, set `nsys.capture_duration_seconds` with
 `capture_mode: cuda_profiler_api`. The launcher stops CUPTI at that deadline but
 does not stop the replay: the bounded window supplies representative kernel
-segments while all requests still finish and emit EngineCore TTFT/TPOT. This
+segments while all requests still finish and emit EngineCore TTFT/TPOT. Add
+`nsys.capture_start_delay_seconds` to arm CUPTI that many seconds after the
+measured replay begins, so the window covers a later stretch of the trace (for
+example the long prefills of `trace/diverse_100.csv`, which arrive 10-70 s in). This
 also avoids letting graph-node tracing perturb multi-rank collectives for the
 entire benchmark.
 
