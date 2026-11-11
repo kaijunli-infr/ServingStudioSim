@@ -14,11 +14,14 @@
 #   complete; at least 60 GB is free; the server port is free; both profile
 #   databases are checksummed.
 # during: every 10 s, a compute process on one of the run's GPUs that is not
-#   in this run's process session stops the run.
+#   one of this run's own processes stops the run.
 # after: the same environment, fingerprint and database checks; leftover
-#   processes of this run's own session are killed, nothing else.
+#   processes of this run are stopped (launcher first, then INT, then KILL),
+#   nothing else.
 #
-# It never resets a GPU and never signals a process outside its own session.
+# A process belongs to the run when it descends from this script (proc_own.sh),
+# whatever session it starts. The script never resets a GPU and never signals
+# a process that is not the run's own.
 set -u
 # The launcher builds the load generator with cargo; non-interactive shells
 # lack the user's toolchain directories on PATH.
@@ -35,27 +38,34 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STAMP=$(date -u +%Y%m%d-%H%M%S)
 OUT=$ROOT/guard/$RUN-$STAMP
 mkdir -p "$OUT"
-SID="$(ps -o sid= -p $$ | tr -d ' ')"
+OWN_ROOT=$$
+OWN_FILE="$OUT/own-pids.txt"
+: >"$OWN_FILE"
+# shellcheck source=proc_own.sh
+source "$HERE/proc_own.sh"
 declare -A UUID=([0]=GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c [1]=GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb
                  [2]=GPU-d2cef419-102a-b229-7832-70f157a02dc1 [3]=GPU-098db872-19a4-a98b-2793-9ea752f88553)
 
 log() { printf '%s %s\n' "$(date -u +%FT%TZ)" "$*" | tee -a "$OUT/steps.log"; }
-cleanup() {
+cleanup() { # signal this run's processes only: first the launcher, then whatever remains
   local pids
   kill "${WATCH:-0}" "${SAMPLER:-0}" 2>/dev/null
-  pids="$(ps -s "$SID" -o pid= | grep -vw "$$" | tr '\n' ' ')"
+  record_own
+  [ -n "${LAUNCH:-}" ] && kill -INT "$LAUNCH" 2>/dev/null
+  for _ in $(seq 1 30); do [ -z "$(live_own | grep -vx "$$")" ] && break; sleep 1; done
+  pids="$(live_own | grep -vx "$$" | sort -u | tr '\n' ' ')"
   # shellcheck disable=SC2086
-  [ -n "${pids// /}" ] && kill -INT $pids 2>/dev/null && sleep 20
-  pids="$(ps -s "$SID" -o pid= | grep -vw "$$" | tr '\n' ' ')"
+  [ -n "${pids// /}" ] && { echo "$(date -u +%FT%TZ) cleanup INT $pids" >>"$OUT/steps.log"; kill -INT $pids 2>/dev/null; sleep 20; }
+  pids="$(live_own | grep -vx "$$" | sort -u | tr '\n' ' ')"
   # shellcheck disable=SC2086
-  [ -n "${pids// /}" ] && kill -KILL $pids 2>/dev/null
+  [ -n "${pids// /}" ] && { echo "$(date -u +%FT%TZ) cleanup KILL $pids" >>"$OUT/steps.log"; kill -KILL $pids 2>/dev/null; }
   return 0
 }
 fail() { log "STOP: $1"; nvidia-smi >"$OUT/nvidia-smi-at-stop.txt" 2>&1; cleanup; exit "${2:-1}"; }
 
 [ -f "$CFG" ] || fail "no config $CFG" 2
 DEVICES="$(python3 -I -c "import json,sys;print(json.load(open(sys.argv[1]))['cuda_visible_devices'])" "$CFG")"
-log "run $RUN devices=$DEVICES limit_s=$LIMIT_S sid=$SID out=$OUT"
+log "run $RUN devices=$DEVICES limit_s=$LIMIT_S root_pid=$$ out=$OUT"
 
 device_state() { # device_state LABEL
   nvidia-smi --query-gpu=index,uuid,utilization.gpu,memory.used,power.draw,clocks.sm,temperature.gpu,fabric.state \
@@ -115,13 +125,14 @@ device_state pre
 
 watch_gpus() {
   local idx u pid
-  while sleep 10; do
+  while sleep 5; do
+    record_own
     nvidia-smi --query-compute-apps=gpu_uuid,pid --format=csv,noheader >"$OUT/apps-watch.csv" 2>/dev/null
     for idx in ${DEVICES//,/ }; do
       u="${UUID[$idx]}"
       for pid in $(grep "$u" "$OUT/apps-watch.csv" | cut -d, -f2 | tr -d ' '); do
-        [ "$(ps -o sid= -p "$pid" 2>/dev/null | tr -d ' ')" = "$SID" ] && continue
-        echo "$(date -u +%FT%TZ) foreign pid $pid on GPU $idx" >>"$OUT/steps.log"
+        is_own "$pid" && continue
+        echo "$(date -u +%FT%TZ) foreign pid $pid on GPU $idx: $(ps -o user=,args= -p "$pid" | cut -c1-160)" >>"$OUT/steps.log"
         kill -USR1 $$
         return
       done
