@@ -198,8 +198,13 @@ def main() -> int:
     orphans = added_run_keys - known_runs
     if orphans:
         problems.append(f"{len(orphans)} added rows cite a run_key with no {RUN_TABLE} row")
-    if set(run_entry.get("added_run_keys", [])) != added_run_keys:
-        problems.append("added _profile_run rows are not exactly the runs the added rows cite")
+    # Every new run record must be cited by an added row. Added rows may also cite
+    # run records that were already present (a later merge of rows from a run whose
+    # other rows came in earlier); those are listed, not counted as a problem.
+    new_runs = set(run_entry.get("added_run_keys", []))
+    if not new_runs <= added_run_keys:
+        problems.append("a new _profile_run row is cited by no added row")
+    report["added_rows_citing_existing_runs"] = sorted(added_run_keys - new_runs)
     report["added_runs"] = [
         dict(r)
         for r in after.execute(
