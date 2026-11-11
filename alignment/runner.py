@@ -548,13 +548,31 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
                 if not driver.wait_for_idle(base_url, cfg.idle, cfg.server):
                     raise RuntimeError("server did not drain before measurement")
                 measurement_log_offset = server_log.stat().st_size
-                if is_nsys and cfg.nsys.capture_mode == "cuda_profiler_api":
+                api_capture = is_nsys and cfg.nsys.capture_mode == "cuda_profiler_api"
+                start_delay = cfg.nsys.capture_start_delay_seconds
+                if api_capture and start_delay is None:
                     driver.set_cuda_profile(base_url, active=True)
                     cuda_profile_active = True
-                if cuda_profile_active and cfg.nsys.capture_duration_seconds is not None:
+                if api_capture and (
+                    start_delay is not None or cfg.nsys.capture_duration_seconds is not None
+                ):
 
-                    def stop_bounded_capture() -> None:
+                    def bounded_capture() -> None:
+                        # Optional delayed start, then optional bounded stop. Either
+                        # wait returns early (and the thread exits) once the replay
+                        # ends and cancels the timer.
                         nonlocal cuda_profile_active
+                        if start_delay is not None:
+                            if capture_timer_cancelled.wait(start_delay):
+                                return
+                            try:
+                                driver.set_cuda_profile(base_url, active=True)
+                            except BaseException as error:
+                                capture_timer_errors.append(error)
+                                return
+                            cuda_profile_active = True
+                        if cfg.nsys.capture_duration_seconds is None:
+                            return
                         if capture_timer_cancelled.wait(cfg.nsys.capture_duration_seconds):
                             return
                         try:
@@ -565,7 +583,7 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
                             cuda_profile_active = False
 
                     capture_timer = threading.Thread(
-                        target=stop_bounded_capture,
+                        target=bounded_capture,
                         name="alignment-nsys-capture-timer",
                     )
                     capture_timer.start()
@@ -595,7 +613,7 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
             if capture_timer is not None:
                 capture_timer.join()
             if capture_timer_errors:
-                raise RuntimeError("bounded NSYS capture stop failed") from capture_timer_errors[0]
+                raise RuntimeError("bounded NSYS capture start/stop failed") from capture_timer_errors[0]
             drive_summary["reached_idle"] = driver.wait_for_idle(base_url, cfg.idle, cfg.server)
             if speculative:
                 if not drive_summary["reached_idle"]:

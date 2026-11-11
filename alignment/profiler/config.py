@@ -131,6 +131,10 @@ class NsysConfig:
     # Long graph-node captures can perturb or deadlock multi-rank collectives;
     # request TTFT/TPOT logging remains active after capture stops.
     capture_duration_seconds: float | None = None
+    # Arm CUPTI only this many seconds after the measured replay starts, so a
+    # bounded window can sit over a later stretch of a long trace (the capture
+    # then runs for `capture_duration_seconds`, or to the end of the replay).
+    capture_start_delay_seconds: float | None = None
     sample: str = "none"
     cpuctxsw: str = "none"
     cuda_graph_trace: str = "node"
@@ -153,6 +157,13 @@ class NsysConfig:
                 )
             if self.capture_duration_seconds <= 0:
                 raise ValueError("nsys.capture_duration_seconds must be positive")
+        if self.capture_start_delay_seconds is not None:
+            if self.capture_mode != "cuda_profiler_api":
+                raise ValueError(
+                    "nsys.capture_start_delay_seconds requires capture_mode=cuda_profiler_api"
+                )
+            if self.capture_start_delay_seconds <= 0:
+                raise ValueError("nsys.capture_start_delay_seconds must be positive")
         if self.cuda_flush_interval_ms is not None and self.cuda_flush_interval_ms <= 0:
             raise ValueError("nsys.cuda_flush_interval_ms must be positive")
         if (
