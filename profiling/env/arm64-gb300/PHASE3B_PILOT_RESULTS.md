@@ -367,3 +367,21 @@ stop):
 
 Every item in §6 and §7 needs a separate decision. So do any further GPU
 execution and any database integration.
+
+## 12. Recorded deviation (added 2026-11-11, after acceptance)
+
+The pilot was accepted with one recorded experiment deviation. Sections 1–11
+above are unchanged.
+
+- **Private CUDA-cache budget, exceeded in decimal megabytes.** The approved
+  limit was 600 MB. The guard enforced it as 600 MiB (`du -sm`) and set
+  `CUDA_CACHE_MAXSIZE` to 600 MiB. The private copy ended at 627,368,052 bytes:
+  598.3 MiB, but **627.4 MB, 27.4 MB (4.6 %) over a 600 MB decimal limit**.
+  The run therefore did **not** comply with the cache budget as written. The
+  guard did not stop it because of the unit mismatch, not because the run was
+  within budget.
+- **Effect on results:** none known. The cache held compiled driver binaries;
+  no timing or correctness result depends on its size. It was deleted after
+  the run, and the source cache was unchanged.
+- **Correction for later runs:** guards measure byte counts (`du -sb`) against
+  decimal limits, and `CUDA_CACHE_MAXSIZE` is set below the decimal limit.

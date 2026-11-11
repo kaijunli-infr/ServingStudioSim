@@ -1,0 +1,17 @@
+## Rust (cargo test -p simulator --lib)
+test result: ok. 1604 passed; 0 failed; 8 ignored; 0 measured; 0 filtered out; finished in 6.29s
+## pytest CPU tier (not gpu/agent/bench/presets, -n 16)
+FAILED tests/test_dsa_sparse_mla_attention.py::test_profile_translates_runtime_failures
+FAILED tests/test_dsa_sparse_mla_attention.py::test_trtllm_fp8_rope_dim_selects_the_accepted_layout[overrides0-reached the launch]
+FAILED tests/test_gdn_spec_decode.py::test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_uses_total_energy_counter
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_uses_passed_timing_for_iteration_count
+FAILED tests/test_l1_single_gemm.py::test_energy_window_restarts_cleanly_when_planned_iters_are_short
+FAILED tests/test_kda_chunk_prefill_flashinfer.py::test_row_provenance_names_the_flashinfer_commit
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_falls_back_to_power_polling
+8 failed, 5072 passed, 34 skipped, 40 warnings in 87.77s (0:01:27)
+## pytest presets tier
+9 passed, 5131 deselected, 1 warning in 25.01s
+## profile.db sha256 (working file, HEAD blob)
+3ec95dcd4226660b8eca425290e0a45a44f7b038f9432abcfaf0f4d8c56a8b3e  profiling/profile.db
+3ec95dcd4226660b8eca425290e0a45a44f7b038f9432abcfaf0f4d8c56a8b3e  -

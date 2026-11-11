@@ -1,0 +1,1097 @@
+{
+ "db": "profiling/profile.db",
+ "tables": {
+  "all_reduce": {
+   "rows": 247,
+   "match": 247,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "all_reduce_fusion": {
+   "rows": 150,
+   "match": 150,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "all_reduce_residual_rms_norm": {
+   "rows": 143,
+   "match": 143,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "batched_gemm": {
+   "rows": 1360,
+   "match": 1360,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "bf16_fused_moe": {
+   "rows": 6324,
+   "match": 6324,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "clamped_swiglu": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "compressed_sparse_mla_decode": {
+   "rows": 386,
+   "match": 386,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "compressed_sparse_mla_prefill": {
+   "rows": 2259,
+   "match": 2259,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "compressed_sparse_mla_rope_cast": {
+   "rows": 2540,
+   "match": 2540,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_compressed_mqa_logits_prefill": {
+   "rows": 622,
+   "match": 622,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_compressed_topk_prefill": {
+   "rows": 622,
+   "match": 622,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_index_cache_append": {
+   "rows": 279,
+   "match": 279,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_indexer_q_rope_quant": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_indexer_q_rope_quant_weight_fold": {
+   "rows": 40,
+   "match": 40,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_mqa_logits_prefill": {
+   "rows": 2057,
+   "match": 2057,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_paged_mqa_logits_decode": {
+   "rows": 18569,
+   "match": 18569,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_persistent_topk_decode": {
+   "rows": 24369,
+   "match": 24369,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_sparse_index_remap": {
+   "rows": 4227,
+   "match": 4227,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_sparse_mla_attention": {
+   "rows": 21272,
+   "match": 21272,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_sparse_mla_prefill": {
+   "rows": 1630,
+   "match": 1630,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "dsa_topk_prefill": {
+   "rows": 2115,
+   "match": 2115,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "elementwise": {
+   "rows": 9312,
+   "match": 9312,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "embedding_row_gather": {
+   "rows": 78,
+   "match": 78,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "engram_lookup": {
+   "rows": 122,
+   "match": 122,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "fa4_varlen_attention": {
+   "rows": 1136,
+   "match": 1136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "flashinfer_attn_decode": {
+   "rows": 4374,
+   "match": 4374,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "flashinfer_attn_prefill": {
+   "rows": 3240,
+   "match": 3240,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "flashinfer_attn_rect": {
+   "rows": 3969,
+   "match": 3969,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "fp8_block_quant": {
+   "rows": 748,
+   "match": 748,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "fp8_blockscale_grouped_gemm": {
+   "rows": 3678,
+   "match": 3678,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "fp8_per_token_group_quant": {
+   "rows": 1224,
+   "match": 1224,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_causal_conv_decode": {
+   "rows": 93,
+   "match": 93,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_causal_conv_prefill": {
+   "rows": 1216,
+   "match": 1216,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_chunk_delta_rule": {
+   "rows": 84,
+   "match": 84,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_gated_rms_norm": {
+   "rows": 44,
+   "match": 44,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_prefill_post_conv": {
+   "rows": 71,
+   "match": 71,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_recurrent_decode": {
+   "rows": 75,
+   "match": 75,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gdn_recurrent_decode_gated_norm": {
+   "rows": 104,
+   "match": 104,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "gemm_fp32_output": {
+   "rows": 980,
+   "match": 980,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "grouped_gemm": {
+   "rows": 9652,
+   "match": 9652,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "grouped_rms_norm": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "hc_combine": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "hc_combine_norm": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "hc_gate_mix": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "indexed_row_copy": {
+   "rows": 165,
+   "match": 165,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "inv_rope_fp8_quant": {
+   "rows": 57,
+   "match": 57,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "kda_chunk_prefill": {
+   "rows": 4096,
+   "match": 4096,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "kda_recurrent_decode": {
+   "rows": 36,
+   "match": 36,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "kv_cache_append": {
+   "rows": 1341,
+   "match": 1341,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "kv_compress_store": {
+   "rows": 361,
+   "match": 361,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "logits_topk": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "mhc_fused_post_pre_rms_norm": {
+   "rows": 324,
+   "match": 324,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "mhc_pre_rms_norm": {
+   "rows": 136,
+   "match": 136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "mhc_terminal_head": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "mla_cache_append": {
+   "rows": 419,
+   "match": 419,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "mla_rope_quantize_fp8": {
+   "rows": 137,
+   "match": 137,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_align_block_size": {
+   "rows": 198,
+   "match": 198,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_alltoall": {
+   "rows": 470,
+   "match": 470,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_alltoall_prepare": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_ep_all_gather": {
+   "rows": 62,
+   "match": 62,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_ep_quantized_all_gather": {
+   "rows": 92,
+   "match": 92,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_ep_reduce_scatter": {
+   "rows": 108,
+   "match": 108,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_finalize_fuse_shared": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_finalize_routing": {
+   "rows": 2137,
+   "match": 2137,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_fused_topk": {
+   "rows": 42,
+   "match": 42,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_sink_gate_select": {
+   "rows": 152,
+   "match": 152,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_sum": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "moe_topk_softplus_sqrt": {
+   "rows": 136,
+   "match": 136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "multi_add_rms_norm": {
+   "rows": 340,
+   "match": 340,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "mxfp4_marlin_moe_gemm": {
+   "rows": 313,
+   "match": 313,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "nvfp4_fused_moe": {
+   "rows": 13074,
+   "match": 13074,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "nvfp4_quant": {
+   "rows": 748,
+   "match": 748,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "p2p_inter": {
+   "rows": 38,
+   "match": 38,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "p2p_intra": {
+   "rows": 57,
+   "match": 57,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "packed_kv_cache_gather": {
+   "rows": 2,
+   "match": 2,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "paged_attn_batch_decode": {
+   "rows": 701,
+   "match": 701,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "paged_attn_batch_prefill": {
+   "rows": 1080,
+   "match": 1080,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "ple_gate": {
+   "rows": 25,
+   "match": 25,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "ple_ngram_ids": {
+   "rows": 40,
+   "match": 40,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "ple_short_conv": {
+   "rows": 195,
+   "match": 195,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "q_kv_rms_norm": {
+   "rows": 136,
+   "match": 136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "q_pad_kv_rope_mxfp8_insert": {
+   "rows": 182,
+   "match": 182,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "qk_rms_norm_rope_gate": {
+   "rows": 136,
+   "match": 136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "qnorm_rope_kv_insert": {
+   "rows": 339,
+   "match": 339,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "rel_bias_attention": {
+   "rows": 6472,
+   "match": 6472,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "residual_rms_norm": {
+   "rows": 272,
+   "match": 272,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "rms_norm": {
+   "rows": 819,
+   "match": 819,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "rs_sconv_ag_residual_rms_norm": {
+   "rows": 254,
+   "match": 254,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "scaled_silu": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "sconv_qkvr_prep": {
+   "rows": 147,
+   "match": 147,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "silu_and_mul": {
+   "rows": 136,
+   "match": 136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "single_gemm": {
+   "rows": 17445,
+   "match": 17445,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "sparse_gqa_paged_attention": {
+   "rows": 868,
+   "match": 868,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "sparse_index_expand": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "sparse_indexer_logits_decode": {
+   "rows": 964,
+   "match": 964,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "sparse_indexer_logits_prefill": {
+   "rows": 80,
+   "match": 80,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "sparse_indexer_prepare": {
+   "rows": 68,
+   "match": 68,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "static_fp8_quant": {
+   "rows": 136,
+   "match": 136,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "vllm_fused_moe": {
+   "rows": 194,
+   "match": 194,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  },
+  "vllm_mla_rope": {
+   "rows": 272,
+   "match": 272,
+   "mismatch": 0,
+   "error": 0,
+   "examples": []
+  }
+ },
+ "backends_per_table": {
+  "all_reduce": [
+   "nccl",
+   "nccl_graph",
+   "nvshmem"
+  ],
+  "all_reduce_fusion": [
+   "flashinfer_mnnvl",
+   "flashinfer_trtllm"
+  ],
+  "all_reduce_residual_rms_norm": [
+   "flashinfer_mnnvl",
+   "flashinfer_trtllm"
+  ],
+  "batched_gemm": [
+   "deepgemm_mxfp8_einsum_grouped_o_proj",
+   "torch_mla_q_absorb",
+   "torch_mla_q_absorb_no_rope",
+   "torch_mla_v_up",
+   "torch_mla_v_up_unpadded"
+  ],
+  "bf16_fused_moe": [
+   "flashinfer_trtllm_sm100"
+  ],
+  "clamped_swiglu": [
+   "vllm_inductor"
+  ],
+  "compressed_sparse_mla_decode": [
+   "vllm_flashmla_fp8_cudagraph"
+  ],
+  "compressed_sparse_mla_prefill": [
+   "vllm_flashmla_bf16"
+  ],
+  "compressed_sparse_mla_rope_cast": [
+   "flashmla_mega",
+   "torch"
+  ],
+  "dsa_compressed_mqa_logits_prefill": [
+   "vllm_deepgemm_fp8"
+  ],
+  "dsa_compressed_topk_prefill": [
+   "vllm_cuda"
+  ],
+  "dsa_index_cache_append": [
+   "sglang_fused_norm_rope_store",
+   "torch",
+   "vllm_cuda"
+  ],
+  "dsa_indexer_q_rope_quant": [
+   "sglang_cuda"
+  ],
+  "dsa_indexer_q_rope_quant_weight_fold": [
+   "vllm_cutedsl_fp8"
+  ],
+  "dsa_mqa_logits_prefill": [
+   "deepgemm_fp8",
+   "torch"
+  ],
+  "dsa_paged_mqa_logits_decode": [
+   "deepgemm_fp8",
+   "torch"
+  ],
+  "dsa_persistent_topk_decode": [
+   "torch",
+   "vllm_cuda",
+   "vllm_cuda_cooperative",
+   "vllm_fork_cuda"
+  ],
+  "dsa_sparse_index_remap": [
+   "torch",
+   "vllm_triton"
+  ],
+  "dsa_sparse_mla_attention": [
+   "flashinfer_trtllm_fp8",
+   "torch",
+   "vllm_flashmla_bf16"
+  ],
+  "dsa_sparse_mla_prefill": [
+   "flashinfer_trtllm_fp8"
+  ],
+  "dsa_topk_prefill": [
+   "deep_select",
+   "sglang_cuda",
+   "torch",
+   "vllm_cuda"
+  ],
+  "elementwise": [
+   "torch",
+   "torch_cat",
+   "torch_cat_vllm",
+   "torch_strided_copy",
+   "torch_strided_copy_vllm",
+   "torch_vllm",
+   "triton"
+  ],
+  "embedding_rms_norm": [
+   "vllm_inductor"
+  ],
+  "embedding_row_gather": [
+   "torch",
+   "vllm_triton"
+  ],
+  "engram_lookup": [
+   "vllm_triton"
+  ],
+  "fa4_varlen_attention": [
+   "vllm_fa4"
+  ],
+  "flashinfer_attn_decode": [
+   "cudnn",
+   "fa2",
+   "fa2_cudagraph",
+   "fa3"
+  ],
+  "flashinfer_attn_prefill": [
+   "cudnn",
+   "fa2",
+   "fa3"
+  ],
+  "flashinfer_attn_rect": [
+   "cudnn",
+   "fa2",
+   "fa3"
+  ],
+  "fp8_block_quant": [
+   "flashinfer_trtllm"
+  ],
+  "fp8_blockscale_grouped_gemm": [
+   "flashinfer_trtllm"
+  ],
+  "fp8_per_token_group_quant": [
+   "vllm_cuda"
+  ],
+  "gdn_causal_conv_decode": [
+   "torch",
+   "vllm_triton"
+  ],
+  "gdn_causal_conv_prefill": [
+   "dao_channellast",
+   "torch",
+   "vllm_triton"
+  ],
+  "gdn_chunk_delta_rule": [
+   "flashinfer"
+  ],
+  "gdn_gated_rms_norm": [
+   "torch",
+   "vllm_triton"
+  ],
+  "gdn_prefill_post_conv": [
+   "torch",
+   "vllm_triton"
+  ],
+  "gdn_recurrent_decode": [
+   "torch",
+   "vllm_triton",
+   "vllm_triton_sigmoid_gating"
+  ],
+  "gdn_recurrent_decode_gated_norm": [
+   "vllm_cuda"
+  ],
+  "gemm_fp32_output": [
+   "sglang_router_auto",
+   "torch_cublas",
+   "vllm_ll_bf16_auto"
+  ],
+  "gqa_rope_neox": [
+   "vllm_inductor",
+   "vllm_inductor_graph"
+  ],
+  "grouped_gemm": [
+   "deepgemm",
+   "torch"
+  ],
+  "grouped_rms_norm": [
+   "vllm_triton"
+  ],
+  "hc_combine": [
+   "vllm_triton"
+  ],
+  "hc_combine_norm": [
+   "vllm_triton"
+  ],
+  "hc_gate_mix": [
+   "vllm_triton"
+  ],
+  "indexed_row_copy": [
+   "torch",
+   "torch_vllm"
+  ],
+  "inv_rope_fp8_quant": [
+   "vllm_triton"
+  ],
+  "kda_chunk_prefill": [
+   "flashinfer_cute_persistent",
+   "flashinfer_tirx",
+   "flashkda",
+   "vllm_triton"
+  ],
+  "kda_recurrent_decode": [
+   "vllm_triton"
+  ],
+  "kv_cache_append": [
+   "torch",
+   "vllm_cuda",
+   "vllm_triton_diffkv"
+  ],
+  "kv_compress_store": [
+   "vllm_cutedsl",
+   "vllm_triton"
+  ],
+  "logits_topk": [
+   "flashinfer",
+   "torch"
+  ],
+  "mhc_fused_post_pre_rms_norm": [
+   "deepgemm_mega",
+   "deepgemm_mega_nonshifted",
+   "vllm_tilelang"
+  ],
+  "mhc_pre_rms_norm": [
+   "vllm_tilelang"
+  ],
+  "mhc_terminal_head": [
+   "vllm_tilelang"
+  ],
+  "mla_cache_append": [
+   "sglang_cuda",
+   "torch",
+   "vllm_cuda"
+  ],
+  "mla_rope_quantize_fp8": [
+   "flashinfer"
+  ],
+  "moe_align_block_size": [
+   "vllm_cuda"
+  ],
+  "moe_alltoall": [
+   "flashinfer_mnnvl"
+  ],
+  "moe_alltoall_prepare": [
+   "flashinfer_mnnvl"
+  ],
+  "moe_ep_all_gather": [
+   "vllm_pynccl"
+  ],
+  "moe_ep_quantized_all_gather": [
+   "vllm_pynccl"
+  ],
+  "moe_ep_reduce_scatter": [
+   "vllm_pynccl"
+  ],
+  "moe_finalize_fuse_shared": [
+   "sglang_cuda"
+  ],
+  "moe_finalize_routing": [
+   "flashinfer_trtllm"
+  ],
+  "moe_fused_topk": [
+   "torch",
+   "vllm_cuda"
+  ],
+  "moe_sink_gate_select": [
+   "vllm_triton"
+  ],
+  "moe_sum": [
+   "vllm_cuda"
+  ],
+  "moe_topk_softplus_sqrt": [
+   "vllm_cuda"
+  ],
+  "multi_add_rms_norm": [
+   "vllm_inductor"
+  ],
+  "mxfp4_marlin_moe_gemm": [
+   "vllm_marlin"
+  ],
+  "nvfp4_fused_moe": [
+   "flashinfer_trtllm_fp8_block_sm100",
+   "flashinfer_trtllm_routed_sm100",
+   "flashinfer_trtllm_routed_sm100_fork",
+   "flashinfer_trtllm_sm100",
+   "flashinfer_trtllm_sm100_deferred_finalize",
+   "flashinfer_trtllm_sm100_mxfp4",
+   "flashinfer_trtllm_sm100_mxfp4_bf16"
+  ],
+  "nvfp4_quant": [
+   "flashinfer_cutedsl",
+   "vllm_cuda"
+  ],
+  "p2p_inter": [
+   "nccl",
+   "nvshmem"
+  ],
+  "p2p_intra": [
+   "nccl",
+   "nvshmem"
+  ],
+  "packed_kv_cache_gather": [
+   "vllm_cutedsl"
+  ],
+  "paged_attn_batch_decode": [
+   "flashinfer_trtllm_gen"
+  ],
+  "paged_attn_batch_prefill": [
+   "flashinfer_trtllm_gen"
+  ],
+  "ple_gate": [
+   "vllm_triton"
+  ],
+  "ple_ngram_ids": [
+   "vllm_triton"
+  ],
+  "ple_short_conv": [
+   "vllm_triton"
+  ],
+  "q_kv_rms_norm": [
+   "vllm_triton"
+  ],
+  "q_pad_kv_rope_mxfp8_insert": [
+   "vllm_cuda"
+  ],
+  "qk_rms_norm_rope_gate": [
+   "vllm_triton"
+  ],
+  "qnorm_rope_kv_insert": [
+   "vllm_cuda"
+  ],
+  "rel_bias_attention": [
+   "tml_fa4"
+  ],
+  "residual_rms_norm": [
+   "torch",
+   "vllm_cuda"
+  ],
+  "rms_norm": [
+   "flashinfer",
+   "vllm_cuda",
+   "vllm_gemma_native"
+  ],
+  "rs_sconv_ag_residual_rms_norm": [
+   "vllm_lamport_triton"
+  ],
+  "scaled_silu": [
+   "vllm_triton"
+  ],
+  "sconv_qkvr_prep": [
+   "vllm_triton"
+  ],
+  "silu_and_mul": [
+   "vllm_cuda",
+   "vllm_inductor",
+   "vllm_inductor_graph"
+  ],
+  "single_gemm": [
+   "deepgemm",
+   "flashinfer_cutedsl",
+   "flashinfer_fp8_tensor",
+   "flashinfer_mxfp8",
+   "sglang_bf16_auto",
+   "sglang_fused_a_auto",
+   "torch",
+   "torch_linear",
+   "torch_linear_vllm"
+  ],
+  "sparse_gqa_paged_attention": [
+   "vllm_triton"
+  ],
+  "sparse_index_expand": [
+   "vllm_triton"
+  ],
+  "sparse_indexer_logits_decode": [
+   "vllm_triton"
+  ],
+  "sparse_indexer_logits_prefill": [
+   "vllm_triton"
+  ],
+  "sparse_indexer_prepare": [
+   "vllm_triton"
+  ],
+  "static_fp8_quant": [
+   "vllm_inductor"
+  ],
+  "vllm_fused_moe": [
+   "vllm_triton"
+  ],
+  "vllm_mla_rope": [
+   "vllm_inductor"
+  ]
+ },
+ "total_rows": 186297,
+ "failures": 0
+}

@@ -1,0 +1,18 @@
+[
+ {
+  "gpu": "NVIDIA GB300",
+  "arch": {
+   "type": "llama3_dense_vllm",
+   "model_config": "model/config/llama3_8b.json",
+   "fp8": false
+  }
+ },
+ {
+  "gpu": "NVIDIA B200",
+  "arch": {
+   "type": "llama3_dense_vllm",
+   "model_config": "model/config/llama3_8b.json",
+   "fp8": false
+  }
+ }
+]

@@ -1,0 +1,12 @@
+{
+ "arch": {
+  "iter": {
+   "type": "llama3_dense_vllm",
+   "model_config": "model/config/llama3_8b.json",
+   "fp8": false
+  }
+ },
+ "gpu": "NVIDIA GB300",
+ "log_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/new-arch/log-GB300",
+ "cases_file": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/new-arch/cases.json"
+}

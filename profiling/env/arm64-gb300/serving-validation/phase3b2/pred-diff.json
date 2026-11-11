@@ -1,0 +1,851 @@
+{
+ "pred-predict_afd_attn": {
+  "files": 64,
+  "identical_after_path_normalisation": 56,
+  "differing": {
+   "pred-predict_afd_attn/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_afd_attn/stdout.log": {
+    "text_lines": 95,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_afd_attn/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_attn/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_attn/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_attn/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_attn/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_attn/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_afd_ffn": {
+  "files": 77,
+  "identical_after_path_normalisation": 69,
+  "differing": {
+   "pred-predict_afd_ffn/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_afd_ffn/stdout.log": {
+    "text_lines": 307,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_afd_ffn/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_ffn/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_ffn/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_ffn/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_ffn/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_afd_ffn/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_deepseek_v4_vllm_serial": {
+  "files": 313,
+  "identical_after_path_normalisation": 305,
+  "differing": {
+   "pred-predict_deepseek_v4_vllm_serial/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_deepseek_v4_vllm_serial/stdout.log": {
+    "text_lines": 584,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_deepseek_v4_vllm_serial/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_deepseek_v4_vllm_serial/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_deepseek_v4_vllm_serial/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_deepseek_v4_vllm_serial/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_deepseek_v4_vllm_serial/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_deepseek_v4_vllm_serial/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_glm52_nvfp4_b200_ep4": {
+  "files": 177,
+  "identical_after_path_normalisation": 169,
+  "differing": {
+   "pred-predict_glm52_nvfp4_b200_ep4/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/stdout.log": {
+    "text_lines": 354,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_glm52_nvfp4_b200_ep4/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_llama3_8b_gb300_iter": {
+  "files": 74,
+  "identical_after_path_normalisation": 66,
+  "differing": {
+   "pred-predict_llama3_8b_gb300_iter/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_llama3_8b_gb300_iter/stdout.log": {
+    "text_lines": 139,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_llama3_8b_gb300_iter/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_gb300_iter/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_gb300_iter/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_gb300_iter/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_gb300_iter/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_gb300_iter/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_llama3_8b_iter": {
+  "files": 74,
+  "identical_after_path_normalisation": 66,
+  "differing": {
+   "pred-predict_llama3_8b_iter/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_llama3_8b_iter/stdout.log": {
+    "text_lines": 139,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_llama3_8b_iter/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_iter/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_iter/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_iter/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_iter/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_llama3_8b_iter/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_pd_iter": {
+  "files": 79,
+  "identical_after_path_normalisation": 71,
+  "differing": {
+   "pred-predict_pd_iter/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_pd_iter/stdout.log": {
+    "text_lines": 238,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_pd_iter/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_pd_iter/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_pd_iter/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_pd_iter/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_pd_iter/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_pd_iter/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_qwen36_local_iter": {
+  "files": 5,
+  "identical_after_path_normalisation": 2,
+  "differing": {
+   "pred-predict_qwen36_local_iter/stdout.log": {
+    "text_lines": 45,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_qwen36_local_iter/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/timing_predict/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen36_local_iter/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   }
+  }
+ },
+ "pred-predict_qwen3_235b_attn": {
+  "files": 64,
+  "identical_after_path_normalisation": 56,
+  "differing": {
+   "pred-predict_qwen3_235b_attn/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_qwen3_235b_attn/stdout.log": {
+    "text_lines": 95,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_qwen3_235b_attn/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_attn/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_attn/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_attn/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_attn/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_attn/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_qwen3_235b_ffn": {
+  "files": 77,
+  "identical_after_path_normalisation": 69,
+  "differing": {
+   "pred-predict_qwen3_235b_ffn/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_qwen3_235b_ffn/stdout.log": {
+    "text_lines": 307,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_qwen3_235b_ffn/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_ffn/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_ffn/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_ffn/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_ffn/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_ffn/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ },
+ "pred-predict_qwen3_235b_iter": {
+  "files": 79,
+  "identical_after_path_normalisation": 71,
+  "differing": {
+   "pred-predict_qwen3_235b_iter/prediction.meta.json": {
+    "json_leaf_paths": {
+     "/prediction_id": 1
+    }
+   },
+   "pred-predict_qwen3_235b_iter/stdout.log": {
+    "text_lines": 238,
+    "lines_differing_after_stamp_strip": 0,
+    "examples": []
+   },
+   "pred-predict_qwen3_235b_iter/.launcher/run_state.json": {
+    "json_leaf_paths": {
+     "/stages/analyze_compute/updated_at": 1,
+     "/stages/render/updated_at": 1,
+     "/stages/timing_predict/updated_at": 1,
+     "/stages/trace/updated_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_iter/.launcher/stages/render.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_iter/.launcher/stages/trace.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_iter/.launcher/stages/timing_predict.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_iter/.launcher/stages/analyze_compute.json": {
+    "json_leaf_paths": {
+     "/child_pid": 1,
+     "/created_at": 1,
+     "/elapsed_seconds": 1,
+     "/exited_at": 1,
+     "/finished_at": 1,
+     "/launcher_pid": 1,
+     "/process_group_id": 1,
+     "/started_at": 1,
+     "/updated_at": 1
+    }
+   },
+   "pred-predict_qwen3_235b_iter/reports/analyzer_timing.json": {
+    "json_leaf_paths": {
+     "/subjects[]/elapsed_ms": 15,
+     "/total_elapsed_ms": 1
+    }
+   }
+  }
+ }
+}

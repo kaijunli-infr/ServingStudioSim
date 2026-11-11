@@ -1,0 +1,15 @@
+commit df14792a1544f78fb9d32fa9fc4dc6ed2dd46f91 dirty=46
+build rc=0
+cost-trees rc=0
+predict predict_llama3_8b_iter rc=0
+predict predict_llama3_8b_gb300_iter rc=0
+predict predict_qwen36_local_iter rc=1
+predict predict_qwen3_235b_iter rc=0
+predict predict_qwen3_235b_attn rc=0
+predict predict_qwen3_235b_ffn rc=0
+predict predict_afd_attn rc=0
+predict predict_afd_ffn rc=0
+predict predict_pd_iter rc=0
+predict predict_glm52_nvfp4_b200_ep4 rc=0
+predict predict_deepseek_v4_vllm_serial rc=0
+REGRESS_DONE

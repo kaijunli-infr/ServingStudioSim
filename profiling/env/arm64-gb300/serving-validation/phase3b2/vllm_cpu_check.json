@@ -1,0 +1,37 @@
+{
+ "torch": "2.13.0+cu130",
+ "vllm": "0.1.dev21921+ge1423a4d7",
+ "cuda_available": false,
+ "embedding_rms_norm": {
+  "residual_bitwise": true,
+  "normed_max_abs": 0.03125,
+  "oracle": "pass"
+ },
+ "multi_add_rms_norm": {
+  "post_attention": {
+   "planes": 1,
+   "max_abs": [
+    0.03125
+   ],
+   "oracle": "pass"
+  },
+  "next_input": {
+   "planes": 2,
+   "max_abs": [
+    0.03125,
+    0.03125
+   ],
+   "oracle": "pass"
+  },
+  "final": {
+   "planes": 1,
+   "max_abs": [
+    0.03125
+   ],
+   "oracle": "pass"
+  }
+ },
+ "llama_source": {
+  "layer0_residual_is_embedding": true
+ }
+}
