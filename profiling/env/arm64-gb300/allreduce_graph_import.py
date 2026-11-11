@@ -141,7 +141,11 @@ def main() -> int:
         "measurement_method": MEASUREMENT_METHOD,
         "import_commit": stamp,
         "importer": "profiling/env/arm64-gb300/allreduce_graph_import.py",
-        "database": {"path": args.db, "sha256_before": sha_before, "sha256_after": _sha256(args.db)},
+        "database": {
+            "path": args.db,
+            "sha256_before": sha_before,
+            "sha256_after": _sha256(args.db),
+        },
         "eager_nccl_rows_unchanged": len(eager_before),
         "reports": {"small": args.small, "large": args.large},
         "rows": [
@@ -169,7 +173,7 @@ def main() -> int:
         text=True,
         check=False,
     ).stdout.strip()
-    print(f"staged {len(staged)} {BACKEND} rows at {head}; eager rows unchanged: {len(eager_after)}")
+    print(f"staged {len(staged)} {BACKEND} rows at {head}; eager rows kept: {len(eager_after)}")
     return 0
 
 
