@@ -7,6 +7,11 @@
 # - FLASHINFER_WORKSPACE_BASE=$FI_BASE (fresh, never copied or moved afterwards);
 #   FLASHINFER_CUDA_ARCH_LIST=10.3 (GB300's sm_103a, the arch the serving cache
 #   built for), so nothing queries a device. CUDA_VISIBLE_DEVICES is empty.
+# - TVM_FFI_DISABLE_TORCH_C_DLPACK=1: importing tvm_ffi (FlashInfer's loader)
+#   otherwise calls torch.cuda.is_available(), which initializes the CUDA driver
+#   and opens every /dev/nvidia* node even with no visible device (the first
+#   attempt, prebuild-20261111-180507, did). It is not an input of the module's
+#   build.ninja; the GPU run leaves it unset.
 # - Every step runs under `strace -f` (all child processes: ninja, nvcc, cicc,
 #   ptxas, ...); a step fails if any process opened a /dev/nvidia* node.
 # - Temporary files go to a local TMPDIR sampled every second against
@@ -38,7 +43,7 @@ log "capacity: shared fs free ${free_shared} B, /tmp free ${free_tmp} B"
 [ "$free_shared" -ge 2000000000 ] && [ "$free_tmp" -ge $((TMP_CAP_BYTES * 2)) ] || { log "STOP: not enough free space"; exit 2; }
 mkdir -p "$FI_BASE"
 export CUDA_VISIBLE_DEVICES= FLASHINFER_WORKSPACE_BASE="$FI_BASE" FLASHINFER_CUDA_ARCH_LIST=10.3 \
-  TMPDIR="$TMPD" MAX_JOBS=1 HF_HUB_OFFLINE=1 PATH="$G/venv/bin:$PATH"
+  TMPDIR="$TMPD" MAX_JOBS=1 HF_HUB_OFFLINE=1 PATH="$G/venv/bin:$PATH" TVM_FFI_DISABLE_TORCH_C_DLPACK=1
 PEAK=0
 step() { # step NAME : strace the helper's mode NAME, sampling TMPDIR
   local name=$1 pid rc b
