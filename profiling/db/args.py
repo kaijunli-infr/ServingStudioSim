@@ -119,21 +119,48 @@ def field_types(args_schema: type[KernelArgs]) -> dict[str, Any]:
 
 
 @cache
-def optional_fields(args_schema: type[KernelArgs]) -> dict[str, str]:
-    """``{field: same_as}`` of each field declared with ``optional_arg``."""
+def optional_fields(args_schema: type[KernelArgs]) -> dict[str, str | None]:
+    """``{field: same_as}`` of each field declared with ``optional_arg``; ``None``
+    for a field whose absent value is a constant (``absent_values``)."""
 
-    return {f.name: f.metadata["same_as"] for f in fields(args_schema) if "same_as" in f.metadata}
+    return {
+        f.name: f.metadata.get("same_as")
+        for f in fields(args_schema)
+        if "same_as" in f.metadata or "absent" in f.metadata
+    }
+
+
+@cache
+def absent_values(args_schema: type[KernelArgs]) -> dict[str, Any]:
+    """``{field: constant}`` of each optional field declared with ``absent``."""
+
+    return {f.name: f.metadata["absent"] for f in fields(args_schema) if "absent" in f.metadata}
+
+
+def resolved_optional(args: KernelArgs, name: str) -> Any:
+    """The value an optional field stands for: its own when set, else its
+    ``same_as`` field's or its ``absent`` constant."""
+
+    value = getattr(args, name)
+    if value is not None:
+        return value
+    same_as = optional_fields(type(args))[name]
+    return getattr(args, same_as) if same_as is not None else absent_values(type(args))[name]
 
 
 def canonical_args(args: KernelArgs) -> KernelArgs:
-    """``args`` with each optional field that equals its ``same_as`` field unset,
-    so a call has one key whether or not its spec spelled the field out."""
+    """``args`` with each optional field that equals what its absence means
+    unset, so a call has one key whether or not its spec spelled the field out."""
 
-    changes = {
-        name: None
-        for name, same_as in optional_fields(type(args)).items()
-        if getattr(args, name) is not None and getattr(args, name) == getattr(args, same_as)
-    }
+    constants = absent_values(type(args))
+    changes = {}
+    for name, same_as in optional_fields(type(args)).items():
+        value = getattr(args, name)
+        if value is None:
+            continue
+        implied = getattr(args, same_as) if same_as is not None else constants[name]
+        if value == implied:
+            changes[name] = None
     return replace(args, **changes) if changes else args
 
 
@@ -183,4 +210,13 @@ class KvCacheAppendArgs(KernelArgs):
         unit="elements",
         same_as="head_dim",
         doc="Elements in each value head; absent when equal to head_dim (symmetric K/V).",
+    )
+    value_row_stride: int | None = optional_arg(
+        unit="elements",
+        absent=0,
+        doc=(
+            "Elements between consecutive tokens' value rows when the values are the "
+            "trailing slice of a wider row (the fused QKV projection output); absent "
+            "(0) when they are a contiguous tensor of their own."
+        ),
     )

@@ -157,6 +157,7 @@ impl MimoV2AttnLocalWorklet {
                 kv_dtype: cfg.dtype,
                 cache_layout: DIFFKV_INSERT_LAYOUT.to_string(),
                 scale_granularity: KV_SCALE_GRANULARITY.to_string(),
+                value_row_stride: None,
             },
             attention: Fa4VarlenAttentionKernelConfig {
                 backends: cfg.attention_backends.clone(),

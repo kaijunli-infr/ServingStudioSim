@@ -25,7 +25,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from profiling.db.args import DType, KernelArgs
-from profiling.db.doc import CUPTI_METHOD, BackendDoc, KernelDoc, arg
+from profiling.db.doc import CUPTI_METHOD, BackendDoc, KernelDoc, arg, optional_arg
 from profiling.db.outlier import BatchOutlierPolicy
 from profiling.db.registry import (
     BackendSupport,
@@ -36,6 +36,8 @@ from profiling.db.registry import (
 )
 
 KIND = "paged_attn_batch_prefill"
+# Page size of every row measured before page_size was keyed.
+LEGACY_PAGE_SIZE = 32
 
 
 @dataclass(frozen=True)
@@ -48,6 +50,14 @@ class PagedAttnBatchPrefillArgs(KernelArgs):
     o_dtype: DType = arg(doc="Output element type.")
     requests: tuple[tuple[int, int], ...] = arg(
         doc="(cached prefix tokens, new tokens) per prefill request in the call."
+    )
+    page_size: int | None = optional_arg(
+        unit="tokens",
+        absent=LEGACY_PAGE_SIZE,
+        doc=(
+            "Tokens per KV-cache page, the deployment's block_size; it selects the "
+            "kernel specialization. Absent: 32."
+        ),
     )
 
 
@@ -79,8 +89,10 @@ DOC = KernelDoc(
     ),
     caveats=(
         "Queries, keys and values are random; the quantization scales are 1.",
-        "Pages hold 32 tokens: 16, 32 and 64 measured within 1%, so the page size "
-        "is not part of the key.",
+        "page_size selects the trtllm-gen cubin (its name carries P16, P32, ...). "
+        "Rows without it hold 32-token pages, chosen when 16, 32 and 64 measured "
+        "within 1% (FP8, not re-measured for bf16 on GB300); the served GB300 "
+        "Llama deployment runs P16, so its rows set page_size=16.",
         "The kernel tiles each request's new tokens by 128 and a partial tile costs "
         "a full one, so many short requests cost more than one long request with "
         "the same query-key pairs.",

@@ -9,27 +9,31 @@
 //! PHASE3A_DESIGN.md`):
 //!
 //! ```text
-//! first_norm        multi_add_rms_norm (1 addend, stores sum + normed)  replaces embedding + layer 0 input_norm
+//! first_norm        embedding_rms_norm vllm_inductor (gather by id, store residual + normed)
+//!                   = the embedding and layer 0's input norm, one kernel
 //! per layer (×N):
 //!   qkv_proj        single_gemm torch_linear (F.linear layout)
-//!   rope            gqa_rope_neox vllm_inductor                         (new: llama3_dense has no RoPE leaf)
-//!   kv_cache_append kv_cache_append vllm_cuda, HND
-//!   prefill / decode paged_attn_batch_{prefill,decode} flashinfer_trtllm_gen (counter fill inside)
+//!   rope            gqa_rope_neox vllm_inductor_graph                   (new: llama3_dense has no RoPE leaf)
+//!   kv_cache_append kv_cache_append vllm_cuda, HND_PACKED, V strided from the QKV row
+//!   prefill / decode paged_attn_batch_{prefill,decode} flashinfer_trtllm_gen, page 16 (counter fill inside)
 //!   o_proj          single_gemm torch_linear (split-K reduce inside the row)
 //!   post_norm       multi_add_rms_norm (2 addends, stores normed)
 //!   up_gate_proj    single_gemm torch_linear
-//!   activation      silu_and_mul vllm_inductor
+//!   activation      silu_and_mul vllm_inductor_graph
 //!   down_proj       single_gemm torch_linear (split-K reduce inside the row)
 //! next_input_norm   multi_add_rms_norm (3 addends, stores sum + normed) ×(N−1): layers 1..N−1's input norm
 //! final_norm        multi_add_rms_norm (3 addends, stores normed)
 //! lm_head           single_gemm torch_linear, one row per request
 //! ```
 //!
-//! Approximation: the first norm is priced as a one-addend RMSNorm that stores
-//! its input. vLLM fuses the embedding gather into it (it reads the row from
-//! the embedding table by token id); the kind reads the row contiguously. Same
-//! bytes per token, a different access pattern; the gather is not priced
-//! separately and no `embedding` leaf exists.
+//! Serving configuration (GB300 TP1 pilot, `profiling/env/arm64-gb300/
+//! PHASE3B_PILOT_RESULTS.md`): every Inductor norm, the first one included, is
+//! keyed by the deployment's `max_num_batched_tokens` (its tuning size) and the
+//! checkpoint's `rms_norm_eps`; the KV append writes vLLM's packed FlashInfer
+//! cache with V read in place from the QKV output; attention runs the 16-token
+//! page specialization. SiLU and RoPE are priced from CUDA-graph replay rows
+//! (`vllm_inductor_graph`), the boundary that matched the served kernels; every
+//! other leaf from cold eager rows.
 //!
 //! Not modeled, as in `llama3_dense`: CUDA-graph padding of a decode batch (the
 //! leaves run at the real token and request counts), the engine's runtime
@@ -44,6 +48,7 @@ use crate::arch::DenseParallel;
 use crate::op::Op;
 use crate::timing::bridge::DType;
 use crate::timing::kernels::{
+    EmbeddingRmsNormKernel, EmbeddingRmsNormKernelConfig, EmbeddingRmsNormKernelInput,
     GqaRopeNeoxKernel, GqaRopeNeoxKernelConfig, GqaRopeNeoxKernelInput, KvCacheAppendKernel,
     KvCacheAppendKernelConfig, KvCacheAppendKernelInput, MultiAddRmsNormKernel,
     MultiAddRmsNormKernelConfig, MultiAddRmsNormKernelInput, PagedAttnBatchDecodeKernel,
@@ -63,18 +68,32 @@ use crate::worklet::glm53_common::{atomic, push_or_zero};
 /// weight is a different cuBLAS problem.
 const GEMM_BACKENDS: &[&str] = &["torch_linear"];
 const INDUCTOR_BACKENDS: &[&str] = &["vllm_inductor"];
+/// The same Inductor kernels timed by CUDA-graph replay (warm L2, no launch
+/// gap), the boundary that matched the served SiLU and RoPE kernels.
+const INDUCTOR_GRAPH_BACKENDS: &[&str] = &["vllm_inductor_graph"];
 const KV_APPEND_BACKENDS: &[&str] = &["vllm_cuda"];
 const ATTENTION_BACKENDS: &[&str] = &["flashinfer_trtllm_gen"];
-/// Tokens per KV page (the trace's attention kernel name carries `P16`).
+/// Tokens per KV page (the trace's attention kernel name carries `P16`); also
+/// the attention leaves' `page_size`, which selects that cubin.
 const KV_BLOCK_SIZE: u32 = 16;
-/// TRT-LLM attention reads an HND cache.
-const KV_CACHE_LAYOUT: &str = "HND";
+/// vLLM's FlashInfer cache: one `[blocks, heads, page, 2 * head_dim]` buffer
+/// whose halves are K and V, which TRT-LLM attention reads.
+const KV_CACHE_LAYOUT: &str = "HND_PACKED";
 const KV_SCALE_GRANULARITY: &str = "tensor";
+
+/// The serving deployment's settings the leaves are keyed by.
+#[derive(Clone, Debug)]
+pub struct VllmServing {
+    /// vLLM's `max_num_batched_tokens`: Inductor's tuning size.
+    pub max_num_batched_tokens: u32,
+    /// The checkpoint's `rms_norm_eps`.
+    pub rms_norm_eps: f64,
+}
 
 /// Every leaf's kernel config, unresolved (all are atomic: no partition).
 #[derive(Clone, Debug)]
 pub struct Llama3DenseVllmConfigs {
-    pub first_norm: MultiAddRmsNormKernelConfig,
+    pub first_norm: EmbeddingRmsNormKernelConfig,
     pub qkv_proj: SingleGemmKernelConfig,
     pub rope: GqaRopeNeoxKernelConfig,
     pub kv_cache_append: KvCacheAppendKernelConfig,
@@ -98,6 +117,7 @@ pub fn build_configs(
     model: &ModelCfg,
     parallel: &DenseParallel,
     rope_max_position: u32,
+    serving: &VllmServing,
 ) -> Llama3DenseVllmConfigs {
     let gpu = &parallel.gpu_name;
     let dtype = model.dtype;
@@ -117,6 +137,8 @@ pub fn build_configs(
         store_normed: true,
         store_fp8: false,
         dtype,
+        tune_tokens: Some(serving.max_num_batched_tokens),
+        rms_eps_bits: Some(serving.rms_norm_eps.to_bits()),
     };
     let attention_geometry = (
         model.num_qo_heads.clone(),
@@ -124,13 +146,21 @@ pub fn build_configs(
         model.head_dim.clone(),
     );
     Llama3DenseVllmConfigs {
-        first_norm: norm(1, true),
+        first_norm: EmbeddingRmsNormKernelConfig {
+            backends: INDUCTOR_BACKENDS.to_vec(),
+            gpu_name: gpu.clone(),
+            hidden_dim: model.hidden.clone(),
+            vocab_size: model.vocab.clone(),
+            dtype,
+            rms_eps_bits: serving.rms_norm_eps.to_bits(),
+            tune_tokens: serving.max_num_batched_tokens,
+        },
         qkv_proj: gemm(
             (model.num_qo_heads.clone() + 2 * model.num_kv_heads.clone()) * model.head_dim.clone(),
             model.hidden.clone(),
         ),
         rope: GqaRopeNeoxKernelConfig {
-            backends: INDUCTOR_BACKENDS.to_vec(),
+            backends: INDUCTOR_GRAPH_BACKENDS.to_vec(),
             gpu_name: gpu.clone(),
             num_qo_heads: model.num_qo_heads.clone(),
             num_kv_heads: model.num_kv_heads.clone(),
@@ -151,6 +181,10 @@ pub fn build_configs(
             kv_dtype: model.kv_dtype,
             cache_layout: KV_CACHE_LAYOUT.to_string(),
             scale_granularity: KV_SCALE_GRANULARITY.to_string(),
+            // V is the trailing slice of the fused QKV output row.
+            value_row_stride: Some(
+                (model.num_qo_heads.get() + 2 * model.num_kv_heads.get()) * model.head_dim.get(),
+            ),
         },
         prefill_attention: PagedAttnBatchPrefillKernelConfig {
             backends: ATTENTION_BACKENDS.to_vec(),
@@ -161,6 +195,7 @@ pub fn build_configs(
             q_dtype: dtype,
             kv_dtype: model.kv_dtype,
             o_dtype: dtype,
+            page_size: Some(KV_BLOCK_SIZE),
         },
         decode_attention: PagedAttnBatchDecodeKernelConfig {
             backends: ATTENTION_BACKENDS.to_vec(),
@@ -171,6 +206,7 @@ pub fn build_configs(
             q_dtype: dtype,
             kv_dtype: model.kv_dtype,
             o_dtype: dtype,
+            page_size: Some(KV_BLOCK_SIZE),
         },
         o_proj: gemm(
             model.hidden.clone(),
@@ -179,7 +215,7 @@ pub fn build_configs(
         post_norm: norm(2, false),
         up_gate_proj: gemm(2 * model.intermediate.clone(), model.hidden.clone()),
         activation: SiluAndMulKernelConfig {
-            backends: INDUCTOR_BACKENDS.to_vec(),
+            backends: INDUCTOR_GRAPH_BACKENDS.to_vec(),
             gpu_name: gpu.clone(),
             hidden_dim: model.intermediate.clone(),
             dtype,
@@ -199,7 +235,7 @@ pub struct Llama3DenseVllmModel {
     pub name: String,
     pub num_layers: u32,
     pub kv_cache_part: KvCachePart,
-    first_norm: Op<MultiAddRmsNormKernel>,
+    first_norm: Op<EmbeddingRmsNormKernel>,
     qkv_proj: Op<SingleGemmKernel>,
     rope: Op<GqaRopeNeoxKernel>,
     kv_cache_append: Op<KvCacheAppendKernel>,
@@ -237,7 +273,7 @@ pub fn build(
     )
     .placed(gqa_placement(u64::from(cfgs.num_kv_heads), 1));
     let mut model = Llama3DenseVllmModel {
-        first_norm: atomic(n, "first_norm", cfgs.first_norm, MultiAddRmsNormKernel::build, bridge)?,
+        first_norm: atomic(n, "first_norm", cfgs.first_norm, EmbeddingRmsNormKernel::build, bridge)?,
         qkv_proj: atomic(l, "qkv_proj", cfgs.qkv_proj, SingleGemmKernel::build, bridge)?,
         rope: atomic(l, "rope", cfgs.rope, GqaRopeNeoxKernel::build, bridge)?,
         kv_cache_append: atomic(
@@ -347,7 +383,12 @@ impl Llama3DenseVllmModel {
         let norm = MultiAddRmsNormKernelInput { num_tokens: tokens };
         let prefill_tokens: u32 = g.prefill_chunk_pairs.iter().map(|&(_, new)| new).sum();
         let decodes = g.decode_kv_lens.len() as u32;
-        push_or_zero(&self.first_norm, norm.clone(), false, ev);
+        push_or_zero(
+            &self.first_norm,
+            EmbeddingRmsNormKernelInput { num_tokens: tokens },
+            false,
+            ev,
+        );
         push_or_zero(&self.qkv_proj, rows.clone(), false, ev);
         push_or_zero(&self.rope, GqaRopeNeoxKernelInput { num_tokens: tokens }, false, ev);
         push_or_zero(
@@ -454,6 +495,10 @@ mod tests {
                 gpu_name: "NVIDIA GB300".to_string(),
             },
             131072,
+            &VllmServing {
+                max_num_batched_tokens: 2048,
+                rms_norm_eps: 1e-5,
+            },
         )
     }
 
@@ -476,23 +521,55 @@ mod tests {
 
     #[test]
     fn norms_follow_the_compiled_fusions() {
-        // (addends, store_sum, store_normed) of each traced Inductor norm.
+        // (addends, store_sum, store_normed, store_fp8) of each traced Inductor
+        // norm: post stores only the normed rows (its sum is re-added by the
+        // next one), next-input stores the new residual and the normed rows,
+        // final only the normed rows.
         let c = configs();
         let key = |n: &MultiAddRmsNormKernelConfig| (n.num_addends, n.store_sum, n.store_normed, n.store_fp8);
-        assert_eq!(key(&c.first_norm), (1, true, true, false));
         assert_eq!(key(&c.post_norm), (2, false, true, false));
         assert_eq!(key(&c.next_input_norm), (3, true, true, false));
         assert_eq!(key(&c.final_norm), (3, false, true, false));
-        assert!([&c.first_norm, &c.post_norm, &c.next_input_norm, &c.final_norm]
+        for n in [&c.post_norm, &c.next_input_norm, &c.final_norm] {
+            assert_eq!(n.backends, vec!["vllm_inductor"]);
+            assert_eq!(n.hidden_dim.get(), 4096);
+            // Serving's tuning size and Llama 3.1's epsilon, both keyed.
+            assert_eq!(n.tune_tokens, Some(2048));
+            assert_eq!(n.rms_eps_bits.map(f64::from_bits), Some(1e-5));
+        }
+    }
+
+    #[test]
+    fn first_norm_is_the_fused_embedding_kernel_not_a_plain_norm() {
+        // Defect caught: pricing the first norm as a 1-addend RMSNorm (no
+        // gather, no residual store), the configuration the runner rejects.
+        let c = configs();
+        let f = &c.first_norm;
+        assert_eq!(f.backends, vec!["vllm_inductor"]);
+        assert_eq!((f.hidden_dim.get(), f.vocab_size.get()), (4096, 128256));
+        assert_eq!(f.dtype, DType::Bf16);
+        assert_eq!(f64::from_bits(f.rms_eps_bits), 1e-5);
+        assert_eq!(f.tune_tokens, 2048);
+        let model = built(32);
+        let manifest = model.cost_log_manifest();
+        let first = manifest.slots.iter().find(|s| s.name == "llama.first_norm").unwrap();
+        assert_eq!(first.kind, "embedding_rms_norm");
+        assert!(manifest
+            .slots
             .iter()
-            .all(|n| n.backends == vec!["vllm_inductor"] && n.hidden_dim.get() == 4096));
+            .filter(|s| s.kind == "multi_add_rms_norm")
+            .all(|s| s.kernel_config["num_addends"] != serde_json::json!(1)));
     }
 
     #[test]
     fn attention_kv_and_rope_match_the_trace() {
         let c = configs();
-        assert_eq!(c.kv_cache_append.cache_layout, "HND");
+        // Packed FlashInfer cache; V read from the QKV row of (32 + 2 * 8) * 128.
+        assert_eq!(c.kv_cache_append.cache_layout, "HND_PACKED");
+        assert_eq!(c.kv_cache_append.value_row_stride, Some(6144));
         assert_eq!(c.kv_cache_append.block_size, 16);
+        assert_eq!(c.decode_attention.page_size, Some(16));
+        assert_eq!(c.prefill_attention.page_size, Some(16));
         assert_eq!((c.kv_cache_append.input_dtype, c.kv_cache_append.kv_dtype), (DType::Bf16, DType::Bf16));
         for (q, kv, o) in [
             (c.decode_attention.q_dtype, c.decode_attention.kv_dtype, c.decode_attention.o_dtype),
@@ -504,7 +581,9 @@ mod tests {
         assert_eq!((c.rope.num_qo_heads.get(), c.rope.num_kv_heads.get()), (32, 8));
         assert_eq!((c.rope.head_dim.get(), c.rope.rotary_dim.get(), c.rope.max_position), (128, 128, 131072));
         assert_eq!(c.activation.hidden_dim.get(), 14336);
-        assert_eq!(c.activation.backends, vec!["vllm_inductor"]);
+        // Graph-replay rows, never the eager rows of the same kernel.
+        assert_eq!(c.activation.backends, vec!["vllm_inductor_graph"]);
+        assert_eq!(c.rope.backends, vec!["vllm_inductor_graph"]);
     }
 
     fn built(num_layers: u32) -> Llama3DenseVllmModel {
@@ -555,10 +634,15 @@ mod tests {
             .collect();
         assert_eq!(charges(&model), expected);
         // 32 input norms in all (first + 31 fused next-layer ones), 32 post
-        // norms, one final norm: one per RMSNorm of the HF model, and no
-        // separate embedding leaf (it is folded into first_norm).
+        // norms, one final norm: one per RMSNorm of the HF model. The
+        // embedding is charged once, inside first_norm's fused kernel, and
+        // has no leaf of its own.
         let manifest = model.cost_log_manifest();
         assert!(manifest.slots.iter().all(|s| !s.name.contains("embed")));
+        assert_eq!(
+            manifest.slots.iter().filter(|s| s.kind == "embedding_rms_norm").count(),
+            1
+        );
         let kinds: Vec<&str> = manifest.slots.iter().map(|s| s.kind.as_str()).collect();
         assert_eq!(kinds.iter().filter(|k| **k == "silu_and_mul").count(), 1);
         assert_eq!(kinds.iter().filter(|k| k.starts_with("paged_attn_batch")).count(), 2);

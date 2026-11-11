@@ -107,6 +107,21 @@ pub fn max_position_embeddings(path: &Path) -> Result<u32> {
         })
 }
 
+/// The checkpoint's `rms_norm_eps` (read from its `text_config` when present),
+/// for an arch whose norm kernels key the epsilon.
+pub fn rms_norm_eps(path: &Path) -> Result<f64> {
+    let text = std::fs::read_to_string(path)
+        .with_context(|| format!("reading model config {}", path.display()))?;
+    let raw: serde_json::Value = serde_json::from_str(&text)
+        .with_context(|| format!("parsing model config {}", path.display()))?;
+    let config = raw.get("text_config").unwrap_or(&raw);
+    config
+        .get("rms_norm_eps")
+        .and_then(serde_json::Value::as_f64)
+        .filter(|eps| *eps > 0.0 && *eps < 1.0)
+        .with_context(|| format!("model config {} has no usable rms_norm_eps", path.display()))
+}
+
 fn parse_dtype(s: &str) -> Result<DType> {
     Ok(match s {
         "float16" | "fp16" => DType::Fp16,

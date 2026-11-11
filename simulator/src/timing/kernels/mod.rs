@@ -23,6 +23,7 @@ pub mod dsa_sparse_mla_attention;
 pub mod dsa_sparse_mla_prefill;
 pub mod dsa_topk_prefill;
 pub mod elementwise;
+pub mod embedding_rms_norm;
 pub mod embedding_row_gather;
 pub mod engine;
 pub mod engram_lookup;
@@ -185,6 +186,10 @@ pub use dsa_topk_prefill::{
 };
 pub use elementwise::{
     ElementwiseKernel, ElementwiseKernelConfig, ElementwiseKernelInput, ElementwiseSpec,
+};
+pub use embedding_rms_norm::{
+    EmbeddingRmsNormKernel, EmbeddingRmsNormKernelConfig, EmbeddingRmsNormKernelInput,
+    EmbeddingRmsNormSpec,
 };
 pub use embedding_row_gather::{
     EmbeddingRowGatherKernel, EmbeddingRowGatherKernelConfig, EmbeddingRowGatherKernelInput,

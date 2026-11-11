@@ -21,9 +21,15 @@ picks other configs below a few hundred tokens: on B200 the static compile of
 SiLU-and-mul launches 136 programs at one token where the served kernel
 launches 17, and the static FP8 quant 24 where it launches 6.
 
-The tuning size is not a deployment knob: tuning at 2048 and at 8192 tokens
-selected the same configs for every kernel kind built here (B200), and those
+The tuning size can be a deployment knob. On B200, tuning at 2048 and at 8192
+tokens selected the same configs for every kernel kind built here, and those
 reproduce the grid and block of every served launch in a chunk-2048 capture.
+On GB300 the 3-addend RMSNorm that stores its sum, tuned at 8192, launched
+256 threads per row where the served kernel, tuned at the deployment's
+``max_num_batched_tokens`` of 2048, launched 512
+(``profiling/env/arm64-gb300/PHASE3B_PILOT_RESULTS.md``; that tuning at 2048
+here reproduces 512 is not yet measured). A kind whose rows depend on the size
+keys it and passes it as ``tune_tokens``.
 
 Only blocks whose source is vLLM's own native implementation belong here; the
 caller passes that callable unchanged so the generated kernel is the one vLLM's
@@ -54,18 +60,20 @@ def compile_like_vllm(
     make_inputs: Callable[[int], Sequence[Any]],
     token_dims: dict[int, int],
     num_tokens: int,
+    tune_tokens: int = TUNE_TOKENS,
 ) -> Callable[..., Any]:
     """Compile ``block`` with a symbolic token dimension, as vLLM serves ``num_tokens``.
 
     ``make_inputs(tokens)`` builds the block's positional arguments;
     ``token_dims`` maps an argument index to the dimension that holds tokens.
-    The returned callable accepts inputs of up to the tuning token count.
+    The first call runs at ``max(tune_tokens, num_tokens)``; the returned
+    callable accepts inputs of up to that token count.
     """
     # With guards dropped, Dynamo would hand an earlier spec's graph (another
     # width or output set) to this one, because both trace the same code object.
     torch._dynamo.reset()
     compiled = torch.compile(block, backend="inductor", options=vllm_inductor_options(torch))
-    tune_inputs = make_inputs(max(TUNE_TOKENS, num_tokens))
+    tune_inputs = make_inputs(max(tune_tokens, num_tokens))
     for index, dim in token_dims.items():
         torch._dynamo.mark_dynamic(tune_inputs[index], dim)
     compiled(*tune_inputs)

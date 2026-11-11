@@ -153,6 +153,7 @@ impl VllmQwen35GatedGqaLocalWorklet {
                 kv_dtype: cfg.kv_dtype,
                 cache_layout: CACHE_LAYOUT.to_string(),
                 scale_granularity: KV_SCALE_GRANULARITY.to_string(),
+                value_row_stride: None,
             },
             prefill_attention: PagedAttnBatchPrefillKernelConfig {
                 backends: cfg.attention_backends.clone(),
@@ -163,6 +164,7 @@ impl VllmQwen35GatedGqaLocalWorklet {
                 q_dtype,
                 kv_dtype: cfg.kv_dtype,
                 o_dtype: cfg.activation_dtype,
+                page_size: None,
             },
             decode_attention: PagedAttnBatchDecodeKernelConfig {
                 backends: cfg.attention_backends.clone(),
@@ -173,6 +175,7 @@ impl VllmQwen35GatedGqaLocalWorklet {
                 q_dtype,
                 kv_dtype: cfg.kv_dtype,
                 o_dtype: cfg.activation_dtype,
+                page_size: None,
             },
             gate_quant: quant(true),
             o_proj: gemm(cfg.hidden, q_width),

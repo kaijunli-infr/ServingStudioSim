@@ -43,6 +43,7 @@ use crate::timing::kernels::{
 };
 
 use crate::timing::kernels::CompressedSparseMlaRopeCastKernelInput;
+use crate::timing::kernels::EmbeddingRmsNormKernelInput;
 use crate::timing::kernels::EmbeddingRowGatherKernelInput;
 use crate::timing::kernels::EngramLookupKernelInput;
 use crate::timing::kernels::GqaRopeNeoxKernelInput;
@@ -235,6 +236,7 @@ log_inputs! {
     VllmFusedMoe => VllmFusedMoeKernelInput,
     VllmMlaRope => VllmMlaRopeKernelInput,
     MultiAddRmsNorm => MultiAddRmsNormKernelInput,
+    EmbeddingRmsNorm => EmbeddingRmsNormKernelInput,
     SiluAndMul => SiluAndMulKernelInput,
     GqaRopeNeox => GqaRopeNeoxKernelInput,
     GroupedRmsNorm => GroupedRmsNormKernelInput,

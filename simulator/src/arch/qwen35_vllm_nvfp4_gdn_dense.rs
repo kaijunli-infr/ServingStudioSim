@@ -313,6 +313,9 @@ fn norm(
         store_normed,
         store_fp8,
         dtype: ACTIVATION_DTYPE,
+        // Unset: the rows this arch keys were tuned at 8192 with eps 1e-6.
+        tune_tokens: None,
+        rms_eps_bits: None,
     }
 }
 

@@ -768,6 +768,7 @@ pub fn dense(
 /// Build the vLLM-kernel variant of the dense Llama3 model (bf16 only).
 pub fn dense_vllm(
     model_spec: &ModelSpec,
+    max_num_batched_tokens: u32,
     gpu: &str,
     name: &str,
     bridge: &PerfApiBridge,
@@ -788,10 +789,18 @@ pub fn dense_vllm(
     let parallel = DenseParallel {
         gpu_name: gpu.to_string(),
     };
+    anyhow::ensure!(
+        max_num_batched_tokens > 0,
+        "llama3_dense_vllm needs a positive max_num_batched_tokens"
+    );
     let configs = llama3_dense_vllm::build_configs(
         &model_cfg,
         &parallel,
         model_spec.max_position_embeddings()?,
+        &llama3_dense_vllm::VllmServing {
+            max_num_batched_tokens,
+            rms_norm_eps: model_spec.rms_norm_eps()?,
+        },
     );
     llama3_dense_vllm::build(name.to_string(), configs, bridge)
         .context("building Llama3-dense vLLM model (often a missing profile.db row)")
@@ -2164,7 +2173,10 @@ pub fn build_iter_model(
             bridge,
         )?),
         IterArchSel::Llama3Dense { model } => Box::new(dense(model, gpu, name, bridge)?),
-        IterArchSel::Llama3DenseVllm { model } => Box::new(dense_vllm(model, gpu, name, bridge)?),
+        IterArchSel::Llama3DenseVllm {
+            model,
+            max_num_batched_tokens,
+        } => Box::new(dense_vllm(model, *max_num_batched_tokens, gpu, name, bridge)?),
         IterArchSel::Llama3DenseTp { model, tp_size } => {
             Box::new(dense_tp(model, *tp_size, gpu, name, bridge)?)
         }

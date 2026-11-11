@@ -203,6 +203,7 @@ impl Dflash2ContextKvLocalWorklet {
                 kv_dtype: cfg.kv_dtype,
                 cache_layout: cfg.kv_cache_layout.clone(),
                 scale_granularity: cfg.kv_scale_granularity.clone(),
+                value_row_stride: None,
             },
             raw_cfg: cfg.clone(),
         }

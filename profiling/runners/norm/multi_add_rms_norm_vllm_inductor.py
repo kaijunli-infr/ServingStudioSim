@@ -15,6 +15,7 @@ from __future__ import annotations
 from typing import Any
 
 from profiling.db.args import DType
+from profiling.kernels.multi_add_rms_norm import LEGACY_RMS_EPS, LEGACY_TUNE_TOKENS
 from profiling.profilers.energy import Energy
 from profiling.profilers.timer import Timer
 from profiling.runners.exceptions import KernelLaunchFailed, OOMError, ProfilerNotImplemented
@@ -23,8 +24,7 @@ from profiling.runners.norm.multi_add_rms_norm_reference import multi_add_rms_no
 from profiling.runners.vllm_inductor import compile_like_vllm
 
 _BACKEND = "multi_add_rms_norm:vllm_inductor"
-# Runtime constants: neither changes the generated kernel's shape or traffic.
-_EPS = 1e-6
+# Runtime constant: does not change the generated kernel's shape or traffic.
 _FP8_SCALE = 1.0 / 16.0
 
 
@@ -36,14 +36,19 @@ def _validate_args(
     store_normed: bool,
     store_fp8: bool,
     dtype: DType | str,
+    tune_tokens: int = LEGACY_TUNE_TOKENS,
+    rms_eps: float = LEGACY_RMS_EPS,
 ) -> None:
     for name, value in (
         ("num_tokens", num_tokens),
         ("hidden_dim", hidden_dim),
         ("num_addends", num_addends),
+        ("tune_tokens", tune_tokens),
     ):
         if type(value) is not int or value <= 0:
             raise ValueError(f"{name} must be a positive integer, got {value!r}")
+    if not (isinstance(rms_eps, float) and 0.0 < rms_eps < 1.0):
+        raise ValueError(f"rms_eps must be a float in (0, 1), got {rms_eps!r}")
     if store_sum and num_addends < 2:
         raise ValueError("store_sum needs at least two addends; one addend is its own sum")
     if not (store_normed or store_fp8):
@@ -52,34 +57,68 @@ def _validate_args(
         raise ProfilerNotImplemented(f"{_BACKEND} requires dtype=bf16, got {dtype}")
 
 
-def _build_block(store_sum: bool, store_normed: bool, store_fp8: bool, num_addends: int) -> Any:
+def _build_block(
+    store_sum: bool,
+    store_normed: bool,
+    store_fp8: bool,
+    num_addends: int,
+    eps: float = LEGACY_RMS_EPS,
+) -> Any:
     from vllm import ir
     from vllm.config import VllmConfig, set_current_vllm_config
     from vllm.model_executor.layers.quantization.input_quant_fp8 import QuantFP8
     from vllm.model_executor.layers.quantization.utils.quant_utils import GroupShape
 
-    fused_add_rms_norm = ir.ops.fused_add_rms_norm.impls["native"].impl_fn
-    rms_norm = ir.ops.rms_norm.impls["native"].impl_fn
     # QuantFP8 is a CustomOp and reads the ambient config while it is built.
     with set_current_vllm_config(VllmConfig()):
         quant = QuantFP8(static=True, group_shape=GroupShape.PER_TENSOR, compile_native=False)
+    return block_from_ops(
+        ir.ops.fused_add_rms_norm.impls["native"].impl_fn,
+        ir.ops.rms_norm.impls["native"].impl_fn,
+        lambda normed, scale: quant.forward_native(normed, scale)[0],
+        store_sum=store_sum,
+        store_normed=store_normed,
+        store_fp8=store_fp8,
+        num_addends=num_addends,
+        eps=eps,
+    )
+
+
+def block_from_ops(
+    fused_add_rms_norm: Any,
+    rms_norm: Any,
+    quant_fp8: Any,
+    *,
+    store_sum: bool,
+    store_normed: bool,
+    store_fp8: bool,
+    num_addends: int,
+    eps: float,
+) -> Any:
+    """The block over vLLM's op implementations (passed in, so the output-plane
+    wiring is testable with any implementation of the same contract):
+    ``fused_add_rms_norm(x, residual, w, eps) -> (normed, x + residual)``,
+    ``rms_norm(x, w, eps) -> normed``, ``quant_fp8(normed, scale) -> fp8``.
+
+    Returns the stored planes in the order sum, normed, fp8.
+    """
 
     def block(*args: Any) -> tuple[Any, ...]:
         addends, weight, scale = args[:num_addends], args[num_addends], args[num_addends + 1]
         if num_addends == 1:
-            total, normed = None, rms_norm(addends[0], weight, _EPS)
+            total, normed = None, rms_norm(addends[0], weight, eps)
         else:
             total = addends[0]
             for addend in addends[1:-1]:
-                total = fused_add_rms_norm(addend, total, weight, _EPS)[1]
-            normed, total = fused_add_rms_norm(addends[-1], total, weight, _EPS)
+                total = fused_add_rms_norm(addend, total, weight, eps)[1]
+            normed, total = fused_add_rms_norm(addends[-1], total, weight, eps)
         outputs = []
         if store_sum:
             outputs.append(total)
         if store_normed:
             outputs.append(normed)
         if store_fp8:
-            outputs.append(quant.forward_native(normed, scale)[0])
+            outputs.append(quant_fp8(normed, scale))
         return tuple(outputs)
 
     return block
@@ -93,8 +132,23 @@ def profile_multi_add_rms_norm_vllm_inductor(
     store_normed: bool,
     store_fp8: bool,
     dtype: DType | str,
+    tune_tokens: int | None = None,
+    rms_eps: float | None = None,
 ) -> ComputeMetrics:
-    _validate_args(num_tokens, hidden_dim, num_addends, store_sum, store_normed, store_fp8, dtype)
+    # Absent: the values every row measured before the fields existed used.
+    tune_tokens = LEGACY_TUNE_TOKENS if tune_tokens is None else tune_tokens
+    rms_eps = LEGACY_RMS_EPS if rms_eps is None else rms_eps
+    _validate_args(
+        num_tokens,
+        hidden_dim,
+        num_addends,
+        store_sum,
+        store_normed,
+        store_fp8,
+        dtype,
+        tune_tokens,
+        rms_eps,
+    )
     try:
         import torch
     except ImportError as exc:
@@ -102,7 +156,7 @@ def profile_multi_add_rms_norm_vllm_inductor(
     if store_fp8 and torch.cuda.get_device_capability() < (8, 9):
         raise ProfilerNotImplemented(f"{_BACKEND}: Triton lowers FP8 E4M3 only on SM89+")
     try:
-        block = _build_block(store_sum, store_normed, store_fp8, num_addends)
+        block = _build_block(store_sum, store_normed, store_fp8, num_addends, rms_eps)
     except ImportError as exc:
         raise ProfilerNotImplemented(f"{_BACKEND} requires the pinned vLLM environment") from exc
 
@@ -124,12 +178,17 @@ def profile_multi_add_rms_norm_vllm_inductor(
 
     try:
         compiled = compile_like_vllm(
-            torch, block, make_inputs, {index: 0 for index in range(num_addends)}, num_tokens
+            torch,
+            block,
+            make_inputs,
+            {index: 0 for index in range(num_addends)},
+            num_tokens,
+            tune_tokens=tune_tokens,
         )
         inputs = make_inputs(num_tokens)
         outputs = iter(compiled(*inputs))
         torch.cuda.synchronize()
-        expected = multi_add_rms_norm_reference(torch, inputs[:num_addends], weight, scale, _EPS)
+        expected = multi_add_rms_norm_reference(torch, inputs[:num_addends], weight, scale, rms_eps)
         for stored, reference, tolerance in zip(
             (store_sum, store_normed, store_fp8),
             expected,
@@ -175,4 +234,4 @@ def profile_multi_add_rms_norm_vllm_inductor(
     )
 
 
-__all__ = ["profile_multi_add_rms_norm_vllm_inductor"]
+__all__ = ["block_from_ops", "profile_multi_add_rms_norm_vllm_inductor"]

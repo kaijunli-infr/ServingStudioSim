@@ -327,12 +327,14 @@ FROM single_gemm t JOIN _profile_run r USING (run_key)
 ```
 
 An args field added to a kind that already has rows is declared with
-`optional_arg(same_as=...)` (`profiling/db/doc.py`), last in its schema: unset
-(or equal to `same_as`) it is stored NULL and left out of `args_hash`, so
-existing rows keep their keys and no migration runs. The table gains the
-nullable column, appended, only when a row first sets it; readers of a table
-without it treat it as unset, and `merge-db` merges a table with it and one
-without. Example: `kv_cache_append.head_dim_v` (`same_as="head_dim"`).
+`optional_arg(same_as=...)` or `optional_arg(absent=...)` (`profiling/db/doc.py`),
+last in its schema: unset (or equal to its `same_as` field, or to the `absent`
+constant, the value every existing row was measured with) it is stored NULL and
+left out of `args_hash`, so existing rows keep their keys and no migration runs.
+The table gains the nullable column, appended, only when a row first sets it;
+readers of a table without it treat it as unset, and `merge-db` merges a table
+with it and one without. Examples: `kv_cache_append.head_dim_v`
+(`same_as="head_dim"`), `multi_add_rms_norm.tune_tokens` (`absent=8192`).
 
 A DB an older checkout wrote (schema v2) is refused by readers until
 `python -m launcher kernel-profile migrate-db <path>` upgrades it in place; the

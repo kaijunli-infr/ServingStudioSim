@@ -28,6 +28,7 @@ from profiling.runners.metrics import ComputeMetrics
 from profiling.runners.vllm_inductor import compile_like_vllm
 
 _BACKEND = "gqa_rope_neox:vllm_inductor"
+_GRAPH_BACKEND = "gqa_rope_neox:vllm_inductor_graph"
 # Llama 3.1's rope parameters (config.json rope_scaling, rope_theta). They set
 # the cos/sin values only, never the kernel, so they are not part of the key.
 LLAMA3_ROPE_PARAMETERS = {
@@ -80,22 +81,29 @@ def bytes_moved(
     return num_tokens * (2 * heads * head_dim * element + rotary_dim * element + 8)
 
 
-def profile_gqa_rope_neox_vllm_inductor(
+def _import_torch(backend: str) -> Any:
+    try:
+        import torch
+        import vllm.model_executor.layers.rotary_embedding  # noqa: F401
+    except ImportError as exc:
+        raise ProfilerNotImplemented(f"{backend} requires the pinned vLLM environment") from exc
+    return torch
+
+
+def _compiled_case(
+    torch: Any,
     num_tokens: int,
     num_qo_heads: int,
     num_kv_heads: int,
     head_dim: int,
     rotary_dim: int,
     max_position: int,
-    dtype: DType | str,
-) -> ComputeMetrics:
-    validate_args(num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim, max_position, dtype)
-    try:
-        import torch
-        from vllm.config import VllmConfig, set_current_vllm_config
-        from vllm.model_executor.layers.rotary_embedding import get_rope
-    except ImportError as exc:
-        raise ProfilerNotImplemented(f"{_BACKEND} requires the pinned vLLM environment") from exc
+    backend: str,
+) -> tuple[Any, Any]:
+    """``(launch, check)``: one call of the compiled block over seeded inputs,
+    and the oracle for its ``(q, k)`` output."""
+    from vllm.config import VllmConfig, set_current_vllm_config
+    from vllm.model_executor.layers.rotary_embedding import get_rope
 
     device = torch.device("cuda", torch.cuda.current_device())
     q_size, kv_size = num_qo_heads * head_dim, num_kv_heads * head_dim
@@ -113,7 +121,7 @@ def profile_gqa_rope_neox_vllm_inductor(
             dtype=torch.bfloat16,
         ).to(device)
     if rope.rotary_dim != rotary_dim:
-        raise ProfilerNotImplemented(f"{_BACKEND}: vLLM built rotary_dim {rope.rotary_dim}")
+        raise ProfilerNotImplemented(f"{backend}: vLLM built rotary_dim {rope.rotary_dim}")
     generator = torch.Generator(device=device).manual_seed(0)
 
     def block(positions: Any, qkv: Any) -> tuple[Any, Any]:
@@ -132,11 +140,14 @@ def profile_gqa_rope_neox_vllm_inductor(
         )
         return [positions, qkv]
 
-    try:
-        compiled = compile_like_vllm(torch, block, make_inputs, {0: 0, 1: 0}, num_tokens)
-        inputs = make_inputs(num_tokens)
-        q, k = compiled(*inputs)
-        torch.cuda.synchronize()
+    compiled = compile_like_vllm(torch, block, make_inputs, {0: 0, 1: 0}, num_tokens)
+    inputs = make_inputs(num_tokens)
+
+    def launch() -> Any:
+        return compiled(*inputs)
+
+    def check(outputs: Any) -> None:
+        q, k = outputs
         want_q, want_k = gqa_rope_neox_reference(
             torch,
             inputs[0],
@@ -150,18 +161,18 @@ def profile_gqa_rope_neox_vllm_inductor(
         torch.testing.assert_close(q.reshape(want_q.shape), want_q, rtol=_RTOL, atol=_ATOL)
         torch.testing.assert_close(k.reshape(want_k.shape), want_k, rtol=_RTOL, atol=_ATOL)
 
-        def launch() -> None:
-            compiled(*inputs)
+    return launch, check
 
-        time_ms = Timer.cupti(launch, kernel_name=None)
-        energy_j = Energy.perf(launch, warmup=5, per_iter_time_ms=time_ms)
-    except torch.OutOfMemoryError as exc:
-        raise OOMError(f"{_BACKEND} ran out of CUDA memory") from exc
-    except ProfilerNotImplemented:
-        raise
-    except Exception as exc:
-        raise KernelLaunchFailed(f"{_BACKEND} failed: {exc}") from exc
 
+def _metrics(
+    time_ms: float,
+    energy_j: float,
+    num_tokens: int,
+    num_qo_heads: int,
+    num_kv_heads: int,
+    head_dim: int,
+    rotary_dim: int,
+) -> ComputeMetrics:
     seconds = time_ms / 1000.0
     moved = bytes_moved(num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim)
     return ComputeMetrics(
@@ -172,4 +183,69 @@ def profile_gqa_rope_neox_vllm_inductor(
     )
 
 
-__all__ = ["profile_gqa_rope_neox_vllm_inductor", "validate_args", "bytes_moved"]
+def profile_gqa_rope_neox_vllm_inductor(
+    num_tokens: int,
+    num_qo_heads: int,
+    num_kv_heads: int,
+    head_dim: int,
+    rotary_dim: int,
+    max_position: int,
+    dtype: DType | str,
+) -> ComputeMetrics:
+    validate_args(num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim, max_position, dtype)
+    torch = _import_torch(_BACKEND)
+    geometry = (num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim)
+    try:
+        launch, check = _compiled_case(torch, *geometry, max_position, _BACKEND)
+        outputs = launch()
+        torch.cuda.synchronize()
+        check(outputs)
+
+        def timed() -> None:
+            launch()
+
+        time_ms = Timer.cupti(timed, kernel_name=None)
+        energy_j = Energy.perf(timed, warmup=5, per_iter_time_ms=time_ms)
+    except torch.OutOfMemoryError as exc:
+        raise OOMError(f"{_BACKEND} ran out of CUDA memory") from exc
+    except ProfilerNotImplemented:
+        raise
+    except Exception as exc:
+        raise KernelLaunchFailed(f"{_BACKEND} failed: {exc}") from exc
+    return _metrics(time_ms, energy_j, *geometry)
+
+
+def profile_gqa_rope_neox_vllm_inductor_graph(
+    num_tokens: int,
+    num_qo_heads: int,
+    num_kv_heads: int,
+    head_dim: int,
+    rotary_dim: int,
+    max_position: int,
+    dtype: DType | str,
+) -> ComputeMetrics:
+    """The same compiled kernel timed by CUDA-graph replay (see graph_replay)."""
+    from profiling.profilers.graph_replay import time_graph_replay
+
+    validate_args(num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim, max_position, dtype)
+    torch = _import_torch(_GRAPH_BACKEND)
+    geometry = (num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim)
+    try:
+        launch, check = _compiled_case(torch, *geometry, max_position, _GRAPH_BACKEND)
+        timing, replay = time_graph_replay(launch, check, torch=torch)
+        energy_j = Energy.perf(replay, warmup=5, per_iter_time_ms=timing.time_ms)
+    except torch.OutOfMemoryError as exc:
+        raise OOMError(f"{_GRAPH_BACKEND} ran out of CUDA memory") from exc
+    except ProfilerNotImplemented:
+        raise
+    except Exception as exc:
+        raise KernelLaunchFailed(f"{_GRAPH_BACKEND} failed: {exc}") from exc
+    return _metrics(timing.time_ms, energy_j, *geometry)
+
+
+__all__ = [
+    "bytes_moved",
+    "profile_gqa_rope_neox_vllm_inductor",
+    "profile_gqa_rope_neox_vllm_inductor_graph",
+    "validate_args",
+]

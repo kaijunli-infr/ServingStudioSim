@@ -436,3 +436,24 @@ def test_dbs_with_and_without_an_optional_column_merge(tmp_path: Path, wide_side
         [_kv_append_args(), _kv_append_args(head_dim_v=96)], backend="vllm_cuda", gpu_name=GPU
     )
     assert (old.time_ms, asym.time_ms) == (0.0042, 0.006)
+
+
+def test_optional_arg_needs_exactly_one_meaning_for_absence() -> None:
+    from profiling.db.doc import optional_arg
+
+    with pytest.raises(ValueError):
+        optional_arg(doc="x")
+    with pytest.raises(ValueError):
+        optional_arg(doc="x", same_as="a", absent=1)
+
+
+def test_a_constant_absent_optional_arg_keeps_existing_keys() -> None:
+    """An arg declared with ``absent=`` (the value every existing row used):
+    unset or spelled out it hashes as before the field existed; another value
+    gets its own key."""
+    table = Table(_spec("kv_cache_append"), Path("unused.db"))
+    before = storage.args_hash(_kv_append_spec(), _KV_APPEND_MAIN_TYPES)
+    for args in (_kv_append_args(), _kv_append_args(value_row_stride=0)):
+        assert args.value_row_stride is None
+        assert table.args_hash(table.db_key(args)) == before
+    assert table.args_hash(table.db_key(_kv_append_args(value_row_stride=6144))) != before

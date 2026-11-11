@@ -176,3 +176,76 @@ def test_prefill_check_places_rows_after_the_prefix(dtypes):
     work.out[shape.appends[0] + 1] = 0
     with pytest.raises(KernelLaunchFailed):
         runner.check_prefill(torch, shape, work)
+
+
+def test_page_size_defaults_to_the_legacy_32_and_accepts_the_served_16():
+    # Defect caught: rows measured before page_size existed (32-token pages)
+    # changing meaning, or a page size trtllm-gen ships no cubin for being
+    # timed as another one.
+    assert _decode().geometry.page_size == runner._PAGE_SIZE == 32
+    assert _decode(page_size=16).geometry.page_size == 16
+    assert _prefill(page_size=16).geometry.page_size == 16
+    with pytest.raises(ProfilerNotImplemented, match="page_size"):
+        _decode(page_size=48)
+    with pytest.raises(ProfilerNotImplemented, match="page_size"):
+        _prefill(page_size=8)
+
+
+def test_page_size_is_a_key_field_whose_legacy_value_keeps_old_keys():
+    # Defect caught: P16 rows overwriting (or served as) the P32 rows of the
+    # same shape, or a spelled-out 32 moving every existing row's key.
+    from profiling.db.batch import coerce_args
+    from profiling.db.table import Table
+
+    for kind, extra in (
+        ("paged_attn_batch_decode", dict(batch_size=4, max_kv_len=100, total_kv_len=250)),
+        ("paged_attn_batch_prefill", dict(requests=[[40, 4], [0, 3]])),
+    ):
+        spec = find_kernel_profiler_spec(kind, "flashinfer_trtllm_gen")
+        table = Table(spec, "unused.db")
+        base = dict(_GEOMETRY, **extra)
+        unset = coerce_args(spec.args_schema, base)
+        legacy = coerce_args(spec.args_schema, {**base, "page_size": 32})
+        served = coerce_args(spec.args_schema, {**base, "page_size": 16})
+        assert legacy.page_size is None
+        key = table.args_hash(table.db_key(unset))
+        assert table.args_hash(table.db_key(legacy)) == key
+        assert table.args_hash(table.db_key(served)) != key
+
+
+@pytest.mark.parametrize("page_size", [16, 32])
+def test_decode_workload_pages_follow_the_page_size(page_size):
+    # Defect caught: the cache or page table laid out for 32-token pages while
+    # the call (and the cubin) runs 16; the check reads the cache through the
+    # page table, so a mismatch fails it.
+    shape = _decode(batch_size=3, max_kv_len=70, total_kv_len=110, page_size=page_size, **_BF16)
+    geometry = shape.geometry
+    work = runner._build_workload(torch, geometry, shape.lengths, 3, torch.device("cpu"))
+    assert work.raw_cache.shape[2] == page_size
+    assert work.page_counts == [-(-length // page_size) for length in shape.lengths]
+    positions = [[length - 1] for length in shape.lengths]
+    page = page_size
+    for request, position in enumerate(positions):
+        context = shape.lengths[request]
+        pages = work.block_table[request].long()[torch.arange(context) // page]
+        offsets = torch.arange(context) % page
+        dim = geometry.head_dim
+        out = varlen_attention_reference(
+            work.q[[request]].float(),
+            torch.tensor(position),
+            work.raw_cache[pages, :, offsets, :dim].float(),
+            work.raw_cache[pages, :, offsets, dim:].float(),
+            softmax_scale=dim**-0.5,
+            window=0,
+        )
+        work.out[[request]] = out.to(work.out.dtype)
+    assert runner.check_decode(torch, shape, work)["rows_checked"] == 3
+
+
+def test_decode_split_bound_is_fixed_by_the_key_and_the_gpu():
+    # The split is not a free knob: max_seq_len saturates at 512 tokens per SM
+    # (19 splits on GB300's 152 SMs for one request; serving's graph captured
+    # at max_model_len 8192 gives 16), so (key, GPU) determines it.
+    assert runner.decode_max_seq_len(568, 152) == 512 * 152
+    assert runner.decode_max_seq_len(100_000, 152) == 100_000
+    assert -(-runner.decode_max_seq_len(568, 152) // 512) == 152

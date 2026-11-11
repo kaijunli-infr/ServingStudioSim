@@ -49,7 +49,8 @@ def test_every_original_leaf_is_replaced_exactly_as_often_as_it_was_charged():
 
 
 def test_residual_add_and_rms_norm_are_not_double_counted():
-    norm_leaves = [leaf for leaf in m.VARIANT_LEAVES if leaf.kind == "multi_add_rms_norm"]
+    norm_kinds = ("multi_add_rms_norm", "embedding_rms_norm")
+    norm_leaves = [leaf for leaf in m.VARIANT_LEAVES if leaf.kind in norm_kinds]
     # One norm leaf per traced norm kernel: 1 first + 32 post + 31 next-input + 1 final.
     assert (
         sum(leaf.per_iteration for leaf in norm_leaves)
@@ -65,8 +66,9 @@ def test_residual_add_and_rms_norm_are_not_double_counted():
     # and llama3_dense had no residual-add leaf to remove.
     assert all("residual" not in leaf.name for leaf in m.VARIANT_LEAVES)
     assert "residual_add" not in m.ORIGINAL_LEAVES
-    # A sum is stored only where the trace stores it.
-    stored = {leaf.name: leaf.config["store_sum"] for leaf in norm_leaves}
+    # A sum is stored only where the trace stores it; the fused first norm always
+    # stores its residual (the gathered embedding row).
+    stored = {leaf.name: leaf.config.get("store_sum", True) for leaf in norm_leaves}
     assert stored == {
         "first_norm": True,
         "post_norm": False,
@@ -156,3 +158,11 @@ def test_paged_attention_backend_takes_bf16_and_keeps_fp8():
             assert registry.backend_supports(
                 kind, "flashinfer_trtllm_gen", dtype, dtype, gpu="NVIDIA GB300"
             )
+
+
+def test_norms_carry_the_serving_tuning_size_and_eps():
+    # Phase 3B-2: every Inductor norm leaf, the fused first norm included, is
+    # keyed by serving's max_num_batched_tokens and Llama 3.1's eps.
+    for leaf in m.VARIANT_LEAVES:
+        if leaf.kind in ("multi_add_rms_norm", "embedding_rms_norm"):
+            assert (leaf.config["tune_tokens"], leaf.config["rms_eps"]) == (2048, 1e-5)

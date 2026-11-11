@@ -220,6 +220,7 @@ fn kv_cache_append_config(cfg: &FlashInferAttentionConfig) -> KvCacheAppendKerne
         kv_dtype: cfg.kv_dtype(),
         cache_layout: cfg.kv_cache_layout.clone(),
         scale_granularity: cfg.kv_scale_granularity.clone(),
+        value_row_stride: None,
     }
 }
 

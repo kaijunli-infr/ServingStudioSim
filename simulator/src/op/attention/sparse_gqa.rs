@@ -147,6 +147,7 @@ impl SparseGqaAttentionOp {
                 kv_dtype: cfg.kv_dtype,
                 cache_layout: CACHE_LAYOUT.to_string(),
                 scale_granularity: KV_SCALE_GRANULARITY.to_string(),
+                value_row_stride: None,
             },
             // A pure write of one [heads x head_dim] output row per token.
             out_zero: ElementwiseKernelConfig {

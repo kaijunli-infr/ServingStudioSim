@@ -43,6 +43,9 @@ const PREFIX_KNOTS: [u32; 6] = [0, 512, 2048, 8192, 32768, 131072];
 /// Profiling cap on one batch's KV bytes (the runner's `_MAX_KV_BYTES`).
 const MAX_KV_BYTES: f64 = (32u64 << 30) as f64;
 
+/// Page size of every row measured before `page_size` was keyed.
+pub const LEGACY_PAGE_SIZE: u32 = 32;
+
 #[derive(KernelConfig, Hash, PartialEq, Eq, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct PagedAttnBatchPrefillKernelConfig {
     #[serde(deserialize_with = "de_backends")]
@@ -56,6 +59,10 @@ pub struct PagedAttnBatchPrefillKernelConfig {
     #[kv_dtype]
     pub kv_dtype: DType,
     pub o_dtype: DType,
+    /// Tokens per KV page (selects the trtllm-gen cubin, `P16`/`P32`/...);
+    /// `None`, or [`LEGACY_PAGE_SIZE`], keys the rows measured before the field.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub page_size: Option<u32>,
 }
 
 impl PagedAttnBatchPrefillKernelConfig {
@@ -179,6 +186,7 @@ impl KernelSpec for PagedAttnBatchPrefillSpec {
         grid: &SweepGrid,
         backend: &'static str,
     ) -> Vec<ArgsPayload> {
+        let page_size = config.page_size.filter(|&p| p != LEGACY_PAGE_SIZE);
         grid.expand_3d(|seqs, tiles, prefix| {
             // A request holds at least one tile, so past `tiles` requests the
             // count saturates: the cell holds the one-tile-per-request batch.
@@ -186,7 +194,7 @@ impl KernelSpec for PagedAttnBatchPrefillSpec {
             // sits on the `seqs == tiles` edge, between a real and a dropped
             // corner.
             let requests = canonical(seqs.min(tiles), tiles, prefix);
-            ArgsPayload::new()
+            let payload = ArgsPayload::new()
                 .with("backend", backend)
                 .with("num_qo_heads", config.num_qo_heads.get())
                 .with("num_kv_heads", config.num_kv_heads.get())
@@ -194,7 +202,11 @@ impl KernelSpec for PagedAttnBatchPrefillSpec {
                 .with("q_dtype", config.q_dtype.as_str())
                 .with("kv_dtype", config.kv_dtype.as_str())
                 .with("o_dtype", config.o_dtype.as_str())
-                .with("requests", serde_json::json!(requests))
+                .with("requests", serde_json::json!(requests));
+            match page_size {
+                Some(page) => payload.with("page_size", page),
+                None => payload,
+            }
         })
     }
 }
@@ -216,6 +228,7 @@ mod tests {
             q_dtype: DType::Fp8E4m3,
             kv_dtype: DType::Fp8E4m3,
             o_dtype: DType::Bf16,
+            page_size: None,
         }
     }
 
@@ -353,5 +366,20 @@ mod tests {
         assert_eq!(fields.len(), 8);
         assert_eq!(fields.get("requests"), Some(&serde_json::json!([[0, 128]])));
         assert_eq!(fields.get("kv_dtype"), Some(&Value::from("fp8_e4m3")));
+    }
+
+    #[test]
+    fn page_size_keys_only_when_it_differs_from_the_legacy_32() {
+        let grid = PagedAttnBatchPrefillSpec::sweep_grid(&config());
+        let fields = |page_size| {
+            let cfg = PagedAttnBatchPrefillKernelConfig { page_size, ..config() };
+            PagedAttnBatchPrefillSpec::enumerate(&cfg, &grid, "flashinfer_trtllm_gen")[0]
+                .fields()
+                .clone()
+        };
+        assert_eq!(fields(None), fields(Some(LEGACY_PAGE_SIZE)));
+        assert_eq!(fields(None).len(), 8);
+        assert_eq!(fields(Some(16))["page_size"], Value::from(16_u32));
+        assert_eq!(fields(Some(16)).len(), 9);
     }
 }

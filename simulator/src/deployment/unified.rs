@@ -368,10 +368,17 @@ impl Deployment for UnifiedDeployment {
                     build_barebone_worker,
                 ))
             }
-            IterArchSel::Llama3DenseVllm { .. } => {
+            IterArchSel::Llama3DenseVllm {
+                max_num_batched_tokens,
+                ..
+            } => {
                 ensure_barebone(&g.worker)?;
                 let model = Arc::new(arch_build::dense_vllm(
-                    model_spec, &gpu_name, MODEL_NAME, bridge,
+                    model_spec,
+                    *max_num_batched_tokens,
+                    &gpu_name,
+                    MODEL_NAME,
+                    bridge,
                 )?);
                 Ok(assemble_flow(
                     model,

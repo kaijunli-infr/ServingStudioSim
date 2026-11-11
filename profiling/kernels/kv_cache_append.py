@@ -15,6 +15,13 @@ granularity are static kernel identity because each can select a different
 implementation branch.  ``head_dim_v`` is optional: absent means symmetric
 K/V (equal to ``head_dim``), so symmetric rows keep the keys they had before
 the field existed and only asymmetric rows carry it.
+
+``cache_layout="HND_PACKED"`` is vLLM's FlashInfer-backend cache, one
+``[blocks, heads, page, 2 * head_dim]`` buffer whose halves are K and V, and
+``value_row_stride`` (optional, absent = contiguous values) says the values are
+the trailing slice of a wider row, the fused QKV output. Only ``vllm_cuda``
+measures either; the other backends reject them. Neither changes an existing
+row's key: the layout is a new value and the stride is unset there.
 """
 
 from __future__ import annotations
@@ -42,7 +49,10 @@ DOC = KernelDoc(
         "one cache slot per token, and block_size is the tokens per page. The "
         "measurement writes num_tokens tokens into distinct random slots of a "
         "cache with at least 256 pages. Keys have head_dim elements per head and "
-        "values head_dim_v, which is left out when the two are equal."
+        "values head_dim_v, which is left out when the two are equal. HND_PACKED "
+        "is one cache per layer whose last dimension holds a head's K then V "
+        "channels, as vLLM's FlashInfer backend allocates it; value_row_stride is "
+        "set when the values are read in place from the fused QKV output."
     ),
     category="Attention",
     subcategory="MHA / GQA",
@@ -68,6 +78,8 @@ DOC = KernelDoc(
         "vllm_cuda uses K and V scales of 1.",
         "vllm_cuda needs head_dim_v == head_dim; vllm_triton_diffkv writes one packed "
         "[num_blocks, block_size, num_kv_heads, head_dim + head_dim_v] cache.",
+        "HND_PACKED and value_row_stride are vllm_cuda-only and bf16-cache-only; "
+        "each such row is checked bit for bit over the whole cache before timing.",
         "GB/s counts the K and V reads and writes and the int64 slot map, not the scales.",
     ),
     # The torch backend is the PyTorch reference; it lives in the runner module.

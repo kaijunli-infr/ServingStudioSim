@@ -11,8 +11,10 @@ Cache layout. vLLM's FlashInfer cache is ``[pages, kv_heads, page_size,
 2 * head_dim]`` per layer under HND and the backend passes the two halves of the
 last dimension as the K and V views. The runner allocates the same raw pages,
 shuffles them across a pool sized to the batch and keeps physical page 0 as the
-null page that empty rows point at. Pages hold ``_PAGE_SIZE`` tokens: the
-kernel time measured the same for 16, 32 and 64.
+null page that empty rows point at. Pages hold ``page_size`` tokens, the
+deployment's block size; it selects the trtllm-gen cubin (``P16``, ``P32``,
+...). Rows that leave it out hold ``_PAGE_SIZE`` (32), chosen when 16, 32 and
+64 measured the same for FP8; the served GB300 bf16 Llama runs ``P16``.
 
 Dtypes. Two deployments: an FP8 query over an FP8 cache (bf16 output), and a
 bf16 query over a bf16 cache (bf16 output), the unquantized path vLLM takes
@@ -28,7 +30,8 @@ Decode bound. ``max_seq_len`` only sizes the split of each request's KV range
 (at most ``ceil(max_seq_len / 512)`` CTAs, bounded by the SMs). vLLM's FULL CUDA
 graph for a decode-only step was captured with ``max_seq_len = max_model_len``;
 the runner passes ``max(max_kv_len, 512 * SMs)``, which saturates the split the
-same way for any ``max_model_len`` that does.
+same way for any ``max_model_len`` that does. The split is therefore a function
+of the row's key and the GPU (``decode_max_seq_len``), not a free parameter.
 """
 
 from __future__ import annotations
@@ -45,6 +48,8 @@ BACKEND = "flashinfer_trtllm_gen"
 _DECODE = "paged_attn_batch_decode"
 _PREFILL = "paged_attn_batch_prefill"
 _PAGE_SIZE = 32
+# Page sizes FlashInfer's trtllm-gen ships cubins for.
+_PAGE_SIZES = (16, 32, 64)
 _NULL_PAGE = 0
 # vLLM's VLLM_FLASHINFER_WORKSPACE_BUFFER_SIZE default.
 _WORKSPACE_BYTES = 394 * 1024 * 1024
@@ -77,6 +82,7 @@ class _Geometry:
     head_dim: int
     # Bytes of one query or cache element: 1 for FP8, 2 for bf16.
     element_bytes: int = 1
+    page_size: int = _PAGE_SIZE
 
     @property
     def fp8(self) -> bool:
@@ -100,13 +106,21 @@ def _validate_geometry(
     q_dtype: object,
     kv_dtype: object,
     o_dtype: object,
+    page_size: int | None = None,
 ) -> _Geometry:
+    # Absent: the 32-token pages of every row measured before the field existed.
+    page_size = _PAGE_SIZE if page_size is None else page_size
     for name, value in (
         ("num_qo_heads", num_qo_heads),
         ("num_kv_heads", num_kv_heads),
         ("head_dim", head_dim),
+        ("page_size", page_size),
     ):
         _positive(name, value)
+    if page_size not in _PAGE_SIZES:
+        raise ProfilerNotImplemented(
+            f"{kind}:{BACKEND} supports page_size in {_PAGE_SIZES}, got {page_size}"
+        )
     if num_qo_heads % num_kv_heads:
         raise ValueError("num_qo_heads must be a multiple of num_kv_heads")
     key = (str(q_dtype), str(kv_dtype), str(o_dtype))
@@ -115,7 +129,7 @@ def _validate_geometry(
             f"{kind}:{BACKEND} supports fp8_e4m3 queries over an fp8_e4m3 cache, or bf16 "
             f"queries over a bf16 cache, with bf16 output; got {key}"
         )
-    return _Geometry(num_qo_heads, num_kv_heads, head_dim, _DTYPES[key])
+    return _Geometry(num_qo_heads, num_kv_heads, head_dim, _DTYPES[key], page_size)
 
 
 @dataclass(frozen=True)
@@ -149,9 +163,10 @@ def validate_decode_args(
     batch_size: int,
     max_kv_len: int,
     total_kv_len: int,
+    page_size: int | None = None,
 ) -> _DecodeShape:
     geometry = _validate_geometry(
-        _DECODE, num_qo_heads, num_kv_heads, head_dim, q_dtype, kv_dtype, o_dtype
+        _DECODE, num_qo_heads, num_kv_heads, head_dim, q_dtype, kv_dtype, o_dtype, page_size
     )
     for name, value in (
         ("batch_size", batch_size),
@@ -209,9 +224,10 @@ def validate_prefill_args(
     kv_dtype: object,
     o_dtype: object,
     requests: tuple[tuple[int, int], ...],
+    page_size: int | None = None,
 ) -> _PrefillShape:
     geometry = _validate_geometry(
-        _PREFILL, num_qo_heads, num_kv_heads, head_dim, q_dtype, kv_dtype, o_dtype
+        _PREFILL, num_qo_heads, num_kv_heads, head_dim, q_dtype, kv_dtype, o_dtype, page_size
     )
     if not requests:
         raise ValueError("requests must hold at least one (prefix, new tokens) pair")
@@ -229,6 +245,15 @@ def validate_prefill_args(
     if sum(shape.lengths) * geometry.kv_bytes_per_token > _MAX_KV_BYTES:
         raise ProfilerNotImplemented(f"{_PREFILL} caps the batch's KV at {_MAX_KV_BYTES} bytes")
     return shape
+
+
+def decode_max_seq_len(max_kv_len: int, sms: int) -> int:
+    """The ``max_seq_len`` the decode call passes: it saturates the split as vLLM's
+    FULL graph captured at ``max_model_len`` does, whenever ``max_model_len`` is at
+    least ``512 * SMs``. FlashInfer splits each request over at most
+    ``ceil(max_seq_len / 512)`` CTAs, bounded by the SMs, so with the batch the
+    split is fixed by the row's key and the GPU."""
+    return max(max_kv_len, _SPLIT_TOKENS * sms)
 
 
 def _cdiv(a: int, b: int) -> int:
@@ -260,7 +285,8 @@ def _build_workload(
     torch: Any, geometry: _Geometry, lengths: list[int], tokens: int, device: Any
 ) -> _Workload:
     generator = torch.Generator().manual_seed(0x7A77)
-    page_counts = [_cdiv(length, _PAGE_SIZE) for length in lengths]
+    page = geometry.page_size
+    page_counts = [_cdiv(length, page) for length in lengths]
     num_pages = sum(page_counts) + 1
     physical = (torch.randperm(num_pages - 1, generator=generator) + 1).to(torch.int32)
     block_table = torch.full(
@@ -272,9 +298,7 @@ def _build_workload(
         cursor += count
 
     hkv, hq, dim = geometry.num_kv_heads, geometry.num_qo_heads, geometry.head_dim
-    raw_cache = torch.empty(
-        (num_pages, hkv, _PAGE_SIZE, 2 * dim), dtype=torch.bfloat16, device=device
-    )
+    raw_cache = torch.empty((num_pages, hkv, page, 2 * dim), dtype=torch.bfloat16, device=device)
     element = torch.float8_e4m3fn if geometry.fp8 else torch.bfloat16
     raw_cache = raw_cache.normal_(std=0.5).to(element)
     kv_cache = (raw_cache[..., :dim], raw_cache[..., dim:])
@@ -355,7 +379,7 @@ def build_decode(torch: Any, shape: _DecodeShape, device: Any) -> tuple[_Workloa
     work = _build_workload(torch, geometry, shape.lengths, shape.batch_size, device)
     workspace = _workspace(torch, device)
     sms = torch.cuda.get_device_properties(device).multi_processor_count
-    max_seq_len = max(shape.max_kv_len, _SPLIT_TOKENS * sms)
+    max_seq_len = decode_max_seq_len(shape.max_kv_len, sms)
     bmm1_scale = geometry.head_dim**-0.5
 
     def run() -> Any:

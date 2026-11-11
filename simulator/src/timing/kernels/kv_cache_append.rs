@@ -1,8 +1,12 @@
 //! Paged KV-cache append: write newly produced K/V rows into cache slots.
 //!
 //! Static identity captures the physical write path (KV heads, key and value
-//! head sizes, page size, input/cache dtypes, NHD/HND layout, and tensor/head
-//! scale). `head_dim_v` is unset for ordinary attention (V as wide as K); it is
+//! head sizes, page size, input/cache dtypes, NHD/HND/HND_PACKED layout, value
+//! row stride, and tensor/head scale). `HND_PACKED` is vLLM's FlashInfer cache,
+//! one `[blocks, heads, page, 2 * head_dim]` buffer whose halves are K and V;
+//! `value_row_stride` is set when the values are read in place from the fused
+//! QKV output (unset, or 0, for a contiguous value tensor, so every earlier
+//! config keys the rows it keyed before the field existed). `head_dim_v` is unset for ordinary attention (V as wide as K); it is
 //! set when V is narrower than K (the `vllm_triton_diffkv` backend writes both
 //! into one packed `[blocks, page, heads, head_dim + head_dim_v]` cache). Runtime is
 //! the number of actual appended tokens, matching vLLM's use of
@@ -34,6 +38,10 @@ pub struct KvCacheAppendKernelConfig {
     pub kv_dtype: DType,
     pub cache_layout: String,
     pub scale_granularity: String,
+    /// Elements between consecutive tokens' value rows when the values are a
+    /// slice of a wider row; `None` (or 0) is a contiguous value tensor.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub value_row_stride: Option<u32>,
 }
 
 #[derive(Clone, SweepCoords, serde::Serialize, serde::Deserialize)]
@@ -75,6 +83,7 @@ impl KernelSpec for KvCacheAppendSpec {
             .as_ref()
             .map(Dim::get)
             .filter(|&v| v != config.head_dim.get());
+        let value_row_stride = config.value_row_stride.filter(|&s| s != 0);
         grid.expand_1d(|num_tokens| {
             let payload = ArgsPayload::new()
                 .with("backend", backend)
@@ -86,8 +95,12 @@ impl KernelSpec for KvCacheAppendSpec {
                 .with("cache_layout", config.cache_layout.clone())
                 .with("scale_granularity", config.scale_granularity.clone())
                 .with("num_tokens", num_tokens as u32);
-            match head_dim_v {
+            let payload = match head_dim_v {
                 Some(v) => payload.with("head_dim_v", v),
+                None => payload,
+            };
+            match value_row_stride {
+                Some(s) => payload.with("value_row_stride", s),
                 None => payload,
             }
         })
@@ -117,6 +130,7 @@ mod tests {
             kv_dtype: DType::Bf16,
             cache_layout: "NHD".to_string(),
             scale_granularity: "tensor".to_string(),
+            value_row_stride: None,
         }
     }
 
@@ -212,5 +226,40 @@ mod tests {
         let grid = KvCacheAppendSpec::sweep_grid(&cfg);
         let payload = &KvCacheAppendSpec::enumerate(&cfg, &grid, "vllm_cuda")[0];
         assert!(!payload.fields().contains_key("head_dim_v"));
+    }
+
+    #[test]
+    fn serving_layout_and_strided_values_key_their_own_rows() {
+        // The packed FlashInfer cache with V read from the QKV row must not
+        // share a key with the HND rows (same kernel, other strides).
+        let served = KvCacheAppendKernelConfig {
+            gpu_name: "NVIDIA GB300".to_string(),
+            cache_layout: "HND_PACKED".to_string(),
+            value_row_stride: Some(6144),
+            ..config()
+        };
+        let grid = KvCacheAppendSpec::sweep_grid(&served);
+        let payloads = KvCacheAppendSpec::enumerate(&served, &grid, "vllm_cuda");
+        let fields = payloads[0].fields();
+        assert_eq!(fields.get("cache_layout"), Some(&Value::from("HND_PACKED")));
+        assert_eq!(fields.get("value_row_stride"), Some(&Value::from(6144_u32)));
+        assert_eq!(fields.len(), 10);
+        assert_eq!(payloads.len(), 70);
+        assert_eq!(
+            served.describe_config()["value_row_stride"],
+            Value::from(6144_u32)
+        );
+    }
+
+    #[test]
+    fn a_zero_value_row_stride_keys_like_an_unset_one() {
+        let cfg = KvCacheAppendKernelConfig {
+            value_row_stride: Some(0),
+            ..config()
+        };
+        let grid = KvCacheAppendSpec::sweep_grid(&cfg);
+        let payload = &KvCacheAppendSpec::enumerate(&cfg, &grid, "vllm_cuda")[0];
+        assert!(!payload.fields().contains_key("value_row_stride"));
+        assert_eq!(payload.fields().len(), 9);
     }
 }

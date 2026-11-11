@@ -33,6 +33,7 @@ from profiling.kernels import (
     dsa_sparse_mla_prefill,  # noqa: F401
     dsa_topk_prefill,  # noqa: F401
     elementwise,  # noqa: F401
+    embedding_rms_norm,  # noqa: F401
     embedding_row_gather,  # noqa: F401
     engram_lookup,  # noqa: F401
     fa4_varlen_attention,  # noqa: F401

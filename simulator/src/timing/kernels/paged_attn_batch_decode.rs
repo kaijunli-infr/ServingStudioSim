@@ -38,6 +38,9 @@ const FILL_KNOTS: [f64; 4] = [0.0, 0.25, 0.5, 1.0];
 /// Profiling cap on one batch's KV bytes (the runner's `_MAX_KV_BYTES`).
 const MAX_KV_BYTES: f64 = (32u64 << 30) as f64;
 
+/// Page size of every row measured before `page_size` was keyed.
+pub const LEGACY_PAGE_SIZE: u32 = 32;
+
 #[derive(KernelConfig, Hash, PartialEq, Eq, Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct PagedAttnBatchDecodeKernelConfig {
     #[serde(deserialize_with = "de_backends")]
@@ -51,6 +54,10 @@ pub struct PagedAttnBatchDecodeKernelConfig {
     #[kv_dtype]
     pub kv_dtype: DType,
     pub o_dtype: DType,
+    /// Tokens per KV page (selects the trtllm-gen cubin, `P16`/`P32`/...);
+    /// `None`, or [`LEGACY_PAGE_SIZE`], keys the rows measured before the field.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub page_size: Option<u32>,
 }
 
 impl PagedAttnBatchDecodeKernelConfig {
@@ -170,8 +177,9 @@ impl KernelSpec for PagedAttnBatchDecodeSpec {
         backend: &'static str,
     ) -> Vec<ArgsPayload> {
         // A single request has no room to fill: its cells share one row.
+        let page_size = config.page_size.filter(|&p| p != LEGACY_PAGE_SIZE);
         grid.expand_3d(|batch, max_kv_len, fill| {
-            ArgsPayload::new()
+            let payload = ArgsPayload::new()
                 .with("backend", backend)
                 .with("num_qo_heads", config.num_qo_heads.get())
                 .with("num_kv_heads", config.num_kv_heads.get())
@@ -181,7 +189,11 @@ impl KernelSpec for PagedAttnBatchDecodeSpec {
                 .with("o_dtype", config.o_dtype.as_str())
                 .with("batch_size", batch as u32)
                 .with("max_kv_len", max_kv_len as u32)
-                .with("total_kv_len", total_kv_len(batch, max_kv_len, fill))
+                .with("total_kv_len", total_kv_len(batch, max_kv_len, fill));
+            match page_size {
+                Some(page) => payload.with("page_size", page),
+                None => payload,
+            }
         })
     }
 }
@@ -205,6 +217,7 @@ mod tests {
             q_dtype: DType::Fp8E4m3,
             kv_dtype: DType::Fp8E4m3,
             o_dtype: DType::Bf16,
+            page_size: None,
         }
     }
 
@@ -275,6 +288,7 @@ mod tests {
             q_dtype: DType::Bf16,
             kv_dtype: DType::Bf16,
             o_dtype: DType::Bf16,
+            page_size: None,
         };
         let gb300 = llama("NVIDIA GB300");
         assert_eq!(gb300.ctas_per_request(), 8);
@@ -359,5 +373,23 @@ mod tests {
             assert_eq!(masked, bytes > MAX_KV_BYTES);
         }
         assert!(mask.iter().any(|&m| m) && mask.iter().any(|&m| !m));
+    }
+
+    #[test]
+    fn page_size_keys_only_when_it_differs_from_the_legacy_32() {
+        // Defect caught: P16 rows sharing the P32 rows' keys (different
+        // cubin), or a spelled-out 32 moving the keys of existing rows.
+        let grid = PagedAttnBatchDecodeSpec::sweep_grid(&config());
+        let fields = |page_size| {
+            let cfg = PagedAttnBatchDecodeKernelConfig { page_size, ..config() };
+            PagedAttnBatchDecodeSpec::enumerate(&cfg, &grid, "flashinfer_trtllm_gen")[0]
+                .fields()
+                .clone()
+        };
+        assert_eq!(fields(None), fields(Some(LEGACY_PAGE_SIZE)));
+        assert!(!fields(None).contains_key("page_size"));
+        assert_eq!(fields(Some(16))["page_size"], Value::from(16_u32));
+        assert_eq!(fields(Some(16)).len(), fields(None).len() + 1);
+        assert!(config().describe_config().get("page_size").is_none());
     }
 }

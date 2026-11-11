@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from profiling.db.args import DType, KernelArgs
-from profiling.db.doc import CUPTI_METHOD, BackendDoc, KernelDoc, arg
+from profiling.db.doc import CUPTI_METHOD, BackendDoc, KernelDoc, arg, optional_arg
 from profiling.db.outlier import BatchOutlierPolicy
 from profiling.db.registry import (
     BackendSupport,
@@ -16,6 +16,10 @@ from profiling.db.registry import (
 )
 
 KIND = "multi_add_rms_norm"
+# What every row measured before the fields existed used (TUNE_TOKENS and the
+# runner's eps then); absent fields mean these, so those rows keep their keys.
+LEGACY_TUNE_TOKENS = 8192
+LEGACY_RMS_EPS = 1e-6
 
 
 @dataclass(frozen=True)
@@ -35,6 +39,19 @@ class MultiAddRmsNormArgs(KernelArgs):
         doc="Whether the normalized rows are written as static per-tensor FP8 E4M3."
     )
     dtype: DType = arg(doc="Element type of the addends, the weight and the stored rows.")
+    tune_tokens: int | None = optional_arg(
+        unit="tokens",
+        absent=LEGACY_TUNE_TOKENS,
+        doc=(
+            "Token count of the first call, which picks Inductor's launch config: the "
+            "deployment's max_num_batched_tokens (vLLM's profile run). Absent: 8192."
+        ),
+    )
+    rms_eps: float | None = optional_arg(
+        unit="unitless",
+        absent=LEGACY_RMS_EPS,
+        doc="Stabilizer added to the mean square; the model's rms_norm_eps. Absent: 1e-6.",
+    )
 
 
 DOC = KernelDoc(
@@ -63,11 +80,17 @@ DOC = KernelDoc(
     default_metric="memory_bandwidth_gbps",
     method=(
         f"{CUPTI_METHOD} The block is compiled once with a symbolic token count, "
-        "and its first call, at 8192 tokens or at the row's token count when larger, "
+        "and its first call, at tune_tokens or at the row's token count when larger, "
         "picks the launch config the row then uses, as vLLM's profile run at "
         "max_num_batched_tokens does. Every launch of the compiled block is counted."
     ),
     caveats=(
+        "The tuning size can change the launch config: on GB300 the 3-addend norm "
+        "that stores the sum launched 256 threads per row tuned at 8192 tokens, where "
+        "the served kernel, tuned at 2048, launched 512. That tuning at 2048 here "
+        "reproduces 512 is not yet measured.",
+        "rms_eps is a literal in the generated source and does not change the "
+        "launch config or the traffic; it is keyed so the row states the model's value.",
         "GB/s counts each input once. The kernel reads the addends twice, once for "
         "the mean square and once for the outputs; the second read mostly hits L2.",
         "The weight is a plain multiplier; a (1 + w) weight adds one addition per "

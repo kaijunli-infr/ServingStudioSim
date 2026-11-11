@@ -61,6 +61,11 @@ impl ModelSpec {
     pub fn max_position_embeddings(&self) -> anyhow::Result<u32> {
         super::model_cfg::max_position_embeddings(std::path::Path::new(&self.model_config))
     }
+
+    /// The checkpoint's `rms_norm_eps`.
+    pub fn rms_norm_eps(&self) -> anyhow::Result<f64> {
+        super::model_cfg::rms_norm_eps(std::path::Path::new(&self.model_config))
+    }
 }
 
 // ── iter-wise contract (unified, pd) ────────────────────────────────────────
@@ -99,6 +104,11 @@ const GLM52_MTP_MODES: [&str; 3] = ["off", "full_index", "index_share"];
 
 const fn default_glm52_parallel_size() -> u16 {
     8
+}
+
+/// `llama3_dense_vllm`'s `max_num_batched_tokens` (the GB300 TP1 serving run's).
+const fn default_vllm_max_num_batched_tokens() -> u32 {
+    2048
 }
 
 const fn default_glm52_nvfp4_parallel_size() -> u16 {
@@ -212,6 +222,12 @@ pub enum IterArchSel {
     Llama3DenseVllm {
         #[serde(flatten)]
         model: ModelSpec,
+        /// vLLM's `max_num_batched_tokens`: the token count of its profile run,
+        /// which picks the launch config of every Inductor kernel the norm
+        /// leaves key it for (2048: the GB300 TP1 serving configuration).
+        #[serde(default = "default_vllm_max_num_batched_tokens")]
+        #[param(default = 2048, cache_key)]
+        max_num_batched_tokens: u32,
     },
     /// Megatron TP over dense Llama 3. `tp_size` must divide the KV heads (8).
     Llama3DenseTp {
@@ -1203,7 +1219,7 @@ impl IterArchSel {
         match self {
             Self::Qwen36Local { model, .. }
             | Self::Llama3Dense { model }
-            | Self::Llama3DenseVllm { model }
+            | Self::Llama3DenseVllm { model, .. }
             | Self::Llama3DenseTp { model, .. }
             | Self::Llama3DpAttnTpFfn { model, .. }
             | Self::Qwen3MoeDpAttnEpFfn { model, .. }
@@ -1272,7 +1288,7 @@ impl IterArchSel {
             ),
             Self::Qwen36Local { model, .. }
             | Self::Llama3Dense { model }
-            | Self::Llama3DenseVllm { model }
+            | Self::Llama3DenseVllm { model, .. }
             | Self::Llama3DenseTp { model, .. }
             | Self::Llama3DpAttnTpFfn { model, .. }
             | Self::Qwen3MoeDpAttnEpFfn { model, .. }

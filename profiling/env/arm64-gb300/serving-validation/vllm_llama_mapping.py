@@ -38,6 +38,11 @@ NUM_KV_HEADS = 8
 HEAD_DIM = 128
 VOCAB = 128256
 KV_BLOCK_SIZE = 16  # the trace's attention kernel name carries `P16`
+# Serving configuration the Inductor norms are keyed by (Phase 3B-2): vLLM's
+# max_num_batched_tokens (the tuning size) and Llama 3.1's rms_norm_eps.
+MAX_NUM_BATCHED_TOKENS = 2048
+RMS_EPS = 1e-5
+SERVED_NORM = {"tune_tokens": MAX_NUM_BATCHED_TOKENS, "rms_eps": RMS_EPS}
 
 # The leaves of `llama3_dense` (simulator/src/arch/llama3_dense.rs) and how
 # many times one iteration charges each.
@@ -77,22 +82,21 @@ GEMM_BACKEND = "torch_linear"  # F.linear with weight [n, k]: the layout vLLM's 
 VARIANT_LEAVES: tuple[Leaf, ...] = (
     Leaf(
         "first_norm",
-        "multi_add_rms_norm",
+        "embedding_rms_norm",
         "vllm_inductor",
         {
             "hidden_dim": HIDDEN,
-            "num_addends": 1,
-            "store_sum": True,
-            "store_normed": True,
-            "store_fp8": False,
+            "vocab_size": VOCAB,
             "dtype": "bf16",
+            **SERVED_NORM,
         },
         1,
         ("embedding", "input_norm"),
         ("embed_input_norm",),
-        "approximate",
-        "The trace gathers the input row from the embedding table; the kind loads it "
-        "contiguously. Same bytes for 8 tokens; the gather is not priced separately.",
+        "equivalent",
+        "Phase 3B-2 kind: the served fused kernel (gather by int32 id, store the row as "
+        "the residual and its RMSNorm). Replaces the Phase 3A 1-addend approximation, "
+        "which the runner rejects and which the pilot measured as a different kernel.",
     ),
     Leaf(
         "qkv_proj",
@@ -107,7 +111,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
     Leaf(
         "rope",
         "gqa_rope_neox",
-        "vllm_inductor",
+        "vllm_inductor_graph",
         {
             "num_qo_heads": NUM_QO_HEADS,
             "num_kv_heads": NUM_KV_HEADS,
@@ -120,7 +124,8 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
         (),
         ("rope",),
         "equivalent",
-        "New kind (Phase 3B-0): no earlier kind applied RoPE to Q and K of a plain GQA layer.",
+        "New kind (Phase 3B-0): no earlier kind applied RoPE to Q and K of a plain GQA layer. "
+        "Graph-replay rows (Phase 3B-2).",
     ),
     Leaf(
         "kv_cache_append",
@@ -132,14 +137,16 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
             "block_size": KV_BLOCK_SIZE,
             "input_dtype": "bf16",
             "kv_dtype": "bf16",
-            "cache_layout": "HND",
+            "cache_layout": "HND_PACKED",
             "scale_granularity": "tensor",
+            "value_row_stride": (NUM_QO_HEADS + 2 * NUM_KV_HEADS) * HEAD_DIM,
         },
         NUM_LAYERS,
         ("kv_cache_append",),
         ("kv_cache_append",),
         "equivalent",
-        "Same kernel; the variant passes the HND layout TRT-LLM attention uses.",
+        "Same kernel over the served layout (Phase 3B-2): vLLM's packed FlashInfer cache, "
+        "V read in place from the QKV output.",
     ),
     Leaf(
         "attention_decode",
@@ -152,6 +159,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
             "q_dtype": "bf16",
             "kv_dtype": "bf16",
             "o_dtype": "bf16",
+            "page_size": KV_BLOCK_SIZE,
         },
         NUM_LAYERS,
         ("decode",),
@@ -172,6 +180,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
             "q_dtype": "bf16",
             "kv_dtype": "bf16",
             "o_dtype": "bf16",
+            "page_size": KV_BLOCK_SIZE,
         },
         NUM_LAYERS,
         ("prefill",),
@@ -202,6 +211,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
             "store_normed": True,
             "store_fp8": False,
             "dtype": "bf16",
+            **SERVED_NORM,
         },
         NUM_LAYERS,
         ("post_norm",),
@@ -221,7 +231,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
     Leaf(
         "activation",
         "silu_and_mul",
-        "vllm_inductor",
+        "vllm_inductor_graph",
         {"hidden_dim": INTERMEDIATE, "dtype": "bf16"},
         NUM_LAYERS,
         ("activation",),
@@ -251,6 +261,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
             "store_normed": True,
             "store_fp8": False,
             "dtype": "bf16",
+            **SERVED_NORM,
         },
         NUM_LAYERS - 1,
         ("input_norm",),
@@ -269,6 +280,7 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
             "store_normed": True,
             "store_fp8": False,
             "dtype": "bf16",
+            **SERVED_NORM,
         },
         1,
         ("final_norm",),

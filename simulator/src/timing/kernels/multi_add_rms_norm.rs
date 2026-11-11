@@ -8,6 +8,12 @@
 //! output plane. Which planes are written is part of the kernel: each one is a
 //! full `num_tokens x hidden_dim` store, so they are config fields, not a
 //! post-hoc byte scale.
+//!
+//! `tune_tokens` (the first-call token count that picks Inductor's launch
+//! config, the deployment's `max_num_batched_tokens`) and `rms_eps` are
+//! optional: unset, or equal to the 8192 / 1e-6 every earlier row was measured
+//! with, they stay out of the identity and the payload, so configs that never
+//! set them key the rows they keyed before the fields existed.
 
 use crate::timing::bridge::{de_backends, ArgsPayload, DType, KernelKind};
 use crate::timing::cache::CacheKind;
@@ -31,7 +37,17 @@ pub struct MultiAddRmsNormKernelConfig {
     pub store_fp8: bool,
     #[compute_dtype]
     pub dtype: DType,
+    /// Inductor tuning size; `None` is [`LEGACY_TUNE_TOKENS`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tune_tokens: Option<u32>,
+    /// `f64::to_bits` of the RMSNorm epsilon; `None` is [`LEGACY_RMS_EPS`].
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rms_eps_bits: Option<u64>,
 }
+
+/// Tuning size and epsilon of every row measured before the fields existed.
+pub const LEGACY_TUNE_TOKENS: u32 = 8192;
+pub const LEGACY_RMS_EPS: f64 = 1e-6;
 
 #[derive(Clone, SweepCoords, serde::Serialize, serde::Deserialize)]
 pub struct MultiAddRmsNormKernelInput {
@@ -59,8 +75,13 @@ impl KernelSpec for MultiAddRmsNormSpec {
         grid: &SweepGrid,
         backend: &'static str,
     ) -> Vec<ArgsPayload> {
+        let tune_tokens = config.tune_tokens.filter(|&t| t != LEGACY_TUNE_TOKENS);
+        let rms_eps = config
+            .rms_eps_bits
+            .map(f64::from_bits)
+            .filter(|&eps| eps != LEGACY_RMS_EPS);
         grid.expand_1d(|num_tokens| {
-            ArgsPayload::new()
+            let payload = ArgsPayload::new()
                 .with("backend", backend)
                 .with("num_tokens", num_tokens as u32)
                 .with("hidden_dim", config.hidden_dim.get())
@@ -68,7 +89,15 @@ impl KernelSpec for MultiAddRmsNormSpec {
                 .with("store_sum", config.store_sum)
                 .with("store_normed", config.store_normed)
                 .with("store_fp8", config.store_fp8)
-                .with("dtype", config.dtype.as_str())
+                .with("dtype", config.dtype.as_str());
+            let payload = match tune_tokens {
+                Some(t) => payload.with("tune_tokens", t),
+                None => payload,
+            };
+            match rms_eps {
+                Some(eps) => payload.with("rms_eps", eps),
+                None => payload,
+            }
         })
     }
 }
@@ -95,6 +124,8 @@ mod tests {
             store_normed: false,
             store_fp8: true,
             dtype: DType::Bf16,
+            tune_tokens: None,
+            rms_eps_bits: None,
         };
         let payloads = MultiAddRmsNormSpec::enumerate(
             &config,
@@ -108,5 +139,57 @@ mod tests {
         assert_eq!(fields["store_normed"], Value::from(false));
         assert_eq!(fields["store_fp8"], Value::from(true));
         assert_eq!(fields.len(), 8);
+    }
+
+    fn llama_post_norm() -> MultiAddRmsNormKernelConfig {
+        MultiAddRmsNormKernelConfig {
+            backends: vec!["vllm_inductor"],
+            gpu_name: "NVIDIA GB300".to_string(),
+            hidden_dim: 4096.into(),
+            num_addends: 2,
+            store_sum: false,
+            store_normed: true,
+            store_fp8: false,
+            dtype: DType::Bf16,
+            tune_tokens: None,
+            rms_eps_bits: None,
+        }
+    }
+
+    fn payload_fields(config: &MultiAddRmsNormKernelConfig) -> std::collections::BTreeMap<String, Value> {
+        let payloads = MultiAddRmsNormSpec::enumerate(
+            config,
+            &MultiAddRmsNormSpec::sweep_grid(config),
+            "vllm_inductor",
+        );
+        payloads[0].fields().clone()
+    }
+
+    #[test]
+    fn legacy_tuning_and_eps_keep_the_old_identity_and_payload() {
+        // Spelling out the values earlier rows used must not move their keys.
+        let unset = llama_post_norm();
+        let spelled = MultiAddRmsNormKernelConfig {
+            tune_tokens: Some(super::LEGACY_TUNE_TOKENS),
+            rms_eps_bits: Some(super::LEGACY_RMS_EPS.to_bits()),
+            ..llama_post_norm()
+        };
+        assert_eq!(payload_fields(&unset), payload_fields(&spelled));
+        assert_eq!(payload_fields(&unset).len(), 8);
+        let described = crate::timing::kernels::engine::KernelConfig::describe_config(&unset);
+        assert!(described.get("tune_tokens").is_none() && described.get("rms_eps_bits").is_none());
+    }
+
+    #[test]
+    fn serving_tuning_and_eps_reach_the_profiler() {
+        let served = MultiAddRmsNormKernelConfig {
+            tune_tokens: Some(2048),
+            rms_eps_bits: Some(1e-5f64.to_bits()),
+            ..llama_post_norm()
+        };
+        let fields = payload_fields(&served);
+        assert_eq!(fields["tune_tokens"], Value::from(2048u32));
+        assert_eq!(fields["rms_eps"], Value::from(1e-5f64));
+        assert_eq!(fields.len(), 10);
     }
 }
