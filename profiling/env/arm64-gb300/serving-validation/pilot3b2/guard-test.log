@@ -1,0 +1,11 @@
+PASS A_normal occupancy=5.2
+PASS A_sizes_sampled (2 samples)
+PASS B_timeout occupancy=2.1
+PASS C_interrupt occupancy=6.4
+PASS D_leftover occupancy=4.7
+PASS E_source_at_cap occupancy=none
+PASS F_cache_growth occupancy=2.1
+private CUDA cache grew by 4000000 bytes, 1 files
+PASS G_artifact_growth occupancy=2.1
+PASS H_tmp_counted occupancy=2.1
+guard tests: 9 passed, 0 failed
