@@ -20,6 +20,9 @@
 #
 # It never resets a GPU and never signals a process outside its own session.
 set -u
+# The launcher builds the load generator with cargo; non-interactive shells
+# lack the user's toolchain directories on PATH.
+export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 RUN="${1:?RUN}"
 LIMIT_S="${LIMIT_S:-900}"
 S=/mnt/shared/home/kevin/workspace/serving-studio
