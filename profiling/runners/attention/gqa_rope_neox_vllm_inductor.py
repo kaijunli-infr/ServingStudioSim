@@ -92,19 +92,26 @@ def profile_gqa_rope_neox_vllm_inductor(
     validate_args(num_tokens, num_qo_heads, num_kv_heads, head_dim, rotary_dim, max_position, dtype)
     try:
         import torch
+        from vllm.config import VllmConfig, set_current_vllm_config
         from vllm.model_executor.layers.rotary_embedding import get_rope
     except ImportError as exc:
         raise ProfilerNotImplemented(f"{_BACKEND} requires the pinned vLLM environment") from exc
 
     device = torch.device("cuda", torch.cuda.current_device())
     q_size, kv_size = num_qo_heads * head_dim, num_kv_heads * head_dim
-    rope = get_rope(
-        head_dim,
-        max_position=max_position,
-        is_neox_style=True,
-        rope_parameters={**LLAMA3_ROPE_PARAMETERS, "partial_rotary_factor": rotary_dim / head_dim},
-        dtype=torch.bfloat16,
-    ).to(device)
+    # RotaryEmbedding is a CustomOp and reads the ambient compilation config
+    # during construction; without a current config it raises on __init__.
+    with set_current_vllm_config(VllmConfig()):
+        rope = get_rope(
+            head_dim,
+            max_position=max_position,
+            is_neox_style=True,
+            rope_parameters={
+                **LLAMA3_ROPE_PARAMETERS,
+                "partial_rotary_factor": rotary_dim / head_dim,
+            },
+            dtype=torch.bfloat16,
+        ).to(device)
     if rope.rotary_dim != rotary_dim:
         raise ProfilerNotImplemented(f"{_BACKEND}: vLLM built rotary_dim {rope.rotary_dim}")
     generator = torch.Generator(device=device).manual_seed(0)

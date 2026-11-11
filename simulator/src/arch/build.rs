@@ -772,10 +772,18 @@ pub fn dense_vllm(
     name: &str,
     bridge: &PerfApiBridge,
 ) -> Result<Llama3DenseVllmModel> {
+    // Dense archs otherwise ignore `fp8`; this one must not build bf16 leaves
+    // for a run that asked for FP8.
+    anyhow::ensure!(
+        !model_spec.fp8,
+        "llama3_dense_vllm prices the bf16 deployment only (fp8 is not mapped)"
+    );
     let model_cfg = dense_model_cfg(model_spec)?;
     anyhow::ensure!(
         model_cfg.dtype == DType::Bf16 && model_cfg.kv_dtype == DType::Bf16,
-        "llama3_dense_vllm prices the bf16 deployment only (fp8 is not mapped)"
+        "llama3_dense_vllm prices the bf16 deployment only, got {:?}/{:?}",
+        model_cfg.dtype,
+        model_cfg.kv_dtype
     );
     let parallel = DenseParallel {
         gpu_name: gpu.to_string(),
@@ -4278,5 +4286,33 @@ mod tests {
         assert_eq!(built[0].params["max_model_len"], 8192);
         assert_ne!(json(&built[0]), json(&built[2]));
         assert!(built[1].error.as_deref().unwrap().contains("no_such_arch"));
+    }
+
+    /// The vLLM Llama variant builds through the shared dispatch with every
+    /// GEMM on `torch_linear`, and refuses `fp8: true` instead of silently
+    /// pricing bf16 leaves.
+    #[test]
+    fn llama3_dense_vllm_builds_bf16_and_rejects_fp8() {
+        let build = |fp8: bool| {
+            let raw = format!(
+                r#"{{"type":"llama3_dense_vllm","model_config":"{}","fp8":{fp8}}}"#,
+                Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("model/config/llama3_8b.json")
+                    .display()
+            );
+            let selector: IterArchSel = serde_json::from_str(&raw).unwrap();
+            let bridge = PerfApiBridge::new_uninit_for_test();
+            bridge.enable_enumerate();
+            build_iter_model(&selector, "NVIDIA GB300", "test", &bridge)
+        };
+        let built = build(false).expect("build llama3_dense_vllm");
+        assert_eq!(built.gpus_per_replica(), 1);
+        let manifest = built.cost_log_manifest();
+        assert_eq!(manifest.slots.len(), 14);
+        for slot in manifest.slots.iter().filter(|s| s.kind == "single_gemm") {
+            assert_eq!(slot.kernel_config["backends"], serde_json::json!(["torch_linear"]));
+        }
+        let err = build(true).err().expect("fp8 must be rejected").to_string();
+        assert!(err.contains("bf16 deployment only"), "{err}");
     }
 }
