@@ -1,5 +1,8 @@
 # Proposal: validate GB300 predictions against real Llama 3.1 8B serving
 
+**Superseded by `SERVING_VALIDATION_STAGE_A.md`**, which found from source that
+vLLM's default TP all-reduce on GB300 is a FlashInfer fused kernel, not NCCL.
+
 Prepared 2026-11-11 on CPU only (repository and rack inspection, no GPU, no
 download, no engine start). Nothing here runs without a new approval.
 

@@ -40,6 +40,7 @@ home (`GB300_ROOT`, default `/mnt/shared/home/kevin/workspace/serving-studio/gb3
 | `INTEGRATION_RESULTS.md`, `integration/` | the TP2/TP4 merge (2026-11-11): row counts and checksums, eager and graph coverage, stability of the 14 large rows, validation gates, graph-mode predictions, H200/B200 compatibility, limitations |
 | `eager-completion/` | reports of the second merge (the 24 eager `nccl` rows below 16 MiB), described in `INTEGRATION_RESULTS.md` |
 | `SERVING_VALIDATION_PROPOSAL.md` | proposal (nothing run) to compare TP1/TP2/TP4 predictions with real vLLM serving of Llama 3.1 8B on GB300 |
+| `SERVING_VALIDATION_STAGE_A.md`, `serving-validation/` | Stage A (CPU-only): vLLM fork's actual TP all-reduce (FlashInfer fused AR+RMSNorm by default) and CUDA-graph behaviour with source references, isolated aarch64 engine environment, model access status, comparison method, revised GPU experiment; supersedes the proposal |
 | `merge_check.py` | verifies a `profiling merge-db` output against the DB it started from: prior rows byte-for-byte present, added rows all one GPU, no duplicate keys, valid `time_ms`, run records consistent |
 | `public_api_check.py` | local public API query over a profile DB (GB300 catalog entry, peaks, per-kind rows); CPU only, nothing deployed |
 

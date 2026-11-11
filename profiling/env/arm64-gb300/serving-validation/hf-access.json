@@ -1,0 +1,28 @@
+{
+ "repo": "meta-llama/Llama-3.1-8B-Instruct",
+ "pinned_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+ "hub": "2.4.0",
+ "authenticated": false,
+ "authentication_error": "LocalTokenNotFoundError",
+ "resolved_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
+ "gated": "manual",
+ "weight_files": {
+  "model-00001-of-00004.safetensors": 4976698672,
+  "model-00002-of-00004.safetensors": 4999802720,
+  "model-00003-of-00004.safetensors": 4915916176,
+  "model-00004-of-00004.safetensors": 1168138808
+ },
+ "weight_bytes": 16060556376,
+ "tokenizer_files": [
+  "special_tokens_map.json",
+  "tokenizer.json",
+  "tokenizer_config.json"
+ ],
+ "config_files": [
+  "config.json",
+  "generation_config.json",
+  "tokenizer_config.json"
+ ],
+ "download_access": false,
+ "download_access_error": "GatedRepoError"
+}
