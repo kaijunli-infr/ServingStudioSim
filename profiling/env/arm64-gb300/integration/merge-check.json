@@ -1,0 +1,190 @@
+{
+ "before": {
+  "path": "profiling/profile.db",
+  "sha256": "41c9cbe58d571e61fc7b1a7a0e86ae5e493aef0487001d944a270afc87bd82af",
+  "integrity_check": "ok"
+ },
+ "after": {
+  "path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/merge/profile-merged.db",
+  "sha256": "279cbe9b1fddeb8142f6762d9a1897cb924139ff5284c698ca0244660191cb43",
+  "integrity_check": "ok"
+ },
+ "gpu": "NVIDIA GB300",
+ "tables": {
+  "_profile_run": {
+   "before": 348,
+   "after": 354,
+   "lost_or_changed": 0,
+   "added": 6,
+   "added_run_keys": [
+    -5707706468047188291,
+    -5371202703420839407,
+    2423990454118780408,
+    5764201693635776300,
+    7178210190321058238,
+    8056474189844680758
+   ]
+  },
+  "all_reduce": {
+   "before": 171,
+   "after": 223,
+   "lost_or_changed": 0,
+   "added": 52,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.01268085790798068,
+   "added_time_ms_max": 2.6796881103515626,
+   "added_by_backend": {
+    "nccl": 14,
+    "nccl_graph": 38
+   },
+   "added_outliers": 0
+  },
+  "elementwise": {
+   "before": 9280,
+   "after": 9312,
+   "lost_or_changed": 0,
+   "added": 32,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.002362312,
+   "added_time_ms_max": 0.022786233,
+   "added_by_backend": {
+    "triton": 32
+   },
+   "added_outliers": 0
+  },
+  "flashinfer_attn_decode": {
+   "before": 4050,
+   "after": 4374,
+   "lost_or_changed": 0,
+   "added": 324,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.0058636090000000005,
+   "added_time_ms_max": 1.2715285189873418,
+   "added_by_backend": {
+    "fa2": 324
+   },
+   "added_outliers": 0
+  },
+  "flashinfer_attn_prefill": {
+   "before": 2970,
+   "after": 3240,
+   "lost_or_changed": 0,
+   "added": 270,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.008149955,
+   "added_time_ms_max": 37.7509247,
+   "added_by_backend": {
+    "fa2": 270
+   },
+   "added_outliers": 0
+  },
+  "kv_cache_append": {
+   "before": 1201,
+   "after": 1341,
+   "lost_or_changed": 0,
+   "added": 140,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.002654124,
+   "added_time_ms_max": 0.3115577701863354,
+   "added_by_backend": {
+    "vllm_cuda": 140
+   },
+   "added_outliers": 0
+  },
+  "single_gemm": {
+   "before": 16357,
+   "after": 17445,
+   "lost_or_changed": 0,
+   "added": 1088,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.004741959,
+   "added_time_ms_max": 4.422407109207708,
+   "added_by_backend": {
+    "torch": 544,
+    "torch_linear": 544
+   },
+   "added_outliers": 0
+  }
+ },
+ "last_migrated_at": {
+  "before": [
+   "2026-11-06 17:17:19"
+  ],
+  "after": [
+   "2026-11-06 17:17:19"
+  ]
+ },
+ "added_runs": [
+  {
+   "id": 362,
+   "run_key": -5707706468047188291,
+   "profiler_git_hash": "09d2006fe405643651e5dba18d41e9761990fdef",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  },
+  {
+   "id": 363,
+   "run_key": -5371202703420839407,
+   "profiler_git_hash": "20722a7ef04e112643509439f69fccdbed4463ca",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": "nccl 2.28.9"
+  },
+  {
+   "id": 364,
+   "run_key": 2423990454118780408,
+   "profiler_git_hash": "2a295264ec584e522b22778cc7f3aa5a16587119",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  },
+  {
+   "id": 365,
+   "run_key": 5764201693635776300,
+   "profiler_git_hash": "2a295264ec584e522b22778cc7f3aa5a16587119",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": "2.10.0+cu130"
+  },
+  {
+   "id": 366,
+   "run_key": 7178210190321058238,
+   "profiler_git_hash": "48a816d56654faf3b5fd1ef8235d2724a2e3f2c0",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  },
+  {
+   "id": 367,
+   "run_key": 8056474189844680758,
+   "profiler_git_hash": "2a295264ec584e522b22778cc7f3aa5a16587119",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": "3.6.0"
+  }
+ ],
+ "rows_per_gpu": {
+  "NVIDIA B200": {
+   "before": 129826,
+   "after": 129826
+  },
+  "NVIDIA GB300": {
+   "before": 1236,
+   "after": 3142
+  },
+  "NVIDIA H200": {
+   "before": 54857,
+   "after": 54857
+  }
+ },
+ "added_rows": 1906,
+ "problems": [],
+ "verdict": "PASS"
+}

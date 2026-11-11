@@ -1,6 +1,6 @@
 # Proposal: GB300 Llama 3.1 8B BF16 TP2 and TP4 profiling
 
-Status 2026-11-10 evening: phase A (the 1854 single-GPU rows) was approved and is done, see `TP24_RESULTS.md`. Phases B and C (the 38 all-reduce rows) were approved and are done, see `ALLREDUCE_RESULTS.md`. Merging TP2/TP4 rows into the tracked database is not approved.
+Status 2026-11-10 evening: phase A (the 1854 single-GPU rows) was approved and is done, see `TP24_RESULTS.md`. Phases B and C (the 38 all-reduce rows) were approved and are done, see `ALLREDUCE_RESULTS.md`. The TP2/TP4 rows were merged on 2026-11-11 with a separate `nccl_graph` all-reduce backend, see `INTEGRATION_RESULTS.md`.
 
 Prepared 2026-11-10 on CPU only (`simulator cost-trees --kernel-configs` and
 `timing-predict --dry-run --no-gpu` against the merged database; inputs and

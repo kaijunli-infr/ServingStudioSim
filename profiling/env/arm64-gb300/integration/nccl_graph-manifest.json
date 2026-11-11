@@ -1,0 +1,2490 @@
+{
+ "gpu_name": "NVIDIA GB300",
+ "kind": "all_reduce",
+ "backend": "nccl_graph",
+ "measurement_method": "nccl_torch_dist.cuda_graph_replay.ops10",
+ "import_commit": "20722a7ef04e112643509439f69fccdbed4463ca",
+ "importer": "profiling/env/arm64-gb300/allreduce_graph_import.py",
+ "database": {
+  "path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/staging/profile-staging.db",
+  "sha256_before": "9474a224feb01b7e6cf4af32fb3d26fe04965216f25e4fdb50a25f76942be1af",
+  "sha256_after": "a1701e26c7124076ac2937f20036e51a039febdec13c7e40c183254cf01b31ec"
+ },
+ "eager_nccl_rows_unchanged": 38,
+ "reports": {
+  "small": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/graph-stability-small.json",
+  "large": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/graph-stability-large.json"
+ },
+ "rows": [
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 4096,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.013715579640120268,
+   "group_estimates_ms": [
+    0.013691549189388752,
+    0.013928732834756374,
+    0.013659100979566574,
+    0.013715579640120268,
+    0.013866525143384933
+   ],
+   "batch_ms": {
+    "1": [
+     0.013691549189388752,
+     0.013704475946724415,
+     0.013683260884135962
+    ],
+    "2": [
+     0.013925949577242136,
+     0.013928732834756374,
+     0.013947454281151295
+    ],
+    "3": [
+     0.013660603668540716,
+     0.01362444506958127,
+     0.013659100979566574
+    ],
+    "4": [
+     0.013728764839470387,
+     0.013715579640120268,
+     0.013689373154193163
+    ],
+    "5": [
+     0.013866525143384933,
+     0.013876636978238821,
+     0.013856797013431787
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.8583717508867689,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05742688179016113,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 8192,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.01268085790798068,
+   "group_estimates_ms": [
+    0.013243003748357296,
+    0.012678106781095266,
+    0.01268085790798068,
+    0.012674842961132526,
+    0.012709147296845913
+   ],
+   "batch_ms": {
+    "1": [
+     0.012975707184523344,
+     0.01325925998389721,
+     0.013243003748357296
+    ],
+    "2": [
+     0.012678905855864286,
+     0.012669307179749012,
+     0.012678106781095266
+    ],
+    "3": [
+     0.01268085790798068,
+     0.012675642967224121,
+     0.012693626806139946
+    ],
+    "4": [
+     0.012674842961132526,
+     0.012671034783124924,
+     0.012686075177043676
+    ],
+    "5": [
+     0.01272857142612338,
+     0.012700953986495733,
+     0.012709147296845913
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.950363509029901,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05734240055084228,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 16384,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.014264252968132496,
+   "group_estimates_ms": [
+    0.014937343075871468,
+    0.014277149923145771,
+    0.014258973766118288,
+    0.014264252968132496,
+    0.014262845739722252
+   ],
+   "batch_ms": {
+    "1": [
+     0.015803201124072075,
+     0.01457628607749939,
+     0.014937343075871468
+    ],
+    "2": [
+     0.014277149923145771,
+     0.014287997968494892,
+     0.014274493791162968
+    ],
+    "3": [
+     0.014265854377299547,
+     0.014256638009101152,
+     0.014258973766118288
+    ],
+    "4": [
+     0.014264252968132496,
+     0.014266494195908308,
+     0.014263197779655457
+    ],
+    "5": [
+     0.014265757985413074,
+     0.014256030321121216,
+     0.014262845739722252
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 2.0860830677149775,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05299839973449707,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 32768,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.014311294071376324,
+   "group_estimates_ms": [
+    0.014584478922188282,
+    0.014330239035189152,
+    0.014291773084551096,
+    0.014311294071376324,
+    0.01430908590555191
+   ],
+   "batch_ms": {
+    "1": [
+     0.014584478922188282,
+     0.014613086823374033,
+     0.014548607170581818
+    ],
+    "2": [
+     0.014314302243292332,
+     0.01434102188795805,
+     0.014330239035189152
+    ],
+    "3": [
+     0.014294622000306845,
+     0.014291773084551096,
+     0.0142814377322793
+    ],
+    "4": [
+     0.014311294071376324,
+     0.014327357988804579,
+     0.014307389967143536
+    ],
+    "5": [
+     0.014895198866724968,
+     0.01430908590555191,
+     0.014308606274425983
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.8578900281156685,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05586527824401855,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 65536,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.014362717978656292,
+   "group_estimates_ms": [
+    0.014407134149223566,
+    0.014359486289322376,
+    0.014363422058522701,
+    0.014362717978656292,
+    0.014358750078827143
+   ],
+   "batch_ms": {
+    "1": [
+     0.014403293840587139,
+     0.014407134149223566,
+     0.01709366776049137
+    ],
+    "2": [
+     0.014357374981045723,
+     0.014364894013851881,
+     0.014359486289322376
+    ],
+    "3": [
+     0.014362461864948273,
+     0.014363422058522701,
+     0.0143657261505723
+    ],
+    "4": [
+     0.014362717978656292,
+     0.014363485854119062,
+     0.014360989909619093
+    ],
+    "5": [
+     0.014353982172906399,
+     0.014362685848027468,
+     0.014358750078827143
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.14395984068380255,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05290048122406006,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 131072,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.014501566998660564,
+   "group_estimates_ms": [
+    0.014621151145547628,
+    0.014398494269698858,
+    0.014501566998660564,
+    0.014503390993922949,
+    0.014468317851424217
+   ],
+   "batch_ms": {
+    "1": [
+     0.014621151145547628,
+     0.015100096352398396,
+     0.014614142011851072
+    ],
+    "2": [
+     0.014398494269698858,
+     0.014400189742445946,
+     0.014383455272763968
+    ],
+    "3": [
+     0.014502397738397121,
+     0.014501566998660564,
+     0.01450134301558137
+    ],
+    "4": [
+     0.014514143113046885,
+     0.014503390993922949,
+     0.014498207252472639
+    ],
+    "5": [
+     0.014459230937063694,
+     0.014468317851424217,
+     0.014483646024018526
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.5559512656650847,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.06096767902374268,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 262144,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.01449625426903367,
+   "group_estimates_ms": [
+    0.014494303148239851,
+    0.014522622805088758,
+    0.01449625426903367,
+    0.01449590316042304,
+    0.0145005420781672
+   ],
+   "batch_ms": {
+    "1": [
+     0.014494303148239851,
+     0.01449334342032671,
+     0.014496574643999338
+    ],
+    "2": [
+     0.014514015056192875,
+     0.014524350874125957,
+     0.014522622805088758
+    ],
+    "3": [
+     0.014492733869701624,
+     0.01449625426903367,
+     0.014500702265650034
+    ],
+    "4": [
+     0.01449590316042304,
+     0.014495742972940207,
+     0.014496350660920143
+    ],
+    "5": [
+     0.0145005420781672,
+     0.01449398323893547,
+     0.014519229996949434
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.08135857056552491,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.059547839164733884,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 524288,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.014728863257914782,
+   "group_estimates_ms": [
+    0.014864895027130842,
+    0.01467593526467681,
+    0.014757599215954542,
+    0.014728863257914782,
+    0.01457388699054718
+   ],
+   "batch_ms": {
+    "1": [
+     0.014929982833564281,
+     0.014864895027130842,
+     0.014784831088036299
+    ],
+    "2": [
+     0.014728670939803123,
+     0.01467593526467681,
+     0.014567103236913681
+    ],
+    "3": [
+     0.014757599215954542,
+     0.01488790288567543,
+     0.014649087097495794
+    ],
+    "4": [
+     0.014639615081250668,
+     0.014728863257914782,
+     0.014890335034579039
+    ],
+    "5": [
+     0.014888096135109663,
+     0.01457388699054718,
+     0.014503614977002144
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.7267417937430996,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04623680114746094,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 1048576,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.01735782902687788,
+   "group_estimates_ms": [
+    0.01730602001771331,
+    0.017363909166306257,
+    0.01739846868440509,
+    0.01735782902687788,
+    0.017262499779462814
+   ],
+   "batch_ms": {
+    "1": [
+     0.01730602001771331,
+     0.017378948163241148,
+     0.01725837169215083
+    ],
+    "2": [
+     0.017453573178499937,
+     0.01725715585052967,
+     0.017363909166306257
+    ],
+    "3": [
+     0.0174530609510839,
+     0.017288485076278448,
+     0.01739846868440509
+    ],
+    "4": [
+     0.01732694823294878,
+     0.017512100748717785,
+     0.01735782902687788
+    ],
+    "5": [
+     0.017262499779462814,
+     0.017283364199101925,
+     0.017253892961889505
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.30850272860227124,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.049260158538818356,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 2097152,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.02224430302157998,
+   "group_estimates_ms": [
+    0.022288845852017403,
+    0.022295374888926744,
+    0.022236494813114405,
+    0.022232365794479847,
+    0.02224430302157998
+   ],
+   "batch_ms": {
+    "1": [
+     0.02229755138978362,
+     0.022288845852017403,
+     0.022288526874035597
+    ],
+    "2": [
+     0.022295374888926744,
+     0.02230036724358797,
+     0.022277581971138716
+    ],
+    "3": [
+     0.022236494813114405,
+     0.02223665500059724,
+     0.022227406967431307
+    ],
+    "4": [
+     0.02222561463713646,
+     0.022232365794479847,
+     0.022240206133574247
+    ],
+    "5": [
+     0.02224334329366684,
+     0.02224430302157998,
+     0.02227102220058441
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.13560700519481167,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04828415870666504,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 4194304,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.04135432606562972,
+   "group_estimates_ms": [
+    0.04139285488054156,
+    0.04141170298680663,
+    0.04133858298882842,
+    0.04131362261250615,
+    0.04135432606562972
+   ],
+   "batch_ms": {
+    "1": [
+     0.04135970305651426,
+     0.04139285488054156,
+     0.04140514321625233
+    ],
+    "2": [
+     0.04141170298680663,
+     0.04146783100441098,
+     0.04137295112013817
+    ],
+    "3": [
+     0.04133858298882842,
+     0.04134472692385316,
+     0.04120520735159516
+    ],
+    "4": [
+     0.04125202214345336,
+     0.04131362261250615,
+     0.041344374883919954
+    ],
+    "5": [
+     0.04135432606562972,
+     0.04140642285346985,
+     0.04132155887782574
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.09647810359978072,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.061798720359802245,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 8388608,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.04695705836638808,
+   "group_estimates_ms": [
+    0.046879458241164684,
+    0.04678140999749303,
+    0.04695705836638808,
+    0.04708957113325596,
+    0.0470696659758687
+   ],
+   "batch_ms": {
+    "1": [
+     0.046879458241164684,
+     0.04691862594336271,
+     0.04686563415452838
+    ],
+    "2": [
+     0.04678140999749303,
+     0.046774657908827066,
+     0.04681776184588671
+    ],
+    "3": [
+     0.046938114799559116,
+     0.04701728234067559,
+     0.04695705836638808
+    ],
+    "4": [
+     0.04709705896675587,
+     0.04708957113325596,
+     0.04704717081040144
+    ],
+    "5": [
+     0.04702909104526043,
+     0.0470696659758687,
+     0.04707257775589824
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.27583459034858493,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.054584321975708006,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-10T18:27:05Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp2-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 16777216,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.056012087035924196,
+   "group_estimates_ms": [
+    0.056002326775342226,
+    0.056012087035924196,
+    0.056137433275580406,
+    0.05603259988129139,
+    0.056011897046118975
+   ],
+   "batch_ms": {
+    "1": [
+     0.05601915903389454,
+     0.05592843797057867,
+     0.056002326775342226
+    ],
+    "2": [
+     0.055870198644697666,
+     0.0560249830596149,
+     0.056012087035924196
+    ],
+    "3": [
+     0.05758438119664788,
+     0.056137433275580406,
+     0.05593189503997564
+    ],
+    "4": [
+     0.05603259988129139,
+     0.05595621606335044,
+     0.05605311319231987
+    ],
+    "5": [
+     0.056011897046118975,
+     0.056011800188571215,
+     0.05602882523089647
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.09988814651906597,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05976128101348877,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 33554432,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.08183556608855724,
+   "group_estimates_ms": [
+    0.081812490709126,
+    0.08183041168376803,
+    0.08184922905638814,
+    0.08183556608855724,
+    0.08195562986657023
+   ],
+   "batch_ms": {
+    "1": [
+     0.08174493908882141,
+     0.0818130993284285,
+     0.081812490709126
+    ],
+    "2": [
+     0.08181642787531018,
+     0.08183041168376803,
+     0.08187534008175135
+    ],
+    "3": [
+     0.0818195641040802,
+     0.08184922905638814,
+     0.08188020437955856
+    ],
+    "4": [
+     0.08179377298802137,
+     0.0818437896668911,
+     0.08183556608855724
+    ],
+    "5": [
+     0.08195268595591187,
+     0.08195562986657023,
+     0.08195575792342424
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.06947058615922254,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.08733983993530274,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 67108864,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.15126535901799798,
+   "group_estimates_ms": [
+    0.15126763004809618,
+    0.15126535901799798,
+    0.15124017605558038,
+    0.15137643413618207,
+    0.15121336188167334
+   ],
+   "batch_ms": {
+    "1": [
+     0.1513240779750049,
+     0.15094270138069987,
+     0.15126763004809618
+    ],
+    "2": [
+     0.15127883106470108,
+     0.1509671499952674,
+     0.15126535901799798
+    ],
+    "3": [
+     0.15124017605558038,
+     0.15098827192559838,
+     0.1512588318437338
+    ],
+    "4": [
+     0.15137643413618207,
+     0.15119172912091017,
+     0.15138264186680317
+    ],
+    "5": [
+     0.15121336188167334,
+     0.15101454593241215,
+     0.15127973025664687
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.04104305149797651,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.15697183609008789,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 134217728,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.27917791018262506,
+   "group_estimates_ms": [
+    0.2789824469946325,
+    0.27907860977575183,
+    0.27925637224689126,
+    0.27917791018262506,
+    0.27918965741991997
+   ],
+   "batch_ms": {
+    "1": [
+     0.2789824469946325,
+     0.2792155989445746,
+     0.2789465426467359
+    ],
+    "2": [
+     0.27906388882547617,
+     0.2792966910637915,
+     0.27907860977575183
+    ],
+    "3": [
+     0.27918002009391785,
+     0.2795286299660802,
+     0.27925637224689126
+    ],
+    "4": [
+     0.27913125371560454,
+     0.27943698270246387,
+     0.27917791018262506
+    ],
+    "5": [
+     0.27902875980362296,
+     0.27930517587810755,
+     0.27918965741991997
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.03841446883351942,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.28258207321166995,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 268435456,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.5174972456879914,
+   "group_estimates_ms": [
+    0.5176025540567935,
+    0.5174972456879914,
+    0.5175742111168802,
+    0.5174771258607507,
+    0.5174516900442541
+   ],
+   "batch_ms": {
+    "1": [
+     0.5176025540567935,
+     0.5175080271437764,
+     0.5176730509847403
+    ],
+    "2": [
+     0.5174972456879914,
+     0.5172795504331589,
+     0.5175585271790624
+    ],
+    "3": [
+     0.5175742111168802,
+     0.5172826899215579,
+     0.5175957148894668
+    ],
+    "4": [
+     0.5174771258607507,
+     0.5173502457328141,
+     0.517576134763658
+    ],
+    "5": [
+     0.5174516900442541,
+     0.5172522971406579,
+     0.5175636587664485
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.012513210098796227,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.5255360031127929,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 536870912,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.9802946271374822,
+   "group_estimates_ms": [
+    0.9802946271374822,
+    0.980338381137699,
+    0.9802946420386435,
+    0.980114905629307,
+    0.9802304650656879
+   ],
+   "batch_ms": {
+    "1": [
+     0.9802946271374822,
+     0.9802459562197328,
+     0.9803060828708111
+    ],
+    "2": [
+     0.9804158187471329,
+     0.9803180918097497,
+     0.980338381137699
+    ],
+    "3": [
+     0.9803635380230844,
+     0.9802946420386435,
+     0.9802842107601464
+    ],
+    "4": [
+     0.9802793529815972,
+     0.980114905629307,
+     0.98008821811527
+    ],
+    "5": [
+     0.9803194901905955,
+     0.9802304650656879,
+     0.9802018250338732
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.008881959775053051,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.976677474975586,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 2,
+   "message_size_bytes": 1073741824,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 1.851768541149795,
+   "group_estimates_ms": [
+    1.851606021169573,
+    1.851740756072104,
+    1.851779333781451,
+    1.851778928656131,
+    1.851768541149795
+   ],
+   "batch_ms": {
+    "1": [
+     1.851606021169573,
+     1.8513969969935715,
+     1.8516561998985708
+    ],
+    "2": [
+     1.851740756072104,
+     1.851419476326555,
+     1.8518336866982281
+    ],
+    "3": [
+     1.851860067807138,
+     1.8512979219667614,
+     1.851779333781451
+    ],
+    "4": [
+     1.851778928656131,
+     1.851434319280088,
+     1.852120020892471
+    ],
+    "5": [
+     1.851768541149795,
+     1.8508490212261677,
+     1.852265025023371
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.003976544746278585,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 1.8491900634765626,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "2,3",
+    "started_utc": "2026-11-11T01:45:34Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp2-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 4096,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.01911216787993908,
+   "group_estimates_ms": [
+    0.019325031898915768,
+    0.01911216787993908,
+    0.018779592122882605,
+    0.019343144726008177,
+    0.018597383052110672
+   ],
+   "batch_ms": {
+    "1": [
+     0.019325031898915768,
+     0.019317639991641045,
+     0.01934448815882206
+    ],
+    "2": [
+     0.019054343923926353,
+     0.01911216787993908,
+     0.019620584789663553
+    ],
+    "3": [
+     0.01875303126871586,
+     0.018779592122882605,
+     0.01878688670694828
+    ],
+    "4": [
+     0.019367976114153862,
+     0.019343144726008177,
+     0.019315463956445456
+    ],
+    "5": [
+     0.018657990731298923,
+     0.0185928069986403,
+     0.018597383052110672
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.7460809173425782,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.051773757934570314,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 8192,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.018456965684890747,
+   "group_estimates_ms": [
+    0.01858736714348197,
+    0.018456965684890747,
+    0.01830106182023883,
+    0.018662439193576574,
+    0.01812579808756709
+   ],
+   "batch_ms": {
+    "1": [
+     0.01856912672519684,
+     0.018593573942780495,
+     0.01858736714348197
+    ],
+    "2": [
+     0.018465349916368723,
+     0.01845296612009406,
+     0.018456965684890747
+    ],
+    "3": [
+     0.01830189535394311,
+     0.01830106182023883,
+     0.01828566985204816
+    ],
+    "4": [
+     0.018681894056499004,
+     0.01864675898104906,
+     0.018662439193576574
+    ],
+    "5": [
+     0.01812579808756709,
+     0.018131013959646225,
+     0.018105830065906048
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.1784929586104664,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.046603522300720214,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 16384,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.01969671295955777,
+   "group_estimates_ms": [
+    0.019957674201577902,
+    0.01969671295955777,
+    0.019575145095586777,
+    0.02014378597959876,
+    0.019221415743231773
+   ],
+   "batch_ms": {
+    "1": [
+     0.01994932210072875,
+     0.019971017260104418,
+     0.019957674201577902
+    ],
+    "2": [
+     0.01969671295955777,
+     0.019677353091537952,
+     0.019705769140273333
+    ],
+    "3": [
+     0.019564904272556305,
+     0.019584104884415865,
+     0.019575145095586777
+    ],
+    "4": [
+     0.02018439443781972,
+     0.02014378597959876,
+     0.02012756187468767
+    ],
+    "5": [
+     0.01924256794154644,
+     0.019221415743231773,
+     0.019218856003135443
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.804026309319887,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.05201632022857666,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 32768,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.0203234339132905,
+   "group_estimates_ms": [
+    0.02051303396001458,
+    0.0203234339132905,
+    0.02007623389363289,
+    0.020546570885926485,
+    0.019932777155190706
+   ],
+   "batch_ms": {
+    "1": [
+     0.0205256431363523,
+     0.02038458688184619,
+     0.02051303396001458
+    ],
+    "2": [
+     0.020232457667589188,
+     0.0203234339132905,
+     0.02054692292585969
+    ],
+    "3": [
+     0.02013236191123724,
+     0.019929673988372087,
+     0.02007623389363289
+    ],
+    "4": [
+     0.020546570885926485,
+     0.020388746168464422,
+     0.02058714721351862
+    ],
+    "5": [
+     0.019965770188719034,
+     0.01977616874501109,
+     0.019932777155190706
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.3262568150033984,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04218624114990235,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 65536,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.019630473107099533,
+   "group_estimates_ms": [
+    0.019815721083432436,
+    0.019630473107099533,
+    0.019353737123310566,
+    0.02031316189095378,
+    0.019148551858961582
+   ],
+   "batch_ms": {
+    "1": [
+     0.01981460116803646,
+     0.02032084297388792,
+     0.019815721083432436
+    ],
+    "2": [
+     0.019630473107099533,
+     0.01976912934333086,
+     0.019623945001512766
+    ],
+    "3": [
+     0.019320199731737375,
+     0.01937831286340952,
+     0.019353737123310566
+    ],
+    "4": [
+     0.019913865718990564,
+     0.02036068309098482,
+     0.02031316189095378
+    ],
+    "5": [
+     0.019148551858961582,
+     0.01932419976219535,
+     0.019035335164517164
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 2.2853103590561865,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04918367862701416,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 131072,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.020632266998291016,
+   "group_estimates_ms": [
+    0.020778506994247437,
+    0.020632266998291016,
+    0.020390858873724937,
+    0.02088471595197916,
+    0.02009952999651432
+   ],
+   "batch_ms": {
+    "1": [
+     0.020778506994247437,
+     0.02064506709575653,
+     0.020788779947906733
+    ],
+    "2": [
+     0.02063703490421176,
+     0.0205498025752604,
+     0.020632266998291016
+    ],
+    "3": [
+     0.020400234032422304,
+     0.02026410587131977,
+     0.020390858873724937
+    ],
+    "4": [
+     0.02088471595197916,
+     0.02092221984639764,
+     0.02087047602981329
+    ],
+    "5": [
+     0.020139753818511963,
+     0.01994560891762376,
+     0.02009952999651432
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.5363787892844112,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.041189441680908205,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 262144,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.020751978736370802,
+   "group_estimates_ms": [
+    0.020751978736370802,
+    0.020883467979729176,
+    0.020736746955662966,
+    0.02097972296178341,
+    0.020349066238850355
+   ],
+   "batch_ms": {
+    "1": [
+     0.020696076098829508,
+     0.020820971112698317,
+     0.020751978736370802
+    ],
+    "2": [
+     0.020867690909653902,
+     0.02092004381120205,
+     0.020883467979729176
+    ],
+    "3": [
+     0.02073613926768303,
+     0.020778474863618612,
+     0.020736746955662966
+    ],
+    "4": [
+     0.02091351617127657,
+     0.021007628180086613,
+     0.02097972296178341
+    ],
+    "5": [
+     0.020322475116699934,
+     0.020370314829051495,
+     0.020349066238850355
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.1587623465257482,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04426432132720947,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 524288,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.0201977058313787,
+   "group_estimates_ms": [
+    0.020555786788463593,
+    0.0201977058313787,
+    0.020080137997865677,
+    0.02032272983342409,
+    0.019818664994090796
+   ],
+   "batch_ms": {
+    "1": [
+     0.020555786788463593,
+     0.020576875191181898,
+     0.02019351487979293
+    ],
+    "2": [
+     0.020201705861836672,
+     0.02017693780362606,
+     0.0201977058313787
+    ],
+    "3": [
+     0.020597226917743683,
+     0.0200549541041255,
+     0.020080137997865677
+    ],
+    "4": [
+     0.02032272983342409,
+     0.020309417974203825,
+     0.020329738035798073
+    ],
+    "5": [
+     0.019796809181571007,
+     0.019818664994090796,
+     0.0199465686455369
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.359043262673494,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04325823783874512,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 1048576,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.023326704744249582,
+   "group_estimates_ms": [
+    0.023326704744249582,
+    0.023497584741562605,
+    0.022990799974650145,
+    0.023634384851902723,
+    0.022811695002019405
+   ],
+   "batch_ms": {
+    "1": [
+     0.023326704744249582,
+     0.023310639895498753,
+     0.02335192123427987
+    ],
+    "2": [
+     0.023497584741562605,
+     0.023532400839030743,
+     0.02346497680991888
+    ],
+    "3": [
+     0.022990799974650145,
+     0.022978703025728464,
+     0.02299409592524171
+    ],
+    "4": [
+     0.023628944996744394,
+     0.02366267330944538,
+     0.023634384851902723
+    ],
+    "5": [
+     0.022801038809120655,
+     0.02282257517799735,
+     0.022811695002019405
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.480771892299661,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.046070399284362795,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 2097152,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.02702079201117158,
+   "group_estimates_ms": [
+    0.02702079201117158,
+    0.027033176738768816,
+    0.026983223855495453,
+    0.027063223998993635,
+    0.026744982693344355
+   ],
+   "batch_ms": {
+    "1": [
+     0.02701103175058961,
+     0.02702805632725358,
+     0.02702079201117158
+    ],
+    "2": [
+     0.027026969008147717,
+     0.0271905530244112,
+     0.027033176738768816
+    ],
+    "3": [
+     0.026980343740433455,
+     0.026995736174285412,
+     0.026983223855495453
+    ],
+    "4": [
+     0.027155703864991665,
+     0.027053561061620712,
+     0.027063223998993635
+    ],
+    "5": [
+     0.026685846969485283,
+     0.026744982693344355,
+     0.026772312354296446
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.47653025116581804,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04454944133758545,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 4194304,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.040114834904670715,
+   "group_estimates_ms": [
+    0.04007982695475221,
+    0.04013083502650261,
+    0.040114834904670715,
+    0.04024318791925907,
+    0.039184401743113995
+   ],
+   "batch_ms": {
+    "1": [
+     0.04007957177236676,
+     0.040082579012960196,
+     0.04007982695475221
+    ],
+    "2": [
+     0.0401166919618845,
+     0.04013083502650261,
+     0.04013825906440616
+    ],
+    "3": [
+     0.040114834904670715,
+     0.040110738947987556,
+     0.04012254811823368
+    ],
+    "4": [
+     0.040134514681994915,
+     0.04024318791925907,
+     0.04033281980082393
+    ],
+    "5": [
+     0.03957172995433211,
+     0.039184401743113995,
+     0.03917489806190133
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.0830203795711428,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.04386591911315918,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 8388608,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.048516548704355955,
+   "group_estimates_ms": [
+    0.04850390926003456,
+    0.04881936637684703,
+    0.048516548704355955,
+    0.04856592509895563,
+    0.04753619525581598
+   ],
+   "batch_ms": {
+    "1": [
+     0.048512004781514406,
+     0.04850390926003456,
+     0.04849914135411382
+    ],
+    "2": [
+     0.048531780019402504,
+     0.04881936637684703,
+     0.0488409660756588
+    ],
+    "3": [
+     0.048516548704355955,
+     0.04855315713211894,
+     0.04850845271721482
+    ],
+    "4": [
+     0.04902938101440668,
+     0.048565253149718046,
+     0.04856592509895563
+    ],
+    "5": [
+     0.04753619525581598,
+     0.047539426013827324,
+     0.047525827307254076
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 1.0193992308472246,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.045796480178833004,
+   "measured": {
+    "source_commit": "c5e247cf0aa40161498fa7ff89dc7307ba04cd57",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-10T18:28:37Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/phase2f/tp4-latest/raw",
+    "report": "small"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 16777216,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.07100615510717034,
+   "group_estimates_ms": [
+    0.07100615510717034,
+    0.07162193395197392,
+    0.07084349961951375,
+    0.07105399807915092,
+    0.07083268603309989
+   ],
+   "batch_ms": {
+    "1": [
+     0.07103261863812804,
+     0.07100615510717034,
+     0.07097613997757435
+    ],
+    "2": [
+     0.07162193395197392,
+     0.07156196609139442,
+     0.07162673398852348
+    ],
+    "3": [
+     0.07081629987806082,
+     0.07085223589092493,
+     0.07084349961951375
+    ],
+    "4": [
+     0.07105399807915092,
+     0.07106161396950483,
+     0.07102542091161013
+    ],
+    "5": [
+     0.07080132467672229,
+     0.07085697259753942,
+     0.07083268603309989
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.4540645107538972,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.06832640171051026,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 33554432,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.12197397276759148,
+   "group_estimates_ms": [
+    0.12197397276759148,
+    0.1220874460414052,
+    0.12193887075409293,
+    0.12243445683270693,
+    0.12175148027017713
+   ],
+   "batch_ms": {
+    "1": [
+     0.12199278874322772,
+     0.12187826028093696,
+     0.12197397276759148
+    ],
+    "2": [
+     0.12211016612127425,
+     0.12202271027490497,
+     0.1220874460414052
+    ],
+    "3": [
+     0.12214427860453725,
+     0.12160469265654683,
+     0.12193887075409293
+    ],
+    "4": [
+     0.12256901804357767,
+     0.12243445683270693,
+     0.12232645694166422
+    ],
+    "5": [
+     0.12175148027017713,
+     0.12167244032025337,
+     0.12198306433856487
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.2071532665599851,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.12002464294433594,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 67108864,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.18666257616132498,
+   "group_estimates_ms": [
+    0.18713038135319948,
+    0.18720097420737147,
+    0.18641850911080837,
+    0.18666257616132498,
+    0.18658148869872093
+   ],
+   "batch_ms": {
+    "1": [
+     0.1872857087291777,
+     0.18713038135319948,
+     0.18665949907153845
+    ],
+    "2": [
+     0.18720097420737147,
+     0.18731953389942646,
+     0.1868482381105423
+    ],
+    "3": [
+     0.18638833379372954,
+     0.18676907010376453,
+     0.18641850911080837
+    ],
+    "4": [
+     0.18666257616132498,
+     0.18684248067438602,
+     0.18655819119885564
+    ],
+    "5": [
+     0.18681208230555058,
+     0.18658148869872093,
+     0.18653851188719273
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.18584940699480637,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.18801631927490234,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 134217728,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.36136136995628476,
+   "group_estimates_ms": [
+    0.3613502220250666,
+    0.3624671888537705,
+    0.361047956161201,
+    0.36142139974981546,
+    0.36136136995628476
+   ],
+   "batch_ms": {
+    "1": [
+     0.3613502220250666,
+     0.36077988473698497,
+     0.3618658082559705
+    ],
+    "2": [
+     0.3626149338670075,
+     0.3621312528848648,
+     0.3624671888537705
+    ],
+    "3": [
+     0.361047956161201,
+     0.3605072167702019,
+     0.36160485399886966
+    ],
+    "4": [
+     0.36142139974981546,
+     0.36186168994754553,
+     0.3605581009760499
+    ],
+    "5": [
+     0.36136136995628476,
+     0.3606303920969367,
+     0.3614124748855829
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.1504396454935404,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.3629743957519531,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 268435456,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 0.7044764487072825,
+   "group_estimates_ms": [
+    0.7044764487072825,
+    0.7044240711256862,
+    0.7046344135887921,
+    0.7075490518473089,
+    0.7044037668965757
+   ],
+   "batch_ms": {
+    "1": [
+     0.7044764487072825,
+     0.7041977280750871,
+     0.7045105290599167
+    ],
+    "2": [
+     0.704042661935091,
+     0.7044240711256862,
+     0.7044799751602113
+    ],
+    "3": [
+     0.7042133240029216,
+     0.7048750859685242,
+     0.7046344135887921
+    ],
+    "4": [
+     0.7075490518473089,
+     0.7070482508279383,
+     0.7081377911381423
+    ],
+    "5": [
+     0.704138102941215,
+     0.7044037668965757,
+     0.7046702969819307
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.19478313371052192,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 0.7109635162353516,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 536870912,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 1.3606397900730371,
+   "group_estimates_ms": [
+    1.3613717169500887,
+    1.3605430219322443,
+    1.3602927611209452,
+    1.3607719079591334,
+    1.3606397900730371
+   ],
+   "batch_ms": {
+    "1": [
+     1.3613717169500887,
+     1.3609913322143257,
+     1.3616166790015996
+    ],
+    "2": [
+     1.3607936138287187,
+     1.3603969407267869,
+     1.3605430219322443
+    ],
+    "3": [
+     1.3602927611209452,
+     1.3602730492129922,
+     1.3607777869328856
+    ],
+    "4": [
+     1.3607719079591334,
+     1.3603683239780366,
+     1.361127207055688
+    ],
+    "5": [
+     1.3606397900730371,
+     1.3597216452471912,
+     1.3607276319526136
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.029571139603200732,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 1.4050265502929689,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  },
+  {
+   "num_gpus": 4,
+   "message_size_bytes": 1073741824,
+   "dtype": "bf16",
+   "fabric": "nvlink",
+   "time_ms": 2.546176214236766,
+   "group_estimates_ms": [
+    2.546065768226981,
+    2.5466790990903974,
+    2.5454009086824954,
+    2.54736980330199,
+    2.546176214236766
+   ],
+   "batch_ms": {
+    "1": [
+     2.54579814709723,
+     2.546065768226981,
+     2.5461250958032906
+    ],
+    "2": [
+     2.5466790990903974,
+     2.5468358071520925,
+     2.5461487667635083
+    ],
+    "3": [
+     2.5454009086824954,
+     2.545599344186485,
+     2.545333777088672
+    ],
+    "4": [
+     2.5478012240491807,
+     2.5472820568829775,
+     2.54736980330199
+    ],
+    "5": [
+     2.546176214236766,
+     2.5461975601501763,
+     2.5458481847308576
+    ]
+   },
+   "groups_within_10pct": 5,
+   "cv_pct": 0.02885489685664658,
+   "sum_mismatches": 0,
+   "eager_nccl_time_ms": 2.6796881103515626,
+   "measured": {
+    "source_commit": "64a663b5257520d0bf087de8523a87ea4c3153db",
+    "source_dirty": false,
+    "harness": "profiling/env/arm64-gb300/allreduce_graph.py",
+    "cuda_visible_devices": "0,1,2,3",
+    "started_utc": "2026-11-11T01:47:39Z",
+    "torch": "2.10.0+cu130",
+    "nccl": [
+     2,
+     28,
+     9
+    ],
+    "rank_uuids": [
+     "GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c",
+     "GPU-9574ced0-46be-d5b7-0098-01fa1e84dccb",
+     "GPU-d2cef419-102a-b229-7832-70f157a02dc1",
+     "GPU-098db872-19a4-a98b-2793-9ea752f88553"
+    ],
+    "raw_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/tp4-large-latest/raw",
+    "report": "large"
+   }
+  }
+ ]
+}

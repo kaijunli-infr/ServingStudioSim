@@ -1,0 +1,73 @@
+{
+ "before": {
+  "path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/db/profile-gb300.db",
+  "sha256": "9474a224feb01b7e6cf4af32fb3d26fe04965216f25e4fdb50a25f76942be1af",
+  "integrity_check": "ok"
+ },
+ "after": {
+  "path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/integration/staging/profile-staging.db",
+  "sha256": "a1701e26c7124076ac2937f20036e51a039febdec13c7e40c183254cf01b31ec",
+  "integrity_check": "ok"
+ },
+ "gpu": "NVIDIA GB300",
+ "tables": {
+  "_profile_run": {
+   "before": 353,
+   "after": 354,
+   "lost_or_changed": 0,
+   "added": 1,
+   "added_run_keys": [
+    -5371202703420839407
+   ]
+  },
+  "all_reduce": {
+   "before": 209,
+   "after": 247,
+   "lost_or_changed": 0,
+   "added": 38,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.01268085790798068,
+   "added_time_ms_max": 2.546176214236766,
+   "added_by_backend": {
+    "nccl_graph": 38
+   },
+   "added_outliers": 0
+  }
+ },
+ "last_migrated_at": {
+  "before": [
+   "2026-11-10 16:50:02"
+  ],
+  "after": [
+   "2026-11-11 01:55:40"
+  ]
+ },
+ "added_runs": [
+  {
+   "id": 367,
+   "run_key": -5371202703420839407,
+   "profiler_git_hash": "20722a7ef04e112643509439f69fccdbed4463ca",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": "nccl 2.28.9"
+  }
+ ],
+ "rows_per_gpu": {
+  "NVIDIA B200": {
+   "before": 129826,
+   "after": 129826
+  },
+  "NVIDIA GB300": {
+   "before": 3128,
+   "after": 3166
+  },
+  "NVIDIA H200": {
+   "before": 54857,
+   "after": 54857
+  }
+ },
+ "added_rows": 38,
+ "problems": [],
+ "verdict": "PASS"
+}
