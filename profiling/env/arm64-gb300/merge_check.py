@@ -111,6 +111,16 @@ def main() -> int:
             problems.append(f"{table}: column lists differ")
             continue
         rb, ra = content_rows(before, table, cols), content_rows(after, table, cols)
+        if table == "_db_metadata":
+            # `last_migrated_at` is a bookkeeping stamp every writer refreshes; it is
+            # reported, not compared. Every other metadata row must be identical.
+            stamps = {
+                name: [value for key, value in rows if key == "last_migrated_at"]
+                for name, rows in (("before", rb), ("after", ra))
+            }
+            report["last_migrated_at"] = stamps
+            rb = Counter({k: v for k, v in rb.items() if k[0] != "last_migrated_at"})
+            ra = Counter({k: v for k, v in ra.items() if k[0] != "last_migrated_at"})
         lost = rb - ra
         added = ra - rb
         entry = {
