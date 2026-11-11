@@ -7,11 +7,17 @@
 # - FLASHINFER_WORKSPACE_BASE=$FI_BASE (fresh, never copied or moved afterwards);
 #   FLASHINFER_CUDA_ARCH_LIST=10.3 (GB300's sm_103a, the arch the serving cache
 #   built for), so nothing queries a device. CUDA_VISIBLE_DEVICES is empty.
-# - TVM_FFI_DISABLE_TORCH_C_DLPACK=1: importing tvm_ffi (FlashInfer's loader)
-#   otherwise calls torch.cuda.is_available(), which initializes the CUDA driver
-#   and opens every /dev/nvidia* node even with no visible device (the first
-#   attempt, prebuild-20261111-180507, did). It is not an input of the module's
-#   build.ninja; the GPU run leaves it unset.
+# - Importing FlashInfer initializes the CUDA driver (torch.cuda.is_available()
+#   in tvm_ffi's optional DLPack loader, then cuda.tile via flashinfer.cutile),
+#   which opens every /dev/nvidia* node even with no visible device: attempts
+#   prebuild-20261111-180507 and -180858 were refused by this script for that.
+#   Every step therefore runs with nogpu_shim.so preloaded (built here from
+#   nogpu_shim.c): any open of a /dev/nvidia* path fails with EACCES before
+#   reaching the kernel and is logged to nogpu.log, so no process of the build
+#   can initialize a GPU. strace then must show no /dev/nvidia* syscall at all.
+#   TVM_FFI_DISABLE_TORCH_C_DLPACK=1 is kept (not a build input).
+# - build.ninja is compared with the first attempt's (built with the driver
+#   reachable): equal means the build's inputs do not depend on driver state.
 # - Every step runs under `strace -f` (all child processes: ninja, nvcc, cicc,
 #   ptxas, ...); a step fails if any process opened a /dev/nvidia* node.
 # - Temporary files go to a local TMPDIR sampled every second against
@@ -41,7 +47,10 @@ for d in "$G/cache/flashinfer" "$G/cache/nv-compute"; do echo "$d $(listing "$d"
 free_shared=$(df -B1 --output=avail "$G" | tail -1); free_tmp=$(df -B1 --output=avail /tmp | tail -1)
 log "capacity: shared fs free ${free_shared} B, /tmp free ${free_tmp} B"
 [ "$free_shared" -ge 2000000000 ] && [ "$free_tmp" -ge $((TMP_CAP_BYTES * 2)) ] || { log "STOP: not enough free space"; exit 2; }
+gcc -shared -fPIC -O2 -Wall -o "$OUT/nogpu_shim.so" "$HERE/nogpu_shim.c" -ldl || { log "STOP: shim build failed"; exit 2; }
+log "shim $(sha256sum "$HERE/nogpu_shim.c" | cut -d' ' -f1) built"
 mkdir -p "$FI_BASE"
+export LD_PRELOAD="$OUT/nogpu_shim.so" NOGPU_LOG="$OUT/nogpu.log"
 export CUDA_VISIBLE_DEVICES= FLASHINFER_WORKSPACE_BASE="$FI_BASE" FLASHINFER_CUDA_ARCH_LIST=10.3 \
   TMPDIR="$TMPD" MAX_JOBS=1 HF_HUB_OFFLINE=1 PATH="$G/venv/bin:$PATH" TVM_FFI_DISABLE_TORCH_C_DLPACK=1
 PEAK=0
@@ -62,9 +71,8 @@ step() { # step NAME : strace the helper's mode NAME, sampling TMPDIR
     sleep 1
   done
   wait "$pid"; rc=$?
-  local dev; dev=$(grep -c '"/dev/nvidia' "$OUT/strace-$name.log")
-  grep '"/dev/nvidia' "$OUT/strace-$name.log" | grep -v ENOENT | head -5 >"$OUT/strace-$name-devices.txt"
-  log "step $name rc=$rc device-node opens=${dev} (non-ENOENT: $(wc -l <"$OUT/strace-$name-devices.txt")) tmp peak so far ${PEAK} B"
+  grep '"/dev/nvidia' "$OUT/strace-$name.log" | head -5 >"$OUT/strace-$name-devices.txt"
+  log "step $name rc=$rc device-node syscalls=$(grep -c '"/dev/nvidia' "$OUT/strace-$name.log") refused-by-shim so far=$(wc -l <"$OUT/nogpu.log" 2>/dev/null || echo 0) tmp peak so far ${PEAK} B"
   return $rc
 }
 step build || { log "STOP: build failed or breached (see build.out)"; rm -rf "$TMPD"; exit 3; }
@@ -82,6 +90,10 @@ fi
 log "temporary files at the end: $(du -sb "$TMPD" | cut -f1) B; peak sampled ${PEAK} B"
 rm -rf "$TMPD" && log "deleted $TMPD"
 log "retained module output: $(du -sb "$FI_BASE" | cut -f1) B in $FI_BASE"
+REF=${REF_NINJA_SHA:-b484f12fb7ebaa373befcc58d295b566933a55474e073e26ca9c5a8209669cf1}
+got=$(python3 -c "import json;print(json.load(open('$OUT/build.json'))['build_ninja_sha256'])")
+[ "$got" = "$REF" ] && log "build.ninja $got equals the driver-reachable attempt's" || log "build.ninja $got DIFFERS from $REF"
+log "shim refusals: $(cut -d' ' -f2 "$OUT/nogpu.log" 2>/dev/null | sort | uniq -c | tr '\n' ';')"
 for d in "$G/cache/flashinfer" "$G/cache/nv-compute"; do echo "$d $(listing "$d")" >>"$OUT/shared-caches-post.txt"; done
 cmp -s "$OUT/shared-caches-pre.txt" "$OUT/shared-caches-post.txt" && log "shared caches unchanged" || log "a shared cache CHANGED"
 log "done"
