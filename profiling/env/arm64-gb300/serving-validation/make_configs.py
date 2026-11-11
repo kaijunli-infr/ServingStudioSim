@@ -133,7 +133,9 @@ def profile(root: Path, out: Path, name: str) -> dict:
             "backend": {"type": "vllm_tokens"},
             "text_file": str(root / "corpus" / "enwik9"),
             "tokenizer": model,
-            "warmup": True,
+            # Off for the smoke run: the approval names its requests exactly, and
+            # warm-up would add short requests of its own.
+            "warmup": name != "tp1-smoke",
             "arrival_mode": "trace-timed",
             "max_concurrency": concurrency,
             "max_model_len": 8192,

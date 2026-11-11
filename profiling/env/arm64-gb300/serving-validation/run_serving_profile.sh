@@ -39,7 +39,7 @@ declare -A UUID=([0]=GPU-0294efb9-8850-f68b-5cdd-9d4e92e2cb9c [1]=GPU-9574ced0-4
 log() { printf '%s %s\n' "$(date -u +%FT%TZ)" "$*" | tee -a "$OUT/steps.log"; }
 cleanup() {
   local pids
-  kill "${WATCH:-0}" 2>/dev/null
+  kill "${WATCH:-0}" "${SAMPLER:-0}" 2>/dev/null
   pids="$(ps -s "$SID" -o pid= | grep -vw "$$" | tr '\n' ' ')"
   # shellcheck disable=SC2086
   [ -n "${pids// /}" ] && kill -INT $pids 2>/dev/null && sleep 20
@@ -129,12 +129,20 @@ trap 'fail "foreign compute process appeared on a run GPU" 4' USR1
 watch_gpus &
 WATCH=$!
 
+# GPU samples for the run's devices: peak memory, utilisation, power.
+nvidia-smi -i "$DEVICES" --query-gpu=timestamp,index,utilization.gpu,memory.used,power.draw,clocks.sm \
+  --format=csv -lms 1000 >"$OUT/gpu-samples.csv" 2>/dev/null &
+SAMPLER=$!
+
 log "launch"
+# In the background, so the USR1 trap of the watcher runs while we wait.
 (cd "$W" && CUDA_VISIBLE_DEVICES= timeout --signal=INT --kill-after=120 "$LIMIT_S" \
-   "$SIM_PY" -m launcher alignment profile "$CFG") >"$OUT/launcher.out" 2>"$OUT/launcher.err"
+   "$SIM_PY" -m launcher alignment profile "$CFG") >"$OUT/launcher.out" 2>"$OUT/launcher.err" &
+LAUNCH=$!
+wait "$LAUNCH"
 rc=$?
 log "launcher rc=$rc"
-kill "$WATCH" 2>/dev/null; trap - USR1
+kill "$WATCH" "$SAMPLER" 2>/dev/null; trap - USR1
 cleanup
 fingerprints post
 cmp -s "$OUT/db-sha256-pre.txt" "$OUT/db-sha256-post.txt" || fail "a profile database changed" 7
