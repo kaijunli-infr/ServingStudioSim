@@ -1,0 +1,1 @@
+{"arch": {"iter": {"type": "llama3_dense", "model_config": "model/config/llama3_8b.json", "fp8": false}}, "gpu": "NVIDIA GB300", "log_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/audit/predict-tp1", "cases_file": "decode8_cases.json"}
