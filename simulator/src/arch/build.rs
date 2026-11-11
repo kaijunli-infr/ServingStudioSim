@@ -26,7 +26,7 @@ use crate::arch::{
     glm52_vllm_nvfp4_dp_attn_dsa_moe, glm52_vllm_nvfp4_dsa_moe, glm52_vllm_nvfp4_pp_dsa_moe,
     glm53_flash_vllm_fp8_dp_attn_ep_moe, glm53_flash_vllm_fp8_kda_dsa_moe,
     glm53_flash_vllm_fp8_pp_kda_dsa_moe, glm53_vllm_nvfp4_dsa_moe_dflash2,
-    inkling_vllm_nvfp4_rel_attn_moe, llama3_dense, llama3_dense_tp, llama3_dp_attn_tp_ffn,
+    inkling_vllm_nvfp4_rel_attn_moe, llama3_dense, llama3_dense_tp, llama3_dense_vllm, llama3_dp_attn_tp_ffn,
     mimo_v2_vllm_fp8_swa_moe, qwen35_vllm_nvfp4_gdn_dense, qwen36_local, qwen3_attn_layerwise,
     qwen3_ffn_moe_layerwise, qwen3_fp8_ffn_moe_layerwise, qwen3_moe_dp_attn_ep_ffn,
     qwen3_moe_fp8_dp_attn_ep_ffn, qwen3_vllm_moe_dp_attn_ep_ffn, qwen4_exp_vllm_nvfp4_gdn_qsa_moe,
@@ -40,7 +40,7 @@ use crate::arch::{
     Glm53FlashKernelPath, Glm53FlashModelCfg, Glm53FlashQuant, Glm53FlashVllmFp8PpModel,
     Glm53FlashVllmFp8PpParallel, Glm53FlashVllmModel, Glm53FlashVllmParallel,
     Glm53VllmNvfp4DsaMoeDflash2Model, InklingExpertDemand, InklingExpertPrecision, InklingModelCfg,
-    InklingVllmModel, InklingVllmParallel, IterwiseUnifiedModel, Llama3DenseModel,
+    InklingVllmModel, InklingVllmParallel, IterwiseUnifiedModel, Llama3DenseModel, Llama3DenseVllmModel,
     Llama3DenseTpModel, Llama3DpAttnTpFfnModel, MimoV2ModelCfg, MimoV2VllmModel,
     MimoV2VllmParallel, Qwen35ModelCfg, Qwen35VllmModel, Qwen35VllmParallel, Qwen36LocalModel,
     Qwen36LocalParallel, Qwen36ModelCfg, Qwen3AttnLayerwiseModel, Qwen3AttnParallel,
@@ -763,6 +763,30 @@ pub fn dense(
         llama3_dense::resolve_configs(&llama3_dense::build_configs(&model_cfg, &parallel));
     llama3_dense::build(name.to_string(), resolved, bridge)
         .context("building Llama3-dense model (often a missing profile.db row)")
+}
+
+/// Build the vLLM-kernel variant of the dense Llama3 model (bf16 only).
+pub fn dense_vllm(
+    model_spec: &ModelSpec,
+    gpu: &str,
+    name: &str,
+    bridge: &PerfApiBridge,
+) -> Result<Llama3DenseVllmModel> {
+    let model_cfg = dense_model_cfg(model_spec)?;
+    anyhow::ensure!(
+        model_cfg.dtype == DType::Bf16 && model_cfg.kv_dtype == DType::Bf16,
+        "llama3_dense_vllm prices the bf16 deployment only (fp8 is not mapped)"
+    );
+    let parallel = DenseParallel {
+        gpu_name: gpu.to_string(),
+    };
+    let configs = llama3_dense_vllm::build_configs(
+        &model_cfg,
+        &parallel,
+        model_spec.max_position_embeddings()?,
+    );
+    llama3_dense_vllm::build(name.to_string(), configs, bridge)
+        .context("building Llama3-dense vLLM model (often a missing profile.db row)")
 }
 
 /// Build the tensor-parallel dense Llama3 model.
@@ -2132,6 +2156,7 @@ pub fn build_iter_model(
             bridge,
         )?),
         IterArchSel::Llama3Dense { model } => Box::new(dense(model, gpu, name, bridge)?),
+        IterArchSel::Llama3DenseVllm { model } => Box::new(dense_vllm(model, gpu, name, bridge)?),
         IterArchSel::Llama3DenseTp { model, tp_size } => {
             Box::new(dense_tp(model, *tp_size, gpu, name, bridge)?)
         }

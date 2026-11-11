@@ -42,6 +42,7 @@ pub mod gdn_prefill_post_conv;
 pub mod gdn_recurrent_decode;
 pub mod gdn_recurrent_decode_gated_norm;
 pub mod gemm_fp32_output;
+pub mod gqa_rope_neox;
 pub mod grouped_gemm;
 pub mod grouped_rms_norm;
 pub mod hc_combine;
@@ -250,6 +251,9 @@ pub use gdn_recurrent_decode_gated_norm::{
 };
 pub use gemm_fp32_output::{
     GemmFp32OutputKernel, GemmFp32OutputKernelConfig, GemmFp32OutputKernelInput, GemmFp32OutputSpec,
+};
+pub use gqa_rope_neox::{
+    GqaRopeNeoxKernel, GqaRopeNeoxKernelConfig, GqaRopeNeoxKernelInput, GqaRopeNeoxSpec,
 };
 pub use grouped_gemm::{
     GroupedGemmKernel, GroupedGemmKernelConfig, GroupedGemmKernelInput, GroupedGemmSpec,

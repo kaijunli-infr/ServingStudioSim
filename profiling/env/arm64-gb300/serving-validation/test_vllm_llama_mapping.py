@@ -134,12 +134,8 @@ def _registry():
     return registry
 
 
-@pytest.mark.parametrize(
-    "leaf",
-    [leaf for leaf in m.VARIANT_LEAVES if leaf.semantics != "new_kind"],
-    ids=lambda leaf: leaf.name,
-)
-def test_existing_kinds_and_backends_are_registered_with_the_needed_fields(leaf):
+@pytest.mark.parametrize("leaf", m.VARIANT_LEAVES, ids=lambda leaf: leaf.name)
+def test_every_kind_and_backend_is_registered_with_the_needed_fields(leaf):
     registry = _registry()
     assert leaf.backend in registry.known_backends(leaf.kind)
     schema = registry.find_args_schema(leaf.kind, leaf.backend)
@@ -147,21 +143,16 @@ def test_existing_kinds_and_backends_are_registered_with_the_needed_fields(leaf)
     assert set(leaf.config) <= fields, set(leaf.config) - fields
 
 
-def test_the_proposed_rope_kind_does_not_exist_yet():
-    registry = _registry()
-    try:
-        backends = registry.known_backends("gqa_rope_neox")
-    except (KeyError, ValueError):
-        backends = []
-    assert backends == []
+def test_no_leaf_is_blocked_or_unimplemented():
+    assert {leaf.semantics for leaf in m.VARIANT_LEAVES} <= {"equivalent", "approximate"}
 
 
-def test_paged_attention_backend_rejects_bf16_today():
+def test_paged_attention_backend_takes_bf16_and_keeps_fp8():
     registry = _registry()
     from profiling.db.args import DType
 
     for kind in ("paged_attn_batch_decode", "paged_attn_batch_prefill"):
-        assert not registry.backend_supports(kind, "flashinfer_trtllm_gen", DType.BF16, DType.BF16)
-        assert registry.backend_supports(
-            kind, "flashinfer_trtllm_gen", DType.FP8_E4M3, DType.FP8_E4M3, gpu="NVIDIA GB300"
-        )
+        for dtype in (DType.BF16, DType.FP8_E4M3):
+            assert registry.backend_supports(
+                kind, "flashinfer_trtllm_gen", dtype, dtype, gpu="NVIDIA GB300"
+            )

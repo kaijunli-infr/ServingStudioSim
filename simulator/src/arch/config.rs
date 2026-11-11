@@ -206,6 +206,13 @@ pub enum IterArchSel {
         #[serde(flatten)]
         model: ModelSpec,
     },
+    /// Opt-in bf16 Llama 3 dense on one GPU, priced with the kernels vLLM's
+    /// compiled graph launches (`torch_linear` GEMMs, Inductor norms / RoPE /
+    /// SiLU, TRT-LLM attention over an HND cache). See `llama3_dense_vllm`.
+    Llama3DenseVllm {
+        #[serde(flatten)]
+        model: ModelSpec,
+    },
     /// Megatron TP over dense Llama 3. `tp_size` must divide the KV heads (8).
     Llama3DenseTp {
         #[serde(flatten)]
@@ -1196,6 +1203,7 @@ impl IterArchSel {
         match self {
             Self::Qwen36Local { model, .. }
             | Self::Llama3Dense { model }
+            | Self::Llama3DenseVllm { model }
             | Self::Llama3DenseTp { model, .. }
             | Self::Llama3DpAttnTpFfn { model, .. }
             | Self::Qwen3MoeDpAttnEpFfn { model, .. }
@@ -1264,6 +1272,7 @@ impl IterArchSel {
             ),
             Self::Qwen36Local { model, .. }
             | Self::Llama3Dense { model }
+            | Self::Llama3DenseVllm { model }
             | Self::Llama3DenseTp { model, .. }
             | Self::Llama3DpAttnTpFfn { model, .. }
             | Self::Qwen3MoeDpAttnEpFfn { model, .. }

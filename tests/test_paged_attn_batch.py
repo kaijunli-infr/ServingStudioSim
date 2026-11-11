@@ -1,3 +1,5 @@
+import dataclasses
+
 import pytest
 import torch
 
@@ -35,7 +37,8 @@ def test_both_kinds_register_the_trtllm_gen_backend_on_vllm_env():
         spec = find_kernel_profiler_spec(kind, "flashinfer_trtllm_gen")
         assert spec.backend == "flashinfer_trtllm_gen"
         assert spec.subprocess_env == "vllm_env"
-        assert {str(d) for d in spec.supports.compute} == {"fp8_e4m3"}
+        assert {str(d) for d in spec.supports.compute} == {"fp8_e4m3", "bf16"}
+        assert {str(d) for d in spec.supports.kv} == {"fp8_e4m3", "bf16"}
 
 
 def test_canonical_decode_batch_holds_the_key():
@@ -64,6 +67,8 @@ def test_prefill_batch_reads_each_request_after_its_prefix():
         (dict(total_kv_len=102), ValueError),
         (dict(total_kv_len=401), ValueError),
         (dict(q_dtype="bf16"), ProfilerNotImplemented),
+        (dict(kv_dtype="bf16"), ProfilerNotImplemented),
+        (dict(q_dtype="bf16", kv_dtype="bf16", o_dtype="fp8_e4m3"), ProfilerNotImplemented),
         (dict(num_qo_heads=5), ValueError),
         (
             dict(batch_size=4, max_kv_len=1 << 30, total_kv_len=(1 << 30) + 3),
@@ -85,8 +90,36 @@ def test_prefill_validation_needs_new_tokens_per_request(requests, error):
         _prefill(requests=requests)
 
 
-def _workload(lengths, tokens):
-    geometry = _decode().geometry
+_BF16 = dict(q_dtype="bf16", kv_dtype="bf16", o_dtype="bf16")
+
+
+def test_fp8_geometry_is_unchanged_and_bf16_doubles_the_element():
+    # Defect caught: the bf16 extension changing the FP8 row's byte accounting
+    # (its metrics are already in the database), or bf16 counted at FP8 width.
+    fp8 = _decode().geometry
+    assert (fp8.element_bytes, fp8.fp8, fp8.kv_bytes_per_token) == (1, True, 2 * 2 * 64)
+    bf16 = _decode(**_BF16).geometry
+    assert (bf16.element_bytes, bf16.fp8, bf16.kv_bytes_per_token) == (2, False, 2 * 2 * 64 * 2)
+    # FP8 decode of 4 tokens over 250 cached tokens: query 1 B + output 2 B.
+    metrics = runner._metrics(fp8, 1000, 4, runner._kv_bytes(fp8, [250]), 1.0, 0.0)
+    assert metrics.memory_bandwidth_gbps == pytest.approx((4 * 6 * 64 * 3 + 250 * 256) / 1e-3 / 1e9)
+    metrics = runner._metrics(bf16, 1000, 4, runner._kv_bytes(bf16, [250]), 1.0, 0.0)
+    assert metrics.memory_bandwidth_gbps == pytest.approx((4 * 6 * 64 * 4 + 250 * 512) / 1e-3 / 1e9)
+
+
+def test_bf16_and_fp8_rows_never_share_a_key():
+    # Defect caught: a bf16 row overwriting (or being served as) the FP8 row of
+    # the same shape. The dtypes are fields of the key on both kinds.
+    from profiling.kernels.paged_attn_batch_decode import PagedAttnBatchDecodeArgs
+    from profiling.kernels.paged_attn_batch_prefill import PagedAttnBatchPrefillArgs
+
+    for args in (PagedAttnBatchDecodeArgs, PagedAttnBatchPrefillArgs):
+        names = {f.name for f in dataclasses.fields(args)}
+        assert {"q_dtype", "kv_dtype", "o_dtype"} <= names
+
+
+def _workload(lengths, tokens, **dtypes):
+    geometry = _decode(**dtypes).geometry
     return geometry, runner._build_workload(torch, geometry, lengths, tokens, torch.device("cpu"))
 
 
@@ -112,12 +145,15 @@ def _reference_out(geometry, work, lengths, positions_per_request, row_starts):
         work.out[rows] = out.to(work.out.dtype)
 
 
-def test_decode_check_reads_the_hnd_cache_through_the_page_table():
+@pytest.mark.parametrize("dtypes", [{}, _BF16], ids=["fp8", "bf16"])
+def test_decode_check_reads_the_hnd_cache_through_the_page_table(dtypes):
     # Defect caught: the check reading K/V with the wrong layout (HND pages
     # viewed as NHD) or the wrong page, which would pass a broken kernel or
-    # fail a correct one.
-    shape = _decode(batch_size=3, max_kv_len=70, total_kv_len=110)
-    geometry, work = _workload(shape.lengths, shape.batch_size)
+    # fail a correct one; for bf16, a workload still built in FP8.
+    shape = _decode(batch_size=3, max_kv_len=70, total_kv_len=110, **dtypes)
+    geometry, work = _workload(shape.lengths, shape.batch_size, **dtypes)
+    expected = torch.float8_e4m3fn if geometry.fp8 else torch.bfloat16
+    assert work.q.dtype == work.raw_cache.dtype == expected
     positions = [[length - 1] for length in shape.lengths]
     _reference_out(geometry, work, shape.lengths, positions, range(shape.batch_size))
     report = runner.check_decode(torch, shape, work)
@@ -127,11 +163,12 @@ def test_decode_check_reads_the_hnd_cache_through_the_page_table():
         runner.check_decode(torch, shape, work)
 
 
-def test_prefill_check_places_rows_after_the_prefix():
+@pytest.mark.parametrize("dtypes", [{}, _BF16], ids=["fp8", "bf16"])
+def test_prefill_check_places_rows_after_the_prefix(dtypes):
     # Defect caught: query rows checked at positions that ignore the cached
     # prefix or the request's start in the packed query.
-    shape = _prefill(requests=((33, 5), (2, 4)))
-    geometry, work = _workload(shape.lengths, shape.query_tokens)
+    shape = _prefill(requests=((33, 5), (2, 4)), **dtypes)
+    geometry, work = _workload(shape.lengths, shape.query_tokens, **dtypes)
     positions = [list(range(p, p + a)) for p, a in shape.requests]
     _reference_out(geometry, work, shape.lengths, positions, [0, shape.appends[0]])
     report = runner.check_prefill(torch, shape, work)

@@ -14,6 +14,12 @@ shuffles them across a pool sized to the batch and keeps physical page 0 as the
 null page that empty rows point at. Pages hold ``_PAGE_SIZE`` tokens: the
 kernel time measured the same for 16, 32 and 64.
 
+Dtypes. Two deployments: an FP8 query over an FP8 cache (bf16 output), and a
+bf16 query over a bf16 cache (bf16 output), the unquantized path vLLM takes
+when ``kv_cache_dtype`` is ``auto`` on a bf16 model. Both pass the same packed
+HND cache and the same call; only the element type of the query and cache
+differs. A mixed pair is not a deployment vLLM routes here and is rejected.
+
 Scales. vLLM folds the query and key scales into ``bmm1_scale = scale * q_scale
 * k_scale`` and passes ``bmm2_scale = v_scale``; the runner's scales are 1, so
 the FP8 values are the dequantized values the reference reads.
@@ -56,15 +62,29 @@ _ABS_TOL = 0.05
 _REL_L2_TOL = 0.06
 
 
+# (query, cache, output) dtypes the backend runs, with the bytes of one query
+# or cache element.
+_DTYPES = {
+    ("fp8_e4m3", "fp8_e4m3", "bf16"): 1,
+    ("bf16", "bf16", "bf16"): 2,
+}
+
+
 @dataclass(frozen=True)
 class _Geometry:
     num_qo_heads: int
     num_kv_heads: int
     head_dim: int
+    # Bytes of one query or cache element: 1 for FP8, 2 for bf16.
+    element_bytes: int = 1
+
+    @property
+    def fp8(self) -> bool:
+        return self.element_bytes == 1
 
     @property
     def kv_bytes_per_token(self) -> int:
-        return 2 * self.num_kv_heads * self.head_dim  # FP8 K and V
+        return 2 * self.num_kv_heads * self.head_dim * self.element_bytes  # K and V
 
 
 def _positive(name: str, value: object) -> None:
@@ -89,11 +109,13 @@ def _validate_geometry(
         _positive(name, value)
     if num_qo_heads % num_kv_heads:
         raise ValueError("num_qo_heads must be a multiple of num_kv_heads")
-    if (str(q_dtype), str(kv_dtype), str(o_dtype)) != ("fp8_e4m3", "fp8_e4m3", "bf16"):
+    key = (str(q_dtype), str(kv_dtype), str(o_dtype))
+    if key not in _DTYPES:
         raise ProfilerNotImplemented(
-            f"{kind}:{BACKEND} supports fp8_e4m3 queries over an fp8_e4m3 cache with bf16 output"
+            f"{kind}:{BACKEND} supports fp8_e4m3 queries over an fp8_e4m3 cache, or bf16 "
+            f"queries over a bf16 cache, with bf16 output; got {key}"
         )
-    return _Geometry(num_qo_heads, num_kv_heads, head_dim)
+    return _Geometry(num_qo_heads, num_kv_heads, head_dim, _DTYPES[key])
 
 
 @dataclass(frozen=True)
@@ -215,8 +237,8 @@ def _cdiv(a: int, b: int) -> int:
 
 @dataclass
 class _Workload:
-    q: Any  # [tokens, Hq, D] fp8
-    raw_cache: Any  # [pages, Hkv, page, 2D] fp8 (HND)
+    q: Any  # [tokens, Hq, D] fp8 or bf16
+    raw_cache: Any  # [pages, Hkv, page, 2D] fp8 or bf16 (HND)
     kv_cache: tuple  # K and V views [pages, Hkv, page, D]
     block_table: Any  # [requests, max pages] int32
     seq_lens: Any  # [requests] int32
@@ -253,11 +275,10 @@ def _build_workload(
     raw_cache = torch.empty(
         (num_pages, hkv, _PAGE_SIZE, 2 * dim), dtype=torch.bfloat16, device=device
     )
-    raw_cache = raw_cache.normal_(std=0.5).to(torch.float8_e4m3fn)
+    element = torch.float8_e4m3fn if geometry.fp8 else torch.bfloat16
+    raw_cache = raw_cache.normal_(std=0.5).to(element)
     kv_cache = (raw_cache[..., :dim], raw_cache[..., dim:])
-    q = (torch.randn((tokens, hq, dim), generator=generator) * 0.5).to(
-        device=device, dtype=torch.float8_e4m3fn
-    )
+    q = (torch.randn((tokens, hq, dim), generator=generator) * 0.5).to(device=device, dtype=element)
     return _Workload(
         q=q,
         raw_cache=raw_cache,
@@ -383,8 +404,8 @@ def build_prefill(torch: Any, shape: _PrefillShape, device: Any) -> tuple[_Workl
     bmm1_scale = geometry.head_dim**-0.5
 
     def run() -> Any:
-        # FlashInferImpl.forward's prefill call (flashinfer.py): FP8 query over
-        # the FP8 cache directly, no sinks, full causal attention.
+        # FlashInferImpl.forward's prefill call (flashinfer.py): the query over
+        # the cache of the same dtype directly, no sinks, full causal attention.
         return prefill.trtllm_batch_context_with_kv_cache(
             query=work.q,
             kv_cache=work.kv_cache,
@@ -443,8 +464,9 @@ def _metrics(
 ) -> ComputeMetrics:
     seconds = time_ms / 1000.0
     flops = 4.0 * geometry.num_qo_heads * geometry.head_dim * interactions
-    # FP8 query in, bf16 output out, every request's K and V once.
-    io_bytes = tokens * geometry.num_qo_heads * geometry.head_dim * (1 + 2) + kv_bytes
+    # Query in (FP8 or bf16), bf16 output out, every request's K and V once.
+    query_and_out = tokens * geometry.num_qo_heads * geometry.head_dim
+    io_bytes = query_and_out * (geometry.element_bytes + 2) + kv_bytes
     return ComputeMetrics(
         time_ms=float(time_ms),
         tflops=float(flops / seconds / 1e12),

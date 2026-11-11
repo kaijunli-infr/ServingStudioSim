@@ -44,6 +44,22 @@
 
 /// SMs on the only supported GPU (NVIDIA B200).
 pub(crate) const B200_SMS: f64 = 148.0;
+
+/// SMs a launch grid is laid out for, by the GPU a kernel config names.
+///
+/// Only GPUs whose count has been checked against the device and a trace are
+/// listed. Every other GPU keeps the B200 count every grid used before this
+/// table existed, so their knots are unchanged. GB300: 152 SMs as the device
+/// reports them; its TP1 vLLM trace launches trtllm-gen decode attention with
+/// `floor(152 / (CTA columns x batch))` KV splits (2 at a batch of 8, 4 at 4).
+/// Used by the `paged_attn_batch_*` grids; the FA4 projection above still
+/// counts B200 waves.
+pub(crate) fn launch_sms(gpu_name: &str) -> u32 {
+    match gpu_name {
+        "NVIDIA GB300" => 152,
+        _ => B200_SMS as u32,
+    }
+}
 /// The work unit: one KV tile of 128 keys.
 const TILE_N: f64 = 128.0;
 /// Per-CTA prologue/epilogue cost in KV-tile units.

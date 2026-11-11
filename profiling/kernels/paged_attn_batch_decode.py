@@ -5,7 +5,8 @@ here: the wire string ``KIND``, the ``PagedAttnBatchDecodeArgs`` schema, and
 the ``register(...)`` call that wires the kind into ``profiling.db.registry``.
 
 Source: vLLM ``FlashInferImpl.forward`` (``vllm/v1/attention/backends/
-flashinfer.py``) on a TRTLLM-attention deployment (quantized query). The
+flashinfer.py``) on a TRTLLM-attention deployment (FP8 query over an FP8 cache, or
+bf16 query over a bf16 cache). The
 metadata builder splits every step into decode requests (one query token) and
 prefill requests (``split_decodes_and_prefills``); the decode part is ONE
 ``flashinfer.decode.trtllm_batch_decode_with_kv_cache`` call per layer over a
@@ -108,13 +109,15 @@ DOC = KernelDoc(
 
 
 # trtllm-gen decode cubins ship for sm_100f; vLLM routes FP8 queries over an
-# FP8 cache to them (flashinfer.py use_trtllm_attention).
+# FP8 cache, and bf16 queries over a bf16 cache, to them (flashinfer.py
+# use_trtllm_attention; the bf16 pair is the GB300 Llama 3.1 8B TP1 trace's
+# fmhaSm100f/fmhaSm103a QkvBfloat16OBfloat16 kernels). The two dtype axes are
+# independent here; the runner rejects a mixed FP8/bf16 pair at profile time.
 _SUPPORT = BackendSupport(
-    compute=frozenset({DType.FP8_E4M3}),
-    kv=frozenset({DType.FP8_E4M3}),
+    compute=frozenset({DType.FP8_E4M3, DType.BF16}),
+    kv=frozenset({DType.FP8_E4M3, DType.BF16}),
     sm_targets=frozenset({"sm_100f"}),
 )
-
 register(
     KernelProfilerSpec(
         kernel_kind=KIND,

@@ -45,6 +45,7 @@ use crate::timing::kernels::{
 use crate::timing::kernels::CompressedSparseMlaRopeCastKernelInput;
 use crate::timing::kernels::EmbeddingRowGatherKernelInput;
 use crate::timing::kernels::EngramLookupKernelInput;
+use crate::timing::kernels::GqaRopeNeoxKernelInput;
 use crate::timing::kernels::IndexedRowCopyKernelInput;
 use crate::timing::kernels::MoeSinkGateSelectKernelInput;
 use crate::timing::kernels::QPadKvRopeMxfp8InsertKernelInput;
@@ -235,6 +236,7 @@ log_inputs! {
     VllmMlaRope => VllmMlaRopeKernelInput,
     MultiAddRmsNorm => MultiAddRmsNormKernelInput,
     SiluAndMul => SiluAndMulKernelInput,
+    GqaRopeNeox => GqaRopeNeoxKernelInput,
     GroupedRmsNorm => GroupedRmsNormKernelInput,
     ScaledSilu => ScaledSiluKernelInput,
     StaticFp8Quant => StaticFp8QuantKernelInput,

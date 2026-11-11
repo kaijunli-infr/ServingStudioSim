@@ -368,6 +368,21 @@ impl Deployment for UnifiedDeployment {
                     build_barebone_worker,
                 ))
             }
+            IterArchSel::Llama3DenseVllm { .. } => {
+                ensure_barebone(&g.worker)?;
+                let model = Arc::new(arch_build::dense_vllm(
+                    model_spec, &gpu_name, MODEL_NAME, bridge,
+                )?);
+                Ok(assemble_flow(
+                    model,
+                    store,
+                    worker_config,
+                    log_dir,
+                    gpu_name,
+                    dp_cfg,
+                    build_barebone_worker,
+                ))
+            }
             IterArchSel::Llama3DenseTp { tp_size, .. } => {
                 ensure_barebone(&g.worker)?;
                 let model = Arc::new(arch_build::dense_tp(

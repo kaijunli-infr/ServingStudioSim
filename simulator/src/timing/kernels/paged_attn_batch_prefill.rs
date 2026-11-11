@@ -26,7 +26,7 @@
 use crate::timing::bridge::{de_backends, ArgsPayload, DType, KernelKind};
 use crate::timing::cache::CacheKind;
 use crate::timing::kernels::engine::{register_kernel, KernelSpec};
-use crate::timing::kernels::fa4_varlen_projection::B200_SMS;
+use crate::timing::kernels::fa4_varlen_projection::launch_sms;
 use crate::timing::sweep::{Axis, SweepGrid};
 use crate::timing::{Coords, Dim, KernelConfig, SweepCoords};
 
@@ -62,7 +62,8 @@ impl PagedAttnBatchPrefillKernelConfig {
     /// Tile knots: both sides of each wave edge for the first waves, then the tail.
     fn tile_axis(&self) -> Vec<f64> {
         let heads = self.num_qo_heads.get();
-        let last_in_wave = |wave: u32| (f64::from(wave) * B200_SMS) as u32 / heads;
+        let sms = f64::from(launch_sms(&self.gpu_name));
+        let last_in_wave = |wave: u32| (f64::from(wave) * sms) as u32 / heads;
         let mut knots: Vec<u32> = (1..=last_in_wave(1).clamp(1, 4)).collect();
         for wave in 1..=WAVE_KNOTS {
             let last = last_in_wave(wave);
@@ -287,6 +288,22 @@ mod tests {
         wide.num_qo_heads = 64.into();
         wide.num_kv_heads = 8.into();
         assert!(wide.tile_axis().contains(&3.0) && wide.tile_axis().contains(&4.0));
+    }
+
+    #[test]
+    fn tile_axis_counts_gb300_waves_of_152_sms() {
+        // Defect caught: GB300 tiles placed on B200 wave edges. With 32 query
+        // heads the third wave ends at 456 / 32 = 14 tiles on 152 SMs and at
+        // 444 / 32 = 13 on 148.
+        let mut gb300 = config();
+        gb300.gpu_name = "NVIDIA GB300".to_string();
+        gb300.num_qo_heads = 32.into();
+        gb300.num_kv_heads = 8.into();
+        let mut b200 = gb300.clone();
+        b200.gpu_name = "NVIDIA B200".to_string();
+        assert!(gb300.tile_axis().contains(&14.0) && gb300.tile_axis().contains(&15.0));
+        assert!(b200.tile_axis().contains(&13.0) && b200.tile_axis().contains(&14.0));
+        assert_ne!(gb300.tile_axis(), b200.tile_axis());
     }
 
     #[test]

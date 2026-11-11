@@ -119,8 +119,8 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
         NUM_LAYERS,
         (),
         ("rope",),
-        "new_kind",
-        "No existing kind applies RoPE to Q and K of a plain GQA layer; a new kind is proposed.",
+        "equivalent",
+        "New kind (Phase 3B-0): no earlier kind applied RoPE to Q and K of a plain GQA layer.",
     ),
     Leaf(
         "kv_cache_append",
@@ -156,9 +156,9 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
         NUM_LAYERS,
         ("decode",),
         ("attention_aux_fill", "attention"),
-        "blocked",
-        "Same call and launch unit (counter fill + trtllm-gen kernel), but the backend "
-        "supports only FP8 query and KV today.",
+        "equivalent",
+        "Same call and launch unit (counter fill + trtllm-gen kernel); the backend takes a "
+        "bf16 query over a bf16 cache since Phase 3B-0.",
         {"attention_aux_fill": 1, "attention": 1},
     ),
     Leaf(
@@ -176,8 +176,8 @@ VARIANT_LEAVES: tuple[Leaf, ...] = (
         NUM_LAYERS,
         ("prefill",),
         (),
-        "blocked",
-        "Zero in a pure decode step; same dtype restriction as decode.",
+        "equivalent",
+        "Zero in a pure decode step.",
     ),
     Leaf(
         "o_proj",

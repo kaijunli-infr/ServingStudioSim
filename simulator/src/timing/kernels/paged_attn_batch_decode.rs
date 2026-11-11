@@ -24,7 +24,7 @@
 use crate::timing::bridge::{de_backends, ArgsPayload, DType, KernelKind};
 use crate::timing::cache::CacheKind;
 use crate::timing::kernels::engine::{register_kernel, KernelSpec};
-use crate::timing::kernels::fa4_varlen_projection::B200_SMS;
+use crate::timing::kernels::fa4_varlen_projection::launch_sms;
 use crate::timing::sweep::{Axis, SweepGrid};
 use crate::timing::{Coords, Dim, KernelConfig, SweepCoords};
 
@@ -68,7 +68,7 @@ impl PagedAttnBatchDecodeKernelConfig {
     /// Batch knots: both sides of every step in the split count (each batch
     /// while it drops at every request) and of the one-wave edge, then the tail.
     fn batch_axis(&self) -> Vec<f64> {
-        let wave = (B200_SMS as u32 / self.ctas_per_request()).max(1);
+        let wave = (launch_sms(&self.gpu_name) / self.ctas_per_request()).max(1);
         let splits = |batch: u32| (wave / batch).max(1);
         let mut knots: Vec<u32> = (1..=wave + 1)
             .filter(|&batch| {
@@ -248,6 +248,45 @@ mod tests {
         let axis = wide.batch_axis();
         assert!(axis.contains(&18.0) && axis.contains(&19.0));
         assert!(!axis.contains(&37.0));
+    }
+
+    #[test]
+    fn launch_sms_keeps_148_for_every_gpu_but_gb300() {
+        // Defect caught: a GPU-aware SM count that moves the knots of a GPU
+        // whose rows were measured on the 148-SM grid.
+        assert_eq!(launch_sms("NVIDIA B200"), 148);
+        assert_eq!(launch_sms("NVIDIA H200"), 148);
+        assert_eq!(launch_sms("some future GPU"), 148);
+        assert_eq!(launch_sms("NVIDIA GB300"), 152);
+    }
+
+    #[test]
+    fn gb300_llama_batch_axis_uses_its_152_sms() {
+        // Llama 3.1 8B TP1, bf16: 32 query and 8 KV heads, 4 query heads per
+        // CTA, so a request takes 8 CTA columns. 152 SMs hold a wave of 19
+        // requests (B200: 18). The GB300 trace launches 2 KV splits at a batch
+        // of 8 and 4 at 4, which floor(19 / batch) reproduces.
+        let llama = |gpu: &str| PagedAttnBatchDecodeKernelConfig {
+            backends: vec!["flashinfer_trtllm_gen"],
+            gpu_name: gpu.to_string(),
+            num_qo_heads: 32.into(),
+            num_kv_heads: 8.into(),
+            head_dim: 128.into(),
+            q_dtype: DType::Bf16,
+            kv_dtype: DType::Bf16,
+            o_dtype: DType::Bf16,
+        };
+        let gb300 = llama("NVIDIA GB300");
+        assert_eq!(gb300.ctas_per_request(), 8);
+        let wave = launch_sms(&gb300.gpu_name) / gb300.ctas_per_request();
+        assert_eq!(wave, 19);
+        assert_eq!((wave / 8, wave / 4), (2, 4));
+        let gb_axis = gb300.batch_axis();
+        assert!(gb_axis.contains(&19.0) && gb_axis.contains(&20.0));
+        let b200_axis = llama("NVIDIA B200").batch_axis();
+        assert!(b200_axis.contains(&18.0) && b200_axis.contains(&19.0));
+        // bf16 K and V: 2 bytes x 2 x 8 heads x 128.
+        assert_eq!(gb300.kv_bytes_per_token(), 4096.0);
     }
 
     #[test]
