@@ -55,6 +55,7 @@ def test_kind_wire_string_and_table_stem():
     "backend, module_name",
     [
         ("nccl", "profiling.runners.comm.nccl"),
+        ("nccl_graph", "profiling.runners.comm.nccl_graph"),
         ("nvshmem", "profiling.runners.comm.nvshmem"),
     ],
 )
@@ -95,7 +96,8 @@ def test_importing_kernel_module_does_not_eager_import_runner():
             "import sys; "
             "import profiling.kernels.all_reduce; "
             "print(any(m in sys.modules for m in "
-            "('profiling.runners.comm.nccl', 'profiling.runners.comm.nvshmem')))"
+            "('profiling.runners.comm.nccl', 'profiling.runners.comm.nccl_graph', "
+            "'profiling.runners.comm.nvshmem')))"
         ),
     ]
     completed = subprocess.run(command, capture_output=True, text=True, check=True)

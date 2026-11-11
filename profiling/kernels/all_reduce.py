@@ -2,7 +2,7 @@
 
 All Python-side per-kernel knowledge for ``all_reduce`` lives here: the wire
 string ``KIND``, the ``AllReduceArgs`` schema, and the ``register(...)`` calls
-that wire the ``nccl`` and ``nvshmem`` backends into ``profiling.db.registry``.
+that wire the ``nccl``, ``nccl_graph`` and ``nvshmem`` backends into ``profiling.db.registry``.
 
 Wire string: ``"all_reduce"`` — matches Rust ``KernelSpec::KIND`` in
 ``simulator/src/timing/kernels/all_reduce.rs`` and the Python facade stem used
@@ -80,8 +80,10 @@ DOC = KernelDoc(
     method=(
         "Wall time between two CUDA events around repeated calls. Each size runs 50 "
         "warm-up all-reduces, a barrier, then 100 timed calls back to back in the "
-        "same live process group; the time is rank 0's mean per call. Energy is not "
-        "measured for collectives."
+        "same live process group; the time is rank 0's mean per call. The nccl_graph "
+        "backend instead captures 10 calls in a CUDA graph and times 100 replays by "
+        "host wall clock, slowest rank; its row is the median over five fresh process "
+        "groups of three such batches. Energy is not measured for collectives."
     ),
     reference=None,
 )
@@ -89,6 +91,16 @@ DOC = KernelDoc(
 _BACKEND_DOCS = {
     "nccl": BackendDoc(
         summary="torch.distributed.all_reduce with sum, on the NCCL backend.",
+        url="https://github.com/NVIDIA/nccl",
+    ),
+    "nccl_graph": BackendDoc(
+        summary=(
+            "The same torch.distributed.all_reduce on NCCL, captured in a CUDA graph "
+            "and timed by replay, so the row holds GPU execution rather than the "
+            "host's eager launch pace. Below about 8 MiB this is 2 to 4 times less "
+            "than nccl; from there up the two agree. Not comparable with nccl rows "
+            "of another GPU at small sizes."
+        ),
         url="https://github.com/NVIDIA/nccl",
     ),
     "nvshmem": BackendDoc(
@@ -122,4 +134,5 @@ def _spec(backend: str, module_name: str) -> KernelProfilerSpec:
 
 
 register(_spec("nccl", "profiling.runners.comm.nccl"))
+register(_spec("nccl_graph", "profiling.runners.comm.nccl_graph"))
 register(_spec("nvshmem", "profiling.runners.comm.nvshmem"))

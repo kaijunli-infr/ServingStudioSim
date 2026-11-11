@@ -27,6 +27,12 @@ def main() -> int:
     parser.add_argument("--db", required=True)
     parser.add_argument("--stage", action="append", required=True, help="NUM_GPUS=DIR")
     parser.add_argument("--out", required=True)
+    parser.add_argument(
+        "--candidates",
+        choices=("small", "all"),
+        default="small",
+        help="which ten-collective graph rows count as production candidates",
+    )
     args = parser.parse_args()
     con = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     rows = []
@@ -43,6 +49,7 @@ def main() -> int:
         data: dict = {}  # (size, method) -> group -> rank -> method record
         mismatches: dict = {}
         provenance = None
+        rank_uuids: dict[int, str] = {}
         for g in range(1, GROUPS + 1):
             for rank in range(num_gpus):
                 path = Path(directory, f"group{g}-rank{rank}.json")
@@ -53,6 +60,7 @@ def main() -> int:
                     "torch": report["torch"],
                     "nccl": report["nccl"],
                 }
+                rank_uuids[rank] = report["uuid"]
                 for s in report["sizes"]:
                     size = s["message_size_bytes"]
                     for name, method in s["methods"].items():
@@ -70,7 +78,8 @@ def main() -> int:
                 "num_gpus": num_gpus,
                 "message_size_bytes": size,
                 "method": name,
-                "production_candidate": size < 16 << 20 and name.endswith("ops10"),
+                "production_candidate": name.endswith("ops10")
+                and (args.candidates == "all" or size < 16 << 20),
                 "complete": complete,
                 "sum_mismatches": mismatches[(size, name)],
                 "stored_eager_us": stored[size] * 1e3,
@@ -102,7 +111,10 @@ def main() -> int:
                     for i in range(len(groups[g][0]["batches"]))
                 )
             rows.append(row)
-        rows[-1]["provenance"] = provenance
+        rows[-1]["provenance"] = provenance | {
+            "rank_uuids": [rank_uuids[r] for r in sorted(rank_uuids)],
+            "raw_dir": directory,
+        }
     report = {"groups": GROUPS, "tolerance": TOLERANCE, "spike_threshold": SPIKE, "rows": rows}
     Path(args.out).write_text(json.dumps(report, indent=1) + "\n")
     for r in rows:

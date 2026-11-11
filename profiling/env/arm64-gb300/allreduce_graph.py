@@ -34,7 +34,8 @@ element by element with the closed-form sum (times world_size^(ops-1) for the
 ten-collective graph; all values stay exact in bf16). Three batches per method
 and size. CUDA events around the same replay loop are kept as a second clock.
 Nothing is written to a profile database. Every rank writes
-`group<g>-rank<r>.json`.
+`group<g>-rank<r>.json`. `--set large` runs the sizes from 16 MiB to 1 GiB with
+the same sequence (the eager method again only at 16 and 128 MiB).
 """
 
 from __future__ import annotations
@@ -55,6 +56,7 @@ from profiling.runners.comm._batch import _REP, _WARMUP  # noqa: E402
 from profiling.runners.comm._launcher import TorchMpLauncher  # noqa: E402
 
 CANDIDATE_SIZES = [4096 << k for k in range(12)]  # 4 KiB .. 8 MiB: the rows below 16 MiB
+LARGE_SIZES = [(16 << 20) << k for k in range(7)]  # 16 MiB .. 1 GiB: the rows from 16 MiB up
 BOUNDARY_SIZES = [8 << 20, 16 << 20, 128 << 20]  # eager and graph side by side
 BATCHES = 3
 REPLAYS = _REP  # 100 graph replays per batch
@@ -187,10 +189,19 @@ def main() -> int:
     parser.add_argument("--expect-uuids", nargs="+", required=True)
     parser.add_argument("--group", type=int, required=True)
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument(
+        "--set",
+        choices=("small", "large"),
+        default="small",
+        help="small: below 16 MiB plus the boundary sizes (Phase 2F); large: 16 MiB to 1 GiB",
+    )
     args = parser.parse_args()
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    sizes = sorted(set(CANDIDATE_SIZES) | set(BOUNDARY_SIZES))
+    if args.set == "small":
+        sizes = sorted(set(CANDIDATE_SIZES) | set(BOUNDARY_SIZES))
+    else:
+        sizes = list(LARGE_SIZES)
     git = ["git", "-C", str(REPO_ROOT)]
     provenance = {
         "source_commit": subprocess.run(

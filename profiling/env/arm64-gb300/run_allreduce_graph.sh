@@ -28,12 +28,13 @@ GPU_INDICES="${2:?GPU_INDICES}"
 EXPECT_UUIDS="${3:?EXPECTED_UUIDS}"
 BUDGET_S="${BUDGET_S:-420}"
 GROUPS_N=5
+SIZE_SET="${SIZE_SET:-small}"   # small: Phase 2F sizes; large: 16 MiB to 1 GiB
 T_START=$(date +%s)
 STAMP="$(date +%Y%m%d-%H%M%S)"
-CAMP="$GB300_ROOT/artifacts/phase2f"
-OUT="$CAMP/tp$NUM_GPUS-run-$STAMP"
+CAMP="${CAMP:-$GB300_ROOT/artifacts/phase2f}"
+OUT="$CAMP/tp$NUM_GPUS-$SIZE_SET-run-$STAMP"
 mkdir -p "$OUT"
-ln -sfn "$OUT" "$CAMP/tp$NUM_GPUS-latest"
+ln -sfn "$OUT" "$CAMP/tp$NUM_GPUS-$SIZE_SET-latest"
 ENVDIR=profiling/env/arm64-gb300
 SID="$(ps -o sid= -p $$ | tr -d ' ')"
 
@@ -108,8 +109,8 @@ step_time manifest-pre 120 "${RUN[@]}" $ENVDIR/collect_manifest.py --out "$OUT/m
 
 for g in $(seq 1 $GROUPS_N); do
   # shellcheck disable=SC2086
-  step_time "group$g" 150 "${RUN[@]}" $ENVDIR/allreduce_graph.py --num-gpus "$NUM_GPUS" \
-    --expect-uuids ${EXPECT_UUIDS//,/ } --group "$g" --out-dir "$OUT/raw" \
+  step_time "group$g" "${GROUP_TIMEOUT_S:-150}" "${RUN[@]}" $ENVDIR/allreduce_graph.py --num-gpus "$NUM_GPUS" \
+    --expect-uuids ${EXPECT_UUIDS//,/ } --group "$g" --out-dir "$OUT/raw" --set "$SIZE_SET" \
     || fail "graph group $g failed or timed out; see group$g.out/err" 3
   grep -E "^GRAPH GROUP" "$OUT/group$g.out" | tee -a "$OUT/steps.log"
   preflight "after group $g"

@@ -1,0 +1,19 @@
+{
+  "arch": {
+    "iter": {
+      "type": "llama3_dense_tp",
+      "model_config": "model/config/llama3_8b.json",
+      "tp_size": 2,
+      "fp8": false
+    }
+  },
+  "gpu": "NVIDIA GB300",
+  "backends": {
+    "main": {
+      "unified.attn_block.tp_allreduce": ["nccl_graph"],
+      "unified.mlp_block.tp_allreduce": ["nccl_graph"]
+    }
+  },
+  "log_dir": "logs/predict_llama3_8b_gb300_tp2_graph",
+  "cases_file": "predict_llama3_8b_iter_cases.json"
+}
