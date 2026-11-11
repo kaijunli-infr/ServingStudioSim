@@ -5,23 +5,24 @@ TP2/TP4 rows and a complete `nccl_graph` all-reduce curve. Every validation
 gate passed before the merge. Graph mode is selected explicitly; no arch
 default, public preset, simulator source or database schema changed.
 
-One reading of the approval to confirm: the 24 eager `nccl` rows below 16 MiB
-were **not** merged into the tracked database (Phase 2F excluded them and this
-approval did not reverse that). They remain, unchanged, in the private
-database. As a result GB300 TP2/TP4 in the default eager mode reports 12
-missing all-reduce rows per TP size and fails clearly; GB300 TP needs the
-explicit `nccl_graph` selection. Merging those 24 rows later is one step.
+**Update, later on 2026-11-11.** The 24 eager `nccl` rows below 16 MiB, which
+the first merge left out, were merged in a second, separately approved step
+(see "Eager completion"). GB300 TP2/TP4 now has zero missing configurations in
+both the default eager mode and the explicit graph mode. The tables below show
+the final state; the first merge's intermediate figures are in its section.
 
 ## Row counts
 
 | database | B200 | H200 | GB300 | sha256 |
 | --- | --- | --- | --- | --- |
 | tracked before | 129,826 | 54,857 | 1,236 | `41c9cbe5…bd82af` |
-| tracked after | 129,826 | 54,857 | 3,142 | `279cbe9b…91cb43` |
+| tracked after the first merge | 129,826 | 54,857 | 3,142 | `279cbe9b…91cb43` |
+| **tracked, final** | 129,826 | 54,857 | **3,166** | `3ec95dcd…6a8b3e` |
 | private (unchanged) | 129,826 | 54,857 | 3,128 | `9474a224…2be1af` |
 | staging (private + graph rows) | 129,826 | 54,857 | 3,166 | `a1701e26…` |
 
-New in the tracked database: 1,906 GB300 rows and 6 run records.
+New in the tracked database: 1,930 GB300 rows and 6 run records (1,906 in the
+first merge, 24 in the second).
 
 | kind, backend | rows added |
 | --- | --- |
@@ -31,13 +32,14 @@ New in the tracked database: 1,906 GB300 rows and 6 run records.
 | kv_cache_append, vllm_cuda | 140 |
 | elementwise, triton | 32 |
 | all_reduce, nccl_graph | 38 |
-| all_reduce, nccl (16 MiB to 1 GiB) | 14 |
+| all_reduce, nccl, 16 MiB to 1 GiB (first merge) | 14 |
+| all_reduce, nccl, 4 KiB to 8 MiB (second merge) | 24 |
 
 All-reduce coverage for GB300, 19 sizes per TP size from 4 KiB to 1 GiB:
 
 | backend | timing | private DB | tracked DB |
 | --- | --- | --- | --- |
-| `nccl` | eager calls, CUDA events | 38 of 38 | 14 of 38 (16 MiB and up) |
+| `nccl` | eager calls, CUDA events | 38 of 38 | 38 of 38 |
 | `nccl_graph` | CUDA-graph replay | none (staging only) | 38 of 38 |
 
 ## Stage A: the backend
@@ -187,6 +189,61 @@ where they are within 0.7 %. The 2048-token prefill now uses the graph row at
 - Prediction parity: graph-mode TP2 and TP4 iteration breakdowns from the
   tracked database are byte-identical to those from staging.
 
+## Eager completion (second merge, CPU-only)
+
+Approved after the first merge: import exactly the 24 existing GB300 eager
+`nccl` rows below 16 MiB from the private database. Nothing was measured.
+
+- Backup `$GB300_ROOT/artifacts/eager-completion/profile.db.pre-merge-backup`,
+  sha256 `279cbe9b…91cb43`.
+- `python -m profiling.cli merge-db` of the tracked database with the staging
+  copy (private rows plus graph rows): 0 conflicts, output `3ec95dcd…6a8b3e`.
+- `merge_check.py`, tracked before against after: PASS. 24 rows added, all
+  GB300 `all_reduce`/`nccl`; 0 existing rows lost or changed; 0 duplicate
+  keys; 0 invalid times; no new run record (the rows cite the two run records
+  `09d2006f` and `48a816d5` that came in with the 14 large rows). Against the
+  TP1-only database of 2026-11-10: PASS with 1,930 rows added.
+- The 38 eager rows in the tracked database equal the private database's in
+  every value, timestamp and run commit; the 38 graph rows equal staging's.
+- GB300 rows: 3,166. B200 129,826 and H200 54,857, identical row for row.
+
+| check on the final database | result |
+| --- | --- |
+| missing, TP1 | 0 of 1236 |
+| missing, TP2 eager / graph | 0 of 1255 / 0 of 1255 |
+| missing, TP4 eager / graph | 0 of 1255 / 0 of 1255 |
+| eager TP2 and TP4 predictions against the private database | byte-identical |
+| graph TP2 and TP4 predictions against staging | byte-identical |
+| TP1 prediction against staging | byte-identical |
+| H200 TP2 and TP4 predictions against the database before any TP merge | byte-identical |
+| Rust library tests | 1583 passed |
+| Python CPU tier | 5001 passed, 9 failed (the same 9 tests as before the merge) |
+| presets tier | 9 passed |
+| public API, local only | GB300 3,166 rows over the checked kinds; `all_reduce` 76 rows, backends `nccl` and `nccl_graph` |
+
+`merge_check.py` was corrected for this step: it required every run record
+cited by added rows to be new, which is false when the rest of a run's rows
+were merged earlier. It now requires only that every new run record is cited.
+
+## Recorded execution deviations
+
+Two deviations from the approved limits occurred during the `nccl_graph`
+integration on 2026-11-11 (the phase that followed Phase 2F). Both were
+reported at the time; no rollback or re-measurement was requested.
+
+1. **GPU validation outside the specified matrix, 213 s.** The approval listed
+   one measurement of the 14 configurations from 16 MiB up. After it, the
+   registered `nccl_graph` runner was additionally run once per TP size on the
+   same 14 configurations with `--fresh` (TP2 91 s, TP4 122 s; nothing
+   inserted) to check the runner against the harness. It agreed within 0.8 %.
+   Total GPU time stayed at 452 s of the 600 allowed, but the extra run was
+   not in the approved matrix and should have been requested first.
+2. **Disk peak of 345 MB against the 0.25 GB limit.** Four database copies of
+   74 MB each existed at once under `$GB300_ROOT/artifacts/integration`
+   (staging, merge source, merged output, backup). The merge source and merged
+   output were deleted after verification, leaving 204 MB. The copies should
+   have been created one at a time.
+
 ## Commits
 
 | commit | content |
@@ -194,12 +251,16 @@ where they are within 0.7 %. The 2048-token prefill now uses the graph row at
 | `157a0eb8` | `nccl_graph` backend, runner, harness size set, importer, presets, tests |
 | `64a663b5`, `20722a7e`, `66234b7e` | importer formatting; runner cross-check driver; verifier metadata stamp |
 | `30a0a2c5` | **`profiling/profile.db` alone** |
-| `99c400db` and this report's commit | public API check, results, artifacts |
+| `99c400db`, `f549eed7` | public API check, results, artifacts |
+| `1f02fc48` | verifier: added rows may cite an existing run record |
+| `2c75d6bf` | **`profiling/profile.db` alone**, the 24 eager rows |
 
 ## Remaining limitations
 
-- GB300 TP2/TP4 needs the explicit graph selection; eager mode is incomplete
-  in the tracked database by design (see the top of this document).
+- GB300 TP2/TP4 predicts in two modes that differ by up to a factor of two for
+  decode: the default uses the eager `nccl` rows (host launch pace below
+  8 MiB), the explicit selection uses `nccl_graph`. Which one a real engine
+  matches is the subject of `SERVING_VALIDATION_PROPOSAL.md`.
 - H200 and B200 have no `nccl_graph` rows. GB300 graph-mode TP decode and
   small-prefill predictions must not be compared with their eager-timed ones.
 - Not established: whether vLLM's own NCCL wrapper replays at the cost

@@ -1,0 +1,83 @@
+{
+ "before": {
+  "path": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/artifacts/eager-completion/profile.db.pre-merge-backup",
+  "sha256": "279cbe9b1fddeb8142f6762d9a1897cb924139ff5284c698ca0244660191cb43",
+  "integrity_check": "ok"
+ },
+ "after": {
+  "path": "profiling/profile.db",
+  "sha256": "3ec95dcd4226660b8eca425290e0a45a44f7b038f9432abcfaf0f4d8c56a8b3e",
+  "integrity_check": "ok"
+ },
+ "gpu": "NVIDIA GB300",
+ "tables": {
+  "_profile_run": {
+   "before": 354,
+   "after": 354,
+   "lost_or_changed": 0,
+   "added": 0,
+   "added_run_keys": []
+  },
+  "all_reduce": {
+   "before": 223,
+   "after": 247,
+   "lost_or_changed": 0,
+   "added": 24,
+   "duplicate_keys": 0,
+   "added_invalid_time_ms": 0,
+   "added_time_ms_min": 0.041189441680908205,
+   "added_time_ms_max": 0.061798720359802245,
+   "added_by_backend": {
+    "nccl": 24
+   },
+   "added_outliers": 0
+  }
+ },
+ "last_migrated_at": {
+  "before": [
+   "2026-11-06 17:17:19"
+  ],
+  "after": [
+   "2026-11-06 17:17:19"
+  ]
+ },
+ "added_rows_citing_existing_runs": [
+  -5707706468047188291,
+  7178210190321058238
+ ],
+ "added_runs": [
+  {
+   "id": 362,
+   "run_key": -5707706468047188291,
+   "profiler_git_hash": "09d2006fe405643651e5dba18d41e9761990fdef",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  },
+  {
+   "id": 366,
+   "run_key": 7178210190321058238,
+   "profiler_git_hash": "48a816d56654faf3b5fd1ef8235d2724a2e3f2c0",
+   "cuda_version": "13.0",
+   "driver_version": "610.57.04",
+   "backend_version": null
+  }
+ ],
+ "rows_per_gpu": {
+  "NVIDIA B200": {
+   "before": 129826,
+   "after": 129826
+  },
+  "NVIDIA GB300": {
+   "before": 3142,
+   "after": 3166
+  },
+  "NVIDIA H200": {
+   "before": 54857,
+   "after": 54857
+  }
+ },
+ "added_rows": 24,
+ "problems": [],
+ "verdict": "PASS"
+}

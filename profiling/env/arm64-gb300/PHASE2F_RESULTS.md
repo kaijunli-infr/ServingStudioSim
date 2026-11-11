@@ -10,6 +10,10 @@ The results are staged only. No existing measurement was replaced or deleted,
 no database schema or simulator code was changed, and the tracked database is
 untouched.
 
+Follow-up: the integration that came after this phase, including two recorded
+execution deviations (an extra 213 s GPU validation and a 345 MB disk peak),
+is in `INTEGRATION_RESULTS.md`.
+
 ## Coverage and runs
 
 tray12, rack 3; TP2 on GPUs 2 and 3, TP4 on GPUs 0 to 3, rank r on the r-th
