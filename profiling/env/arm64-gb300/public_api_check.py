@@ -8,7 +8,7 @@ Builds the service's objects the way `python -m public_api serve` does
 (`Sources` over the DB, `DeploymentIndex.build` over the public presets, the
 `KernelLibrary`) and drives the FastAPI app with a test client:
 `/kernels` (the GPU list with spec-sheet peaks and per-GPU row counts),
-`/kernels/<kind>/rows?gpu=NVIDIA GB300` for the Llama TP1 kinds (row counts
+`/kernels/<kind>/rows?gpu=NVIDIA GB300` for the Llama TP1 kinds and `all_reduce` (row counts
 and the backends present), and `/kernels/kv_cache_append/configs`.
 """
 
@@ -31,6 +31,7 @@ KINDS = (
     "flashinfer_attn_prefill",
     "flashinfer_attn_decode",
     "kv_cache_append",
+    "all_reduce",
 )
 
 
