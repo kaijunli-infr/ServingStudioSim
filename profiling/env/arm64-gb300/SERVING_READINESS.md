@@ -267,3 +267,26 @@ is the smoke test itself.
 | serving workspace now | 16 GB (engine environment 13 GB, corpus 1 GB, fork 0.9 GB, load-generator build 0.7 GB) |
 | still needed | weights 16.1 GB, caches up to 5 GB, smoke-test traces under 1 GB |
 | free on `/mnt/shared` | 23 TB |
+
+## TP1 smoke test: stopped at the access check, 2026-11-11
+
+The smoke test was approved on the condition that model access verifies first.
+It did not:
+
+- `hf_access_check.py` in the serving environment, with the default credential
+  lookup, reports `authenticated: false` (`LocalTokenNotFoundError`) and
+  `download_access: false` (`GatedRepoError`).
+- The pinned revision `0e9e39f249a16976918f6564b8830bc894c89659` still
+  resolves, 16,060,556,376 bytes of weights.
+
+Per the stop conditions, nothing further ran:
+
+- no download;
+- no GPU guard check or launch;
+- no change to any cache or database.
+
+To proceed, an authorized user stores a credential for the run user `kevin`
+on the rack with an account that has accepted the Llama 3.1 licence, for
+example with the serving environment's `hf auth login`. The credential lands
+in `/mnt/shared/home/kevin/.cache/huggingface/`, which the check reads. The
+access check is then repeated before anything else.
