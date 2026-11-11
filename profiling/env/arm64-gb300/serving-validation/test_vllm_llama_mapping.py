@@ -135,7 +135,9 @@ def _registry():
 
 
 @pytest.mark.parametrize(
-    "leaf", [leaf for leaf in m.VARIANT_LEAVES if leaf.semantics != "new_kind"], ids=lambda leaf: leaf.name
+    "leaf",
+    [leaf for leaf in m.VARIANT_LEAVES if leaf.semantics != "new_kind"],
+    ids=lambda leaf: leaf.name,
 )
 def test_existing_kinds_and_backends_are_registered_with_the_needed_fields(leaf):
     registry = _registry()
