@@ -1,0 +1,72 @@
+{"t": 1794421697.280735, "event": "begin", "mode": "identity", "pid": 1002767}
+{"t": 1794421698.5925, "event": "start", "case": "p5_next_T8"}
+{"t": 1794421706.810707, "event": "done", "case": "p5_next_T8", "file": "001-p5_next_T8.json"}
+{"t": 1794421706.812881, "event": "start", "case": "p5_next_T2048"}
+{"t": 1794421706.953874, "event": "done", "case": "p5_next_T2048", "file": "002-p5_next_T2048.json"}
+{"t": 1794421706.955945, "event": "start", "case": "p5_post_T8"}
+{"t": 1794421707.5954802, "event": "done", "case": "p5_post_T8", "file": "003-p5_post_T8.json"}
+{"t": 1794421707.5974646, "event": "start", "case": "p5_final_T8"}
+{"t": 1794421708.3643994, "event": "done", "case": "p5_final_T8", "file": "004-p5_final_T8.json"}
+{"t": 1794421708.366422, "event": "start", "case": "p6_embed_T8"}
+{"t": 1794421709.097703, "event": "done", "case": "p6_embed_T8", "file": "005-p6_embed_T8.json"}
+{"t": 1794421709.1000185, "event": "start", "case": "p6_embed_T2048"}
+{"t": 1794421709.217227, "event": "done", "case": "p6_embed_T2048", "file": "006-p6_embed_T2048.json"}
+{"t": 1794421709.21923, "event": "start", "case": "p7_kv_T8"}
+{"t": 1794421712.3265665, "event": "done", "case": "p7_kv_T8", "file": "007-p7_kv_T8.json"}
+{"t": 1794421712.3289442, "event": "start", "case": "p7_kv_T256"}
+{"t": 1794421712.3410587, "event": "done", "case": "p7_kv_T256", "file": "008-p7_kv_T256.json"}
+{"t": 1794421712.343047, "event": "start", "case": "p7_kv_T2048"}
+{"t": 1794421712.3625262, "event": "done", "case": "p7_kv_T2048", "file": "009-p7_kv_T2048.json"}
+{"t": 1794421712.3647053, "event": "start", "case": "p8_dec_b1_568_P16"}
+{"t": 1794421713.8515446, "event": "done", "case": "p8_dec_b1_568_P16", "file": "010-p8_dec_b1_568_P16.json"}
+{"t": 1794421713.8538866, "event": "start", "case": "p8_dec_b1_568_P32"}
+{"t": 1794421713.8987167, "event": "done", "case": "p8_dec_b1_568_P32", "file": "011-p8_dec_b1_568_P32.json"}
+{"t": 1794421713.9006112, "event": "start", "case": "p8_dec_b4_630_P16"}
+{"t": 1794421713.9287815, "event": "done", "case": "p8_dec_b4_630_P16", "file": "012-p8_dec_b4_630_P16.json"}
+{"t": 1794421714.0358477, "event": "start", "case": "p8_dec_b4_630_P32"}
+{"t": 1794421714.0561557, "event": "done", "case": "p8_dec_b4_630_P32", "file": "013-p8_dec_b4_630_P32.json"}
+{"t": 1794421714.0610757, "event": "start", "case": "p8_dec_b8_600_P16"}
+{"t": 1794421714.0985155, "event": "done", "case": "p8_dec_b8_600_P16", "file": "014-p8_dec_b8_600_P16.json"}
+{"t": 1794421714.1010225, "event": "start", "case": "p8_dec_b8_600_P32"}
+{"t": 1794421714.1326728, "event": "done", "case": "p8_dec_b8_600_P32", "file": "015-p8_dec_b8_600_P32.json"}
+{"t": 1794421714.1361232, "event": "start", "case": "p8_dec_b128_4096_P16"}
+{"t": 1794421714.2613342, "event": "done", "case": "p8_dec_b128_4096_P16", "file": "016-p8_dec_b128_4096_P16.json"}
+{"t": 1794421714.2635732, "event": "start", "case": "p8_dec_b128_4096_P32"}
+{"t": 1794421714.3232887, "event": "done", "case": "p8_dec_b128_4096_P32", "file": "017-p8_dec_b128_4096_P32.json"}
+{"t": 1794421714.3251722, "event": "start", "case": "p8_pre_256_P16"}
+{"t": 1794421714.4478972, "event": "done", "case": "p8_pre_256_P16", "file": "018-p8_pre_256_P16.json"}
+{"t": 1794421714.4498954, "event": "start", "case": "p8_pre_256_P32"}
+{"t": 1794421714.466999, "event": "done", "case": "p8_pre_256_P32", "file": "019-p8_pre_256_P32.json"}
+{"t": 1794421714.4715552, "event": "start", "case": "p8_pre_568_P16"}
+{"t": 1794421714.5209672, "event": "done", "case": "p8_pre_568_P16", "file": "020-p8_pre_568_P16.json"}
+{"t": 1794421714.5304852, "event": "start", "case": "p8_pre_568_P32"}
+{"t": 1794421714.543361, "event": "done", "case": "p8_pre_568_P32", "file": "021-p8_pre_568_P32.json"}
+{"t": 1794421714.5452642, "event": "start", "case": "p8_pre_mixed2048_P16"}
+{"t": 1794421714.6920805, "event": "done", "case": "p8_pre_mixed2048_P16", "file": "022-p8_pre_mixed2048_P16.json"}
+{"t": 1794421714.6940963, "event": "start", "case": "p8_pre_mixed2048_P32"}
+{"t": 1794421714.7156699, "event": "done", "case": "p8_pre_mixed2048_P32", "file": "023-p8_pre_mixed2048_P32.json"}
+{"t": 1794421714.7181077, "event": "start", "case": "p8_pre_2048_P16"}
+{"t": 1794421714.854854, "event": "done", "case": "p8_pre_2048_P16", "file": "024-p8_pre_2048_P16.json"}
+{"t": 1794421714.8611228, "event": "start", "case": "p8_pre_2048_P32"}
+{"t": 1794421714.8800263, "event": "done", "case": "p8_pre_2048_P32", "file": "025-p8_pre_2048_P32.json"}
+{"t": 1794421714.88174, "event": "start", "case": "p8_dec_b1_568_eager_msl"}
+{"t": 1794421714.8958375, "event": "done", "case": "p8_dec_b1_568_eager_msl", "file": "026-p8_dec_b1_568_eager_msl.json"}
+{"t": 1794421714.9010026, "event": "start", "case": "p8_dec_b1_4096_graph_msl"}
+{"t": 1794421714.9180057, "event": "done", "case": "p8_dec_b1_4096_graph_msl", "file": "027-p8_dec_b1_4096_graph_msl.json"}
+{"t": 1794421714.920379, "event": "start", "case": "p8_dec_b1_4096_eager_msl"}
+{"t": 1794421714.935728, "event": "done", "case": "p8_dec_b1_4096_eager_msl", "file": "028-p8_dec_b1_4096_eager_msl.json"}
+{"t": 1794421714.937468, "event": "start", "case": "p8_dec_b1_8192_graph_msl"}
+{"t": 1794421714.9576676, "event": "done", "case": "p8_dec_b1_8192_graph_msl", "file": "029-p8_dec_b1_8192_graph_msl.json"}
+{"t": 1794421714.9593592, "event": "start", "case": "p9_silu_T8"}
+{"t": 1794421715.0987017, "event": "done", "case": "p9_silu_T8", "file": "030-p9_silu_T8.json"}
+{"t": 1794421715.1010382, "event": "start", "case": "p9_silu_T2048"}
+{"t": 1794421715.4266233, "event": "done", "case": "p9_silu_T2048", "file": "031-p9_silu_T2048.json"}
+{"t": 1794421715.4288697, "event": "start", "case": "p9_silu_T8192"}
+{"t": 1794421715.5036008, "event": "done", "case": "p9_silu_T8192", "file": "032-p9_silu_T8192.json"}
+{"t": 1794421715.5054533, "event": "start", "case": "p9_rope_T8"}
+{"t": 1794421715.9304886, "event": "done", "case": "p9_rope_T8", "file": "033-p9_rope_T8.json"}
+{"t": 1794421715.9330747, "event": "start", "case": "p9_rope_T2048"}
+{"t": 1794421716.1678865, "event": "done", "case": "p9_rope_T2048", "file": "034-p9_rope_T2048.json"}
+{"t": 1794421716.1702323, "event": "start", "case": "p9_rope_T8192"}
+{"t": 1794421716.4062407, "event": "done", "case": "p9_rope_T8192", "file": "035-p9_rope_T8192.json"}
+{"t": 1794421716.4088054, "event": "end"}

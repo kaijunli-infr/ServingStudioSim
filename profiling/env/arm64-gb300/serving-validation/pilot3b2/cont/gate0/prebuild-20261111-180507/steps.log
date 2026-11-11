@@ -1,0 +1,5 @@
+2026-11-11T18:05:07Z prebuild out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/prebuild-20261111-180507 fi_base=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/flashinfer tmp=/tmp/fi-prebuild-20261111-180507 tmp_cap=350000000 helper=91b497290e93c0e18a060abbec21d35b8793948d61db6c2bd7f16c4826d04323 script=9d2db95a783c8f608e907fac979f38fff4a01fd126ebcc3cc00f0e8a1d6c5419
+2026-11-11T18:05:07Z capacity: shared fs free 24768568885248 B, /tmp free 730782666752 B
+2026-11-11T18:05:07Z step build start
+2026-11-11T18:07:32Z step build rc=0 device-node opens=32 (non-ENOENT: 5) tmp peak so far 128839479 B
+2026-11-11T18:07:32Z STOP: the build opened a GPU device node

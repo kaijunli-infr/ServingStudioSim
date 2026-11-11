@@ -1,0 +1,32 @@
+2026-11-11T18:26:31Z pilot out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/run-20261111-182631 test_mode=0 subreaper=1 prior_s=50.3 rerun_budget_s=500 root_pid=993073
+2026-11-11T18:26:31Z capacity: source cache 482765540 B (cap 700000000 B), free 24768568885248 B (need 5000000000 B)
+2026-11-11T18:26:31Z private CUDA cache initial: 482765540 bytes, 38 files
+2026-11-11T18:26:31Z flashinfer workspace pre: 9 files, 33605987 B, listing 7ffa6508e711f97f
+2026-11-11T18:26:33Z cupti extension ready
+2026-11-11T18:26:33Z pre: GPU 1 util 0 % mem 87 MiB; other compute processes: GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3145113, python3, 790 MiB;GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3146111, sglang::scheduler, 249514 MiB;
+2026-11-11T18:26:33Z pass timing start (timeout 270 s)
+2026-11-11T18:27:40Z pass timing occupancy 67.2 s; rerun total 67.2 s of 500; aggregate 117.5 s of 600
+2026-11-11T18:27:40Z pass timing rc=0
+2026-11-11T18:27:40Z pass control2048 start (timeout 75 s)
+2026-11-11T18:28:01Z pass control2048 occupancy 21.0 s; rerun total 88.2 s of 500; aggregate 138.5 s of 600
+2026-11-11T18:28:01Z pass control2048 rc=0
+2026-11-11T18:28:01Z pass control8192 start (timeout 75 s)
+2026-11-11T18:28:16Z pass control8192 occupancy 14.0 s; rerun total 102.2 s of 500; aggregate 152.5 s of 600
+2026-11-11T18:28:16Z pass control8192 rc=0
+2026-11-11T18:28:16Z pass identity start (timeout 377 s)
+2026-11-11T18:28:39Z pass identity occupancy 23.4 s; rerun total 125.6 s of 500; aggregate 175.9 s of 600
+2026-11-11T18:28:39Z pass identity rc=0
+2026-11-11T18:28:40Z GPU 1 back to baseline: GPU 1 util 0 % mem 81 MiB
+2026-11-11T18:28:40Z flashinfer workspace post: 10 files, 33605987 B, listing ef9d60e31fa882af
+2026-11-11T18:28:40Z prebuilt FlashInfer workspace CHANGED
+2026-11-11T18:28:41Z serving env fingerprint unchanged
+2026-11-11T18:28:41Z databases unchanged
+2026-11-11T18:28:41Z artifacts (excluding the private cache) 49796211 bytes; peak sampled 84998676 bytes
+2026-11-11T18:28:41Z sqlite exported (CPU)
+2026-11-11T18:28:41Z done
+2026-11-11T18:28:41Z private CUDA cache final: 664484280 bytes, 39 files
+private CUDA cache grew by 181718740 bytes, 1 files
+2026-11-11T18:28:41Z source cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/cache/nv-compute unchanged
+2026-11-11T18:28:41Z deleted private cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/scratch-20261111-182631
+2026-11-11T18:28:41Z local temporary files at the end: 0 bytes
+2026-11-11T18:28:41Z deleted /tmp/pilot3b2c-20261111-182631

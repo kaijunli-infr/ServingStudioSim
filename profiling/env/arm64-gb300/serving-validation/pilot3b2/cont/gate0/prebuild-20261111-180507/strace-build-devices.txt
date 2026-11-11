@@ -1,0 +1,5 @@
+930923 openat(AT_FDCWD, "/dev/nvidiactl", O_RDWR) = 25
+930923 openat(AT_FDCWD, "/dev/nvidiactl", O_RDWR) = 25
+930923 openat(AT_FDCWD, "/dev/nvidia-uvm", O_RDWR|O_CLOEXEC) = 26
+930923 openat(AT_FDCWD, "/dev/nvidia-uvm", O_RDWR|O_CLOEXEC) = 27
+930923 openat(AT_FDCWD, "/dev/nvidia0", O_RDWR|O_CLOEXEC) = 28

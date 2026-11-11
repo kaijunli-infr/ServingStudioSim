@@ -1,0 +1,10 @@
+{"t": 1794421660.875014, "event": "begin", "mode": "control", "pid": 998850}
+{"t": 1794421662.4479992, "event": "start", "case": "p5c_next_tune2048_T8"}
+{"t": 1794421677.733564, "event": "done", "case": "p5c_next_tune2048_T8", "file": "001-p5c_next_tune2048_T8.json"}
+{"t": 1794421677.735701, "event": "start", "case": "p5c_next_tune2048_T2048"}
+{"t": 1794421678.045724, "event": "done", "case": "p5c_next_tune2048_T2048", "file": "002-p5c_next_tune2048_T2048.json"}
+{"t": 1794421678.04797, "event": "start", "case": "p5c_post_tune2048_T8"}
+{"t": 1794421679.2404296, "event": "done", "case": "p5c_post_tune2048_T8", "file": "003-p5c_post_tune2048_T8.json"}
+{"t": 1794421679.2426548, "event": "start", "case": "p5c_final_tune2048_T8"}
+{"t": 1794421680.4573498, "event": "done", "case": "p5c_final_tune2048_T8", "file": "004-p5c_final_tune2048_T8.json"}
+{"t": 1794421680.4598858, "event": "end"}

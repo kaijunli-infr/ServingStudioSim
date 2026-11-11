@@ -1,0 +1,12 @@
+{
+ "mode": "build",
+ "workspace_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/flashinfer/.cache/flashinfer/0.7.0/103a",
+ "build_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/flashinfer/.cache/flashinfer/0.7.0/103a/cached_ops/fmha_gen",
+ "library": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/flashinfer/.cache/flashinfer/0.7.0/103a/cached_ops/fmha_gen/fmha_gen.so",
+ "is_aot": false,
+ "cubin_dir": "/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/venv/lib/python3.12/site-packages/flashinfer_cubin/cubins",
+ "library_bytes": 15645248,
+ "library_sha256": "f5ad5f6e6ac80e0c2e9a328bb3c9cb718bcb5fff4fc04426bd1677597f1a5d43",
+ "build_ninja_sha256": "b484f12fb7ebaa373befcc58d295b566933a55474e073e26ca9c5a8209669cf1",
+ "torch_cuda_initialized": false
+}

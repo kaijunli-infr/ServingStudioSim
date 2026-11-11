@@ -1,0 +1,112 @@
+{"t": 1794421593.5844977, "event": "begin", "mode": "timing", "pid": 993262}
+{"t": 1794421594.9121447, "event": "start", "case": "p7_kv_T1"}
+{"t": 1794421602.5517397, "event": "done", "case": "p7_kv_T1", "file": "001-p7_kv_T1.json"}
+{"t": 1794421602.5537946, "event": "start", "case": "p7_kv_T8"}
+{"t": 1794421602.8283617, "event": "done", "case": "p7_kv_T8", "file": "002-p7_kv_T8.json"}
+{"t": 1794421602.8305511, "event": "start", "case": "p7_kv_T64"}
+{"t": 1794421602.9484076, "event": "done", "case": "p7_kv_T64", "file": "003-p7_kv_T64.json"}
+{"t": 1794421602.9500983, "event": "start", "case": "p7_kv_T256"}
+{"t": 1794421603.2310505, "event": "done", "case": "p7_kv_T256", "file": "004-p7_kv_T256.json"}
+{"t": 1794421603.2327807, "event": "start", "case": "p7_kv_T568"}
+{"t": 1794421603.5774653, "event": "done", "case": "p7_kv_T568", "file": "005-p7_kv_T568.json"}
+{"t": 1794421603.579778, "event": "start", "case": "p7_kv_T1024"}
+{"t": 1794421603.7040644, "event": "done", "case": "p7_kv_T1024", "file": "006-p7_kv_T1024.json"}
+{"t": 1794421603.705824, "event": "start", "case": "p7_kv_T2048"}
+{"t": 1794421603.837958, "event": "done", "case": "p7_kv_T2048", "file": "007-p7_kv_T2048.json"}
+{"t": 1794421603.8399913, "event": "start", "case": "p8_dec_b1_568_P16"}
+{"t": 1794421623.0684109, "event": "done", "case": "p8_dec_b1_568_P16", "file": "008-p8_dec_b1_568_P16.json"}
+{"t": 1794421623.0714462, "event": "start", "case": "p8_dec_b1_568_P32"}
+{"t": 1794421623.8706307, "event": "done", "case": "p8_dec_b1_568_P32", "file": "009-p8_dec_b1_568_P32.json"}
+{"t": 1794421623.8729234, "event": "start", "case": "p8_dec_b4_630_P16"}
+{"t": 1794421624.6035328, "event": "done", "case": "p8_dec_b4_630_P16", "file": "010-p8_dec_b4_630_P16.json"}
+{"t": 1794421624.6054866, "event": "start", "case": "p8_dec_b4_630_P32"}
+{"t": 1794421624.8059285, "event": "done", "case": "p8_dec_b4_630_P32", "file": "011-p8_dec_b4_630_P32.json"}
+{"t": 1794421624.8101983, "event": "start", "case": "p8_dec_b4_569_P16"}
+{"t": 1794421625.0194514, "event": "done", "case": "p8_dec_b4_569_P16", "file": "012-p8_dec_b4_569_P16.json"}
+{"t": 1794421625.0242095, "event": "start", "case": "p8_dec_b4_569_P32"}
+{"t": 1794421625.7230687, "event": "done", "case": "p8_dec_b4_569_P32", "file": "013-p8_dec_b4_569_P32.json"}
+{"t": 1794421625.7255125, "event": "start", "case": "p8_dec_b7_630_P16"}
+{"t": 1794421626.4436526, "event": "done", "case": "p8_dec_b7_630_P16", "file": "014-p8_dec_b7_630_P16.json"}
+{"t": 1794421626.445691, "event": "start", "case": "p8_dec_b7_630_P32"}
+{"t": 1794421626.6535487, "event": "done", "case": "p8_dec_b7_630_P32", "file": "015-p8_dec_b7_630_P32.json"}
+{"t": 1794421626.655548, "event": "start", "case": "p8_dec_b8_600_P16"}
+{"t": 1794421626.870072, "event": "done", "case": "p8_dec_b8_600_P16", "file": "016-p8_dec_b8_600_P16.json"}
+{"t": 1794421626.8723257, "event": "start", "case": "p8_dec_b8_600_P32"}
+{"t": 1794421627.0834894, "event": "done", "case": "p8_dec_b8_600_P32", "file": "017-p8_dec_b8_600_P32.json"}
+{"t": 1794421627.0854862, "event": "start", "case": "p8_dec_b1_4096_P16"}
+{"t": 1794421628.1631613, "event": "done", "case": "p8_dec_b1_4096_P16", "file": "018-p8_dec_b1_4096_P16.json"}
+{"t": 1794421628.167024, "event": "start", "case": "p8_dec_b1_4096_P32"}
+{"t": 1794421628.3649497, "event": "done", "case": "p8_dec_b1_4096_P32", "file": "019-p8_dec_b1_4096_P32.json"}
+{"t": 1794421628.3668633, "event": "start", "case": "p8_dec_b1_8192_P16"}
+{"t": 1794421629.341751, "event": "done", "case": "p8_dec_b1_8192_P16", "file": "020-p8_dec_b1_8192_P16.json"}
+{"t": 1794421629.3438463, "event": "start", "case": "p8_dec_b1_8192_P32"}
+{"t": 1794421629.5473604, "event": "done", "case": "p8_dec_b1_8192_P32", "file": "021-p8_dec_b1_8192_P32.json"}
+{"t": 1794421629.5492141, "event": "start", "case": "p8_dec_b1_32768_P16"}
+{"t": 1794421629.778526, "event": "done", "case": "p8_dec_b1_32768_P16", "file": "022-p8_dec_b1_32768_P16.json"}
+{"t": 1794421629.7805243, "event": "start", "case": "p8_dec_b1_32768_P32"}
+{"t": 1794421630.0116475, "event": "done", "case": "p8_dec_b1_32768_P32", "file": "023-p8_dec_b1_32768_P32.json"}
+{"t": 1794421630.0135193, "event": "start", "case": "p8_dec_b32_4096_P16"}
+{"t": 1794421630.4794025, "event": "done", "case": "p8_dec_b32_4096_P16", "file": "024-p8_dec_b32_4096_P16.json"}
+{"t": 1794421630.4814088, "event": "start", "case": "p8_dec_b32_4096_P32"}
+{"t": 1794421630.8984995, "event": "done", "case": "p8_dec_b32_4096_P32", "file": "025-p8_dec_b32_4096_P32.json"}
+{"t": 1794421630.9004176, "event": "start", "case": "p8_dec_b128_4096_P16"}
+{"t": 1794421631.4022994, "event": "done", "case": "p8_dec_b128_4096_P16", "file": "026-p8_dec_b128_4096_P16.json"}
+{"t": 1794421631.4042456, "event": "start", "case": "p8_dec_b128_4096_P32"}
+{"t": 1794421631.8767176, "event": "done", "case": "p8_dec_b128_4096_P32", "file": "027-p8_dec_b128_4096_P32.json"}
+{"t": 1794421631.8785665, "event": "start", "case": "p8_pre_256_P16"}
+{"t": 1794421632.9059832, "event": "done", "case": "p8_pre_256_P16", "file": "028-p8_pre_256_P16.json"}
+{"t": 1794421632.9077547, "event": "start", "case": "p8_pre_256_P32"}
+{"t": 1794421633.8280406, "event": "done", "case": "p8_pre_256_P32", "file": "029-p8_pre_256_P32.json"}
+{"t": 1794421633.8299193, "event": "start", "case": "p8_pre_568_P16"}
+{"t": 1794421634.8360431, "event": "done", "case": "p8_pre_568_P16", "file": "030-p8_pre_568_P16.json"}
+{"t": 1794421634.8396626, "event": "start", "case": "p8_pre_568_P32"}
+{"t": 1794421635.0382721, "event": "done", "case": "p8_pre_568_P32", "file": "031-p8_pre_568_P32.json"}
+{"t": 1794421635.0401826, "event": "start", "case": "p8_pre_mixed2048_P16"}
+{"t": 1794421635.4070194, "event": "done", "case": "p8_pre_mixed2048_P16", "file": "032-p8_pre_mixed2048_P16.json"}
+{"t": 1794421635.4088995, "event": "start", "case": "p8_pre_mixed2048_P32"}
+{"t": 1794421635.6422346, "event": "done", "case": "p8_pre_mixed2048_P32", "file": "033-p8_pre_mixed2048_P32.json"}
+{"t": 1794421635.644077, "event": "start", "case": "p8_pre_mixed1933_P16"}
+{"t": 1794421636.1364188, "event": "done", "case": "p8_pre_mixed1933_P16", "file": "034-p8_pre_mixed1933_P16.json"}
+{"t": 1794421636.138235, "event": "start", "case": "p8_pre_mixed1933_P32"}
+{"t": 1794421636.375749, "event": "done", "case": "p8_pre_mixed1933_P32", "file": "035-p8_pre_mixed1933_P32.json"}
+{"t": 1794421636.3779268, "event": "start", "case": "p8_pre_2048_P16"}
+{"t": 1794421636.7568393, "event": "done", "case": "p8_pre_2048_P16", "file": "036-p8_pre_2048_P16.json"}
+{"t": 1794421636.7593105, "event": "start", "case": "p8_pre_2048_P32"}
+{"t": 1794421637.018735, "event": "done", "case": "p8_pre_2048_P32", "file": "037-p8_pre_2048_P32.json"}
+{"t": 1794421637.0226495, "event": "start", "case": "p8_dec_b1_568_eager_msl"}
+{"t": 1794421637.2340477, "event": "done", "case": "p8_dec_b1_568_eager_msl", "file": "038-p8_dec_b1_568_eager_msl.json"}
+{"t": 1794421637.2482626, "event": "start", "case": "p8_dec_b1_4096_graph_msl"}
+{"t": 1794421637.4500775, "event": "done", "case": "p8_dec_b1_4096_graph_msl", "file": "039-p8_dec_b1_4096_graph_msl.json"}
+{"t": 1794421637.4519985, "event": "start", "case": "p8_dec_b1_4096_eager_msl"}
+{"t": 1794421638.2796311, "event": "done", "case": "p8_dec_b1_4096_eager_msl", "file": "040-p8_dec_b1_4096_eager_msl.json"}
+{"t": 1794421638.281585, "event": "start", "case": "p8_dec_b1_8192_graph_msl"}
+{"t": 1794421638.49801, "event": "done", "case": "p8_dec_b1_8192_graph_msl", "file": "041-p8_dec_b1_8192_graph_msl.json"}
+{"t": 1794421638.5020218, "event": "start", "case": "p9_silu_T8"}
+{"t": 1794421645.8446476, "event": "done", "case": "p9_silu_T8", "file": "042-p9_silu_T8.json"}
+{"t": 1794421645.847177, "event": "start", "case": "p9_silu_T256"}
+{"t": 1794421646.2171893, "event": "done", "case": "p9_silu_T256", "file": "043-p9_silu_T256.json"}
+{"t": 1794421646.2233577, "event": "start", "case": "p9_silu_T568"}
+{"t": 1794421646.6032386, "event": "done", "case": "p9_silu_T568", "file": "044-p9_silu_T568.json"}
+{"t": 1794421646.60511, "event": "start", "case": "p9_silu_T1024"}
+{"t": 1794421646.9859157, "event": "done", "case": "p9_silu_T1024", "file": "045-p9_silu_T1024.json"}
+{"t": 1794421646.987729, "event": "start", "case": "p9_silu_T2048"}
+{"t": 1794421647.4184084, "event": "done", "case": "p9_silu_T2048", "file": "046-p9_silu_T2048.json"}
+{"t": 1794421647.4248025, "event": "start", "case": "p9_silu_T4096"}
+{"t": 1794421647.9750278, "event": "done", "case": "p9_silu_T4096", "file": "047-p9_silu_T4096.json"}
+{"t": 1794421647.977076, "event": "start", "case": "p9_silu_T8192"}
+{"t": 1794421648.7393858, "event": "done", "case": "p9_silu_T8192", "file": "048-p9_silu_T8192.json"}
+{"t": 1794421648.7413154, "event": "start", "case": "p9_rope_T8"}
+{"t": 1794421652.9521594, "event": "done", "case": "p9_rope_T8", "file": "049-p9_rope_T8.json"}
+{"t": 1794421652.954204, "event": "start", "case": "p9_rope_T256"}
+{"t": 1794421653.9200008, "event": "done", "case": "p9_rope_T256", "file": "050-p9_rope_T256.json"}
+{"t": 1794421653.9224834, "event": "start", "case": "p9_rope_T568"}
+{"t": 1794421654.8780286, "event": "done", "case": "p9_rope_T568", "file": "051-p9_rope_T568.json"}
+{"t": 1794421654.880127, "event": "start", "case": "p9_rope_T1024"}
+{"t": 1794421655.854061, "event": "done", "case": "p9_rope_T1024", "file": "052-p9_rope_T1024.json"}
+{"t": 1794421655.856731, "event": "start", "case": "p9_rope_T2048"}
+{"t": 1794421656.8264923, "event": "done", "case": "p9_rope_T2048", "file": "053-p9_rope_T2048.json"}
+{"t": 1794421656.828595, "event": "start", "case": "p9_rope_T4096"}
+{"t": 1794421657.8407857, "event": "done", "case": "p9_rope_T4096", "file": "054-p9_rope_T4096.json"}
+{"t": 1794421657.8426719, "event": "start", "case": "p9_rope_T8192"}
+{"t": 1794421658.9525115, "event": "done", "case": "p9_rope_T8192", "file": "055-p9_rope_T8192.json"}
+{"t": 1794421658.954562, "event": "end"}

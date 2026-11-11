@@ -1,0 +1,17 @@
+2026-11-11T18:13:48Z prebuild out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/prebuild-20261111-181348 fi_base=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/flashinfer tmp=/tmp/fi-prebuild-20261111-181348 tmp_cap=350000000 helper=91b497290e93c0e18a060abbec21d35b8793948d61db6c2bd7f16c4826d04323 script=ec67e56836527bc3f7b8895147fcc309dbe12586cb0778acfbe83e7f38331980
+2026-11-11T18:13:48Z capacity: shared fs free 24768568885248 B, /tmp free 730781511680 B
+2026-11-11T18:13:48Z shim fcee1d41408b42ac4dad60b989cf9f85bb7c0b7d5a12052b97722761ecbbd025 built
+2026-11-11T18:13:48Z step build start
+2026-11-11T18:16:30Z step build rc=0 device-node syscalls=0 refused-by-shim so far=7 tmp peak so far 128839479 B
+2026-11-11T18:16:30Z step check start
+2026-11-11T18:16:33Z step check rc=0 device-node syscalls=0 refused-by-shim so far=14 tmp peak so far 128839479 B
+2026-11-11T18:16:33Z step load start
+2026-11-11T18:16:38Z step load rc=0 device-node syscalls=0 refused-by-shim so far=21 tmp peak so far 128839479 B
+2026-11-11T18:16:38Z load: loaded with no GPU device-node access
+2026-11-11T18:16:38Z temporary files at the end: 0 B; peak sampled 128839479 B
+2026-11-11T18:16:38Z deleted /tmp/fi-prebuild-20261111-181348
+2026-11-11T18:16:38Z retained module output: 33605987 B in /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b2/cont/flashinfer
+2026-11-11T18:16:38Z build.ninja b484f12fb7ebaa373befcc58d295b566933a55474e073e26ca9c5a8209669cf1 equals the driver-reachable attempt's
+2026-11-11T18:16:38Z shim refusals:      21 /dev/nvidiactl;
+2026-11-11T18:16:38Z shared caches unchanged
+2026-11-11T18:16:38Z done

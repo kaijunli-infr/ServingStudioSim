@@ -1,0 +1,6 @@
+PASS A_normal persisted ['st_00', 'st_01', 'st_02', 'st_03', 'st_04'] stop None 
+PASS B_int_in_case persisted ['st_00', 'st_01'] stop {'reason': 'SIGINT', 'last_completed': 'st_01', 'in_progress': 'st_02', 'completed': 2} 
+PASS C_int_between persisted ['st_00'] stop {'reason': 'SIGINT', 'last_completed': 'st_00', 'in_progress': None, 'completed': 1} 
+PASS D_int_in_persist persisted ['st_00'] stop {'reason': 'SIGINT', 'last_completed': 'st_00', 'in_progress': None, 'completed': 1} 
+PASS E_term_in_case persisted ['st_00', 'st_01'] stop {'reason': 'SIGTERM', 'last_completed': 'st_01', 'in_progress': 'st_02', 'completed': 2} 
+persistence tests: 5 passed, 0 failed
