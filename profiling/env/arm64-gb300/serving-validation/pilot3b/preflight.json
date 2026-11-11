@@ -1,0 +1,31 @@
+{
+ "first_norm_spec": "rejected: store_sum needs at least two addends; one addend is its own sum",
+ "decode8_lengths": [
+  600,
+  599,
+  599,
+  599,
+  598,
+  598,
+  598,
+  598
+ ],
+ "decode4_lengths": [
+  630,
+  630,
+  630,
+  630
+ ],
+ "prefill_lengths": [
+  256
+ ],
+ "inductor_options": {
+  "enable_auto_functionalized_v2": "False",
+  "combo_kernels": "True",
+  "benchmark_combo_kernel": "True",
+  "guard_filter_fn": "<function skip_all_guards_unsafe at 0xee22dd713e20>"
+ },
+ "cupti_ext": "built",
+ "launch_stats_selftest": "ok",
+ "elapsed_s": 10.4
+}

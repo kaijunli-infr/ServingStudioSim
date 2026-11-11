@@ -1,0 +1,10 @@
+2026-11-11T11:14:29Z pilot out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b0/pilot/run-20261111-111429 total_s=600 root_pid=3980520
+2026-11-11T11:14:30Z pre: GPU 1 util 0 % mem 93 MiB; other compute processes: GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3145113, python3, 790 MiB;GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3146111, sglang::scheduler, 249514 MiB;
+2026-11-11T11:14:31Z cupti extension ready
+2026-11-11T11:14:31Z pass timing start (timeout 420 s)
+2026-11-11T11:14:58Z artifacts above 300 MB
+2026-11-11T11:14:58Z STOP: disk or trace budget exceeded
+2026-11-11T11:15:01Z GPU 1 back to baseline: GPU 1 util 0 % mem 91 MiB
+2026-11-11T11:15:01Z serving env fingerprint unchanged
+2026-11-11T11:15:01Z databases unchanged
+2026-11-11T11:15:01Z GPU occupancy used 0 s of 600; artifacts 315 MB

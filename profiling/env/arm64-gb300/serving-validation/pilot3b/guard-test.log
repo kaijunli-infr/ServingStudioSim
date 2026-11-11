@@ -1,0 +1,11 @@
+PASS A_normal occupancy=5.3 in [4.8,9]
+PASS B_timeout occupancy=2.1 in [1.9,6]
+PASS C_interrupt occupancy=6.0 in [3,8]
+PASS D_leftover occupancy=4.7 in [3.5,9]
+PASS E_cache_budget occupancy=2.1 in [0,8]
+2026-11-11T11:24:19Z private CUDA cache initial: 9000000 bytes, 3 files
+2026-11-11T11:24:21Z private CUDA cache above 1 MB
+2026-11-11T11:24:22Z private CUDA cache final: 9000000 bytes, 3 files
+private CUDA cache grew by 0 bytes, 0 files
+2026-11-11T11:24:22Z deleted private cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b0/pilot/guard-test/scratch-20261111-112419
+guard tests: 5 passed, 0 failed

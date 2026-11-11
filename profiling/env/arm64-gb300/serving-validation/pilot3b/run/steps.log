@@ -1,0 +1,20 @@
+2026-11-11T11:25:03Z pilot out=/mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b0/pilot/run-20261111-112503 test_mode=0 subreaper=1 prior_s=30 rerun_budget_s=540 root_pid=4020678
+2026-11-11T11:25:03Z private CUDA cache initial: 482765540 bytes, 38 files
+2026-11-11T11:25:05Z cupti extension ready
+2026-11-11T11:25:05Z pre: GPU 1 util 0 % mem 91 MiB; other compute processes: GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3145113, python3, 790 MiB;GPU-d2cef419-102a-b229-7832-70f157a02dc1, 3146111, sglang::scheduler, 249514 MiB;GPU-098db872-19a4-a98b-2793-9ea752f88553, 4001170, python3, 790 MiB;GPU-098db872-19a4-a98b-2793-9ea752f88553, 4002937, sglang::scheduler, 245668 MiB;
+2026-11-11T11:25:05Z pass timing start (timeout 400 s)
+2026-11-11T11:27:03Z pass timing occupancy 117.7 s; rerun total 117.7 s of 540; aggregate 147.7 s of 600
+2026-11-11T11:27:03Z pass timing rc=0
+2026-11-11T11:27:03Z pass identity start (timeout 402 s)
+2026-11-11T11:28:05Z pass identity occupancy 62.4 s; rerun total 180.1 s of 540; aggregate 210.1 s of 600
+2026-11-11T11:28:05Z pass identity rc=0
+2026-11-11T11:28:07Z GPU 1 back to baseline: GPU 1 util 0 % mem 89 MiB
+2026-11-11T11:28:07Z serving env fingerprint unchanged
+2026-11-11T11:28:07Z databases unchanged
+2026-11-11T11:28:07Z artifacts (excluding the private cache) 48 MB
+2026-11-11T11:28:07Z sqlite exported (CPU)
+2026-11-11T11:28:07Z done
+2026-11-11T11:28:07Z private CUDA cache final: 627368052 bytes, 40 files
+private CUDA cache grew by 144602512 bytes, 2 files
+2026-11-11T11:28:07Z source cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/cache/nv-compute unchanged
+2026-11-11T11:28:07Z deleted private cache /mnt/shared/home/kevin/workspace/serving-studio/gb300/serving-validation/phase3b0/pilot/scratch-20261111-112503
