@@ -1,0 +1,243 @@
+                  pass class                                         calib  held excl
+     diverse_nsys_run2 decode nreq=1 kv<32k                            620   155    0
+     diverse_nsys_run2 decode nreq=10 kv32-96k                           0   524    0
+     diverse_nsys_run2 decode nreq=10 kv>=96k                            0   842    0
+     diverse_nsys_run2 decode nreq=11 kv32-96k                         153    39    0
+     diverse_nsys_run2 decode nreq=11 kv>=96k                         1129  1130    0
+     diverse_nsys_run2 decode nreq=12 kv32-96k                          13     2    0
+     diverse_nsys_run2 decode nreq=12 kv>=96k                          630   631    0
+     diverse_nsys_run2 decode nreq=13 kv>=96k                          279   277    0
+     diverse_nsys_run2 decode nreq=14 kv32-96k                           0     1    0
+     diverse_nsys_run2 decode nreq=14 kv>=96k                            0   203    0
+     diverse_nsys_run2 decode nreq=15 kv>=96k                            5     6    0
+     diverse_nsys_run2 decode nreq=16 kv>=96k                           13    13    0
+     diverse_nsys_run2 decode nreq=2 kv<32k                           1266   316    0
+     diverse_nsys_run2 decode nreq=3 kv32-96k                          153    38    0
+     diverse_nsys_run2 decode nreq=3 kv<32k                            409   103    0
+     diverse_nsys_run2 decode nreq=4 kv32-96k                         1098   273    0
+     diverse_nsys_run2 decode nreq=4 kv>=96k                            22    21    0
+     diverse_nsys_run2 decode nreq=5 kv32-96k                            0   284    0
+     diverse_nsys_run2 decode nreq=5 kv>=96k                             0   378    0
+     diverse_nsys_run2 decode nreq=6 kv32-96k                          667   170    0
+     diverse_nsys_run2 decode nreq=6 kv>=96k                           500   500    0
+     diverse_nsys_run2 decode nreq=7 kv32-96k                          784   196    0
+     diverse_nsys_run2 decode nreq=7 kv>=96k                           319   318    0
+     diverse_nsys_run2 decode nreq=8 kv32-96k                          535   133    0
+     diverse_nsys_run2 decode nreq=8 kv>=96k                           503   504    0
+     diverse_nsys_run2 decode nreq=9 kv32-96k                          884   219    0
+     diverse_nsys_run2 decode nreq=9 kv>=96k                           130   130    0
+     diverse_nsys_run2 mixed 1k-10k tok                                 11     2   27
+     diverse_nsys_run2 mixed <1k tok                                     7     2   10
+     diverse_nsys_run2 mixed >=10k tok multi-chunk                       6     3   12
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=1                  1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=10                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=11                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=12                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=13                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=14                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=15                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=16                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=17                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=18                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=19                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=20                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=21                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=22                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=23                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=24                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=25                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=26                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=27                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=3                  0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=4                  1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=5                  1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=6                  1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=7                  1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=8                  1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=0k chain=9                  0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=112k chain=12               0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=1                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=10                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=12                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=14                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=17                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=18                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=19                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=2                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=20                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=21                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=22                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=23                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=26                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=27                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=3                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=5                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=7                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=16k chain=9                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=1                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=10                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=12                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=14                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=17                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=2                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=20                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=21                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=23                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=27                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=3                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=5                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=32k chain=9                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=1                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=10                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=12                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=14                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=17                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=2                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=20                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=21                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=27                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=3                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=48k chain=9                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=1                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=10                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=12                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=14                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=17                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=2                 1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=20                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=21                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=3                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=64k chain=9                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=80k chain=10                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=80k chain=12                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=80k chain=17                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=80k chain=21                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=80k chain=9                 0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=96k chain=10                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=96k chain=12                0     1    0
+     diverse_nsys_run2 prefill 16k chunk kv0=96k chain=17                1     0    0
+     diverse_nsys_run2 prefill 16k chunk kv0=96k chain=9                 0     1    0
+         quadrant_nsys decode nreq=1 kv<32k                            206    52    0
+         quadrant_nsys decode nreq=10 kv<32k                             1     1    0
+         quadrant_nsys decode nreq=12 kv<32k                           103    24    0
+         quadrant_nsys decode nreq=15 kv<32k                             0     1    0
+         quadrant_nsys decode nreq=17 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=19 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=2 kv<32k                              2     1    0
+         quadrant_nsys decode nreq=20 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=23 kv<32k                             1     1    0
+         quadrant_nsys decode nreq=24 kv<32k                           190    48    0
+         quadrant_nsys decode nreq=25 kv<32k                           210    52    0
+         quadrant_nsys decode nreq=26 kv<32k                             0   129    0
+         quadrant_nsys decode nreq=27 kv<32k                           103    25    0
+         quadrant_nsys decode nreq=28 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=29 kv<32k                             1     1    0
+         quadrant_nsys decode nreq=3 kv<32k                            102    26    0
+         quadrant_nsys decode nreq=30 kv<32k                             0   127    0
+         quadrant_nsys decode nreq=32 kv<32k                             2     0    0
+         quadrant_nsys decode nreq=33 kv<32k                             0     1    0
+         quadrant_nsys decode nreq=34 kv<32k                             2     1    0
+         quadrant_nsys decode nreq=36 kv<32k                             0   126    0
+         quadrant_nsys decode nreq=37 kv<32k                             0     1    0
+         quadrant_nsys decode nreq=39 kv<32k                             2     0    0
+         quadrant_nsys decode nreq=4 kv<32k                              1     0    0
+         quadrant_nsys decode nreq=40 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=41 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=42 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=43 kv<32k                             2     0    0
+         quadrant_nsys decode nreq=44 kv<32k                             2     0    0
+         quadrant_nsys decode nreq=45 kv<32k                             1     0    0
+         quadrant_nsys decode nreq=46 kv<32k                             3     0    0
+         quadrant_nsys decode nreq=47 kv<32k                             5     1    0
+         quadrant_nsys decode nreq=48 kv<32k                          2425   607    0
+         quadrant_nsys decode nreq=5 kv<32k                              0     1    0
+         quadrant_nsys decode nreq=6 kv<32k                            103    24    0
+         quadrant_nsys decode nreq=7 kv<32k                              1     1    0
+         quadrant_nsys mixed 1k-10k tok                                  3     1    7
+         quadrant_nsys mixed <1k tok                                     4     0    1
+         quadrant_nsys mixed >=10k tok multi-chunk                       5     1    2
+ diverse_nsys_salvaged decode nreq=10 kv32-96k                          58    15    0
+ diverse_nsys_salvaged decode nreq=10 kv>=96k                          411   412    0
+ diverse_nsys_salvaged decode nreq=11 kv32-96k                         122    29    0
+ diverse_nsys_salvaged decode nreq=11 kv>=96k                          438   438    0
+ diverse_nsys_salvaged decode nreq=12 kv32-96k                           5     1    0
+ diverse_nsys_salvaged decode nreq=12 kv>=96k                          212   218    0
+ diverse_nsys_salvaged decode nreq=13 kv32-96k                          11     4    0
+ diverse_nsys_salvaged decode nreq=13 kv>=96k                          144   139    0
+ diverse_nsys_salvaged decode nreq=14 kv32-96k                          56    14    0
+ diverse_nsys_salvaged decode nreq=14 kv>=96k                           86    87    0
+ diverse_nsys_salvaged decode nreq=15 kv32-96k                           1     1    0
+ diverse_nsys_salvaged decode nreq=15 kv>=96k                           72    71    0
+ diverse_nsys_salvaged decode nreq=16 kv>=96k                           86    87    0
+ diverse_nsys_salvaged decode nreq=17 kv>=96k                           34    32    0
+ diverse_nsys_salvaged decode nreq=4 kv<32k                            132    32    0
+ diverse_nsys_salvaged decode nreq=5 kv<32k                              1     0    0
+ diverse_nsys_salvaged decode nreq=6 kv32-96k                           87    21    0
+ diverse_nsys_salvaged decode nreq=7 kv32-96k                          253    63    0
+ diverse_nsys_salvaged decode nreq=7 kv>=96k                           236   234    0
+ diverse_nsys_salvaged decode nreq=8 kv32-96k                           64    17    0
+ diverse_nsys_salvaged decode nreq=8 kv>=96k                            12    12    0
+ diverse_nsys_salvaged decode nreq=9 kv32-96k                            2     0    0
+ diverse_nsys_salvaged decode nreq=9 kv>=96k                            71    72    0
+ diverse_nsys_salvaged mixed 1k-10k tok                                  1     0   14
+ diverse_nsys_salvaged mixed <1k tok                                     2     1    4
+ diverse_nsys_salvaged mixed >=10k tok multi-chunk                       9     3    2
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=1                  1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=10                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=11                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=12                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=13                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=14                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=15                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=16                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=17                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=3                  0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=4                  1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=6                  1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=8                  1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=0k chain=9                  0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=112k chain=12               0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=1                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=10                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=12                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=14                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=17                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=2                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=3                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=5                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=7                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=16k chain=9                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=1                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=10                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=12                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=14                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=17                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=2                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=3                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=5                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=32k chain=9                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=1                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=10                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=12                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=14                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=17                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=2                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=3                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=48k chain=9                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=1                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=10                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=12                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=14                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=17                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=2                 1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=3                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=64k chain=9                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=80k chain=10                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=80k chain=12                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=80k chain=17                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=80k chain=9                 0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=96k chain=10                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=96k chain=12                0     1    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=96k chain=17                1     0    0
+ diverse_nsys_salvaged prefill 16k chunk kv0=96k chain=9                 0     1    0
+{'diverse_nsys_run2': 10191, 'diverse_nsys_run2_h': 7446, 'quadrant_nsys': 3487, 'quadrant_nsys_h': 1253, 'diverse_nsys_salvaged': 2639, 'diverse_nsys_salvaged_h': 2028}

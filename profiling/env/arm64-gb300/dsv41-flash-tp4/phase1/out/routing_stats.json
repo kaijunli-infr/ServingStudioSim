@@ -1,0 +1,830 @@
+{
+ "per_request": [
+  {
+   "request": "independent_34",
+   "tokens": 8191,
+   "imb_mean": 38.357026004150896,
+   "imb_max": 62.93737028445855,
+   "ent_mean": 0.7015283900219356,
+   "distinct_experts_mean": 304.525
+  },
+  {
+   "request": "independent_68",
+   "tokens": 8191,
+   "imb_mean": 47.47669393236479,
+   "imb_max": 63.914052008301795,
+   "ent_mean": 0.5998858207345886,
+   "distinct_experts_mean": 196.75
+  },
+  {
+   "request": "independent_60",
+   "tokens": 7815,
+   "imb_mean": 39.419373000639794,
+   "imb_max": 63.50044785668586,
+   "ent_mean": 0.7043910096479531,
+   "distinct_experts_mean": 299.6
+  },
+  {
+   "request": "independent_24",
+   "tokens": 7533,
+   "imb_mean": 37.55741404486925,
+   "imb_max": 62.836054692685515,
+   "ent_mean": 0.7100052312755218,
+   "distinct_experts_mean": 303.25
+  },
+  {
+   "request": "independent_9",
+   "tokens": 7158,
+   "imb_mean": 34.68857222687902,
+   "imb_max": 62.94495669181335,
+   "ent_mean": 0.7467686987895619,
+   "distinct_experts_mean": 301.975
+  },
+  {
+   "request": "independent_58",
+   "tokens": 6869,
+   "imb_mean": 36.12100742466153,
+   "imb_max": 60.03086329887902,
+   "ent_mean": 0.6949472529139198,
+   "distinct_experts_mean": 310.425
+  },
+  {
+   "request": "independent_98",
+   "tokens": 6273,
+   "imb_mean": 44.54570380997928,
+   "imb_max": 62.58185875976407,
+   "ent_mean": 0.7677257117316081,
+   "distinct_experts_mean": 336.375
+  },
+  {
+   "request": "independent_40",
+   "tokens": 5825,
+   "imb_mean": 38.24068669527897,
+   "imb_max": 63.758283261802575,
+   "ent_mean": 0.6498485600297557,
+   "distinct_experts_mean": 245.85
+  },
+  {
+   "request": "independent_21",
+   "tokens": 4500,
+   "imb_mean": 40.3968,
+   "imb_max": 63.75822222222222,
+   "ent_mean": 0.7137094594374453,
+   "distinct_experts_mean": 270.125
+  },
+  {
+   "request": "independent_23",
+   "tokens": 4402,
+   "imb_mean": 43.141481144934126,
+   "imb_max": 64.0,
+   "ent_mean": 0.6995286780259615,
+   "distinct_experts_mean": 257.925
+  },
+  {
+   "request": "independent_13",
+   "tokens": 4354,
+   "imb_mean": 41.44308681672025,
+   "imb_max": 63.514928801102435,
+   "ent_mean": 0.6842665836246459,
+   "distinct_experts_mean": 256.575
+  },
+  {
+   "request": "independent_50",
+   "tokens": 4254,
+   "imb_mean": 29.417959567465914,
+   "imb_max": 50.91114245416079,
+   "ent_mean": 0.7584702389637749,
+   "distinct_experts_mean": 327.25
+  },
+  {
+   "request": "independent_54",
+   "tokens": 4180,
+   "imb_mean": 46.410334928229666,
+   "imb_max": 63.40287081339713,
+   "ent_mean": 0.5906157330477846,
+   "distinct_experts_mean": 187.0
+  },
+  {
+   "request": "independent_25",
+   "tokens": 4051,
+   "imb_mean": 40.48817575907184,
+   "imb_max": 63.210071587262405,
+   "ent_mean": 0.6593489632723595,
+   "distinct_experts_mean": 202.525
+  },
+  {
+   "request": "independent_52",
+   "tokens": 4021,
+   "imb_mean": 36.91579209151952,
+   "imb_max": 60.19597115145486,
+   "ent_mean": 0.7366798022014299,
+   "distinct_experts_mean": 297.75
+  },
+  {
+   "request": "independent_96",
+   "tokens": 3937,
+   "imb_mean": 19.998983997967997,
+   "imb_max": 34.999237998476,
+   "ent_mean": 0.8358546308493455,
+   "distinct_experts_mean": 339.8
+  },
+  {
+   "request": "independent_59",
+   "tokens": 3412,
+   "imb_mean": 39.650175849941384,
+   "imb_max": 63.71864009378663,
+   "ent_mean": 0.7226887259520128,
+   "distinct_experts_mean": 251.175
+  },
+  {
+   "request": "independent_7",
+   "tokens": 3310,
+   "imb_mean": 35.27105740181268,
+   "imb_max": 59.51419939577039,
+   "ent_mean": 0.713102071142385,
+   "distinct_experts_mean": 247.2
+  },
+  {
+   "request": "independent_94",
+   "tokens": 2956,
+   "imb_mean": 35.841407307171856,
+   "imb_max": 61.68335588633288,
+   "ent_mean": 0.7363901349730255,
+   "distinct_experts_mean": 249.5
+  },
+  {
+   "request": "independent_85",
+   "tokens": 2672,
+   "imb_mean": 40.57904191616767,
+   "imb_max": 62.51497005988024,
+   "ent_mean": 0.695869451730869,
+   "distinct_experts_mean": 233.225
+  },
+  {
+   "request": "independent_1",
+   "tokens": 2614,
+   "imb_mean": 39.077582249426165,
+   "imb_max": 63.902065799540935,
+   "ent_mean": 0.7404216509050776,
+   "distinct_experts_mean": 276.925
+  },
+  {
+   "request": "independent_2",
+   "tokens": 2183,
+   "imb_mean": 37.337975263398995,
+   "imb_max": 58.72285845167201,
+   "ent_mean": 0.7119473464642521,
+   "distinct_experts_mean": 239.25
+  },
+  {
+   "request": "independent_30",
+   "tokens": 2161,
+   "imb_mean": 44.17140212864415,
+   "imb_max": 63.970384081443775,
+   "ent_mean": 0.7408037526476485,
+   "distinct_experts_mean": 281.175
+  },
+  {
+   "request": "independent_36",
+   "tokens": 2044,
+   "imb_mean": 43.16242661448141,
+   "imb_max": 61.62035225048923,
+   "ent_mean": 0.7516996074583753,
+   "distinct_experts_mean": 289.25
+  },
+  {
+   "request": "independent_82",
+   "tokens": 1896,
+   "imb_mean": 38.58227848101266,
+   "imb_max": 63.527426160337555,
+   "ent_mean": 0.7392047339855095,
+   "distinct_experts_mean": 275.775
+  },
+  {
+   "request": "independent_89",
+   "tokens": 1759,
+   "imb_mean": 40.32927799886299,
+   "imb_max": 62.908470722001134,
+   "ent_mean": 0.7722936502095689,
+   "distinct_experts_mean": 302.65
+  },
+  {
+   "request": "independent_51",
+   "tokens": 1700,
+   "imb_mean": 40.23623529411765,
+   "imb_max": 63.811764705882354,
+   "ent_mean": 0.6858225395619347,
+   "distinct_experts_mean": 236.3
+  },
+  {
+   "request": "independent_74",
+   "tokens": 1556,
+   "imb_mean": 43.001542416452445,
+   "imb_max": 62.9305912596401,
+   "ent_mean": 0.7260206992627343,
+   "distinct_experts_mean": 272.675
+  },
+  {
+   "request": "independent_27",
+   "tokens": 1541,
+   "imb_mean": 48.27929915639196,
+   "imb_max": 64.0,
+   "ent_mean": 0.7353137891994628,
+   "distinct_experts_mean": 275.675
+  },
+  {
+   "request": "independent_70",
+   "tokens": 1416,
+   "imb_mean": 39.89830508474576,
+   "imb_max": 63.954802259887,
+   "ent_mean": 0.6958446112712545,
+   "distinct_experts_mean": 231.7
+  },
+  {
+   "request": "independent_14",
+   "tokens": 1236,
+   "imb_mean": 41.663430420711975,
+   "imb_max": 63.79288025889968,
+   "ent_mean": 0.7254286556749445,
+   "distinct_experts_mean": 249.375
+  },
+  {
+   "request": "independent_48",
+   "tokens": 1033,
+   "imb_mean": 54.85692158760891,
+   "imb_max": 64.0,
+   "ent_mean": 0.6935505552538858,
+   "distinct_experts_mean": 243.2
+  },
+  {
+   "request": "independent_39",
+   "tokens": 904,
+   "imb_mean": 47.65132743362832,
+   "imb_max": 63.92920353982301,
+   "ent_mean": 0.7387088179477936,
+   "distinct_experts_mean": 249.725
+  },
+  {
+   "request": "independent_3",
+   "tokens": 606,
+   "imb_mean": 42.312871287128715,
+   "imb_max": 63.04950495049505,
+   "ent_mean": 0.703699852683233,
+   "distinct_experts_mean": 206.875
+  },
+  {
+   "request": "independent_37",
+   "tokens": 605,
+   "imb_mean": 43.2,
+   "imb_max": 63.89421487603306,
+   "ent_mean": 0.7452366494884111,
+   "distinct_experts_mean": 245.3
+  },
+  {
+   "request": "independent_43",
+   "tokens": 555,
+   "imb_mean": 50.05261261261261,
+   "imb_max": 64.0,
+   "ent_mean": 0.6989935032436685,
+   "distinct_experts_mean": 208.8
+  },
+  {
+   "request": "independent_67",
+   "tokens": 479,
+   "imb_mean": 48.59791231732777,
+   "imb_max": 62.66388308977035,
+   "ent_mean": 0.7000211586069748,
+   "distinct_experts_mean": 207.35
+  },
+  {
+   "request": "independent_10",
+   "tokens": 477,
+   "imb_mean": 46.53081761006289,
+   "imb_max": 64.0,
+   "ent_mean": 0.7162034751900549,
+   "distinct_experts_mean": 212.5
+  },
+  {
+   "request": "independent_61",
+   "tokens": 476,
+   "imb_mean": 46.931092436974794,
+   "imb_max": 64.0,
+   "ent_mean": 0.7030543893558068,
+   "distinct_experts_mean": 198.05
+  },
+  {
+   "request": "independent_42",
+   "tokens": 445,
+   "imb_mean": 38.02966292134831,
+   "imb_max": 59.68539325842696,
+   "ent_mean": 0.6750008731453566,
+   "distinct_experts_mean": 150.225
+  },
+  {
+   "request": "independent_31",
+   "tokens": 399,
+   "imb_mean": 52.771929824561404,
+   "imb_max": 64.0,
+   "ent_mean": 0.6982609897131484,
+   "distinct_experts_mean": 196.025
+  },
+  {
+   "request": "independent_56",
+   "tokens": 369,
+   "imb_mean": 51.92845528455284,
+   "imb_max": 64.0,
+   "ent_mean": 0.7069204953347258,
+   "distinct_experts_mean": 201.075
+  },
+  {
+   "request": "independent_63",
+   "tokens": 369,
+   "imb_mean": 45.237940379403796,
+   "imb_max": 59.49051490514905,
+   "ent_mean": 0.6686745886168263,
+   "distinct_experts_mean": 170.8
+  },
+  {
+   "request": "independent_79",
+   "tokens": 324,
+   "imb_mean": 50.25185185185186,
+   "imb_max": 64.0,
+   "ent_mean": 0.7100933300476535,
+   "distinct_experts_mean": 196.075
+  },
+  {
+   "request": "independent_19",
+   "tokens": 320,
+   "imb_mean": 49.93,
+   "imb_max": 64.0,
+   "ent_mean": 0.7048727396944475,
+   "distinct_experts_mean": 196.0
+  },
+  {
+   "request": "independent_73",
+   "tokens": 298,
+   "imb_mean": 46.64697986577181,
+   "imb_max": 64.0,
+   "ent_mean": 0.7047582797161738,
+   "distinct_experts_mean": 177.225
+  },
+  {
+   "request": "independent_83",
+   "tokens": 291,
+   "imb_mean": 53.34432989690722,
+   "imb_max": 64.0,
+   "ent_mean": 0.664059209914982,
+   "distinct_experts_mean": 160.5
+  },
+  {
+   "request": "independent_86",
+   "tokens": 284,
+   "imb_mean": 40.10140845070423,
+   "imb_max": 63.098591549295776,
+   "ent_mean": 0.7255905379008796,
+   "distinct_experts_mean": 182.65
+  },
+  {
+   "request": "independent_65",
+   "tokens": 260,
+   "imb_mean": 43.77846153846154,
+   "imb_max": 60.06153846153846,
+   "ent_mean": 0.6966405008526233,
+   "distinct_experts_mean": 173.75
+  },
+  {
+   "request": "independent_15",
+   "tokens": 251,
+   "imb_mean": 47.190438247011954,
+   "imb_max": 64.0,
+   "ent_mean": 0.7022819003551979,
+   "distinct_experts_mean": 169.875
+  },
+  {
+   "request": "independent_64",
+   "tokens": 247,
+   "imb_mean": 51.91902834008097,
+   "imb_max": 64.0,
+   "ent_mean": 0.6591351891289416,
+   "distinct_experts_mean": 153.875
+  },
+  {
+   "request": "independent_53",
+   "tokens": 221,
+   "imb_mean": 47.55837104072398,
+   "imb_max": 60.52488687782805,
+   "ent_mean": 0.6896414378108672,
+   "distinct_experts_mean": 166.1
+  },
+  {
+   "request": "independent_72",
+   "tokens": 202,
+   "imb_mean": 41.853465346534655,
+   "imb_max": 62.415841584158414,
+   "ent_mean": 0.7248840389499833,
+   "distinct_experts_mean": 179.3
+  },
+  {
+   "request": "independent_16",
+   "tokens": 176,
+   "imb_mean": 51.663636363636364,
+   "imb_max": 64.0,
+   "ent_mean": 0.6505065448649379,
+   "distinct_experts_mean": 126.9
+  },
+  {
+   "request": "independent_44",
+   "tokens": 166,
+   "imb_mean": 44.106024096385546,
+   "imb_max": 64.0,
+   "ent_mean": 0.6568601393328846,
+   "distinct_experts_mean": 121.075
+  },
+  {
+   "request": "independent_28",
+   "tokens": 162,
+   "imb_mean": 39.565432098765434,
+   "imb_max": 60.04938271604938,
+   "ent_mean": 0.7278760181323053,
+   "distinct_experts_mean": 166.0
+  },
+  {
+   "request": "independent_38",
+   "tokens": 122,
+   "imb_mean": 52.091803278688516,
+   "imb_max": 64.0,
+   "ent_mean": 0.6545874358224977,
+   "distinct_experts_mean": 121.275
+  },
+  {
+   "request": "independent_99",
+   "tokens": 118,
+   "imb_mean": 54.87457627118645,
+   "imb_max": 64.0,
+   "ent_mean": 0.6416780649830345,
+   "distinct_experts_mean": 114.575
+  },
+  {
+   "request": "independent_84",
+   "tokens": 100,
+   "imb_mean": 50.032000000000004,
+   "imb_max": 63.36,
+   "ent_mean": 0.6539402066791388,
+   "distinct_experts_mean": 113.425
+  },
+  {
+   "request": "independent_78",
+   "tokens": 93,
+   "imb_mean": 48.240860215053765,
+   "imb_max": 64.0,
+   "ent_mean": 0.6572488676389651,
+   "distinct_experts_mean": 110.975
+  },
+  {
+   "request": "independent_35",
+   "tokens": 91,
+   "imb_mean": 44.94065934065934,
+   "imb_max": 62.59340659340659,
+   "ent_mean": 0.6617885036961104,
+   "distinct_experts_mean": 108.4
+  },
+  {
+   "request": "independent_32",
+   "tokens": 77,
+   "imb_mean": 49.225974025974025,
+   "imb_max": 64.0,
+   "ent_mean": 0.6283429678172434,
+   "distinct_experts_mean": 93.0
+  },
+  {
+   "request": "independent_6",
+   "tokens": 65,
+   "imb_mean": 43.17538461538462,
+   "imb_max": 64.0,
+   "ent_mean": 0.657297763624677,
+   "distinct_experts_mean": 95.825
+  },
+  {
+   "request": "independent_71",
+   "tokens": 61,
+   "imb_mean": 50.072131147540986,
+   "imb_max": 64.0,
+   "ent_mean": 0.6438140732750863,
+   "distinct_experts_mean": 89.55
+  },
+  {
+   "request": "independent_66",
+   "tokens": 58,
+   "imb_mean": 47.668965517241375,
+   "imb_max": 64.0,
+   "ent_mean": 0.6296010602407627,
+   "distinct_experts_mean": 81.35
+  },
+  {
+   "request": "independent_92",
+   "tokens": 54,
+   "imb_mean": 50.222222222222214,
+   "imb_max": 64.0,
+   "ent_mean": 0.6448498805246313,
+   "distinct_experts_mean": 81.825
+  },
+  {
+   "request": "independent_76",
+   "tokens": 40,
+   "imb_mean": 49.64,
+   "imb_max": 64.0,
+   "ent_mean": 0.6553197572508334,
+   "distinct_experts_mean": 66.875
+  },
+  {
+   "request": "independent_80",
+   "tokens": 32,
+   "imb_mean": 55.1,
+   "imb_max": 64.0,
+   "ent_mean": 0.6680315651738533,
+   "distinct_experts_mean": 62.675
+  },
+  {
+   "request": "independent_45",
+   "tokens": 29,
+   "imb_mean": 44.13793103448276,
+   "imb_max": 64.0,
+   "ent_mean": 0.6972076392510329,
+   "distinct_experts_mean": 58.05
+  },
+  {
+   "request": "independent_90",
+   "tokens": 28,
+   "imb_mean": 58.51428571428571,
+   "imb_max": 64.0,
+   "ent_mean": 0.6135408490389596,
+   "distinct_experts_mean": 42.825
+  },
+  {
+   "request": "independent_11",
+   "tokens": 27,
+   "imb_mean": 41.303703703703704,
+   "imb_max": 61.629629629629626,
+   "ent_mean": 0.7283830052537259,
+   "distinct_experts_mean": 62.525
+  },
+  {
+   "request": "independent_81",
+   "tokens": 27,
+   "imb_mean": 49.54074074074074,
+   "imb_max": 64.0,
+   "ent_mean": 0.7041299599351633,
+   "distinct_experts_mean": 59.55
+  },
+  {
+   "request": "independent_17",
+   "tokens": 25,
+   "imb_mean": 54.720000000000006,
+   "imb_max": 64.0,
+   "ent_mean": 0.6781963448055489,
+   "distinct_experts_mean": 52.125
+  },
+  {
+   "request": "independent_97",
+   "tokens": 19,
+   "imb_mean": 57.93684210526315,
+   "imb_max": 64.0,
+   "ent_mean": 0.6905143307591444,
+   "distinct_experts_mean": 42.775
+  },
+  {
+   "request": "independent_0",
+   "tokens": 14,
+   "imb_mean": 47.77142857142857,
+   "imb_max": 64.0,
+   "ent_mean": 0.7440628130303024,
+   "distinct_experts_mean": 37.875
+  },
+  {
+   "request": "independent_93",
+   "tokens": 14,
+   "imb_mean": 50.74285714285715,
+   "imb_max": 64.0,
+   "ent_mean": 0.7281831978194442,
+   "distinct_experts_mean": 36.0
+  },
+  {
+   "request": "independent_47",
+   "tokens": 11,
+   "imb_mean": 55.41818181818182,
+   "imb_max": 64.0,
+   "ent_mean": 0.7434594736281894,
+   "distinct_experts_mean": 32.05
+  },
+  {
+   "request": "independent_4",
+   "tokens": 10,
+   "imb_mean": 56.160000000000004,
+   "imb_max": 64.0,
+   "ent_mean": 0.7398844630066443,
+   "distinct_experts_mean": 28.825
+  },
+  {
+   "request": "independent_49",
+   "tokens": 10,
+   "imb_mean": 59.67999999999999,
+   "imb_max": 64.0,
+   "ent_mean": 0.7353680236107489,
+   "distinct_experts_mean": 28.875
+  },
+  {
+   "request": "independent_77",
+   "tokens": 10,
+   "imb_mean": 55.04,
+   "imb_max": 64.0,
+   "ent_mean": 0.6831393709609292,
+   "distinct_experts_mean": 22.125
+  },
+  {
+   "request": "independent_20",
+   "tokens": 8,
+   "imb_mean": 53.0,
+   "imb_max": 64.0,
+   "ent_mean": 0.7853717082645146,
+   "distinct_experts_mean": 26.375
+  },
+  {
+   "request": "independent_26",
+   "tokens": 8,
+   "imb_mean": 58.0,
+   "imb_max": 64.0,
+   "ent_mean": 0.7542706151166259,
+   "distinct_experts_mean": 24.475
+  },
+  {
+   "request": "independent_29",
+   "tokens": 8,
+   "imb_mean": 57.2,
+   "imb_max": 64.0,
+   "ent_mean": 0.7478262876992054,
+   "distinct_experts_mean": 24.175
+  },
+  {
+   "request": "independent_46",
+   "tokens": 8,
+   "imb_mean": 55.8,
+   "imb_max": 64.0,
+   "ent_mean": 0.7443687426621368,
+   "distinct_experts_mean": 23.35
+  },
+  {
+   "request": "independent_87",
+   "tokens": 8,
+   "imb_mean": 53.4,
+   "imb_max": 64.0,
+   "ent_mean": 0.7838082925692103,
+   "distinct_experts_mean": 26.725
+  },
+  {
+   "request": "independent_12",
+   "tokens": 6,
+   "imb_mean": 51.466666666666676,
+   "imb_max": 64.0,
+   "ent_mean": 0.7970330354497567,
+   "distinct_experts_mean": 20.8
+  },
+  {
+   "request": "independent_55",
+   "tokens": 6,
+   "imb_mean": 49.06666666666667,
+   "imb_max": 64.0,
+   "ent_mean": 0.8338296194415153,
+   "distinct_experts_mean": 23.525
+  },
+  {
+   "request": "independent_57",
+   "tokens": 6,
+   "imb_mean": 58.133333333333326,
+   "imb_max": 64.0,
+   "ent_mean": 0.7717951509564046,
+   "distinct_experts_mean": 19.9
+  },
+  {
+   "request": "independent_69",
+   "tokens": 4,
+   "imb_mean": 59.6,
+   "imb_max": 64.0,
+   "ent_mean": 0.7952511766377944,
+   "distinct_experts_mean": 14.65
+  },
+  {
+   "request": "independent_5",
+   "tokens": 2,
+   "imb_mean": 60.0,
+   "imb_max": 64.0,
+   "ent_mean": 0.9081812803898366,
+   "distinct_experts_mean": 10.025
+  },
+  {
+   "request": "independent_8",
+   "tokens": 2,
+   "imb_mean": 61.6,
+   "imb_max": 64.0,
+   "ent_mean": 0.9046944935691975,
+   "distinct_experts_mean": 9.95
+  },
+  {
+   "request": "independent_18",
+   "tokens": 2,
+   "imb_mean": 64.0,
+   "imb_max": 64.0,
+   "ent_mean": 0.8686643630892597,
+   "distinct_experts_mean": 9.175
+  },
+  {
+   "request": "independent_22",
+   "tokens": 2,
+   "imb_mean": 62.4,
+   "imb_max": 64.0,
+   "ent_mean": 0.8988831822014657,
+   "distinct_experts_mean": 9.825
+  },
+  {
+   "request": "independent_33",
+   "tokens": 2,
+   "imb_mean": 64.0,
+   "imb_max": 64.0,
+   "ent_mean": 0.7977663644029309,
+   "distinct_experts_mean": 7.65
+  },
+  {
+   "request": "independent_62",
+   "tokens": 2,
+   "imb_mean": 59.2,
+   "imb_max": 64.0,
+   "ent_mean": 0.9221284276723928,
+   "distinct_experts_mean": 10.325
+  },
+  {
+   "request": "independent_75",
+   "tokens": 2,
+   "imb_mean": 62.4,
+   "imb_max": 64.0,
+   "ent_mean": 0.8965586576543728,
+   "distinct_experts_mean": 9.775
+  },
+  {
+   "request": "independent_88",
+   "tokens": 2,
+   "imb_mean": 63.2,
+   "imb_max": 64.0,
+   "ent_mean": 0.8465813798918784,
+   "distinct_experts_mean": 8.7
+  },
+  {
+   "request": "independent_95",
+   "tokens": 2,
+   "imb_mean": 59.2,
+   "imb_max": 64.0,
+   "ent_mean": 0.9302642635872175,
+   "distinct_experts_mean": 10.5
+  }
+ ],
+ "layer_max_over_mean": [
+  19.19848457941159,
+  20.3165808322974,
+  51.65595216953768,
+  46.89042798792399,
+  34.911501805481564,
+  32.47783105428284,
+  18.933285976439947,
+  26.813946605102704,
+  57.3738234771799,
+  34.34416622269579,
+  29.142958621914403,
+  34.3204877760019,
+  43.55366127982004,
+  21.57295921387557,
+  39.911442609364826,
+  42.35411117030723,
+  52.02296809329308,
+  41.36151068489907,
+  12.78304623216717,
+  39.07180488959924,
+  43.605280293612736,
+  20.384774758775823,
+  15.360681939264785,
+  13.690404309477298,
+  26.398626650091753,
+  31.09785118096253,
+  15.696442313384242,
+  34.1679985792932,
+  27.081039483809864,
+  12.15604096371278,
+  28.11199905286213,
+  32.11270940626295,
+  13.694192860948322,
+  22.818919078908422,
+  16.45699402119221,
+  19.70662404546262,
+  54.729414550405494,
+  18.474397679512222,
+  10.79216243414432,
+  15.502279050494288
+ ]
+}

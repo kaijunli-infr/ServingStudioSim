@@ -1,0 +1,105 @@
+== quadrant_nsys: clean iterations by class (JIT/module-load iterations excluded)
+class                                      n | gpu_wall host_wall sumbusy slowbusy | compute comm_u intrins   wait   skew  idle  ovlp | hostskw gpu0skw slow rank hist
+decode nreq=1                            258 |    4.809     4.784   17.67     4.63 |    3.20   1.51    0.46   1.07   1.72  0.15  1.91 |   2.650   0.005 {0: 2, 1: 2, 2: 151, 3: 103}
+                                               per-rank compute ['3.07', '3.16', '3.18', '3.20'] comm_union ['0.74', '1.55', '1.51', '1.51'] wait ['0.30', '1.10', '1.06', '1.07'] idle ['1.04', '0.15', '0.15', '0.15'] ovlp ['1.86', '1.90', '1.90', '1.91'] coll/rank 163 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): ar_mhc: 154, 386, 769; nccl_ag: 5, 55, 14; oneshot: 4, 18, 919
+decode nreq=12                           127 |    6.349     6.343   24.71     6.18 |    5.55   0.69    0.51   0.19   0.80  0.16  2.01 |   0.178   0.006 {0: 21, 1: 1, 2: 80, 3: 25}
+                                               per-rank compute ['5.55', '5.54', '5.55', '5.55'] comm_union ['0.69', '0.70', '0.69', '0.69'] wait ['0.19', '0.20', '0.20', '0.19'] idle ['0.16', '0.16', '0.16', '0.17'] ovlp ['2.01', '2.02', '2.02', '2.01'] coll/rank 163 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): ar_mhc: 154, 431, 759; nccl_ag: 5, 66, 8; oneshot: 4, 17, 29
+decode nreq=24                           238 |    7.728     7.731   30.24     7.56 |    7.11   0.51    0.44   0.07   0.21  0.16  1.40 |   0.243   0.009 {2: 131, 3: 107}
+                                               per-rank compute ['6.99', '7.09', '7.11', '7.10'] comm_union ['0.60', '0.52', '0.51', '0.51'] wait ['0.17', '0.08', '0.07', '0.07'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.35', '1.40', '1.40', '1.40'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 81, 9; oneshot: 81, 356, 201
+decode nreq=25                           262 |    8.145     8.141   31.89     7.97 |    7.61   0.63    0.55   0.08   0.20  0.16  1.61 |   0.247   0.008 {2: 156, 3: 106}
+                                               per-rank compute ['7.61', '7.60', '7.61', '7.60'] comm_union ['0.64', '0.66', '0.63', '0.66'] wait ['0.09', '0.11', '0.08', '0.11'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.67', '1.60', '1.61', '1.61'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 100, 8; twoshot: 81, 450, 188
+decode nreq=26                           129 |    8.253     8.249   32.31     8.07 |    7.72   0.65    0.55   0.09   0.23  0.16  1.63 |   0.290   0.010 {1: 1, 2: 67, 3: 61}
+                                               per-rank compute ['7.68', '7.70', '7.71', '7.72'] comm_union ['0.71', '0.68', '0.64', '0.65'] wait ['0.15', '0.12', '0.09', '0.09'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.70', '1.63', '1.63', '1.63'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 103, 9; twoshot: 81, 451, 222
+decode nreq=27                           128 |    8.314     8.301   32.56     8.14 |    7.78   0.63    0.55   0.08   0.19  0.16  1.61 |   0.330   0.010 {2: 73, 3: 55}
+                                               per-rank compute ['7.77', '7.76', '7.78', '7.77'] comm_union ['0.66', '0.67', '0.63', '0.66'] wait ['0.11', '0.12', '0.08', '0.11'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.68', '1.61', '1.61', '1.61'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 101, 9; twoshot: 81, 450, 184
+decode nreq=3                            128 |    4.609     4.602   17.83     4.46 |    3.97   0.56    0.48   0.09   0.49  0.15  2.17 |   0.250   0.006 {2: 84, 3: 44}
+                                               per-rank compute ['3.89', '3.96', '3.97', '3.95'] comm_union ['0.64', '0.57', '0.56', '0.57'] wait ['0.17', '0.11', '0.09', '0.10'] idle ['0.15', '0.14', '0.15', '0.15'] ovlp ['2.16', '2.17', '2.17', '2.17'] coll/rank 163 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): ar_mhc: 154, 414, 452; nccl_ag: 5, 55, 9; oneshot: 4, 16, 29
+decode nreq=30                           127 |    8.480     8.471   33.22     8.31 |    7.95   0.63    0.55   0.08   0.17  0.16  1.60 |   0.367   0.010 {2: 75, 3: 52}
+                                               per-rank compute ['7.93', '7.94', '7.95', '7.94'] comm_union ['0.64', '0.64', '0.63', '0.64'] wait ['0.08', '0.09', '0.08', '0.09'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.62', '1.60', '1.60', '1.60'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 100, 8; twoshot: 81, 450, 162
+decode nreq=36                           126 |    9.152     9.145   35.90     8.97 |    8.60   0.66    0.56   0.10   0.22  0.16  1.57 |   0.341   0.008 {2: 74, 3: 52}
+                                               per-rank compute ['8.59', '8.58', '8.60', '8.60'] comm_union ['0.69', '0.68', '0.66', '0.66'] wait ['0.13', '0.12', '0.10', '0.10'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.57', '1.57', '1.57', '1.57'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 103, 9; twoshot: 81, 458, 210
+decode nreq=48                          3032 |    9.936     9.919   39.06     9.76 |    9.40   0.65    0.58   0.08   0.20  0.16  1.55 |   0.386   0.010 {0: 1, 2: 228, 3: 171}
+                                               per-rank compute ['9.35', '9.38', '9.39', '9.40'] comm_union ['0.72', '0.70', '0.66', '0.65'] wait ['0.15', '0.12', '0.08', '0.08'] idle ['0.16', '0.16', '0.16', '0.16'] ovlp ['1.55', '1.55', '1.56', '1.55'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 113, 9; twoshot: 81, 467, 195
+decode nreq=6                            127 |    5.042     5.035   19.56     4.89 |    4.35   0.62    0.50   0.14   0.65  0.15  2.30 |   0.213   0.006 {2: 80, 3: 47}
+                                               per-rank compute ['4.29', '4.32', '4.35', '4.33'] comm_union ['0.68', '0.65', '0.62', '0.64'] wait ['0.20', '0.17', '0.14', '0.16'] idle ['0.14', '0.14', '0.15', '0.15'] ovlp ['2.29', '2.30', '2.30', '2.30'] coll/rank 163 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): ar_mhc: 154, 424, 615; nccl_ag: 5, 57, 8; oneshot: 4, 16, 32
+mixed 1k-10k prefill tok                   4 |  198.393   194.408  599.04   103.47 |   87.53  16.76   16.27   4.78 100.52 100.17  2.34 |   3.775   0.013 {2: 3, 3: 1}
+                                               per-rank compute ['87.13', '86.95', '87.53', '87.04'] comm_union ['113.37', '113.95', '16.76', '62.32'] wait ['97.10', '97.68', '4.78', '50.58'] idle ['4.23', '3.59', '100.17', '26.71'] ovlp ['2.93', '3.51', '2.34', '3.08'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 1304, 352; twoshot: 81, 14968, 100169
+mixed <1k prefill tok                      4 |   36.723    38.964  109.42    14.64 |   22.46  19.45    0.87  18.64  19.27  3.31 10.43 |   1.222   0.020 {2: 3, 3: 1}
+                                               per-rank compute ['19.86', '22.46', '16.51', '19.58'] comm_union ['19.46', '19.45', '7.45', '18.77'] wait ['18.59', '18.64', '6.57', '17.90'] idle ['3.63', '3.31', '15.11', '3.44'] ovlp ['7.90', '10.43', '4.46', '7.54'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 190, 131; twoshot: 81, 681, 19014
+mixed >=10k prefill tok (multi-chunk)      6 |  221.535   197.422  881.00   220.19 |  182.93  37.79   36.88   0.82   5.13  1.02  5.37 |  26.934   0.015 {2: 6}
+                                               per-rank compute ['181.98', '182.69', '182.93', '181.53'] comm_union ['39.41', '39.06', '37.79', '39.88'] wait ['2.45', '2.23', '0.82', '2.97'] idle ['1.02', '1.01', '1.02', '1.01'] ovlp ['5.28', '5.34', '5.37', '5.69'] coll/rank 86 aligned 1.00
+                                               collectives by kind (calls, intrinsic us/iter, start-skew us/iter): nccl_ag: 5, 2788, 103; nccl_ar: 81, 34086, 5007
+
+Columns: gpu_wall = max over ranks of last kernel end - min first kernel start; sumbusy = sum of 4 ranks' busy (NOT a critical path); slowbusy = busy of the rank that finishes last; compute/comm_u/wait/idle/ovlp shown for the rank with the largest compute; intrins = sum over collective calls of min-over-ranks duration; wait = per-rank collective time above intrinsic; skew = sum over calls of start spread; hostskw = spread of the 'forward' NVTX start across ranks; gpu0skw = spread of first kernel start across ranks.
+
+== representative clean iterations (median gpu_wall of class), per-rank timeline
+
+-- decode nreq=1: iteration 4804 (nreq=1, prefill_tokens=0, chunks=[]), gpu_wall 4.812 ms, host wall 4.922 ms, slowest rank 3, host launch skew 2.874 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.000    4.809   4.809   3.678   3.158  0.593    0.609  0.148 1.131 1.883   163
+      1    0.002    4.810   4.808   4.663   3.131  1.606    1.623  1.161 0.145 1.895   163
+      2    0.003    4.812   4.809   4.667   3.131  1.611    1.627  1.166 0.142 1.904   163
+      3    0.004    4.812   4.808   4.645   3.186  1.532    1.548  1.087 0.163 1.900   163
+   collective intrinsic sum 0.461 ms, start-skew sum 1.636 ms; first calls (kind, start skew us, per-rank dur us): [('oneshot', 963.0, [4.1, 967.0, 962.1, 959.7]), ('ar_mhc', 1.4, [1.3, 1.4, 1.4, 1.4]), ('ar_mhc', 1.4, [3.7, 4.6, 4.1, 3.9]), ('oneshot', 2.9, [5.6, 6.3, 6.5, 3.5]), ('nccl_ag', 0.5, [9.9, 9.9, 10.0, 9.9])]
+
+-- decode nreq=24: iteration 4204 (nreq=24, prefill_tokens=0, chunks=[]), gpu_wall 7.729 ms, host wall 7.654 ms, slowest rank 2, host launch skew 0.226 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.000    7.722   7.722   7.570   6.974  0.648    0.648  0.219 0.152 1.362    86
+      1    0.001    7.722   7.720   7.527   7.097  0.483    0.483  0.054 0.193 1.342    86
+      2    0.007    7.729   7.722   7.558   7.071  0.544    0.544  0.115 0.164 1.390    86
+      3    0.006    7.727   7.721   7.555   7.056  0.556    0.556  0.127 0.166 1.390    86
+   collective intrinsic sum 0.429 ms, start-skew sum 0.251 ms; first calls (kind, start skew us, per-rank dur us): [('oneshot', 20.3, [24.6, 18.6, 4.4, 7.2]), ('oneshot', 7.8, [3.7, 10.3, 7.7, 11.8]), ('oneshot', 3.3, [6.1, 6.8, 4.5, 7.6]), ('nccl_ag', 1.0, [11.9, 12.2, 11.2, 11.9]), ('nccl_ag', 2.4, [15.3, 14.6, 13.4, 12.9])]
+
+-- decode nreq=25: iteration 3783 (nreq=25, prefill_tokens=0, chunks=[]), gpu_wall 8.145 ms, host wall 8.025 ms, slowest rank 2, host launch skew 0.278 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.000    8.131   8.131   7.980   7.608  0.658    0.658  0.105 0.151 1.684    86
+      1    0.000    8.135   8.135   7.980   7.607  0.659    0.659  0.106 0.155 1.607    86
+      2    0.005    8.145   8.140   7.977   7.634  0.607    0.607  0.054 0.163 1.602    86
+      3    0.007    8.142   8.135   7.969   7.591  0.662    0.662  0.109 0.166 1.607    86
+   collective intrinsic sum 0.553 ms, start-skew sum 0.179 ms; first calls (kind, start skew us, per-rank dur us): [('twoshot', 18.8, [24.2, 19.8, 10.4, 5.5]), ('twoshot', 5.1, [8.8, 9.7, 5.6, 10.5]), ('twoshot', 0.6, [6.3, 5.9, 6.7, 6.1]), ('nccl_ag', 1.1, [12.1, 12.1, 10.8, 11.5]), ('nccl_ag', 1.3, [14.6, 14.5, 14.5, 14.8])]
+
+-- decode nreq=48: iteration 1753 (nreq=48, prefill_tokens=0, chunks=[]), gpu_wall 9.937 ms, host wall 9.827 ms, slowest rank 2, host launch skew 0.462 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.000    9.931   9.931   9.767   9.339  0.762    0.762  0.179 0.164 1.571    86
+      1    0.001    9.929   9.928   9.763   9.341  0.754    0.754  0.171 0.165 1.581    86
+      2    0.010    9.937   9.926   9.765   9.388  0.679    0.679  0.096 0.161 1.561    86
+      3    0.010    9.931   9.921   9.742   9.386  0.649    0.649  0.066 0.178 1.554    86
+   collective intrinsic sum 0.583 ms, start-skew sum 0.239 ms; first calls (kind, start skew us, per-rank dur us): [('twoshot', 21.9, [27.6, 21.6, 12.8, 5.7]), ('twoshot', 22.8, [26.8, 28.4, 18.2, 5.7]), ('twoshot', 3.5, [6.3, 9.2, 6.0, 7.0]), ('nccl_ag', 0.3, [12.7, 12.7, 13.0, 12.4]), ('nccl_ag', 1.6, [19.8, 17.5, 17.0, 19.2])]
+
+-- mixed 1k-10k prefill tok: iteration 633 (nreq=45, prefill_tokens=7168, chunks=[[0, 4096], [0, 3072]]), gpu_wall 200.613 ms, host wall 190.320 ms, slowest rank 2, host launch skew 0.901 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.000  199.448 199.448 193.169  87.273 106.283  106.283 90.054 6.280 2.254    86
+      1    0.008  199.449 199.440 198.472  86.996 111.974  111.974 95.745 0.969 3.099    86
+      2    0.011  200.613 200.601 104.399  87.582 17.187   17.187  0.958 96.202 1.882    86
+      3    0.012  199.459 199.447 182.883  87.063 96.202   96.202 79.972 16.564 2.155    86
+   collective intrinsic sum 16.229 ms, start-skew sum 96.237 ms; first calls (kind, start skew us, per-rank dur us): [('twoshot', 33.8, [217.6, 200.4, 183.9, 188.6]), ('twoshot', 1547.7, [869.4, 1731.9, 364.9, 183.8]), ('twoshot', 1888.8, [1046.1, 2074.6, 325.5, 185.1]), ('nccl_ag', 0.7, [137.1, 139.6, 139.8, 136.9]), ('nccl_ag', 13.2, [491.4, 496.7, 488.6, 497.3])]
+
+-- mixed <1k prefill tok: iteration 109 (nreq=0, prefill_tokens=128, chunks=[[0, 128]]), gpu_wall 37.320 ms, host wall 32.944 ms, slowest rank 3, host launch skew 1.032 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.024   36.325  36.301  30.571  28.660 20.631   20.631 19.898 5.730 20.025    86
+      1    0.017   36.328  36.311  29.881  28.347 19.960   19.960 19.228 6.429 19.712    86
+      2    0.000   36.328  36.328  30.290  28.611 20.234   20.234 19.501 6.038 19.969    86
+      3    0.001   37.320  37.319  10.840  10.381  0.785    0.785  0.053 26.480 1.473    86
+   collective intrinsic sum 0.732 ms, start-skew sum 19.986 ms; first calls (kind, start skew us, per-rank dur us): [('twoshot', 1013.4, [1021.4, 619.9, 807.8, 7.9]), ('twoshot', 1025.1, [1032.0, 766.6, 922.7, 6.9]), ('twoshot', 6.1, [12.0, 13.2, 7.0, 11.3]), ('nccl_ag', 2.2, [18.2, 17.2, 16.6, 17.0]), ('nccl_ag', 2.4, [49.4, 50.5, 48.1, 48.5])]
+
+-- mixed >=10k prefill tok (multi-chunk): iteration 115 (nreq=36, prefill_tokens=16348, chunks=[[0, 128], [0, 4096], [0, 128], [0, 3072), gpu_wall 221.700 ms, host wall 194.941 ms, slowest rank 2, host launch skew 60.404 ms
+   rank  first_k   last_k    span    busy compute comm_u comm_sum   wait  idle  ovlp ncoll
+      0    0.005  221.693 221.688 220.667 182.019 38.726   38.726  1.875 1.021 4.868    86
+      1    0.000  221.694 221.694 220.687 182.930 39.250   39.250  2.399 1.008 5.497    86
+      2    0.008  221.700 221.692 220.668 183.427 38.626   38.626  1.775 1.024 5.472    86
+      3    0.005  221.700 221.694 220.676 182.348 39.669   39.669  2.818 1.018 5.961    86
+   collective intrinsic sum 36.851 ms, start-skew sum 5.186 ms; first calls (kind, start skew us, per-rank dur us): [('nccl_ar', 24.1, [421.7, 418.2, 413.6, 424.4]), ('nccl_ar', 984.6, [420.6, 1418.4, 1305.9, 1266.1]), ('nccl_ar', 507.6, [935.9, 877.9, 713.7, 424.9]), ('nccl_ag', 13.1, [283.8, 280.9, 285.9, 287.9]), ('nccl_ag', 28.6, [1104.2, 1127.7, 1101.0, 1107.9])]
+RC=0
