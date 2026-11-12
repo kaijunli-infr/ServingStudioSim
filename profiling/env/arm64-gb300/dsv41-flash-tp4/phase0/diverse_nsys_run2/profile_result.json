@@ -1,0 +1,54 @@
+{
+  "profile_kind": "nsys",
+  "engine": "vllm",
+  "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile",
+  "sqlite": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/nsys/dsv41_flash_1017_gb300_tp4_diverse_nsys_run2.sqlite",
+  "metrics_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/vllm/dsv41_flash_1017_gb300_tp4_diverse_nsys_run2_metrics.jsonl",
+  "request_timings_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/vllm/dsv41_flash_1017_gb300_tp4_diverse_nsys_run2_request_timings.jsonl",
+  "request_timing_count": 100,
+  "parsed_nsys": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/parsed.json",
+  "parsed_kernel_rows": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/parsed.kernels.parquet",
+  "kernel_sequences": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/kernel_sequences.json",
+  "host_timeline": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/host_timeline.json",
+  "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/vllm/dsv41_flash_1017_gb300_tp4_diverse_nsys_run2_server.log",
+  "gpu": "NVIDIA GB300",
+  "server_tp_size": 4,
+  "server_dp_size": 1,
+  "cuda_visible_devices": "0,1,2,3",
+  "parsed_device_ids": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "parsed_dp_rank_by_device": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "replay_result": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/load_generator/replay.jsonl",
+  "drive_summary": {
+    "source_trace": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/trace/diverse_100.csv",
+    "frontend_type": "independent",
+    "backend_type": "vllm_tokens",
+    "log_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/load_generator/replay.jsonl",
+    "summary_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys_run2/profile/load_generator/summary.json",
+    "warmup": true,
+    "routed_experts_dir": null,
+    "replay_start_monotonic_ns": 2497713330948168,
+    "replay_end_monotonic_ns": 2497859735910658,
+    "measurement_log_offset": 1129467,
+    "reached_idle": true
+  },
+  "validation": {
+    "nvtx_forward_ranges": 70744,
+    "kernel_rows": 97151212,
+    "kernel_span_ms": 134464.529008,
+    "ok": true
+  },
+  "nsys_profiler": {
+    "executable": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
+    "version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0"
+  }
+}

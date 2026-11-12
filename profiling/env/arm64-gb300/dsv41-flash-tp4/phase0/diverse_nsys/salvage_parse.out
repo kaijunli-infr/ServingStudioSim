@@ -1,0 +1,10 @@
+load_profile_config signature: (path: 'Path', *, require_python_runtime: 'bool' = True) -> 'ProfileConfig'
+[salvage] export validation: {'nvtx_forward_ranges': 18748, 'kernel_rows': 25846088, 'kernel_span_ms': 62176.154525, 'ok': True}
+[salvage] dp_rank_by_device None worker_ranks {3747671: 0, 3747674: 3, 3747673: 2, 3747672: 1}
+[salvage] devices [0, 1, 2, 3] dp ranks {'0': 0, '1': 0, '2': 0, '3': 0}
+[salvage] parsed 4687 iteration(s), 25846088 kernel row(s) -> /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys/profile/parsed.json
+[salvage] host 6 thread(s), 264395 nvtx range(s), 4369600 api call(s)
+
+real	7m56.913s
+user	3m52.679s
+sys	0m36.060s

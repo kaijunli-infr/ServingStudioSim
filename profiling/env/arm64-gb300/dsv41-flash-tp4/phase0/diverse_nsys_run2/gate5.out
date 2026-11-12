@@ -1,0 +1,278 @@
+== iterations 17686 index range 1614 19299
+step_alignment {'rule': 'iteration_index', 'reference_device_id': 0, 'steps': 17686, 'unpaired_steps_by_device': {}}
+stages Counter({'decode': 17518, 'mixed': 168})
+types Counter({'decode': 17518, 'mixed': 168})
+phases observed ['bookkeep', 'eplb', 'forward', 'postprocess', 'preprocess', 'sample']
+phase sets per iteration (dev0) {('bookkeep', 'eplb', 'forward', 'postprocess', 'preprocess', 'sample'): 17686}
+nvtx ranges per iteration (all devices) {28: 17686}
+devices_absent nonempty: 0
+worker names: ['VLLM::Worker_TP']
+
+== JIT module loads: total 420 iterations affected 49 of 17686
+total jit stall ms 413.92
+  it  2294 mixed   loads= 16 stall_ms=    21.62 busy_ms(dev0)=  199.30 span_ms(dev0)=  305.45
+  it  2302 mixed   loads=  8 stall_ms=     4.07 busy_ms(dev0)=  192.10 span_ms(dev0)=  308.64
+  it  2305 mixed   loads= 24 stall_ms=    23.05 busy_ms(dev0)=  197.51 span_ms(dev0)=  231.79
+  it  2931 mixed   loads=  4 stall_ms=     4.14 busy_ms(dev0)=  191.55 span_ms(dev0)=  199.57
+  it  3121 mixed   loads=  8 stall_ms=    16.14 busy_ms(dev0)=  200.08 span_ms(dev0)=  202.43
+  it  3137 mixed   loads=  4 stall_ms=     0.00 busy_ms(dev0)=  217.65 span_ms(dev0)=  293.67
+  it  3192 mixed   loads= 16 stall_ms=    15.94 busy_ms(dev0)=  151.39 span_ms(dev0)=  216.09
+  it  3333 mixed   loads= 16 stall_ms=    11.13 busy_ms(dev0)=  183.64 span_ms(dev0)=  243.62
+  it  3405 mixed   loads=  8 stall_ms=    15.68 busy_ms(dev0)=  125.33 span_ms(dev0)=  193.46
+  it  3409 mixed   loads=  8 stall_ms=     8.68 busy_ms(dev0)=  186.70 span_ms(dev0)=  188.53
+  it  3411 mixed   loads= 20 stall_ms=    12.98 busy_ms(dev0)=  209.74 span_ms(dev0)=  221.31
+  it  3494 mixed   loads= 20 stall_ms=    30.90 busy_ms(dev0)=  133.79 span_ms(dev0)=  210.52
+  it  3961 mixed   loads=  8 stall_ms=     5.12 busy_ms(dev0)=  210.22 span_ms(dev0)=  241.82
+  it  3971 mixed   loads= 16 stall_ms=    12.80 busy_ms(dev0)=  185.63 span_ms(dev0)=  289.87
+  it  4169 mixed   loads= 20 stall_ms=    32.01 busy_ms(dev0)=   85.08 span_ms(dev0)=  213.20
+  it  4285 mixed   loads=  8 stall_ms=     9.95 busy_ms(dev0)=  153.41 span_ms(dev0)=  195.68
+  it  4694 mixed   loads=  4 stall_ms=     6.32 busy_ms(dev0)=  192.97 span_ms(dev0)=  196.92
+  it  5289 mixed   loads= 12 stall_ms=     5.08 busy_ms(dev0)=  196.85 span_ms(dev0)=  221.85
+  it  7475 mixed   loads=  4 stall_ms=     6.01 busy_ms(dev0)=  201.45 span_ms(dev0)=  196.84
+  it  7477 mixed   loads=  8 stall_ms=     3.69 busy_ms(dev0)=  197.49 span_ms(dev0)=  201.29
+  it  7588 mixed   loads=  8 stall_ms=     4.94 busy_ms(dev0)=  177.02 span_ms(dev0)=  306.34
+  it  7736 mixed   loads=  4 stall_ms=     0.00 busy_ms(dev0)=  209.01 span_ms(dev0)=  233.31
+  it  7965 mixed   loads=  4 stall_ms=     0.00 busy_ms(dev0)=  189.57 span_ms(dev0)=  307.45
+  it  8645 mixed   loads=  4 stall_ms=     3.17 busy_ms(dev0)=  164.66 span_ms(dev0)=  212.37
+  it  8654 mixed   loads= 16 stall_ms=    16.82 busy_ms(dev0)=  200.80 span_ms(dev0)=  277.03
+  it  8780 mixed   loads=  8 stall_ms=    12.28 busy_ms(dev0)=  189.19 span_ms(dev0)=  197.52
+  it  8782 mixed   loads=  4 stall_ms=     1.44 busy_ms(dev0)=  196.30 span_ms(dev0)=  192.05
+  it  8787 mixed   loads=  8 stall_ms=     1.67 busy_ms(dev0)=  196.78 span_ms(dev0)=  250.26
+  it  8891 mixed   loads=  4 stall_ms=     2.46 busy_ms(dev0)=  197.57 span_ms(dev0)=  189.53
+  it  9094 mixed   loads=  8 stall_ms=     5.23 busy_ms(dev0)=  187.68 span_ms(dev0)=  231.92
+  it  9482 mixed   loads=  4 stall_ms=     1.70 busy_ms(dev0)=  193.45 span_ms(dev0)=  204.39
+  it  9486 mixed   loads=  4 stall_ms=     2.44 busy_ms(dev0)=  191.59 span_ms(dev0)=  184.74
+  it  9765 mixed   loads= 12 stall_ms=    18.37 busy_ms(dev0)=  206.64 span_ms(dev0)=  199.47
+  it 10148 mixed   loads=  4 stall_ms=     4.86 busy_ms(dev0)=  198.44 span_ms(dev0)=  194.17
+  it 10468 mixed   loads=  4 stall_ms=     3.58 busy_ms(dev0)=  200.51 span_ms(dev0)=  187.98
+  it 10807 mixed   loads=  8 stall_ms=     9.24 busy_ms(dev0)=  201.43 span_ms(dev0)=  206.88
+  it 10984 mixed   loads=  4 stall_ms=     0.00 busy_ms(dev0)=  185.42 span_ms(dev0)=  245.68
+  it 11101 mixed   loads=  4 stall_ms=     2.03 busy_ms(dev0)=  172.99 span_ms(dev0)=  196.06
+  it 11814 mixed   loads= 16 stall_ms=    17.28 busy_ms(dev0)=  151.81 span_ms(dev0)=  293.11
+  it 11817 mixed   loads=  8 stall_ms=     4.24 busy_ms(dev0)=   96.80 span_ms(dev0)=  220.99
+  ... 9 more
+
+== per-iteration dev0 stats by stage (ms)
+  decode  n=17518 span med=3.937 p90=4.423 p99=5.163 max=39.801 | busy med=5.080 | kernels/iter med=1369 min=1364 max=1372
+  mixed   n=  168 span med=202.087 p90=248.362 p99=307.451 max=308.637 | busy med=219.615 | kernels/iter med=1721 min=1569 max=2350
+  decode first 300: span med 3.912 busy med 4.470 reqs med 3.0
+  decode middle: span med 3.884 busy med 6.204 reqs med 13.0
+  decode last 300: span med 4.649 busy med 3.765 reqs med 1.0
+
+== category ms/iter (dev0, all): {'other': 5.358, 'attention': 2.18, 'gemm_or_cutlass': 1.305, 'nccl_collective': 0.358, 'activation': 0.09, 'fill': 0.057, 'copy_other': 0.04, 'norm_reduce': 0.037}
+
+== top kernels decode (dev0, n_iters=17518, busy_ms_mean=0.768, span_ms_mean=0.795)
+   categories: {'other': 4.4, 'attention': 1.638, 'gemm_or_cutlass': 1.175, 'activation': 0.085, 'nccl_collective': 0.069, 'fill': 0.056, 'norm_reduce': 0.037, 'copy_other': 0.021}
+     0.7036 ms     16.6/it  bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M
+     0.6668 ms    126.4/it  kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmKernel_object_
+     0.5372 ms     83.0/it  mhc_pre_big_fuse_with_norm_tilelang_kernel
+     0.4853 ms     77.0/it  kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel_object_at__tensorptrb
+     0.4751 ms     79.0/it  void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int)64, (unsigned int)3
+     0.4675 ms     83.6/it  kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKernel_object_at
+     0.3786 ms     15.3/it  bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN
+     0.3197 ms     12.4/it  bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M
+     0.2487 ms     17.3/it  bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN
+     0.2045 ms     40.0/it  _dsv4_topk_kernel
+     0.1991 ms     15.7/it  fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta256PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128StaticSwapsAbFo
+     0.1754 ms     17.2/it  fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128StaticSwapsAbFo
+
+== top kernels mixed (dev0, n_iters=168, busy_ms_mean=29.711, span_ms_mean=31.086)
+   categories: {'other': 105.229, 'attention': 58.779, 'nccl_collective': 30.489, 'gemm_or_cutlass': 14.833, 'copy_other': 2.114, 'activation': 0.61, 'fill': 0.146, 'norm_reduce': 0.057}
+    41.2917 ms     25.1/it  void flashinfer::trtllm_mnnvl_allreduce::twoshotAllreduceKernel<(unsigned char)4, __nv_bfloat16, (bool)1, float4>(flashi
+    28.6029 ms     40.0/it  fmhaSm100fKernel_QkvE4m3OBfloat16H512PagedKvDenseDynamicTokenSparseP1VarSeqQ16Kv128PersistentSwapsAbForGen
+    27.9851 ms     55.9/it  ncclDevKernel_AllReduce_Sum_bf16_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+    16.6268 ms     73.3/it  void deep_gemm::sm100_mega_mhc_impl<(unsigned int)5120, (unsigned int)16, (unsigned int)152, (bool)1, (bool)1, (bool)0, 
+    16.1130 ms     27.6/it  bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x192x128_s5_et128x32_m256x192x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_bias
+    11.6649 ms    185.3/it  kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmKernel_object_
+     9.7422 ms     27.6/it  bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x192x128_s5_et128x64_m256x192x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp3
+     7.5724 ms     52.7/it  kernel
+     5.7772 ms     40.0/it  void moe::dev::finalize::finalizeKernelVecLoad<moe::dev::finalize::KernelParams<cutlass::bfloat16_t, float, (int)2, (boo
+     3.9971 ms     11.5/it  void deep_gemm::sm100_mqa_logits<(unsigned int)32, (unsigned int)128, (bool)1, (bool)0, (bool)0, (bool)0, (unsigned int)
+     3.1502 ms     40.0/it  void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (bool)0>(T1 *, unsigne
+     2.5037 ms      5.0/it  ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+
+== unique kernel names 331
+
+  [ep_dispatch_combine] 1
+      _combine_sampled_and_draft_tokens_kernel
+
+  [allreduce_comm] 7
+      void flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel<(unsigned char)4, __nv_bfloat16, (bool)0, (flashinfer::trtllm_mnnvl_allreduce::Q
+      kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel_object_at__tensorptrbf16gmemalign16odiv51201
+      kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel_object_at__tensorptrbf16gmemalign16o9830401_tensorp
+      ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+      kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDeviceKernel_object_at__tensorptrbf16gmemalign16odiv512
+      ncclDevKernel_AllReduce_Sum_bf16_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)
+      void flashinfer::trtllm_mnnvl_allreduce::twoshotAllreduceKernel<(unsigned char)4, __nv_bfloat16, (bool)1, float4>(flashinfer::trtllm_mnnvl_allreduce::
+
+  [moe] 24
+      _dsv4_topk_kernel
+      void moe::dev::routing::routingCustom::routingIndicesBlockKernel<moe::dev::routing::routingCustom::KernelParams<__nv_bfloat16, __nv_bfloat16, (int)512
+      void moe::dev::finalize::finalizeKernel<moe::dev::finalize::KernelParams<cutlass::bfloat16_t, float, (int)2, (bool)1>>(T1)
+      void vllm::cooperative::cooperative_topk_cs16<(unsigned int)512>(vllm::cooperative::CooperativeTopKParams<T1>)
+      void at::native::sbtopk::gatherTopK<float, unsigned int, (int)2, (bool)0>(at::cuda::detail::TensorInfo<const T1, T2>, T2, T2, bool, T2, T2, at::cuda::
+      void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSelectConfig<__nv_bfloat16, int, (bool)0, (bool)0, (
+      _sparse_topk_remap_kernel
+      void moe::dev::routing::routingInitExpertCounts<moe::dev::routing::routingCustom::KernelParams<__nv_bfloat16, __nv_bfloat16, (int)384, (int)8, moe::de
+      void moe::dev::routing::routingIndicesCoopKernel<moe::dev::routing::routingCustom::KernelParams<__nv_bfloat16, __nv_bfloat16, (int)384, (int)8, moe::d
+      void moe::dev::finalize::finalizeKernelVecLoad<moe::dev::finalize::KernelParams<cutlass::bfloat16_t, float, (int)2, (bool)1>>(T1)
+      void at::native::mbtopk::fill<unsigned int, unsigned int>(T1 *, T1, T2)
+      void at::native::mbtopk::computeBlockDigitCounts<float, unsigned int, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, unsigned int, 
+      at::native::mbtopk::computeDigitCumSum(short *, unsigned int *, unsigned int)
+      void at::native::mbtopk::computeBlockwiseWithinKCounts<unsigned int, float>(T1 *, short *, unsigned int *, unsigned int *, unsigned int, int, bool, un
+      void at::native::mbtopk::computeBlockwiseKthCounts<unsigned int>(T1 *, short *, unsigned int, unsigned int, unsigned int *)
+      void at_cuda_detail::cub::detail::scan_by_key::DeviceScanByKeyInitKernel<at_cuda_detail::cub::ReduceByKeyScanTileState<unsigned int, int, (bool)1>, th
+      void at_cuda_detail::cub::detail::scan_by_key::DeviceScanByKeyKernel<at_cuda_detail::cub::detail::scan_by_key::policy_hub<thrust::THRUST_300001_SM_800
+      void at::native::mbtopk::gatherTopK<float, unsigned int, (int)2>(at::cuda::detail::TensorInfo<const T1, T2>, T2, T2, bool, unsigned int, T2, at::cuda:
+      void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSelectConfig<__nv_bfloat16, int, (bool)0, (bool)0, (
+      void at::native::sbtopk::gatherTopK<float, unsigned int, (int)1, (bool)0>(at::cuda::detail::TensorInfo<const T1, T2>, T2, T2, bool, T2, T2, at::cuda::
+      void vllm::cooperative::cooperative_topk_cs8<(unsigned int)512>(vllm::cooperative::CooperativeTopKParams<T1>)
+      void vllm::cooperative::cooperative_topk_cs4<(unsigned int)512>(vllm::cooperative::CooperativeTopKParams<T1>)
+      void moe::dev::routing::routingCustom::routingIndicesClusterKernel<moe::dev::routing::routingCustom::KernelParams<__nv_bfloat16, __nv_bfloat16, (int)5
+      void moe::dev::routing::routingCustom::routingIndicesDynBlockKernel<moe::dev::routing::routingCustom::KernelParams<__nv_bfloat16, __nv_bfloat16, (int)
+
+  [sparse_mla_indexer] 14
+      _indexer_decode_metadata_kernel
+      void deep_gemm::sched::sm100_paged_mqa_logits_metadata<(unsigned int)1, (bool)1, (bool)1, (unsigned int)256, (unsigned int)152>(unsigned int, unsigned
+      _build_flashinfer_mixed_sparse_indices_kernel
+      _indexer_k_norm_rope_quant_store_kernel
+      void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsigned int)64, (bool)1, (bool)1, (bool)1, (unsigned in
+      void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsigned int)128, (bool)1, (bool)1, (bool)1, (unsigned i
+      void deep_gemm::sched::sparse_mqa_logits::sm100_sparse_mqa_logits_metadata<(bool)1, (bool)0, (unsigned int)2, (unsigned int)640, (unsigned int)8, (uns
+      void deep_gemm::sm100_paged_sparse_mqa_logits<(unsigned int)128, (unsigned int)8, (unsigned int)2, (unsigned int)5, (unsigned int)5, (unsigned int)5, 
+      void vllm::cp_gather_indexer_k_quant_cache_kernel<(int)32>(const char *, char *, char *, const int *, const int *, int, long, long, long, long, long, 
+      void deep_gemm::sm100_mqa_logits<(unsigned int)32, (unsigned int)128, (bool)1, (bool)0, (bool)0, (bool)0, (unsigned int)4, (unsigned int)256, (unsigne
+      void deep_gemm::sched::sparse_mqa_logits::sm100_sparse_mqa_logits_metadata<(bool)0, (bool)1, (unsigned int)2, (unsigned int)640, (unsigned int)8, (uns
+      void deep_gemm::sm100_sparse_mqa_logits<(unsigned int)8, (unsigned int)2, (unsigned int)5, (unsigned int)5, (unsigned int)5, (unsigned int)152, (unsig
+      void vllm::cp_gather_indexer_k_quant_cache_kernel<(int)16>(const char *, char *, char *, const int *, const int *, int, long, long, long, long, long, 
+      void vllm::cp_gather_indexer_k_quant_cache_kernel<(int)8>(const char *, char *, char *, const int *, const int *, int, long, long, long, long, long, i
+
+  [attention_other] 9
+      kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o512051201_tensorptri8
+      kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKernel_object_at__TiledMMA_ThrLayoutVMNK111100
+      kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmKernel_object_at__TiledMMA_ThrLayoutVMNK1111
+      kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel_object_at__tensorptrbf16gmemalign16o512051201_tensorptri8gm
+      kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o5765761_tensorptri8gm
+      kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o614461441_tensorptri8
+      _prepare_prefill_inputs_kernel
+      kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmKernel_object_at__TiledMMA_ThrLayoutVMNK2111
+      kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o204820481_tensorptri8
+
+  [gemm] 59
+      void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)5120, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned 
+      kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o416512div85121_tensorptri64gmemo41_tensorptrf32gmemo64641_cutlasscutenvgpucpasynchelpersTmaInfoo
+      kernel_cutlass_kernel_vllmmodel_executorkernelslinearcute_dsl_ll_bf16_dotprodLLBf16Dotprod_object_at__tensorptrbf16gmemalign16o45120i64div81_tensorptr
+      void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256u2_s5_et128x8_m128x8x32_c1x1x2_rM_splitK2_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgT
+      bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s5_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s5_et128x8_m128x8x32_c1x1x2_rM_splitK2_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma
+      void cutlass::Kernel2<cutlass_80_tensorop_s16816gemm_bf16_64x64_64x6_tn_align8>(T1::Params)
+      void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, float, float, float, (bool)0, float, float, float, (bool)1, (bool)0, (bool)0, (bool)0
+      void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16, (bool)0, __nv_bfloat16, __nv_bfloat16, __nv_bflo
+      void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_64x6_tn_align8>(T1::Params)
+      kernel_cutlass_device_kernel_tensorptri64gmemo1_tensorptrbf16gmemalign32o32128i64div16i64div161_tensorptrf32gmemalign32o64i64div81_tensorptrbf16gmemal
+      void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16, (bool)0, float, __nv_bfloat16, __nv_bfloat16, (b
+      void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)5120, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned 
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_mega_mhc_impl<(unsigned int)5120, (unsigned int)16, (unsigned int)152, (bool)1, (bool)1, (bool)0, (unsigned int)0>(CUtensorMap_s
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x192x128_s5_et128x32_m256x192x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_cl
+      bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x192x128_s5_et128x64_m256x192x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f
+      void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x128x256u2_s4x4x4x4x1x4_et128x32_m256x128x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_fCp_bN_ldgst
+      bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x128x128_s7_et128x64_m256x128x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f
+      kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o1616512div85121_tensorptri64gmemo161_tensorptrf32gmemo64641_cutlasscutenvgpucpasynchelpersTmaInf
+      kernel_cutlass_kernel_vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK_object_at__tensorptrbf16_gmem_align16_o_i64_div81_tensorptrbf
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_clmp_sw
+      bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f
+      kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o816512div85121_tensorptri64gmemo81_tensorptrf32gmemo64641_cutlasscutenvgpucpasynchelpersTmaInfoo
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512u2_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_clmp_
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_clmp_sw
+      bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_mega_mhc_impl<(unsigned int)5120, (unsigned int)20, (unsigned int)152, (bool)1, (bool)1, (bool)0, (unsigned int)0>(CUtensorMap_s
+      bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x32x256_s5_et128x32_m256x32x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_clmp
+      bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x32x256_s5_et128x32_m256x32x32_c2x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl<(cute::UMMA::Major)0, (cute::UMMA::Major)0, (unsigned int)32, (unsigned int)32, (unsigned int)32, (unsign
+      void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)5120, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned 
+
+  [engram] 4
+      void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(T2 *, const T1 *, const T2 *, long, long, long, long, long, long, long)
+      _hash_ids_kernel
+      _engram_lookup_kernel
+      _fused_engram_post_wkv_kernel
+
+  [norm_quant_misc] 7
+      mhc_pre_big_fuse_with_norm_tilelang_kernel
+      _q_kv_norm_quant_kernel
+      void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vllm::packed_silu_kernel<__nv_bfloat162>, (bool)1, (b
+      _fused_save_compress_norm_kernel
+      _rope_plain_insert_kernel
+      void vllm::rms_norm_kernel<c10::BFloat16, (int)8, (int)2, (bool)1>(T1 *, const T1 *, long, long, long, long, long, const T1 *, long, float, int, int)
+      void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vllm::packed_silu_kernel<__nv_bfloat162>, (bool)1, (b
+
+  [unclassified] 206
+      void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<bool>, std::array<char *, (unsigned long)1>>(int, T2, T3)
+      void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<bool>, std::array<char *, (unsigned long)1>, (int)4, TrivialOffsetCalculator<(int
+      void <unnamed>::elementwise_kernel_with_index<int, at::native::arange_cuda_out(const c10::Scalar &, const c10::Scalar &, const c10::Scalar &, at::Tens
+      void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)
+      _prepare_pos_seq_lens_kernel
+      _gather_block_tables_kernel
+      _compute_slot_mappings_kernel
+      _token_request_mapping_kernel
+      void at::native::vectorized_elementwise_kernel<(int)8, void at::native::compare_scalar_kernel<long>(at::TensorIteratorBase &, at::native::<unnamed>::O
+      _compute_swa_indices_and_lens_kernel
+      void at::native::vectorized_elementwise_kernel<(int)4, at::native::<unnamed>::launch_clamp_scalar(at::TensorIteratorBase &, c10::Scalar, c10::Scalar, 
+      void at::native::vectorized_elementwise_kernel<(int)2, at::native::FillFunctor<long>, std::array<char *, (unsigned long)1>>(int, T2, T3)
+      kernel
+      void at::native::vectorized_elementwise_kernel<(int)4, at::native::BUnaryFunctor<int, int, int, at::native::binary_internal::div_floor_kernel_cuda(at:
+      _ring_slot_mapping_kernel
+      _gather_lookback_kernel
+      void at::native::vectorized_elementwise_kernel<(int)8, at::native::AUnaryFunctor<int, int, bool, at::native::<unnamed>::CompareEqFunctor<int>>, std::a
+      void at::native::vectorized_elementwise_kernel<(int)8, at::native::bitwise_not_kernel_cuda(at::TensorIteratorBase &)::[lambda(bool) (instance 1)], std
+      void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBa
+      void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (bool)0>(T1 *, unsigned char *, long, long, const T1
+      void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctor_add<int>, std::array<char *, (unsigned long)3>, (int)4, TrivialOffsetCalculator<(
+      void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::array<char *, (unsigned long)1>>(int, T2, T3)
+      fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1VarSeqQ8Kv128PersistentSwapsAbForGen
+      void at::native::vectorized_elementwise_kernel<(int)8, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char *, (unsigned long)3>>(int, T2, T3)
+      mhc_post_tilelang_kernel
+      nvjet_sm103_tss_64x8_64x16_4x1_v_bz_splitK_TNT
+      fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128StaticSwapsAbForGen
+      nvjet_sm103_tss_32x64_64x16_4x1_v_bz_splitK_TNN
+      _block_scores_kernel
+      void at::native::radixSortKVInPlace<(int)2, (int)-1, (int)64, (int)32, float, long, unsigned int>(at::cuda::detail::TensorInfo<T5, T7>, T7, T7, T7, at
+      _store_candidates_kernel
+      _expand_candidates_kernel
+      _hc_head_reduce_store_kernel
+      void at::native::vectorized_gather_kernel<(int)16, long>(char *, char *, T2 *, int, long, long, long, long, bool)
+      nvjet_sm103_tst_128x8_64x12_1x1_h_bz_splitK_TNT
+      void at::native::index_elementwise_kernel<(int)128, (int)4, void at::native::gpu_index_kernel<void at::native::index_kernel_impl<at::native::OpaqueTyp
+      void at::native::index_elementwise_kernel<(int)128, (int)4, void at::native::gpu_index_kernel<void at::native::index_kernel_impl<at::native::OpaqueTyp
+      _gumbel_sample_kernel
+      void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<float, at::native::ArgMaxOps<float>, unsigned int, long, (int)4, (int)4>>(T3)
+      void at::native::_scatter_gather_elementwise_kernel<(int)128, (int)8, void at::native::_cuda_scatter_gather_internal_kernel<(bool)0, at::native::Opaqu
+      _get_num_sampled_and_rejected_kernel
+      _post_update_kernel
+      _zero_kv_blocks_kernel
+      _apply_write_kernel
+      void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>, (int)4, TrivialOffsetCalculator<(int)
+      void at_cuda_detail::cub::detail::scan::DeviceScanInitKernel<at_cuda_detail::cub::ScanTileState<int, (bool)1>>(T1, int)
+      void at_cuda_detail::cub::detail::scan::DeviceScanKernel<at_cuda_detail::cub::detail::scan::policy_hub<int, int, int, unsigned int, std::plus<int>>::P
+      void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::native::CUDAFunctor_add<int>>(at::TensorIteratorBase
+      fmhaSm100fKernel_QkvE4m3OBfloat16H512PagedKvDenseDynamicTokenSparseP1VarSeqQ16Kv128PersistentSwapsAbForGen
+      nvjet_sm103_tss_192x128_64x6_2x2_2cta_h_bz_TNT
+      nvjet_sm103_tss_128x256_64x6_2x2_2cta_h_bz_TNT
+      nvjet_sm103_tst_32x128_64x10_1x4_h_bz_TNN
+      nvjet_sm103_tst_64x256_64x8_2x2_2cta_h_bz_TNT
+      void vllm::topKPerRowPrefill<(int)512, (bool)0>(const float *, const int *, const int *, int *, int, int, int, int)
+      void vllm::topKPerRowPrefill<(int)512, (bool)1>(const float *, const int *, const int *, int *, int, int, int, int)
+      fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ8Kv128StaticSwapsAbForGen
+      nvjet_sm103_tss_256x128_64x5_2x2_2cta_h_bz_TNT
+      void at::native::radixSortKVInPlace<(int)-2, (int)-1, (int)64, (int)32, float, long, unsigned int>(at::cuda::detail::TensorInfo<T5, T7>, T7, T7, T7, a
+      nvjet_sm103_tss_128x176_64x5_1x4_h_bz_TNT
+      nvjet_sm103_tss_256x240_64x4_2x2_2cta_h_bz_TNT

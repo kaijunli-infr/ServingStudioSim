@@ -1,0 +1,27 @@
+{
+  "profile_kind": "workload_metrics",
+  "engine": "vllm",
+  "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile",
+  "metrics_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/vllm/dsv41_flash_1017_gb300_tp4_quadrant_workload_metrics.jsonl",
+  "request_timings_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/vllm/dsv41_flash_1017_gb300_tp4_quadrant_workload_request_timings.jsonl",
+  "request_timing_count": 96,
+  "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/vllm/dsv41_flash_1017_gb300_tp4_quadrant_workload_server.log",
+  "gpu": "NVIDIA GB300",
+  "server_tp_size": 4,
+  "server_dp_size": 1,
+  "cuda_visible_devices": "0,1,2,3",
+  "replay_result": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/load_generator/replay.jsonl",
+  "drive_summary": {
+    "source_trace": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/trace/quadrant_c48_96.csv",
+    "frontend_type": "independent",
+    "backend_type": "vllm_tokens",
+    "log_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/load_generator/replay.jsonl",
+    "summary_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/load_generator/summary.json",
+    "warmup": true,
+    "routed_experts_dir": null,
+    "replay_start_monotonic_ns": 2487752513761505,
+    "replay_end_monotonic_ns": 2487800716668952,
+    "measurement_log_offset": 1410965,
+    "reached_idle": true
+  }
+}

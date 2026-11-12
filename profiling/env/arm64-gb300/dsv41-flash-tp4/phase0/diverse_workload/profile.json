@@ -1,0 +1,81 @@
+{
+ "schema_version": 1,
+ "name": "dsv41_flash_1017_gb300_tp4_diverse_workload",
+ "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_workload/profile",
+ "gpu": "NVIDIA GB300",
+ "cuda_visible_devices": "0,1,2,3",
+ "profile_kind": "workload_metrics",
+ "engine": "vllm",
+ "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
+ "python_runtime": {
+  "packages": [
+   {
+    "name": "nvtx",
+    "version": "0.2.15",
+    "index_url": "https://pypi.org/simple"
+   }
+  ],
+  "environment": {
+   "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
+   "VLLM_ENGINE_READY_TIMEOUT_S": "3600",
+   "VLLM_CACHE_ROOT": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm",
+   "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune",
+   "FLASHINFER_WORKSPACE_BASE": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer",
+   "TRITON_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton",
+   "TORCHINDUCTOR_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor",
+   "DG_JIT_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm",
+   "CUDA_CACHE_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute",
+   "HF_HOME": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface",
+   "HF_HUB_OFFLINE": "1",
+   "VLLM_LOGGING_LEVEL": "INFO"
+  },
+  "lock_timeout_seconds": 60,
+  "install_timeout_seconds": 600
+ },
+ "server": {
+  "model_path": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
+  "tp_size": 4,
+  "dp_size": 1,
+  "chunk_size": 16384,
+  "gpu_memory_utilization": 0.9,
+  "enforce_eager": false,
+  "enable_server_load_tracking": true,
+  "api_server_count": 1,
+  "served_model_name": "dsv41-flash-1017",
+  "startup_timeout": 7200.0,
+  "extra_args": [
+   "--tokenizer-mode",
+   "deepseek_v41",
+   "--attention-config",
+   "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
+   "--kv-cache-dtype",
+   "fp8",
+   "--max-num-seqs",
+   "128",
+   "--engram-config",
+   "{\"cpu_offload\":true}",
+   "--max-model-len",
+   "131072",
+   "--language-model-only"
+  ]
+ },
+ "idle": {
+  "enabled": true,
+  "timeout": 600.0,
+  "poll_interval": 0.5
+ },
+ "workload": {
+  "frontend": {
+   "type": "independent",
+   "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/trace/diverse_100.csv"
+  },
+  "backend": {
+   "type": "vllm_tokens"
+  },
+  "text_file": "/mnt/shared/home/dc/workspace/serving-studio/corpus/enwik9",
+  "tokenizer": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
+  "warmup": true,
+  "max_model_len": 131072,
+  "arrival_mode": "trace-timed"
+ }
+}

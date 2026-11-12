@@ -1,0 +1,13 @@
+{
+  "source_trace": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/trace/quadrant_c48_96.csv",
+  "frontend_type": "independent",
+  "backend_type": "vllm_tokens",
+  "log_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_nsys/profile/load_generator/replay.jsonl",
+  "summary_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_nsys/profile/load_generator/summary.json",
+  "warmup": true,
+  "routed_experts_dir": null,
+  "replay_start_monotonic_ns": 2484817577753510,
+  "replay_end_monotonic_ns": 2484867761385315,
+  "measurement_log_offset": 1408473,
+  "reached_idle": true
+}

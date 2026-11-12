@@ -1,0 +1,61 @@
+{
+  "workload": {
+    "kind": "independent_requests",
+    "requests": 100,
+    "first_context_overflow_request_id": null,
+    "first_context_overflow_input_len": null,
+    "first_context_overflow_requested_total_len": null,
+    "max_input_len": 131070,
+    "max_output_len": 8192,
+    "total_output_len": 135244,
+    "max_arrival_time_ms": 114912.47116
+  },
+  "replay": {
+    "kind": "independent_requests",
+    "common": {
+      "attempted_steps": 100,
+      "success_steps": 100,
+      "failed_steps": 0,
+      "target_output_tokens": 135244,
+      "actual_output_tokens": 135244,
+      "output_mismatch_steps": 0,
+      "output_token_delta": 0,
+      "total_duration_ms_sum": 1152505.2699999998,
+      "total_duration_ms_avg": 11525.052699999998,
+      "total_duration_ms_p50": 2913.71,
+      "total_duration_ms_p90": 36992.216000000015,
+      "total_duration_ms_max": 69797.53,
+      "ttft_ms_avg": 11521.974999999999,
+      "ttft_ms_p50": 2912.21,
+      "ttft_ms_p90": 36985.61500000001,
+      "ttft_ms_max": 69786.64,
+      "ttft_token_id_steps": 100,
+      "ttft_text_fallback_steps": 0,
+      "run_duration_ms": 144592.4038887024,
+      "request_throughput_per_s": 0.6915992632432707,
+      "output_token_throughput_per_s": 935.3465075807289,
+      "tpot_measured_steps": 0,
+      "tpot_ms_avg": null,
+      "tpot_ms_p50": null,
+      "tpot_ms_p90": null,
+      "tpot_ms_max": null,
+      "completion_amortized_tpot_measured_steps": 98,
+      "completion_amortized_tpot_ms_avg": 0.06997186674704244,
+      "completion_amortized_tpot_ms_p50": 0.006901135776973669,
+      "completion_amortized_tpot_ms_p90": 0.20416666666665512,
+      "completion_amortized_tpot_ms_max": 0.8250000000000028,
+      "context_overflow_steps": 0
+    }
+  },
+  "client_runtime": {
+    "tokio_worker_threads": 144,
+    "sampled_global_queue_depth_peak": 0
+  },
+  "timeline": {
+    "path": "session_runner_timeline.parquet",
+    "requests_written": 100,
+    "events_written": 100,
+    "dropped_requests": 0
+  },
+  "slo": null
+}

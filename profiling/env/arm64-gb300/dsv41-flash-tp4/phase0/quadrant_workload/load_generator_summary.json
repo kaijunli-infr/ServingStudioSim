@@ -1,0 +1,61 @@
+{
+  "workload": {
+    "kind": "independent_requests",
+    "requests": 96,
+    "first_context_overflow_request_id": null,
+    "first_context_overflow_input_len": null,
+    "first_context_overflow_requested_total_len": null,
+    "max_input_len": 4096,
+    "max_output_len": 4096,
+    "total_output_len": 178176,
+    "max_arrival_time_ms": 95000.0
+  },
+  "replay": {
+    "kind": "independent_requests",
+    "common": {
+      "attempted_steps": 96,
+      "success_steps": 96,
+      "failed_steps": 0,
+      "target_output_tokens": 178176,
+      "actual_output_tokens": 178176,
+      "output_mismatch_steps": 0,
+      "output_token_delta": 0,
+      "total_duration_ms_sum": 1995462.9999999993,
+      "total_duration_ms_avg": 20786.07291666666,
+      "total_duration_ms_p50": 16822.614999999998,
+      "total_duration_ms_p90": 44815.44,
+      "total_duration_ms_max": 44841.51,
+      "ttft_ms_avg": 612.6002083333332,
+      "ttft_ms_p50": 489.795,
+      "ttft_ms_p90": 1150.53,
+      "ttft_ms_max": 3288.27,
+      "ttft_token_id_steps": 96,
+      "ttft_text_fallback_steps": 0,
+      "run_duration_ms": 47865.91100692749,
+      "request_throughput_per_s": 2.0056026926157577,
+      "output_token_throughput_per_s": 3722.398597494846,
+      "tpot_measured_steps": 96,
+      "tpot_ms_avg": 12.491298379540384,
+      "tpot_ms_p50": 11.217849234776946,
+      "tpot_ms_p90": 15.984251968503937,
+      "tpot_ms_max": 35.44543307086614,
+      "completion_amortized_tpot_measured_steps": 96,
+      "completion_amortized_tpot_ms_avg": 12.492147935844729,
+      "completion_amortized_tpot_ms_p50": 11.217896450667535,
+      "completion_amortized_tpot_ms_p90": 15.985905511811023,
+      "completion_amortized_tpot_ms_max": 35.447007874015746,
+      "context_overflow_steps": 0
+    }
+  },
+  "client_runtime": {
+    "tokio_worker_threads": 144,
+    "sampled_global_queue_depth_peak": 0
+  },
+  "timeline": {
+    "path": "session_runner_timeline.parquet",
+    "requests_written": 96,
+    "events_written": 178272,
+    "dropped_requests": 0
+  },
+  "slo": null
+}

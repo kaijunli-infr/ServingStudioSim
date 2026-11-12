@@ -1,0 +1,551 @@
+{
+  "source": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_corpus/profile/routed_experts",
+  "encoding": "little-endian u16, C order [token, layer, top_k]",
+  "scope": "accepted generated tokens; no prompt or rejected draft routes",
+  "num_model_layers": 40,
+  "model_layer_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "tokens_dropped_without_draft_routes": 0,
+  "request_segments": [
+    {
+      "request": "independent_0",
+      "start": 0,
+      "length": 14
+    },
+    {
+      "request": "independent_1",
+      "start": 14,
+      "length": 2614
+    },
+    {
+      "request": "independent_2",
+      "start": 2628,
+      "length": 2183
+    },
+    {
+      "request": "independent_3",
+      "start": 4811,
+      "length": 606
+    },
+    {
+      "request": "independent_4",
+      "start": 5417,
+      "length": 10
+    },
+    {
+      "request": "independent_5",
+      "start": 5427,
+      "length": 2
+    },
+    {
+      "request": "independent_6",
+      "start": 5429,
+      "length": 65
+    },
+    {
+      "request": "independent_7",
+      "start": 5494,
+      "length": 3310
+    },
+    {
+      "request": "independent_8",
+      "start": 8804,
+      "length": 2
+    },
+    {
+      "request": "independent_9",
+      "start": 8806,
+      "length": 7158
+    },
+    {
+      "request": "independent_10",
+      "start": 15964,
+      "length": 477
+    },
+    {
+      "request": "independent_11",
+      "start": 16441,
+      "length": 27
+    },
+    {
+      "request": "independent_12",
+      "start": 16468,
+      "length": 6
+    },
+    {
+      "request": "independent_13",
+      "start": 16474,
+      "length": 4354
+    },
+    {
+      "request": "independent_14",
+      "start": 20828,
+      "length": 1236
+    },
+    {
+      "request": "independent_15",
+      "start": 22064,
+      "length": 251
+    },
+    {
+      "request": "independent_16",
+      "start": 22315,
+      "length": 176
+    },
+    {
+      "request": "independent_17",
+      "start": 22491,
+      "length": 25
+    },
+    {
+      "request": "independent_18",
+      "start": 22516,
+      "length": 2
+    },
+    {
+      "request": "independent_19",
+      "start": 22518,
+      "length": 320
+    },
+    {
+      "request": "independent_20",
+      "start": 22838,
+      "length": 8
+    },
+    {
+      "request": "independent_21",
+      "start": 22846,
+      "length": 4500
+    },
+    {
+      "request": "independent_22",
+      "start": 27346,
+      "length": 2
+    },
+    {
+      "request": "independent_23",
+      "start": 27348,
+      "length": 4402
+    },
+    {
+      "request": "independent_24",
+      "start": 31750,
+      "length": 7533
+    },
+    {
+      "request": "independent_25",
+      "start": 39283,
+      "length": 4051
+    },
+    {
+      "request": "independent_26",
+      "start": 43334,
+      "length": 8
+    },
+    {
+      "request": "independent_27",
+      "start": 43342,
+      "length": 1541
+    },
+    {
+      "request": "independent_28",
+      "start": 44883,
+      "length": 162
+    },
+    {
+      "request": "independent_29",
+      "start": 45045,
+      "length": 8
+    },
+    {
+      "request": "independent_30",
+      "start": 45053,
+      "length": 2161
+    },
+    {
+      "request": "independent_31",
+      "start": 47214,
+      "length": 399
+    },
+    {
+      "request": "independent_32",
+      "start": 47613,
+      "length": 77
+    },
+    {
+      "request": "independent_33",
+      "start": 47690,
+      "length": 2
+    },
+    {
+      "request": "independent_34",
+      "start": 47692,
+      "length": 8191
+    },
+    {
+      "request": "independent_35",
+      "start": 55883,
+      "length": 91
+    },
+    {
+      "request": "independent_36",
+      "start": 55974,
+      "length": 2044
+    },
+    {
+      "request": "independent_37",
+      "start": 58018,
+      "length": 605
+    },
+    {
+      "request": "independent_38",
+      "start": 58623,
+      "length": 122
+    },
+    {
+      "request": "independent_39",
+      "start": 58745,
+      "length": 904
+    },
+    {
+      "request": "independent_40",
+      "start": 59649,
+      "length": 5825
+    },
+    {
+      "request": "independent_41",
+      "start": 65474,
+      "length": 0
+    },
+    {
+      "request": "independent_42",
+      "start": 65474,
+      "length": 445
+    },
+    {
+      "request": "independent_43",
+      "start": 65919,
+      "length": 555
+    },
+    {
+      "request": "independent_44",
+      "start": 66474,
+      "length": 166
+    },
+    {
+      "request": "independent_45",
+      "start": 66640,
+      "length": 29
+    },
+    {
+      "request": "independent_46",
+      "start": 66669,
+      "length": 8
+    },
+    {
+      "request": "independent_47",
+      "start": 66677,
+      "length": 11
+    },
+    {
+      "request": "independent_48",
+      "start": 66688,
+      "length": 1033
+    },
+    {
+      "request": "independent_49",
+      "start": 67721,
+      "length": 10
+    },
+    {
+      "request": "independent_50",
+      "start": 67731,
+      "length": 4254
+    },
+    {
+      "request": "independent_51",
+      "start": 71985,
+      "length": 1700
+    },
+    {
+      "request": "independent_52",
+      "start": 73685,
+      "length": 4021
+    },
+    {
+      "request": "independent_53",
+      "start": 77706,
+      "length": 221
+    },
+    {
+      "request": "independent_54",
+      "start": 77927,
+      "length": 4180
+    },
+    {
+      "request": "independent_55",
+      "start": 82107,
+      "length": 6
+    },
+    {
+      "request": "independent_56",
+      "start": 82113,
+      "length": 369
+    },
+    {
+      "request": "independent_57",
+      "start": 82482,
+      "length": 6
+    },
+    {
+      "request": "independent_58",
+      "start": 82488,
+      "length": 6869
+    },
+    {
+      "request": "independent_59",
+      "start": 89357,
+      "length": 3412
+    },
+    {
+      "request": "independent_60",
+      "start": 92769,
+      "length": 7815
+    },
+    {
+      "request": "independent_61",
+      "start": 100584,
+      "length": 476
+    },
+    {
+      "request": "independent_62",
+      "start": 101060,
+      "length": 2
+    },
+    {
+      "request": "independent_63",
+      "start": 101062,
+      "length": 369
+    },
+    {
+      "request": "independent_64",
+      "start": 101431,
+      "length": 247
+    },
+    {
+      "request": "independent_65",
+      "start": 101678,
+      "length": 260
+    },
+    {
+      "request": "independent_66",
+      "start": 101938,
+      "length": 58
+    },
+    {
+      "request": "independent_67",
+      "start": 101996,
+      "length": 479
+    },
+    {
+      "request": "independent_68",
+      "start": 102475,
+      "length": 8191
+    },
+    {
+      "request": "independent_69",
+      "start": 110666,
+      "length": 4
+    },
+    {
+      "request": "independent_70",
+      "start": 110670,
+      "length": 1416
+    },
+    {
+      "request": "independent_71",
+      "start": 112086,
+      "length": 61
+    },
+    {
+      "request": "independent_72",
+      "start": 112147,
+      "length": 202
+    },
+    {
+      "request": "independent_73",
+      "start": 112349,
+      "length": 298
+    },
+    {
+      "request": "independent_74",
+      "start": 112647,
+      "length": 1556
+    },
+    {
+      "request": "independent_75",
+      "start": 114203,
+      "length": 2
+    },
+    {
+      "request": "independent_76",
+      "start": 114205,
+      "length": 40
+    },
+    {
+      "request": "independent_77",
+      "start": 114245,
+      "length": 10
+    },
+    {
+      "request": "independent_78",
+      "start": 114255,
+      "length": 93
+    },
+    {
+      "request": "independent_79",
+      "start": 114348,
+      "length": 324
+    },
+    {
+      "request": "independent_80",
+      "start": 114672,
+      "length": 32
+    },
+    {
+      "request": "independent_81",
+      "start": 114704,
+      "length": 27
+    },
+    {
+      "request": "independent_82",
+      "start": 114731,
+      "length": 1896
+    },
+    {
+      "request": "independent_83",
+      "start": 116627,
+      "length": 291
+    },
+    {
+      "request": "independent_84",
+      "start": 116918,
+      "length": 100
+    },
+    {
+      "request": "independent_85",
+      "start": 117018,
+      "length": 2672
+    },
+    {
+      "request": "independent_86",
+      "start": 119690,
+      "length": 284
+    },
+    {
+      "request": "independent_87",
+      "start": 119974,
+      "length": 8
+    },
+    {
+      "request": "independent_88",
+      "start": 119982,
+      "length": 2
+    },
+    {
+      "request": "independent_89",
+      "start": 119984,
+      "length": 1759
+    },
+    {
+      "request": "independent_90",
+      "start": 121743,
+      "length": 28
+    },
+    {
+      "request": "independent_91",
+      "start": 121771,
+      "length": 0
+    },
+    {
+      "request": "independent_92",
+      "start": 121771,
+      "length": 54
+    },
+    {
+      "request": "independent_93",
+      "start": 121825,
+      "length": 14
+    },
+    {
+      "request": "independent_94",
+      "start": 121839,
+      "length": 2956
+    },
+    {
+      "request": "independent_95",
+      "start": 124795,
+      "length": 2
+    },
+    {
+      "request": "independent_96",
+      "start": 124797,
+      "length": 3937
+    },
+    {
+      "request": "independent_97",
+      "start": 128734,
+      "length": 19
+    },
+    {
+      "request": "independent_98",
+      "start": 128753,
+      "length": 6273
+    },
+    {
+      "request": "independent_99",
+      "start": 135026,
+      "length": 118
+    }
+  ]
+}

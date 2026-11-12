@@ -1,0 +1,18 @@
+[diverse_nsys] start 2026-11-12T14:31:21Z on pod4-gb300-10-tray16-f3 fork_python=/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python
+    Finished `release` profile [optimized] target(s) in 3.24s
+[replay] warmup.serial started
+requests arrival rate | saturated (recorded arrivals ignored, bounded by --max-concurrency 1)
+independent-request workload | requests=1 max_input_len=364 max_output_len=15 total_output_len=15 max_arrival_time_ms=0.000
+[replay] warmup started
+requests arrival rate | saturated (recorded arrivals ignored, unbounded)
+independent-request workload | requests=100 max_input_len=131070 max_output_len=32 total_output_len=2512 max_arrival_time_ms=114912.471
+[replay] warmup drained; prefix cache reset
+requests arrival rate | trace=0.861525/s (unchanged)
+independent-request workload | requests=100 max_input_len=131070 max_output_len=8192 total_output_len=135244 max_arrival_time_ms=114912.471
+[alignment] profiling: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys/profile.json
+[profile] launching (external nsys): /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys profile --trace-fork-before-exec=true --trace=cuda,nvtx --sample=none --cpuctxsw=none ... (log: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys/profile/vllm/dsv41_flash_1017_gb300_tp4_diverse_nsys_server.log)
+[profile] server ready; driving workload
+[profile] frontend ready; measurement begins
+[invalid] alignment profile: alignment API request timings have no matching EngineCore records: ['independent_21', 'independent_23', 'independent_24', 'independent_25', 'independent_34', 'independent_40', 'independent_48', 'independent_50']
+[profile] workload done: {'source_trace': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/trace/diverse_100.csv', 'frontend_type': 'independent', 'backend_type': 'vllm_tokens', 'log_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys/profile/load_generator/replay.jsonl', 'summary_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/diverse_nsys/profile/load_generator/summary.json', 'warmup': True, 'routed_experts_dir': None, 'replay_start_monotonic_ns': 2489362278299167, 'replay_end_monotonic_ns': 2489912042042489, 'measurement_log_offset': 1128213, 'reached_idle': True}
+[diverse_nsys] rc=2 end 2026-11-12T15:05:23Z

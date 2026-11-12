@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "data_file": "routes.u16",
+  "num_tokens": 135144,
+  "num_layers": 40,
+  "num_experts": 384,
+  "top_k": 6,
+  "checksum_fnv1a64": 5511459335719819989
+}

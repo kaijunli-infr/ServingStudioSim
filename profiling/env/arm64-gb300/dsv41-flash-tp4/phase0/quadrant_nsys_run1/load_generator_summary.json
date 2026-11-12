@@ -1,0 +1,61 @@
+{
+  "workload": {
+    "kind": "independent_requests",
+    "requests": 96,
+    "first_context_overflow_request_id": null,
+    "first_context_overflow_input_len": null,
+    "first_context_overflow_requested_total_len": null,
+    "max_input_len": 4096,
+    "max_output_len": 4096,
+    "total_output_len": 178176,
+    "max_arrival_time_ms": 95000.0
+  },
+  "replay": {
+    "kind": "independent_requests",
+    "common": {
+      "attempted_steps": 96,
+      "success_steps": 96,
+      "failed_steps": 0,
+      "target_output_tokens": 178176,
+      "actual_output_tokens": 178176,
+      "output_mismatch_steps": 0,
+      "output_token_delta": 0,
+      "total_duration_ms_sum": 2455412.15,
+      "total_duration_ms_avg": 25577.209895833334,
+      "total_duration_ms_p50": 21118.725,
+      "total_duration_ms_p90": 54450.535,
+      "total_duration_ms_max": 54475.65,
+      "ttft_ms_avg": 1858.3615625000002,
+      "ttft_ms_p50": 1032.0549999999998,
+      "ttft_ms_p90": 5393.295,
+      "ttft_ms_max": 6999.74,
+      "ttft_token_id_steps": 96,
+      "ttft_text_fallback_steps": 0,
+      "run_duration_ms": 57705.39927482605,
+      "request_throughput_per_s": 1.6636224895142515,
+      "output_token_throughput_per_s": 3087.683340538451,
+      "tpot_measured_steps": 96,
+      "tpot_ms_avg": 21.029246834576146,
+      "tpot_ms_p50": 14.48898404428525,
+      "tpot_ms_p90": 42.51122047244095,
+      "tpot_ms_max": 94.55007874015747,
+      "completion_amortized_tpot_measured_steps": 96,
+      "completion_amortized_tpot_ms_avg": 21.029976469087654,
+      "completion_amortized_tpot_ms_p50": 14.489032888309998,
+      "completion_amortized_tpot_ms_p90": 42.512637795275594,
+      "completion_amortized_tpot_ms_max": 94.55173228346456,
+      "context_overflow_steps": 0
+    }
+  },
+  "client_runtime": {
+    "tokio_worker_threads": 144,
+    "sampled_global_queue_depth_peak": 0
+  },
+  "timeline": {
+    "path": "session_runner_timeline.parquet",
+    "requests_written": 96,
+    "events_written": 178272,
+    "dropped_requests": 0
+  },
+  "slo": null
+}

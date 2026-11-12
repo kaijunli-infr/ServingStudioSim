@@ -181,3 +181,503 @@ this appears inside the nsys capture window.
 **GPU occupancy at 00:31:22Z (tray16, nvidia-smi):** 4 compute apps = the 4 TP workers (pids 3646175-78), 86.6 GiB used per GPU
 (weights + Engram pinned copies), 0 % util (between load and autotune). No other process on any GPU; reservation pod
 `dsv41-gb300-reserve-tray16` keeps the scheduler off (compute mode Default, no MIG).
+
+## Pass 1 result + Gate 5 validation — quadrant_nsys (attempt 2), recorded 2026-11-12T02:10Z
+
+Run: start 00:26:50Z, server ready ~01:12Z (first boot: 185 s weight load, FlashInfer autotune + JIT 00:31–00:46, graph capture
+00:46:34–00:50:07 = 213 s / 1.49 GiB, JIT kernel warmup 178 compile keys), measurement 01:12:14–01:13:11 + drain, profiler shut
+down 01:17:54Z, launcher `rc=0 end 2026-11-12T01:28:52Z` (SQLite export + parse). GPUs 0 MiB / 0 procs at 01:37Z.
+Artifacts: `quadrant_nsys/profile/{nsys/*.nsys-rep (4.3 G with .sqlite), parsed.json (214 M), parsed.kernels.parquet (147 M),
+kernel_sequences.json, host_timeline.json, profile_result.json, vllm/*_server.log, vllm/*_metrics.jsonl, vllm/*_request_timings.jsonl,
+load_generator/summary.json}`. Analysis scripts used below: `quadrant_nsys/gate5.py` (parsed.json) and `quadrant_nsys/gate5b.py`
+(parquet + sqlite). Nsight Systems 2025.6.3.541.
+
+### 5.1 Capture integrity
+- Workload: 96/96 requests succeeded, 178,176 output tokens = target exactly (0 mismatch), run_duration 57.7 s, 3,088 output tok/s,
+  TTFT p50 1.03 s / p90 5.39 s / max 7.00 s, TPOT p50 14.5 ms / p90 42.5 ms (load_generator/summary.json). Max input 4,096 tokens.
+- Iterations: 4,746 parsed, indices 109..4854 **contiguous** (iterations 0–108 = warmup before `/start_profile`, by design);
+  4,714 decode, 31 mixed, 1 prefill-only. `step_alignment.unpaired_steps_by_device = {}`, `devices_absent` empty for all steps.
+- NVTX: every iteration has all six phases (preprocess, forward, postprocess, sample, bookkeep, eplb) on all 4 TP ranks
+  (28 ranges per iteration, 7 per device); `nvtx_forward_ranges = 18,984 = 4,746 × 4`.
+- Kernel attribution: 25,609,900 kernel rows in the SQLite `CUPTI_ACTIVITY_KIND_KERNEL` table, 25,609,900 attributed to an
+  iteration/phase range in parsed.json → **100 %**, no orphan kernels. Decode: 1,341–1,372 kernels per iteration per rank
+  (median 1,344); mixed 1,590–1,754; prefill-only 1,465.
+- Steady state: decode_requests = 48 in 3,021 iterations (64 %); 256 tail iterations with 1 request (drain). decode kv_len range
+  1,369–6,142 tokens (short contexts, as cautioned: this pass says nothing about 64k–131k behaviour).
+- Occupancy: only the 4 TP workers on the GPUs (reservation pod held the scheduler off). Model load 78.42 GiB/rank, CUDA graphs
+  1.49 GiB, KV cache 163.99 GiB/rank = 24,088,361 fp8 tokens (block 128), i.e. ~0.9 × 284 GiB per GPU during serving. No
+  in-serving nvidia-smi sample was taken (only the 00:31Z post-load sample, 85.3 GiB).
+
+### 5.2 Kernel breakdown (all 4 ranks summed = 219.8 s GPU kernel time; ≈ 54.9 s per rank over 4,746 iterations; per-iteration
+numbers below are per rank; 99 families, top-25 = 94.2 %)
+| # | share | family | decode ms/it (calls/it) | mixed ms/it (calls/it) |
+|---|---|---|---|---|
+| 1 | 22.8 % | `bmm_MxE4m3_MxE2m1…` TRT-LLM MXFP4 expert GEMM1 (MXFP8 act) | 2.578 (40) | 11.88 (40) |
+| 2 | 12.5 % | FlashInfer `dense_blockscaled_gemm_sm100` (MXFP8 dense linears) | 1.413 (194.7) | 6.75 (210) |
+| 3 | 12.3 % | `bmm_Bfloat16_MxE2m1…` TRT-LLM MXFP4 expert GEMM2 | 1.391 (40) | 6.96 (40) |
+| 4 | 8.8 % | `flashinfer::trtllm_mnnvl_allreduce::twoshotAllreduceKernel` | 0.471 (65.7) | 81.5 (65.8) |
+| 5 | 8.6 % | `deep_gemm::sm100_mega_mhc_impl` (fused mHC) | 0.930 (66.4) | 10.4 (77) |
+| 6 | 6.5 % | `fmhaSm100fKernel_…DynamicTokenSparse…` TRT-LLM sparse MLA | 0.646 (40) | 16.3 (78.8) |
+| 7 | 2.6 % | `nvjet_sm103_*` (cuBLAS, router gate / indexer / compressor proj) | 0.300 (50.7) | 1.18 (57) |
+| 8 | 2.2 % | cute-DSL `device_kernel tensorptr…o<M>16512…` (wo_a grouped einsum, decode only) | 0.251 (48) | 0.11 (8) |
+| 9 | 2.1 % | FlashInfer `MXFP8QuantizeSwizzledKernel` | 0.237 (122) | 1.87 (162) |
+| 10 | 1.6 % | `_dsv4_topk_kernel` (router top-k) | 0.179 (40) | 0.57 (40) |
+| 11 | 1.3 % | `at::native::vectorized_elementwise_kernel` (misc) | 0.143 (100.8) | 1.15 (146) |
+| 12 | 1.3 % | `moe::dev::finalize::finalizeKernel` (decode variant) | 0.151 (34.9) | 0 |
+| 13 | 1.2 % | `cublasLt::splitKreduce_kernel` | 0.140 (46.5) | 0.05 (13.9) |
+| 14 | 1.2 % | `moe::dev::routing::routingCustom::routingIndicesClusterKernel` | 0.139 (34.5) | 0.27 (32.5) |
+| 15 | 1.2 % | `vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel` (KV insert) | 0.128 (40) | 1.57 (40) |
+| 16 | 1.2 % | `ncclDevKernel_AllReduce_Sum_bf16_RING_LL` (**eager mixed iterations only**) | 0 | 20.4 (15.2) |
+| 17 | 1.0 % | `_build_flashinfer_mixed_sparse_indices_kernel` | 0.116 (40) | 0.43 (40) |
+| 18 | 1.0 % | `ncclDevKernel_AllGather_RING_LL` (Engram ×4 + logits) | 0.106 (5) | 1.52 (5) |
+| 19 | 0.9 % | `_q_kv_norm_quant_kernel` | 0.094 (40) | 0.82 (40) |
+| 20 | 0.8 % | `mhc_pre_big_fuse_with_norm_tilelang_kernel` (unfused mHC path) | 0.091 (14) | 0.23 (3) |
+| 21–25 | 3.2 % | `sm100_tf32_hc_prenorm_gemm_impl` 13.6/it, `act_and_mul` 40/it, FlashInfer split-K dense GEMM 15.3/it (decode only), `MXFP8QuantizeLinearKernel` 40/it, cute-DSL `all_reduce_mhc_LamportMHC` 10.6/it (decode only) | | |
+Decode step ≈ 9.9 ms kernel time per rank at 48 requests (sum of families) vs ≈ 12.2 ms wall per iteration; GPU idle inside
+decode NVTX windows 0.024 ms mean. Other decode-only counts per rank per iteration: `oneshotAllreduceFusionKernel` 4.7,
+cute-DSL `all_reduce_mhc` (SharedOnlyPublish / LamportMHC / QuadFinalizePublish) 21.1 kernels, `paged_mqa_logits` 4 + `sparse_mqa_logits` 4
+(indexer scoring on the 4 layers that need it at these context lengths), Engram `_hash_ids` 1 / `_engram_lookup` 2 / `_fused_engram_post_wkv` 2.
+Mixed-only: `deep_gemm::sm100_fp8_fp4_gemm_1d1d_impl` 40/it (wo_a prefill), `finalizeKernelVecLoad`, `sm100_sparse_mqa_logits` /
+`sm100_paged_sparse_mqa_logits` + `topKPerRowPrefill`, `cp_gather_indexer_k_quant_cache_kernel`, `kernel` (bare name).
+
+### 5.3 Architecture evidence
+- **Sparse MLA / indexer** (FLASHINFER_MLA_SPARSE_DSV41 honoured): attention core is `fmhaSm100fKernel_QkvE4m3OBfloat16H512PagedKv
+  DenseDynamicTokenSparseP1…` (decode: `…MultiCtasKvVarSeqQ16Kv128StaticSwapsAbForGen` and HVPerCta128 variants; prefill: `…Persistent…`),
+  preceded by `_build_flashinfer_mixed_sparse_indices_kernel`; indexer = `_indexer_k_norm_rope_quant_store_kernel`,
+  `deep_gemm::sm100_paged_mqa_logits` + `vllm::cooperative::cooperative_topk_cs{2,4,8,16}` (decode), `deep_gemm::sm100_sparse_mqa_logits`,
+  `sm100_paged_sparse_mqa_logits`, `sched::sparse_mqa_logits_metadata`, `topKPerRowPrefill`, `cp_gather_indexer_k_quant_cache_kernel<4|8|32>`
+  (prefill); MXFP4 indexer cache confirmed by `_indexer_k_norm_rope_quant_store_kernel` + boot log. SWA/lookback sub-backend kernels
+  present: `_compute_swa_indices_and_lens_kernel`, `_gather_lookback_kernel`, `_ring_slot_mapping_kernel`, `_indexer_decode_metadata_kernel`.
+  Compressor: `_fused_save_compress_norm_kernel`, `_rope_plain_insert_kernel`, `fusedDeepseekV4FullCacheKernel`.
+- **TP-sharded MoE** (FLASHINFER_TRTLLM_MXFP4_MXFP8): per MoE layer exactly one `routingCustom::routingIndices*` (Cluster / Coop /
+  DynBlock / Block variant by token count) → one `bmm_MxE4m3_MxE2m1` (GEMM1) → one `bmm_Bfloat16_MxE2m1` (GEMM2) → one
+  `finalizeKernel[VecLoad]`; 40 of each per iteration per rank. **No dispatch/combine, all-to-all or DeepEP kernels anywhere in
+  the 242 kernel names** (the only "combine" hit is `_combine_sampled_and_draft_tokens_kernel`, a sampler kernel). The FFN output is
+  reduced by the TP all-reduce. Shared expert: `dense_blockscaled_gemm` + `act_and_mul` + split-K dense GEMM alongside.
+- **Collective sequence per body layer, decode (rank 0, iteration 3000, folded):** `mega_mhc → [MXFP8 quant → dense GEMM (wqa/wkv)] →
+  q_kv_norm_quant → dense GEMM (wq_b) → FullCache KV insert → build_sparse_indices → fmha sparse MLA → wo_a (cute-DSL) → wo_b dense GEMM →
+  twoshotAllreduce (attn) → mega_mhc → quant → nvjet router gate + splitKreduce → dsv4_topk → act_and_mul / quant → routingIndices →
+  bmm GEMM1 → bmm GEMM2 → finalize → residual add → twoshotAllreduce (ffn)`. Iteration prologue: embedding → twoshotAllreduce →
+  `_hash_ids` → `_engram_lookup` ×2; Engram block at layers 1 and 14: `mhc_post_tilelang → ncclDevKernel_AllGather ×2 → wkv dense GEMM →
+  _fused_engram_post_wkv → tf32_hc_prenorm_gemm → mhc_pre_big_fuse_with_norm_tilelang`. Head: logits AllGather. Per decode iteration per
+  rank: 65.7 twoshot + 4.7 oneshot-fusion mnnvl all-reduces, 21.1 cute-DSL `all_reduce_mhc` kernels, 5 NCCL all-gathers, 0 NCCL all-reduces.
+  In eager mixed iterations the same spine runs with 15.2 `ncclDevKernel_AllReduce_Sum_bf16_RING_LL` per iteration in addition to
+  65.8 twoshot (large-token all-reduces fall back to NCCL), and 0 cute-DSL `all_reduce_mhc`.
+- Engram CPU offload: **no cudaMemcpy of any kind inside sampled decode iterations** (sqlite MEMCPY table, device 0, iterations 323–325,
+  2141); the pinned table is read by `_engram_lookup_kernel` over UVA. Its GPU time is small (0.024 ms/it decode, 1.44 ms/it mixed) but
+  is host-memory-bandwidth bound, so it must be modelled as a host-UVA read, not a GPU kernel cost. 46–48 CUPTI sync events per decode
+  iteration, 0.14–0.16 ms total.
+
+### 5.4 CUDA-graph behaviour (sqlite `graphId`, device 0)
+- Decode (sampled 8 iterations, 48 req): 96.7 % of kernels inside **one** graph per iteration (distinct graphIds = 1) → **FULL** graph
+  replay for decode; the 3.3 % outside are preprocess/sampling kernels. Over the whole capture 188,560 / 191,080 `fmhaSm100f` launches
+  are in-graph (the rest are the mixed iterations), `twoshotAllreduce` 310,473 / 311,850, MoE `bmm_` 377,840 / 379,680.
+- Mixed/prefill: distinct graphIds per iteration ∈ {0, 44}. Iterations whose token count ≤ 256 (= `max_cudagraph_capture_size` default
+  with max_num_seqs 128) run **PIECEWISE** (44 graph segments = 40 layers + prologue/epilogue, attention eager); every iteration
+  with a prefill chunk > 256 tokens (i.e. all 16,384- and ~7,400-token chunks, 28 of the 32 prefill-bearing iterations) runs
+  **fully eager** (0 graphs). In-graph share of kernels: 11.6 % in the first 12 mixed iterations, 25.1 % in the rest.
+- Consequence: the prefill path observed here is the eager path (unfused mHC TileLang kernels, NCCL ring all-reduce, `finalizeKernelVecLoad`,
+  `sm100_fp8_fp4_gemm` wo_a), unlike the B200 capture which forced `max_cudagraph_capture_size 2048`. Recipe defaults were kept as instructed.
+
+### 5.5 Contamination
+- JIT: 80 CUDA module loads during the window, confined to 9 iterations (all mixed): **239, 241, 243, 245** carry real compile stalls
+  (`jit_stall` summed over 4 ranks 1.39 s / 11.17 s / 11.08 s / 11.01 s; host NVTX span 0.38 s / 3.43 s / 3.39 s / 3.39 s vs 0.19–0.22 s
+  for a normal 16k-chunk mixed iteration). These are the first 16,384-token prefill chunks of the wave (warmup used short prompts);
+  server log at the same wall time: FlashInfer `[AutoTuner] No tuned config covers mxfp8_gemm input_shapes (3201|16384|3989|4253, 1280)×(1280,4096)`
+  (fallback configs, 01:13:59–01:14:04) and `jit_monitor: Triton kernel JIT compilation during inference: _ring_slot_mapping_kernel`
+  (01:14:17). Iterations 246, 371, 372, 375, 502 load 4–8 modules each from the warm cache with 1.5–10.9 ms stall (negligible).
+  **Exclude iterations 239–246 from any timing use** (kernel durations within them are valid, their wall/TTFT is not). That removes
+  4 of the 5 16k-chunk samples; the ~7,400-token chunks and the 128-token prefill are clean. All 4,714 decode iterations are clean.
+- Idle gaps between iterations (rank 0, host): median 5.94 ms, p99 6.67 ms, one outlier of 302 ms before iteration 111 (right after
+  the first captured prefill, before the steady wave). GPU idle inside decode windows 0.024 ms mean.
+- Autotune: no autotuning ran during the window (autotune executed at boot, cache now persisted under `gb300/cache/flashinfer-autotune`);
+  the AutoTuner warnings above mean those 4 prefill GEMM shapes used fallback configs — a performance caveat for prefill, not a timing artifact.
+- Persistent caches (DeepGEMM, Triton, FlashInfer JIT + autotune, TileLang) are now warm, so a re-run of this pass would boot in
+  ~10 min and carry no in-window JIT. Decision left to Kevin (not started).
+
+### 5.6 Structural differences vs the B200 `deepseek_v41_vllm` TP4/EP4 arch (from presets/alignment/dsv41_flash_b200_tp4_ep4 rules + arch)
+1. MoE sharding: B200 = EP4 experts (each rank: ¼ of the experts, full width), GB300 = TP4 experts (all experts, ¼ width). Same kernel
+   families (`bmm_MxE4m3_MxE2m1`, `bmm_Bfloat16_MxE2m1`, routing, finalize), different per-call shapes; neither has dispatch/combine kernels.
+2. Attention core: B200 `flashmla_mega` (`core_attn::Config{(SparseAttnFwdMode)…}`) → GB300 FlashInfer TRT-LLM `fmhaSm100fKernel_…DynamicTokenSparse`
+   + `_build_flashinfer_mixed_sparse_indices_kernel`. KV insert `fusedDeepseekV4QNormRopeKVRopeQuantInsertKernel` → `fusedDeepseekV4FullCacheKernel`.
+   Compressor insert `_rope_quant_insert_nvfp4_kernel` → `_rope_plain_insert_kernel` (no NVFP4 compressor cache); prefill indexer gains
+   `sm100_sparse_mqa_logits` / `sm100_paged_sparse_mqa_logits` (sparse-logits variants, `indexer_sparse_logits=true`) and the SWA/lookback
+   kernels (`_compute_swa_indices_and_lens`, `_gather_lookback`, `_ring_slot_mapping`, `_indexer_decode_metadata`) not in the B200 rules.
+3. Collectives: both use mnnvl `twoshotAllreduce`; GB300 adds `oneshotAllreduceFusionKernel` (4.7/it), the cute-DSL fused mHC all-reduce
+   (`all_reduce_mhc_{SharedOnlyPublish,LamportMHC,QuadFinalizePublish}`, decode only) and NCCL ring all-reduce in eager mixed iterations.
+4. CUDA graphs: B200 capture ran PIECEWISE up to 2048 tokens (forced); GB300 default caps at 256 → prefill chunks run eager, with a
+   different kernel mix (item 5.4). Decode is FULL-graph on both.
+5. wo_a in decode is a cute-DSL grouped kernel whose name embeds M (`…o4816512…`, `…o4016512…`, `…o3216512…`, 24, 16: five variants seen),
+   not `sm100_fp8_fp4_gemm_1d1d_impl` as on B200; prefill still uses deep_gemm `sm100_fp8_fp4_gemm_1d1d_impl`. Label rules must match by prefix.
+6. cuBLAS kernels are `nvjet_sm103_*` (GB300) vs `nvjet_sm100_*`; chunk size 16,384 vs 2,048; decode `finalizeKernel` vs mixed `finalizeKernelVecLoad`.
+7. Unchanged: mHC `deep_gemm::sm100_mega_mhc_impl` (+ TileLang unfused path at layer 0 / Engram / head), Engram kernels, MXFP8 dense
+   linears (`dense_blockscaled_gemm_sm100` + `MXFP8Quantize*`), `_dsv4_topk_kernel`, NCCL AllGather for Engram and logits, no spec decode.
+
+### Status
+Pass 1 complete and usable: 4,714 clean decode iterations, 28 prefill-bearing iterations of which 8 (239–246) are timing-contaminated.
+Stopped after pass 1 per instruction; passes 2–5 not started. Reservation pod still holds tray16's 4 GPUs. Branches pushed:
+kaijunli-infr/ServingStudioSim `test-ss` (7ce99e55, gb300-support based) and `kevin/dsv41-gb300-main` (58f5d779, SyFI main based,
+no submodule pin); kaijunli-infr/vllm `servingstudio-alignment-v0.31.0` (0ab18711). No write access to SyFI-ServingStudio or serendipity-zk.
+
+## Phase 0 campaign continuation (GO from Kevin 2026-11-12: warm-cache quadrant_nsys rerun, then passes 2–5; tray16 reservation kept)
+- 13:15:32Z: original pass-1 capture preserved by renaming `quadrant_nsys/` -> `quadrant_nsys_run1/` (profile/, run.log, gate5*.py, attempt1-wrongfork/ untouched).
+  Fresh `quadrant_nsys/profile.json` = byte-identical copy of run 1 config (cmp ok); run 2 started via `scripts/run_pass.sh quadrant_nsys` in tmux
+  `dsv41-quadrant_nsys` on tray16, GPUs verified idle (0 MiB, no compute apps). Fork/env unchanged (fork-env-v0.31.0, 0ab18711).
+- Investigations requested: (a) 81.5 ms/it mixed-iteration twoshotAllreduce, (b) ~5.9 ms median inter-iteration host gap — analysed on run 1 data
+  with `gap_ar.py` / `gap_ar2.py` (copied into quadrant_nsys_run1/ when done); results below.
+
+### Pass 1 run 2 (`quadrant_nsys`, warm caches) — result and validation
+- Run: start 13:15:32Z, `rc=0` 13:57:28Z (42 min incl. boot; boot re-ran the FlashInfer MoE autotuner, 22 profiles ≈ 15 min, before the window).
+  Config byte-identical to run 1. Fork 0ab18711, engine 0.31.1.dev17+g0ab187113, same server args/env (Gate 4 section applies unchanged).
+- Workload: 96/96 requests, 178,176 output tokens (= target), run 49.85 s, 3,574 output tok/s, TTFT p50 0.65 s / p90 1.53 s / max 3.79 s,
+  TPOT p50 11.9 ms / p90 17.7 ms (run 1: 57.7 s, 3,088 tok/s, TTFT p50 1.03 s — the difference is the removed JIT stalls).
+- Integrity: 4,750 iterations, indices 109–4858 contiguous, 4,726 decode / 23 mixed / 1 prefill; all 6 phases on all 4 ranks (28 ranges) in every
+  iteration; no unpaired steps; kernel attribution 25,626,612 / 25,626,612 rows (100 %); kernel span 49.84 s. 3,032 decode iterations at 48 requests.
+- 16,384-token prefill samples (**all clean**, 0 module loads, 0 stall): iterations 111 (16,383 tok), 112 (16,371), 113 (16,366), 114 (16,356),
+  115 (16,348), 244 (16,351) — six 16k mixed iterations, host span 0.195–0.208 s, GPU busy 218–229 ms (rank 0). Run 1 had one clean 16k sample set
+  (111–115) plus contaminated ones; run 2 adds 244 and removes the contaminated group.
+- In-window JIT: 160 CUDA module loads in 10 mixed iterations. **One real stall: iteration 245** ([kv 1375, 2,721-token continuation chunk] + 42 decode
+  reqs; host span 3.355 s; stall 3.04–3.14 s on every rank, 10 loads/rank). Root cause (from `gb300/cache/deepgemm/cache/` mtimes): DeepGEMM nvcc JIT of
+  `sm100_fp8_gemm_1d1d.a13b850e…` — `kernel.cu` written 13:40:26.40, `kernel.cubin` 13:40:29.41 (3.0 s) — a shape-specialised FP8 GEMM for the new
+  M = 2,763 (2,721 + 42) not present in the persistent cache. 11 further `sm100_fp8_gemm_1d1d` / `tf32_hc_prenorm_gemm` cache entries were (re)committed
+  13:40:19–13:40:36 without compiling (cache hits → module loads of 2–26 ms in iterations 242, 246, 373–375, 503, 504, 765). Iteration 505 (128-token
+  mixed) shows a 69 ms stall (4 loads). AutoTuner "No tuned config covers mxfp8_gemm" warnings for M = 16384, 7179, 2763, 3371 at 13:40:18–31 are
+  fallback-config selections (no tuning, no stall). Triton `jit_monitor` reported `_ring_slot_mapping_kernel` at 13:40:33 (Triton cache hit; no stall seen).
+  → DeepGEMM JIT is keyed on the GEMM shape, so a first-seen prefill M can always compile in-window; persistent caches only remove repeats.
+- **Exclusions for timing use: iteration 245 (and, conservatively, 505).** Kernel durations inside them remain valid. All 4,726 decode iterations clean.
+- Host gaps > 50 ms: 355 ms before iteration 111 (after the first captured prefill, before the steady wave — same as run 1's 302 ms) and 66 ms before 118.
+- Check against the GO requirements: clean 16k prefill samples ✓ (6), complete NVTX attribution ✓, no in-window JIT/autotune ✗ for 1 of 24 mixed
+  iterations (excludable, not a 16k sample). Proceeding with passes 2–5 (they do not depend on this) and flagging the residual in the Phase 0 report.
+- Server teardown: after `rc=0` the APIServer logged "Application shutdown complete" but EngineCore + 4 workers (83/83/261/83 GiB) and the nsys agent stayed
+  resident, idle (≈1 % CPU, futex wait). Terminated with SIGTERM at 14:04:34Z (all exited on TERM), GPUs 0 MiB afterwards. Not observed after run 1 (checked hours later).
+- Analysis outputs for run 2: `quadrant_nsys/{gate5.out,gate5b.out,gap_ar.out,gap_ar2.out,mixed_table.out}` (scripts alongside).
+
+### Investigation (a): mixed-iteration twoshotAllreduce = 81.5 ms/iteration (run 1 data, `gap_ar.py`, `gap_ar2.py`)
+Decomposition of the run 1 figure (per rank, per mixed/prefill iteration, 32 iterations):
+1. **Which iterations use mnnvl twoshot at all**: iterations with ≥ ~10k prefill tokens (111–115: 16k chunks; 245: 11.5k) have **zero** twoshot calls —
+   all 81 all-reduces go to `ncclDevKernel_AllReduce_Sum_bf16_RING_LL` (34.6–39.1 ms/iteration/rank, ≈ 0.45 ms per call). Iterations below that use
+   81 twoshot calls (65.7 in decode, where 5 Engram/logits-adjacent all-reduces take the oneshot-fusion path). → message-size cut-over between the
+   FlashInfer mnnvl all-reduce and NCCL, consistent with vLLM's custom-all-reduce max-size rule.
+2. **Contaminated iterations dominate the mean**: excluded 239–246 average 182.8 ms vs 53.2 ms for the 25 clean ones (e.g. 241: ranks 0/1 spend 941/944 ms
+   inside twoshot kernels while rank 2/3 compile; max single call 841 ms). This is JIT skew absorbed by the collective, not collective cost.
+3. **Clean iterations: the time is arrival skew, not transfer.** The twoshot kernel spins until all 4 ranks arrive, so the early ranks' kernel duration
+   includes waiting. Per-call analysis of clean iteration 371 (4,224 tok): sum of max-rank durations 132 ms, sum of min-rank durations 9.0 ms, sum of
+   start skew 123 ms → **93 % of the max-rank twoshot time is skew**; the laggard rank (rank 2 in 23 of 25 clean iterations) shows 6.6–15.7 ms of twoshot
+   per iteration (≈ 85–190 µs per call, the true collective cost at 3–7k tokens). Iteration 116 (7,131 tok): max 17.1 ms vs min 15.0 ms, skew 11 %.
+4. **Why the ranks skew in eager mode**: for 3–4k-token mixed iterations the laggard rank's GPU busy is only 56 ms of a 215 ms GPU span (compute kernels
+   50 ms + ≈ 7 ms collectives), while the host forward range is 206–210 ms with ≈ 1,590 kernel launches (CUDA launch API time 20–23 ms, Python/launch
+   overhead the rest). The eager forward at these chunk sizes is **host-launch-bound (~130 µs per launch)**; the GPU idles ≈ 74 % of the span on the
+   laggard and the other ranks "look busy" because their all-reduce kernels spin. At 16k tokens the same path is GPU-bound (compute 186 ms + NCCL 39 ms
+   of a 232 ms span, host 211 ms). Decode (FULL graph) shows no such skew: per-rank twoshot 0.55–0.59 ms/iteration, first-kernel skew ≤ 7 µs.
+   Consequence for modelling: mixed iterations with 128 < chunk ≤ ~8k tokens cost ≈ 0.19–0.22 s regardless of chunk size (host-bound eager path,
+   graph cap 256), and their all-reduce kernel time must be taken from the laggard rank (min over ranks), not from the mean.
+5. Run 2 confirms the pattern with the JIT iterations gone: twoshot in mixed iterations 63.5 ms/iteration (rank 0, 52.8 calls) — still skew-dominated
+   (see `quadrant_nsys/gap_ar2.out`), NCCL ring 14.8 ms/iteration (28.2 calls) at the 16k chunks.
+
+### Investigation (b): ~5.9 ms median inter-iteration host gap (run 1 data, `gap_ar.py`; steady decode, 48 requests, 3,013 consecutive pairs, rank 0)
+| metric (median, ms) | run 1 |
+|---|---|
+| step wall (host iteration start → next start) | 10.078 |
+| host NVTX span of the iteration (preprocess 2.56 + forward 0.16 + postprocess 0.01 + sample 0.71 + bookkeep 0.19 + eplb 0.00) | 3.872 |
+| host gap to the next iteration | 6.173 |
+| GPU span first→last kernel of the iteration | 10.075 |
+| GPU busy (union of kernels, all streams) | 9.914 |
+| GPU kernel sum (all streams; multi-stream overlap inflates it) | 11.456 |
+| GPU idle gap to the next iteration | 0.001 |
+| GPU behind host at iteration start / outstanding at host iteration end | 8.40 / 14.55 |
+- **Duty cycle: GPU busy / wall = 98.4 %**; intra-iteration GPU gaps 0.16 ms (1.6 %, graph-launch + sampling boundaries); inter-iteration GPU idle ≈ 0.
+- The host gap is **not host scheduling work**: inside the gap the worker main thread issues no CUDA calls (2 event records, ~6 µs); the EngineCore
+  scheduler thread's per-step NVTX work is ≈ 0.75 ms (allocate_slots 48 × 14 µs + bookkeeping). The only blocking call is `cudaEventSynchronize`
+  (1 per step, 8.9 ms mean) on the **worker helper thread** (async output copy of the sampled tokens), 4,746 calls = 42.4 s over the window.
+- Interpretation: with async scheduling the host runs ≈ 0.8 step ahead of the GPU (8.4 ms lag at iteration start), enqueues the next step in 3.9 ms,
+  and then waits for the GPU. The 5.9–6.2 ms gap is host slack in a GPU-bound pipeline (synchronisation on the previous step's sampled tokens),
+  so decode step time = GPU busy ≈ 9.9 ms + 0.16 ms graph/launch gaps; host scheduling (≈ 3.9 ms worker + 0.75 ms scheduler) is fully hidden.
+- Correction to the pass-1 Gate 5 text: the decode step wall at 48 requests is 10.08 ms (steady state), not "≈ 12.2 ms" (that figure mixed in the
+  drain tail and prefill-bearing iterations). TPOT p50 14.5 ms in run 1 includes the mixed-iteration stalls (TPOT p50 11.9 ms in run 2).
+
+- Run 2 kernel summary (`gate5b.out`, 4 ranks, 4,726 decode / 24 mixed iterations; per-iteration = per rank): total GPU kernel time 210.7 s; top-25 of
+  100 families = 93.9 %. Decode ms/it: MXFP4 expert GEMM1 2.570 (40 calls), GEMM2 1.392 (40), FlashInfer MXFP8 dense GEMM 1.271 (191), mega_mhc 0.927 (66),
+  sparse MLA fmha 0.644 (40), twoshot all-reduce 0.476 (66), nvjet_sm103 0.301 (51), cute-DSL wo_a 0.251 (48), MXFP8 quantize 0.237 (122), _dsv4_topk 0.180
+  (40) — within 1–3 % of run 1 for every family (run 1 decode numbers in §5.2). Decode collectives per iteration/rank unchanged (65.7 twoshot, 4.7 oneshot,
+  21.2 mhc all-reduce, 5 NCCL AllGather, 0 NCCL AllReduce). Mixed: twoshot 44.8 ms/it (clean 41.9, excluded 245: 112.0), NCCL ring all-reduce 13.0 ms/it
+  (27 calls/it, only in 16k iterations), fmha 21.8 ms/it, mega_mhc 12.7, expert GEMM1 14.1 / GEMM2 8.3.
+- Run 2 duty cycle (`gap_ar.out`, 3,025 steady 48-request pairs, rank 0, medians): step wall 9.925 ms, GPU busy 9.761 (98.3 %), intra-iteration GPU gaps
+  0.163 ms (1.6 %), inter-iteration GPU idle 0.001 ms, host span 3.960 ms (preprocess 2.66, sample 0.71, bookkeep 0.19, forward launch 0.16), host gap
+  5.980 ms, GPU 8.17 ms behind the host at iteration start. Per rank GPU busy 9.757–9.763 ms (identical); rank 2/3 host spans 4.3–4.4 ms vs 3.96 ms
+  for rank 0/1 — host-side only. Laggard in mixed iterations again rank 2 (15 of 23 clean); call-level skew explains 71 % (iteration 116, 7.1k tok) and
+  83 % (373, 7.6k tok) of the max-rank twoshot time; true collective cost 15.1–15.7 ms per 81 calls (≈ 190 µs/call at ~7k tokens).
+
+### Pass 2 — `quadrant_workload` (workload_metrics, no nsys): result and validation
+- Run: start 14:05:08Z, `rc=0` 14:30:13Z; config = quadrant_nsys config minus the `nsys` block (same fork/env/server args). Server exited cleanly (GPUs 0 MiB).
+- Workload: 96/96 requests, 178,176 output tokens (= target), run 47.87 s, 3,722 output tok/s, TTFT p50 0.49 s / p90 1.15 s / max 3.29 s,
+  TPOT p50 11.2 ms / p90 16.0 ms / max 35.4 ms. 4,750 iterations in the metrics log, 96 request timings. nsys overhead (run 2 vs this): 49.85 s vs
+  47.87 s wall, +4.1 %; TPOT p50 11.9 vs 11.2 ms.
+- Contamination: **iteration 507** (2 context requests, 256 context tokens + 46 decode → M = 302) took 3,103 ms — one DeepGEMM nvcc compile
+  (`sm100_fp8_gemm_1d1d.04677802…/kernel.cubin` written 14:29:27, in-window), same mechanism as run 2's iteration 245 (first-seen GEMM M). No other
+  iteration > 1 s; no Triton JIT warnings. Exclude iteration 507 from timing use; TTFT max 3.29 s is that stall.
+- Artifacts: `quadrant_workload/profile/vllm/*_{metrics,request_timings}.jsonl`, `*_server.log`, `load_generator/{summary.json,replay.jsonl}`.
+- Pass 3 `diverse_nsys` started 14:31:21Z (tmux `dsv41-diverse_nsys`), unchanged config: capture_start_delay 10 s, capture_duration 60 s, trace-timed
+  arrivals from `trace/diverse_100.csv` (arrival_time in ms; 100 requests over 114.9 s; 19 inputs ≥ 32k, those arriving inside 10–70 s: 82.8k @14.5 s,
+  88.6k @15.0 s, 85.6k @16.6 s, 64.5k @24.6 s, 35.8k @27.0 s, 124.5k @32.9 s, 122.9k @36.2 s, 131.1k @59.1 s, 96.3k @63.7 s, 121.9k @69.8 s).
+
+### Pass 3 — `diverse_nsys` (nsys, delay 10 s, window 60 s): FAILED (`rc=2`), diagnosis
+- Run: start 14:31:21Z, server ready 14:53:55Z (boot 22.5 min: both FlashInfer autotuners re-ran), warmup to 14:56:07Z, measurement start t0 = 14:56:07Z,
+  `rc=2` 15:05:23Z. Config unchanged (trace-timed `diverse_100.csv`, `capture_start_delay_seconds` 10, `capture_duration_seconds` 60; nsys launched with
+  `--capture-range=cudaProfilerApi --capture-range-end=stop`, see `profile/vllm/*_launch.json`). Server exited (GPUs 0 MiB) after the engine died.
+- Outcome: 100 requests submitted, 64 completed, 36 truncated (output_len_actual < target, no finish_reason: their streams ended with `EngineDeadError`);
+  56,851 of 135,244 output tokens; launcher aborted with `[invalid] alignment profile: alignment API request timings have no matching EngineCore
+  records: ['independent_21', '23', '24', '25', '34', '40', '48', '50']` before export/parse. The `.nsys-rep` (767 MB, finalised 15:00:05Z) exists; no
+  sqlite/parsed.json yet (salvage export started on tray14, see below).
+- Wall-clock timeline (server log `Iteration(N)` lines, metrics jsonl, cache mtimes):
+  | t (s from t0) | wall | event |
+  |---|---|---|
+  | 0–70 | 14:56:07–14:57:17 | 5,420 iterations, 106 mixed, 1.37 M prefill tokens; kv positions up to 131,070 reached (prefill chunks at kv 92k–115k, 16k tokens, 225–250 ms); 48 requests arrive |
+  | +3.6, 8.9, 24.2, 29.7, 38.1, 72.5 | 14:56:13 … 14:57:22 | six **DeepGEMM nvcc compiles** (`sm100_fp8_gemm_1d1d.*`, cache mtimes 14:56:13/18/34/39/48, 14:57:22), each a 3.2–3.5 s stall of one iteration (629, 801, 1744, 1755, 1923, 5488), on small first-chunk shapes (M = 443–2,400 tokens + decode) |
+  | 10 → 70 | 14:56:17 → 14:57:17 | nsys capture window (cudaProfilerStart/Stop via the vLLM profiler endpoint) |
+  | 76 → 238 | 14:57:23 → 15:00:05 | **engine frozen 162 s**: no iteration, "Avg generation throughput: 0.0" from 14:57:36; nsys writes the report (`profile/nsys/` created 14:59:13, `.nsys-rep` mtime 15:00:05.49); iteration 5489 resumes at 15:00:05 with "elapsed 0.01 ms" |
+  | 238 → 250 | 15:00:05 → 15:00:17 | backlog burst: 172 iterations, 589 k prefill tokens, running requests 12 → 38 |
+  | 250 → 550 | 15:00:17 → 15:05:17 | **engine hung for good** after iteration 5660 (decode, 36 reqs, 8.2 ms): "Avg generation throughput 0.0" from 15:00:36; EngineCore `shm_broadcast: No available shared memory broadcast block found in 60 seconds` at 15:01:18/02:18/03:18/04:18 (workers not responding); 15:05:17 `EngineCore encountered a fatal error` in `multiproc_executor.get_response → mq.dequeue(timeout)` (5-min worker response timeout) → `EngineDeadError` to all 36 open streams |
+- Not the cause: KV cache (164 GiB/rank, 24.1 M tokens, usage ≤ 1.4 %, no preemption), context overflow (0), OOM/CUDA errors (none in log), the workload itself
+  (prefill at kv ≤ 131k ran at 225–250 ms per 16k chunk, decode at 36–38 requests 8.2 ms/step right up to the hang).
+- Assessment: the bounded-capture stop is the trigger. In runs 1–2 cudaProfilerStop was never called mid-run (capture ran to server shutdown). Here the
+  stop at +70 s made nsys finalise a 767 MB report while the workers were blocked (162 s freeze, CUPTI flush inside the worker processes over CephFS), and
+  12 s after the workers resumed they stopped responding permanently. Whether the final hang is CUPTI teardown inside the workers or a collective left
+  skewed by the freeze cannot be told from the logs; it did not occur in the 3 unbounded captures. The six in-window DeepGEMM compiles are the same
+  shape-keyed JIT mechanism as passes 1–2 (one per first-seen GEMM M), independent of nsys.
+- Long-context coverage of the window (from `*_metrics.jsonl`, iterations whose host time falls in 14:56:17–14:57:17): the 82.8k / 88.6k / 85.6k / 64.5k /
+  35.8k / 124.5k / 122.9k-input requests arrived at +14.5…+36.2 s and their chunks ran inside the window (kv positions ≥ 98k seen in 9 chunk iterations,
+  ≥ 65k in 22, ≥ 32k in 33). The 131k request (+59.1 s) started inside the window; 96k (+63.7 s) and 121.9k (+69.8 s) only partially / not. So the intended
+  long-context prefills **were** captured by nsys; what failed is everything after the stop. → Per the GO instruction, stopping here on pass 3 and reporting
+  before changing the window. Recommended fix for Kevin's decision: keep the 10 s delayed start but drop `capture_duration_seconds` so the capture ends at
+  server shutdown as in passes 1–2 (full replay ≈ 115 s + drain → rep ≈ 1.5–2 GB, parse time ≈ 2.5× run 2); alternatively a shorter window with
+  `--capture-range-end=stop-shutdown` semantics is not acceptable (kills the server, loses request timings).
+- Salvage: `nsys export --type sqlite` of the 60 s rep started on tray14 (CPU only); if the export validates, `launcher alignment profile … --resume` (or the
+  parser directly) gives parsed.json for the captured window — kernel-level evidence for 64k–131k prefill is then available even though the pass failed.
+- Pass 4 `diverse_workload` (no nsys, original Poisson/trace-timed arrivals) started 15:10:08Z (tmux `dsv41-diverse_workload`); it does not depend on nsys and
+  also tests whether the engine survives the full diverse trace without a profiler attached.
+- **Salvage result (15:34Z)**: `nsys export --type sqlite` (2 min, 3.05 GB) + `diverse_nsys/salvage_parse.py` (the runner's parse section; the launcher's
+  `--resume` cannot be used because it re-runs the API/EngineCore request-record join that the dead engine fails) → `profile/{parsed.json,
+  parsed.kernels.parquet, kernel_sequences.json, host_timeline.json, salvage_result.json}`. Export validation ok: 18,748 forward ranges, 25,846,088 kernel
+  rows (= parsed rows, 100 % attribution), kernel span 62.2 s. **4,687 iterations (803–5489) contiguous, 4,593 decode / 94 mixed**, all 6 phases on all
+  4 ranks, no unpaired steps. Decode concurrency 7–14 requests (trace-timed light load), decode kv up to 126,446.
+- Long-context prefill coverage inside the window (all **clean**, 0 module loads): complete chunk sequences of the 82.8k (its 970–973), 88.6k (975–978),
+  85.6k (981–984), 64.5k (1748–1749), 35.8k (1753), 124.5k (1760–1766), 122.9k (1916–1921), **131,070** (4525–4531), 96.3k (4828–4831) and 121.9k
+  (5382–5387) requests. 16,37x-token chunk GPU busy (rank 0) vs kv start: 0 → 223–228 ms, 32k → 227, 49k → 231, 65k → 236, 82k → 242, 98k → 244,
+  115k → 252 ms (+12 % from kv 0 to 115k). Host span 0.19–0.26 s per chunk.
+- In-window contamination: iterations 1744, 1755, 1923, 5488 (small first chunks of 762 / 2,461 / 2,386 / 921 tokens) carry the 3.3–3.5 s DeepGEMM compile
+  stalls → exclude from timing; 16 further mixed iterations show 2–29 ms module-load stalls (cache hits). No host gaps > 50 ms inside the window.
+- Analysis outputs: `diverse_nsys/{gate5.out, mixed_table.out, longctx.out, gate5b.out, diag_p3.out}`.
+
+### Pass 4 — `diverse_workload` (workload_metrics, no nsys, trace-timed arrivals): result and validation
+- Run: start 15:10:08Z, server ready ≈15:33Z (boot ≈ 23 min, autotuners), `rc=0` 15:37:14Z. Config = diverse_nsys config minus the `nsys` block. Server exited
+  cleanly (the single `EngineDeadError` line at 15:37:03 is the launcher's abort-mode shutdown sequence after the workload, not a failure).
+- Workload: 100/100 requests, 135,244 output tokens (= target, 0 mismatches, 0 context overflows), run 144.6 s (trace span 114.9 s + drain), 935 output tok/s,
+  TTFT p50 0.45 s / p90 1.97 s / max 2.72 s, TPOT p50 8.5 ms / p90 27.8 ms / max 155 ms. 19,115 iterations in the metrics log, 100 request timings.
+  **The engine ran the whole diverse trace without any stall or hang** → the pass-3 freeze/hang is attributable to the bounded nsys capture stop, not the model/workload.
+- Contamination: two DeepGEMM nvcc compiles in-window (cache mtimes 15:35:06 and 15:36:27): iterations 3861 (559-token first chunk + 8 decode, 2,644 ms) and
+  12868 (256-token first chunk + 9 decode, 2,570 ms). Exclude for timing use. No other iteration > 1 s.
+- Artifacts: `diverse_workload/profile/vllm/*_{metrics,request_timings}.jsonl`, `*_server.log`, `load_generator/{summary.json,replay.jsonl}`.
+- Pass 5 `diverse_corpus` (token_corpus, `--enable-return-routed-experts`, openai backend) started 15:38:58Z (tmux `dsv41-diverse_corpus`).
+
+### Long-context kernel evidence (salvaged diverse_nsys capture; `diverse_nsys/longctx.out`, `gate5b.out`, `decode_path.out`)
+**16k-token prefill chunk cost vs kv position** (single-chunk mixed iterations, rank 0 GPU ms; all-reduce = min over ranks = laggard = true cost; 55 clean samples):
+| kv_start | busy | fmha (sparse MLA core) | indexer + sparse metadata | "other" (elementwise/sort/gather) | MoE expert GEMM | dense GEMM | mHC | NCCL all-reduce | all-gather | Engram | KV insert | quantize | route/finalize/act |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | 220–231 | 41.3 | 6.3 | 21.4 | 38.6–39.0 | 23.5–24.5 | 24.4 | 35.4–37.0 | 2.8 | 3.7–4.9 | 4.5 | 8.2 | 10.5 |
+| 16k | 221.7–222.4 | 40.5 | 10.7 | 22.4 | 38.3 | 23.4 | 24.5 | 34.5–35.8 | 2.8 | 3.9–4.7 | 4.5 | 8.2 | 10.5 |
+| 32k | 227.0–228.1 | 40.5 | 14.4 | 23.2 | 38.9–39.4 | 23.4 | 24.4 | 34.7–35.7 | 2.8 | 4.0–4.5 | 4.5 | 8.2 | 10.5 |
+| 49k | 230.6–231.5 | 40.4 | 18.5 | 23.9 | 38.0–38.5 | 23.4 | 24.7 | 34.7–35.3 | 2.8 | 3.9–4.7 | 4.5 | 8.3 | 10.5 |
+| 65k | 235.9–236.7 | 40.4 | 22.4 | 24.8 | 38.6–38.9 | 23.4–25.0 | 24.4 | 34.5–36.2 | 2.8 | 3.6–4.7 | 4.5 | 8.2 | 10.5 |
+| 82k | 241.9–242.5 | 40.4 | 27.1 | 25.9 | 38.6–38.8 | 23.3–25.2 | 24.5 | 34.9–35.8 | 2.8 | 3.8–4.6 | 4.5 | 8.3 | 10.5 |
+| 98k | 244.0–244.5 | 40.4 | 29.1 | 25.9 | 38.8–38.9 | 23.3–23.7 | 24.8 | 34.3–35.1 | 2.8 | 4.0–4.5 | 4.5 | 8.2–8.5 | 10.5 |
+| 115k (it 4530) | 251.7 | 40.4 | 35.4 | 26.8 | 38.7 | 23.3 | 25.0 | 35.2 | 2.8 | 4.2 | 4.5 | 8.2 | 10.5 |
+- Only the **indexer + sparse-metadata group grows with kv** (≈ +0.25 ms per 1k kv: `sm100_paged_sparse_mqa_logits`, `topKPerRowPrefill`,
+  `_build_flashinfer_mixed_sparse_indices`, SWA/lookback kernels), plus ≈ +5 ms of elementwise/sort "other"; the sparse MLA core (`fmhaSm100f…DynamicTokenSparse`)
+  is **flat at 40.4 ms per 16k chunk** from kv 0 to 115k (top-k attention). MoE, dense, mHC, Engram, KV insert, quantize are flat. All-reduce for 16k-token
+  chunks is NCCL ring (81 calls, ≈ 0.43 ms each, 35 ms); no mnnvl twoshot above the size cut-over.
+- Chunk-level model: GPU busy ≈ 220 ms + 0.27 ms × (kv_start / 1k) for a 16k chunk; host span 0.19–0.26 s (GPU-bound at this chunk size).
+- Folded forward of iteration 4530 (kv 114,625, 2,173 kernels, 255.9 ms): per body layer = tf32_hc_prenorm + mhc_pre TileLang (layer 0) / `sm100_mega_mhc`
+  (other layers) → MXFP8 quant + dense GEMM (wq_a/wkv_a) → `_q_kv_norm_quant` → dense GEMM (wq_b) → `fusedDeepseekV4FullCacheKernel` (KV insert) →
+  `_build_flashinfer_mixed_sparse_indices` → fmha (SWA/lookback small) → fmha (sparse main, 0.36–1.04 ms) → `kernel` (fmha reduction, 0.26 ms) →
+  `sm100_fp8_fp4_gemm_1d1d` (wo_a) → quant + dense GEMM (wo_b) → NCCL AllReduce (attention) → mega_mhc → nvjet (router) → quant + dense GEMM (shared expert)
+  → act_and_mul → `_dsv4_topk` → quant → routingInitExpertCounts + routingIndicesCoopKernel → MXFP4 expert GEMM1 (0.59 ms) → GEMM2 (0.36 ms) →
+  finalizeKernelVecLoad → NCCL AllReduce (FFN); Engram layers add `_hash_ids`, `_engram_lookup` (1.35–1.9 ms, UVA reads), AllGather, `_fused_engram_post_wkv`;
+  indexer kernels (`sm100_paged_sparse_mqa_logits`, topK) sit in 4 layers. 58 distinct families. Full folded sequence in `longctx.out`.
+
+**Decode kernel path depends on the batch size** (`decode_path.out`, both captures, rank 0, calls per iteration; GPU busy = median ms):
+| decode reqs | busy ms | all-reduce kernels | mHC kernels | dense GEMM kernels | routing / finalize |
+|---|---|---|---|---|---|
+| 1–4 | 3.75–4.46 | cute-DSL `all_reduce_mhc_*` ×154 + oneshotFusion ×4, **no twoshot** | TileLang `mhc_pre_big_fuse_with_norm` ×83 + `tf32_hc_prenorm_gemm` ×80, mega_mhc 0 | persistent ×128 + split-K ×82, nvjet 5–17 | routing DynBlock 0 / finalize 3 (fused in GEMM2 epilogue) |
+| 5–8 | 4.89–5.07 | same | same | persistent ×130 + split-K ×80 + `cute_dsl_ll_bf16_splitk` ×40 | route_dyn ×40, finalize 3 |
+| 9–16 | 6.16–6.37 | same | same | persistent ×50 + split-K ×160 + ll_bf16_splitk ×40, nvjet 13 | route_dyn ×40 |
+| 17–24 | 7.30–7.56 | **oneshotAllreduceFusion ×81**, no twoshot, no ar_mhc | `sm100_mega_mhc` ×77 (+3 TileLang) | persistent ×130–170 + split-K ×40–80, nvjet 57 | route_cluster ×40, finalize ×40 |
+| 25–33 | 7.97–8.31 | **twoshotAllreduce ×81** | mega_mhc ×77 | persistent ×170 + split-K ×40, nvjet 57 | route_cluster ×40, finalize ×40 |
+| ≥ 34 (48) | 8.93–9.76 | twoshot ×81 | mega_mhc ×77 | persistent ×210, nvjet 57 | route_cluster ×40, finalize ×40 |
+- Constant across batch sizes: fmha ×40, mqa_logits ×11 (4 indexer layers), cute-DSL wo_a (`kernel_cutlass_device_kernel…`) ×48, `_dsv4_topk` ×40, expert GEMM1/2 ×40 each.
+- Decode cost is **flat in kv** at fixed batch (diverse: Σkv 100k → 400k, max kv 83k → 126k: 6.37 → 6.33 ms at 10–11 reqs) and steps with the CUDA-graph
+  batch buckets (1–4 / 5–8 / 9–16 / 17–24 / 25–32 / 33–48): MoE expert GEMM 1.24 (≤4) → 1.7 (≤8) → 2.7 (≤16) ms.
+- Consequence for the arch/label rules: three decode variants (≤16, 17–24, ≥25 requests) with different all-reduce, mHC, dense-GEMM and routing kernels;
+  the B200 `deepseek_v41_vllm` arch has one.
+- Decode families for the diverse capture (`gate5b.out`, 4,593 decode iterations at 4–17 reqs): expert GEMM1 1.53 ms/it, dense split-K 0.80, GEMM2 0.89,
+  mhc_pre TileLang 0.53, all_reduce_mhc 0.64 (152 calls), hc_prenorm 0.48, fmha 0.47, MXFP8 quant 0.25, _dsv4_topk 0.23, wo_a 0.20, ll_bf16_splitk 0.17.
+
+### Pass 5 — `diverse_corpus` (token_corpus, `--enable-return-routed-experts`, openai backend, trace-timed): result and validation
+- Run: start 15:38:58Z, `rc=0` 16:05:44Z; server exited cleanly (GPUs 0 MiB). 100/100 requests, 135,244 output tokens (= target, 0 mismatches, 0 overflows),
+  run 144.6 s. `[profile] token_corpus: corpus_tokens=135144 expert_load=absent`.
+- Corpus (`diverse_corpus/profile/token_corpus/{manifest.json,routes.u16,provenance.json}`, u16 [token, layer, top_k]): **135,144 tokens × 40 layers × top-6,
+  384 experts** (135,244 generated − 100 first tokens, which the packer drops by design; `tokens_dropped_without_draft_routes` = 0). 100 per-request
+  `routed_experts/*.npy`, all shaped (tokens, 40, 6); request segments recorded in provenance (2 requests with 1-token outputs contribute 0 rows).
+- Completeness checks (`pack_token_corpus` + independent re-check): every token has routes in every one of the 40 layers (no all-zero rows), every row holds 6
+  **distinct** expert ids in 0..383, layer span contiguous 0..39. Matches `config.json` text_config: num_hidden_layers 40, n_routed_experts 384,
+  num_experts_per_tok 6 (+1 shared expert, not recorded), topk_method noaux_tc. Per-layer coverage: 380–384 distinct experts hit per layer (27 layers miss
+  ≤ 4 experts over 135k tokens); per-layer expert-load max/mean 10.8 (min) / 27.6 (median) / 57.4 (max) — strongly skewed routing, as expected from the
+  trace content (enwik9 text). Config fields `dspark_target_layer_ids [37,38,39]`, `dspark_n_routed_experts 128`, `dspark_num_experts_per_tok 3` and
+  `num_nextn_predict_layers 3` are not reflected in the captured routes (all 40 layers record 6 distinct experts of 384); flagged for the Phase 1 arch review.
+- Contamination: same shape-keyed DeepGEMM JIT mechanism applies, but it affects only timing, which this pass does not measure.
+
+### Phase 0 status (16:10Z) — campaign complete, stopped for review
+| pass | result | usable artifacts | exclusions |
+|---|---|---|---|
+| 1 quadrant_nsys run 1 (`quadrant_nsys_run1/`) | ok, cold caches | parsed.json etc. | 239–246 (JIT) |
+| 1 quadrant_nsys run 2 (`quadrant_nsys/`) | ok, warm caches, 6 clean 16k samples | parsed.json etc. | 245 (DeepGEMM JIT), 505 |
+| 2 quadrant_workload | ok | metrics/request timings | 507 (JIT) |
+| 3 diverse_nsys | **failed after the 70 s capture stop** (engine froze 162 s, then hung; 36/100 requests truncated) | salvaged parsed.json for the 60 s window: 4,687 iterations, all long-context prefills (up to kv 131,070) | 1744, 1755, 1923, 5488 (JIT); no request timings |
+| 4 diverse_workload | ok, 100/100 | metrics/request timings | 3861, 12868 (JIT) |
+| 5 diverse_corpus | ok, 100/100 | token corpus 135,144 × 40 × 6 | — |
+- All raw captures preserved (`*.nsys-rep`, sqlite, server logs, replay logs). Fork 0ab18711 / engine 0.31.1.dev17+g0ab187113 / config unchanged throughout;
+  no model-configuration or performance changes made; Phase 1 not started. Reservation pod `dsv41-gb300-reserve-tray16` still applied; tray16 GPUs idle.
+- Open decision for Kevin: re-run `diverse_nsys` with the delayed start only (no `capture_duration_seconds`, capture to shutdown) to obtain request timings
+  alongside the kernel trace; a bounded capture must not be used again with this trace size.
+
+## Phase 0 closeout (Kevin, 2026-11-12 ~16:45Z: conditional acceptance; items 1–5, no Phase 1)
+
+### Closeout item 2 — measurement semantics (binding for Phase 1 use of these captures)
+- **Collectives**: the kernel duration of a spin-waiting all-reduce (mnnvl twoshot/oneshot, cute-DSL mHC all-reduce, NCCL) on a given rank = intrinsic
+  execution + that rank's wait for the slowest arrival. The per-rank minimum is a **lower bound on the intrinsic cost**, not the critical-path cost: the
+  critical path of an iteration is set by the slowest rank's arrival plus the intrinsic collective time after it, so iteration-level timing must use the
+  laggard rank's full timeline (its compute + its collectives), while the per-call skew (start-time spread across ranks, `gap_ar2.py`) is recorded as a
+  separate quantity. Both are stored per capture (`gap_ar.out`, `gap_ar2.out`); neither is folded into a kernel-cost table as "the" collective cost.
+  Decode (FULL graph) skew ≤ 9 µs per call, so there decode collective kernel time ≈ intrinsic.
+- **Small eager mixed iterations** (chunks 256 < tokens ≲ 8k; PIECEWISE graphs ≤ 256 tokens): host-launch time and GPU kernel time are kept separately.
+  Measured (quadrant run 2, rank 0 unless stated, `quadrant_nsys/gap_ar2.out`):
+  | iteration (prefill tok) | host span ms | host forward ms | CUDA launch API calls / ms | laggard-rank GPU busy ms | laggard compute / collective ms | other ranks GPU busy (incl. spin) |
+  |---|---|---|---|---|---|---|
+  | 504 (3,072) | 210.0 | 202.8 | 1,590 / 19.9 | 54.6 | 49.0 / 7.2 | 197–201 |
+  | 375 (3,328) | 222.5 | 203.5 | 1,590 / 20.0 | 58.5 | 52.3 / 7.9 | 195–200 |
+  | 374 (4,224) | 207.0 | 199.4 | 1,608 / 19.9 | 69.3 | 60.8 / 9.8 | 200–203 |
+  | 503 (4,352) | 200.9 | 193.7 | 1,608 / 20.1 | 71.8 | 63.8 / 10.0 | 183–201 |
+  | 116 (7,136) | 195.8 | 187.7 | 1,608 / 29.4 | 103.3 | 90.5 / 16.9 | 138–139 |
+  | 373 (7,552) | 202.5 | 194.4 | 1,652 / 20.5 | 110.2 | 95.5 / 17.2 | 170–189 |
+  | 505 (128, PIECEWISE) | 65.2 | 34.1 | 523 / 7.9 | 14.5 | 15.3 / 1.0 | 27–32 |
+  | 635 (128, PIECEWISE) | 39.3 | 32.4 | 523 / 6.6 | 14.8 | 15.8 / 1.0 | 32 |
+  The host-side gap (host span − laggard GPU busy ≈ 140–155 ms at 3–4k tokens, ≈ 90 ms at 7k, ≈ 20–50 ms at 128 tokens) is recorded as **host launch /
+  Python overhead of the eager path**, not as GPU time; GPU kernel durations of these iterations stay as measured. No multiplier or tuning is applied.
+- No simulator parameters, multipliers or server performance settings were changed in Phase 0.
+
+### Closeout item 3 — DSpark fields (`dspark_target_layer_ids [37,38,39]`, `dspark_n_routed_experts 128`, `dspark_num_experts_per_tok 3`)
+Finding: **inactive metadata under this configuration; they describe the DSpark speculative draft model, which is not loaded.**
+- Code (fork 0ab18711): the only consumers are the draft-model classes `DSparkDeepseekV4Model/ForCausalLM` in
+  `vllm/models/deepseek_v4{,1}/{nvidia,amd,xpu,cpu}/dspark.py` (`self.target_layer_ids = tuple(config.dspark_target_layer_ids)`), registered as
+  `DSparkDraftModel` / `DSparkV41DraftModel` in `model_executor/models/registry.py`; `cpu/dspark.py` states it "is only instantiated when the speculative-
+  config selects it". The target model `DeepseekV41ForCausalLM` does not read any `dspark_*` field.
+- Server: `Resolved architecture: DeepseekV41ForCausalLM`, `speculative_config=None` (all passes; `--language-model-only`, no `--speculative-config`).
+- Captured forward (quadrant run 2, decode iteration 3000, rank 0): 40 MoE layers execute the **same** expert kernel (`bmm_MxE4m3_MxE2m1…t128x16x256u2_s6`),
+  40 `_dsv4_topk` calls of 4.1–4.6 µs, GEMM1 per-layer durations for layers 37/38/39 = 78.5 / 86.3 / 79.7 µs vs 50–97 µs for layers 0–36; no 128-expert
+  or top-3 variant appears anywhere in the 242 kernel names.
+- Routing corpus: layers 37–39 record 6 distinct experts per token with ids up to 383 (382 / 380 / 382 distinct experts hit), identical in structure to layers 0–36.
+→ The executed forward path has 40 uniform 384-expert top-6 MoE layers; DSpark is not implemented and nothing in Phase 0 depends on it.
+- Code-level precision (`vllm/models/deepseek_v41/nvidia/model.py:126-135`): `DeepseekV4MoE.__init__` substitutes `dspark_n_routed_experts` /
+  `dspark_num_experts_per_tok` **only when `extract_layer_index(prefix) >= config.num_hidden_layers`**, i.e. for layer indices ≥ 40 — the drafter layers that
+  exist only when a DSpark/MTP draft model is instantiated (`dspark.py:375-390` builds the draft MoE with these counts). Target layers 37–39 keep 384 / top-6;
+  `dspark_target_layer_ids` only names the target layers whose hidden states the drafter would consume. With `speculative_config=None` no layer ≥ 40 exists.
+
+## Closeout item 1 — diverse_nsys recovery (`diverse_nsys_run2/`), 2026-11-12 16:50–18:06Z — SUCCESS
+
+Config: `diverse_nsys_run2/profile.json` = byte-identical to `diverse_nsys/profile.json` except `name`/`log_dir` and
+`nsys.capture_duration_seconds` **removed** (the in-inference bounded `cudaProfilerStop` that killed pass 3).
+`capture_start_delay_seconds: 10` kept. Same server flags, same `diverse_100` trace (100 requests, original Poisson arrivals,
+max input 131,070, total output 135,244). Pre-checks: CephFS 22 TB free, local disk 1.2 TB free, TMPDIR unset, GPUs 0 MiB.
+Single attempt, as instructed; the original salvaged capture in `diverse_nsys/` is untouched.
+
+Timeline (server log / run.log, UTC): boot 16:50:42 → model ready + warmup → Iteration(0) 17:14:48 → cudaProfilerStart at +10 s →
+last iteration 19299 at 17:17:44 (workload 100/100 requests, all 135,244 output tokens; TTFT p50 0.42 s, TPOT p50 8.56 ms,
+wall 145.9 s) → cudaProfilerStop with the server idle → clean shutdown → nsys finalize 2.7 GB rep at 17:27 →
+`nsys export --type sqlite` 14.5 GB at 17:35 → launcher parse → `rc=0` 18:06:21. `request_timing_count: 100`.
+The 28 `shm_broadcast … 60 seconds` lines in the server log are all outside the workload: 16:54:25–17:12:26 (boot/warmup,
+before Iteration(0)) and 17:18:45–17:26:46 (idle wait before shutdown). None between 17:14:48 and 17:17:44.
+No DeepGEMM cubin was compiled during the run (`find cache/deepgemm -name kernel.cubin -newermt 16:50` → none): all
+GEMM shapes of this trace were already in the persistent cache from passes 3/4.
+
+Validation (`gate5.py profile`, `gate5.out`):
+- 17,686 iterations captured (index 1614 … 19299 = everything after the 10 s delay; 168 mixed, 17,518 decode);
+  step alignment by iteration_index, 0 unpaired steps, `devices_absent` empty, 28 NVTX ranges per iteration on all 4 devices,
+  every iteration has the full phase set (preprocess/forward/postprocess/sample/bookkeep/eplb) → **100 % NVTX attribution**.
+- JIT: 420 module loads in 49 iterations, total stall 414 ms, max 32 ms per iteration — these are cubin *loads* of cached
+  kernels on first use within the process (no nvcc compile, no 3 s stalls as in passes 1–4). Exclusion list for clean timing =
+  those 49 iterations (`jit_excl.txt`); none of them is a full 16,384-token chunk.
+- Coverage of the uncaptured first 10 s: 9 requests arrived before t=10 s (ids 0–8, inputs 364 … 45,281, i.e. the first
+  prefills of ids 1/4/6/7 at 20k/17k/45k/32k input). All 11 requests with ≥65,536 input and the 131,070-token request (id 41,
+  t=59 s) arrived after t=14 s and are inside the window. The chunk table (`mixed_table.out`) shows the full 131,070 prefill
+  chain at iterations 7579–7587 (8 clean 16,379-token chunks at kv_start 0 … 114,653, busy 219.9 → 251.6 ms, no JIT, host span
+  0.19–0.26 s) plus 122k (3963–3970, 4160–4167), 96k (8647–8654), 82–88k (2284–2293, 2295–2300) chains.
+  Clean 16k-token chunk samples: >60 iterations (`pre_tok ≥ 16370`, stall 0, loads 0) at kv_start 0 to 114,653.
+- Decode (dev0): span median 3.94 ms, p90 4.42, p99 5.16, GPU busy median 5.08 ms (host runs ahead, see item-2 semantics);
+  kernels/iteration 1364–1372; decode_requests 1–16 → the ≤16-request path only (`all_reduce_mhc` ×154 + oneshot ×4,
+  mhc_pre ×83, hc_prenorm ×80; `decode_path.out`), busy 3.80 ms @1 req → 6.3 ms @9–16 reqs (step change at 9 from nvjet 5→13 calls
+  and at 5 from `ll_bf16_splitk`/`route_dyn` 0→40). kv_len in decode 257 … 131,069. Host gaps >50 ms between iterations: none.
+- Long-context (`longctx_fast.py profile <jit_excl>`, `longctx.out`): clean single-chunk 16k iterations, rank-0 GPU busy:
+  kv_start 0: 217–226 ms (23 samples, median ≈220); kv sweep 1.9k→218.4, 16k→222.5, 33k→226.8, 48k→231.0, 65k→236.3, 82k→242.2,
+  98k→243.8, 115k→251.6 ms ⇒ **≈0.29 ms per 1k kv**, same slope as the pass-1/-3 estimate (0.27). Only `indexer+sparse_meta`
+  grows (6.3 → 35.4 ms) plus ~5 ms of "other" (metadata/elementwise); fmha core is flat 40.4–41.7 ms; NCCL ring all-reduce
+  (min over ranks) 34.7–36.5 ms; MoE expert GEMM 38.5–39.4; mHC 24.3–25.2; dense GEMM 23.2–24.6; route/finalize 10.5; quantize 8.3;
+  kv_insert 4.5; engram 3.0–4.7; all-gather 2.8. Deepest chunk (it 7586, kv 114,653+16,379): 2,173 kernels, 256.2 ms, 58 distinct
+  families, folded per-layer sequence recorded in `longctx.out` (embedding → NCCL ring AR → engram lookup (UVA, 1.7–1.9 ms) →
+  tf32 hc_prenorm → mHC pre → MXFP8 quant+dense GEMM → q/kv norm-quant → FullCache insert → sparse-indices build → fmha (sparse MLA) →
+  fp8_fp4 indexer GEMM → … → `_dsv4_topk` → routing → `moe_bmm_MxE4m3`/`Bfloat16` → finalize → NCCL ring AR → mHC post).
+- Decode vs kv (same file): at fixed batch the busy time is flat in total kv (11 req: 6.32 / 6.30 / 6.29 / 6.34 ms for Σkv 100k–400k+;
+  5 req: 4.83–4.89 for Σkv 0–300k); fmha 0.35 → 0.50 ms and indexer 0.20 → 0.28 ms move with #requests, not kv; MoE expert GEMM
+  0.66 (1 req) → 1.2 (3–4) → 1.7 (6–8) → 2.7 ms (≥9 req) is the dominant batch-size term.
+- Collectives/semantics (`gap_ar_fast.py`, `gap_ar.out`): twoshot (mnnvl) only in eager mixed iterations with <10k prefill tokens;
+  per rank per iteration **15.4 ms clean (n=119) vs 74.0 ms in the 49 JIT-module-load iterations** — a cubin load on one rank
+  becomes collective wait time on the other three (rank-arrival skew, not collective execution; cf. closeout item 2). Clean per-call
+  p50 1.5–1.6 ms, p90 2.2–2.5 ms, max 8 ms in these host-launch-bound forwards (intrinsic twoshot cost measured in pass 1 = 85–190 µs).
+  ≥10k-token chunks use NCCL ring (`ncclDevKernel_AllReduce_Sum_bf16_RING_LL`, 81/iter, p50 0.66 ms per call at 1k–10k mixed).
+- Duty cycle at the modal decode batch (11 requests, 2,425 consecutive pairs, rank 0): step wall 6.476 ms; GPU busy 6.309 (**97.4 %**);
+  intra-iteration gaps 0.167 ms (2.6 %); inter-iteration GPU idle 0.001 ms; GPU span = wall. Host: NVTX span 3.96 ms + gap 2.52 ms,
+  the gap is one `cudaEventSynchronize` (6.33 ms spanning) on the worker thread — the host runs 5.8 ms ahead of the GPU at iteration
+  start and leaves 8.3 ms of work outstanding; kernel sum over streams 8.3 ms > busy 6.3 ms (multi-stream overlap). Host phases
+  (median): preprocess 2.62, sample 0.72, bookkeep 0.20, forward 0.18 (graph launch) ms. Host gap over all 17,685 consecutive
+  pairs: median 1.35 ms, p99 2.9, max 41.8 ms (prefill→decode transitions).
+- Kernel families / graphs (`gate5b.py profile`, sqlite path patched to the run2 file; `gate5b.out`): 97.15 M kernel rows,
+  663 s of GPU time over 4 devices; decode kernels **96.7 % inside CUDA graphs** (one graphId per decode iteration), mixed/prefill
+  iterations **0 % in graphs** (eager, chunks > 256 tokens); `twoshotAllreduce` never in a graph (0/4212); fmha 98 % in-graph.
+- Tooling notes: the original `longctx.py`/`gap_ar.py` (full-array boolean masks per iteration) timed out at 25 min on 17.7k
+  iterations; `*_fast.py` are the same computations addressed by `detail_index` slices (and `gap_ar_fast.py` uses the modal
+  `decode_requests` for the steady-state batch instead of the hard-coded 48). The unpatched `gate5b.py` created an empty
+  `…quadrant_nsys.sqlite` in `profile/nsys/` on first run (sqlite3.connect side effect); it was deleted.
+
+**Result: diverse_nsys recovered** (one attempt). Clean-sample inventory for the simulator: 16k chunks at 8 kv depths (0…115k),
+decode batches 1–16 at kv up to 131,069, complete NVTX attribution, exclusions = 49 module-load iterations (`jit_excl.txt`).
+Remaining limitation: the first 10 s of the trace (requests 0–8, first prefill chunks of 20k/17k/45k/32k inputs) are outside the
+window by design; their shapes are covered by later requests.
+
+Closeout: tmux `dsv41-diverse_nsys_run2` killed after `rc=0`; no vLLM/launcher/nsys processes on tray16; GPUs 0 MiB.
+
+## Closeout items 4–5 — reproducibility and artifact preservation (2026-11-12 18:30–19:40Z)
+
+Durable raw-artifact copy: `/mnt/shared/home/dc/workspace/serving-studio/artifacts/phase0-dsv41-flash-gb300-tp4-20261112/` (CephFS),
+`run/<pass>/` for all 7 pass directories (34 GB incl. both diverse_nsys captures), `run/progress.md`, `SHA256SUMS` (311 files; the stray empty
+`…quadrant_nsys.sqlite` created in `diverse_nsys/profile/nsys/` by the unpatched `gate5b.py` was deleted from both source and copy),
+`MANIFEST.md` (revisions, hashes, pass table, retrieval/reproduce instructions, limitations), `meta/` (rsync/sha logs, `sha_verify.log`).
+Committed derived artifacts: `profiling/env/arm64-gb300/dsv41-flash-tp4/{progress.md,MANIFEST.md,SHA256SUMS,collect_phase0.sh,phase0/<pass>/…}`
+via `scripts/collect_phase0.sh` (now also copies `*.txt` and gzips `kernel_sequences.json`).
+
+Phase 0 status after closeout:
+| pass | status | capture of record |
+|---|---|---|
+| 1 quadrant_nsys | complete (run 2 warm; run 1 kept) | `quadrant_nsys/` |
+| 2 quadrant_workload | complete | `quadrant_workload/` |
+| 3 diverse_nsys | **recovered** (run 2; original failed run kept, salvaged) | `diverse_nsys_run2/` |
+| 4 diverse_workload | complete | `diverse_workload/` |
+| 5 diverse_corpus | complete | `diverse_corpus/` |
+Phase 1 not started.

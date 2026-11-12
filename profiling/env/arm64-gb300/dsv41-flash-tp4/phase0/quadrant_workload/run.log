@@ -1,0 +1,19 @@
+[quadrant_workload] start 2026-11-12T14:05:08Z on pod4-gb300-10-tray16-f3 fork_python=/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python
+    Finished `release` profile [optimized] target(s) in 3.71s
+[replay] warmup.serial started
+requests arrival rate | saturated (recorded arrivals ignored, bounded by --max-concurrency 1)
+independent-request workload | requests=1 max_input_len=128 max_output_len=32 total_output_len=32 max_arrival_time_ms=0.000
+[replay] warmup started
+requests arrival rate | saturated (recorded arrivals ignored, bounded by --max-concurrency 48)
+independent-request workload | requests=96 max_input_len=4096 max_output_len=32 total_output_len=3072 max_arrival_time_ms=95000.000
+[replay] warmup drained; prefix cache reset
+requests arrival rate | saturated (recorded arrivals ignored, bounded by --max-concurrency 48)
+independent-request workload | requests=96 max_input_len=4096 max_output_len=4096 total_output_len=178176 max_arrival_time_ms=95000.000
+[alignment] profiling: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile.json
+[profile] launching (bare workload metrics): /mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /mnt/shared/weights/DeepSeek-V4.1-Flash-1017 --api-server-count ... (log: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/vllm/dsv41_flash_1017_gb300_tp4_quadrant_workload_server.log)
+[profile] server ready; driving workload
+[profile] frontend ready; measurement begins
+[profile] workload done: {'source_trace': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/trace/quadrant_c48_96.csv', 'frontend_type': 'independent', 'backend_type': 'vllm_tokens', 'log_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/load_generator/replay.jsonl', 'summary_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/load_generator/summary.json', 'warmup': True, 'routed_experts_dir': None, 'replay_start_monotonic_ns': 2487752513761505, 'replay_end_monotonic_ns': 2487800716668952, 'measurement_log_offset': 1410965, 'reached_idle': True}
+[profile] workload metrics: iterations=4750 request_timings=96
+[alignment] profiling complete: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261112_dsv41_flash_gb300_tp4/quadrant_workload/profile/vllm/dsv41_flash_1017_gb300_tp4_quadrant_workload_metrics.jsonl (kind=workload_metrics)
+[quadrant_workload] rc=0 end 2026-11-12T14:30:13Z

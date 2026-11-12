@@ -1,0 +1,315 @@
+== kernel rows 97151212 total GPU kernel time (sum over 4 devices) 663064 ms; per device avg 165766 ms; capture window kernel span 17686 iterations
+
+== TOP 25 kernel families by cumulative GPU time (all 4 devices; per-iteration columns are per device). decode iters=17518 mixed/prefill iters=168
+rank share%  total_ms     calls | decode_ms ms/dec_it calls/dec_it |  mixed_ms ms/mix_it calls/mix_it  family
+   1  14.55   96464.9   2829760 |   83796.2    1.1959         40.0 |   12668.7    18.852         40.0  trtllm_moe_bmm_MxE4m3_MxE2m1 (mxfp4 expert GEMM)
+   2   8.93   59214.8   2829760 |   51633.1    0.7369         40.0 |    7581.7    11.282         40.0  trtllm_moe_bmm_Bfloat16_MxE2m1 (mxfp4 expert GEMM)
+   3   8.33   55211.2   8997360 |   46956.7    0.6701        126.4 |    8254.5    12.284        210.0  cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+   4   7.53   49936.3   2856640 |   30422.0    0.4342         40.0 |   19514.3    29.039         80.0  trtllm_fmha Sm100f (sparse MLA)
+   5   5.74   38057.7   5817992 |   37797.7    0.5394         83.0 |     260.0     0.387          3.0  mhc_pre_big_fuse_with_norm_tilelang_kernel
+   6   5.11   33869.0   5607776 |   33685.7    0.4807         80.0 |     183.3     0.273          3.0  deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+   7   4.90   32499.3   5858880 |   32499.3    0.4638         83.6 |       0.0     0.000          0.0  cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+   8   4.80   31811.3   5395544 |   31811.3    0.4540         77.0 |       0.0     0.000          0.0  cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+   9   3.29   21845.1     16848 |       0.0    0.0000          0.0 |   21845.1    32.508         25.1  flashinfer::trtllm_mnnvl_allreduce::twoshotAllreduceKernel
+  10   3.07   20364.5   8657648 |   18087.8    0.2581        122.0 |    2276.8     3.388        162.0  cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+  11   2.74   18145.1     37584 |       0.0    0.0000          0.0 |   18145.1    27.002         55.9  ncclDevKernel_AllReduce_Sum_bf16_RING_LL
+  12   2.24   14861.9   2829760 |   14252.8    0.2034         40.0 |     609.1     0.906         40.0  _dsv4_topk_kernel
+  13   2.08   13817.5   3368832 |   13666.9    0.1950         48.0 |     150.6     0.224          8.0  cute:device_kernel(cuBLASLt-like)
+  14   1.72   11416.7     51744 |       0.0    0.0000          0.0 |   11416.7    16.989         77.0  deep_gemm::sm100_mega_mhc_impl
+  15   1.70   11246.4   2829760 |    9115.2    0.1301         40.0 |    2131.1     3.171         40.0  vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+  16   1.37    9070.8   2087040 |    9070.8    0.1294         29.8 |       0.0     0.000          0.0  cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK
+  17   1.34    8869.8   2829760 |    7838.8    0.1119         40.0 |    1031.0     1.534         40.0  _q_kv_norm_quant_kernel
+  18   1.27    8393.1   2829760 |    7904.5    0.1128         40.0 |     488.6     0.727         40.0  _build_flashinfer_mixed_sparse_indices_kernel
+  19   1.24    8251.6    657960 |    6880.4    0.0982          8.8 |    1371.2     2.040         57.0  nvjet_sm103 (cuBLAS)
+  20   1.21    8053.8   2087040 |    8053.8    0.1149         29.8 |       0.0     0.000          0.0  moe::dev::routing::routingCustom::routingIndicesDynBlockKernel
+  21   1.17    7743.5    280288 |    7743.5    0.1105          4.0 |       0.0     0.000          0.0  flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel
+  22   1.10    7306.6   4943264 |    5856.9    0.0836         69.1 |    1449.7     2.157        151.7  at::native::vectorized_elementwise_kernel
+  23   0.95    6327.9   2829760 |    5908.0    0.0843         40.0 |     419.9     0.625         40.0  vllm::act_and_mul_kernel
+  24   0.95    6298.9    353720 |    4693.8    0.0670          5.0 |    1605.1     2.389          5.0  ncclDevKernel_AllGather_RING_LL
+  25   0.85    5646.9   2592664 |    5646.9    0.0806         37.0 |       0.0     0.000          0.0  cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDeviceKernel
+  top-25 cumulative share 88.19%  (99 families total)
+
+== per decode iteration (device 0) counts of key families
+  twoshotAllreduce                 0.00 calls/it    0.0000 ms/it
+  oneshotAllreduceFusion           4.00 calls/it    0.0953 ms/it
+  ncclDevKernel_AllReduce          0.00 calls/it    0.0000 ms/it
+  ncclDevKernel_AllGather          5.00 calls/it    0.0689 ms/it
+  all_reduce_mhc                 154.00 calls/it    0.6242 ms/it
+  trtllm_moe_bmm_MxE4m3           40.00 calls/it    1.1965 ms/it
+  trtllm_moe_bmm_Bfloat16         40.00 calls/it    0.7372 ms/it
+  routing                         40.00 calls/it    0.1410 ms/it
+  finalize                         3.00 calls/it    0.0144 ms/it
+  _dsv4_topk                      40.00 calls/it    0.2045 ms/it
+  trtllm_fmha                     40.00 calls/it    0.4315 ms/it
+  paged_mqa_logits                 4.00 calls/it    0.0312 ms/it
+  sparse_mqa_logits                4.00 calls/it    0.0325 ms/it
+  sm100_mega_mhc                   0.00 calls/it    0.0000 ms/it
+  _engram_lookup                   2.00 calls/it    0.0109 ms/it
+  _hash_ids                        1.00 calls/it    0.0053 ms/it
+  fused_engram_post                2.00 calls/it    0.0069 ms/it
+  sm100_fp8_fp4_gemm               0.00 calls/it    0.0000 ms/it
+  tf32_hc_prenorm                 80.00 calls/it    0.4791 ms/it
+
+== same for mixed/prefill iterations (device 0)
+  twoshotAllreduce                25.07 calls/it    41.292 ms/it
+  oneshotAllreduceFusion           0.00 calls/it     0.000 ms/it
+  ncclDevKernel_AllReduce         55.93 calls/it    27.985 ms/it
+  ncclDevKernel_AllGather          5.00 calls/it     2.504 ms/it
+  all_reduce_mhc                   0.00 calls/it     0.000 ms/it
+  trtllm_moe_bmm_MxE4m3           40.00 calls/it    18.800 ms/it
+  trtllm_moe_bmm_Bfloat16         40.00 calls/it    11.273 ms/it
+  routing                         67.62 calls/it     0.382 ms/it
+  trtllm_fmha                     80.00 calls/it    29.054 ms/it
+  paged_mqa_logits                 4.00 calls/it     0.035 ms/it
+  sparse_mqa_logits               21.21 calls/it     2.334 ms/it
+  sm100_mega_mhc                  77.00 calls/it    17.092 ms/it
+  sm100_fp8_fp4_gemm              40.00 calls/it     2.744 ms/it
+  _engram_lookup                   2.00 calls/it     2.351 ms/it
+
+== forward kernel sequence, decode it 3000, device 0: 1324 kernels; first 2 layers approx (folded):
+    vllm::vocab_embedding::vocab_parallel_embedding_kernel
+    flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel
+    at::native::vectorized_elementwise_kernel x3
+    _hash_ids_kernel
+    _engram_lookup_kernel
+    at::native::elementwise_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    _engram_lookup_kernel
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    _q_kv_norm_quant_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+    _build_flashinfer_mixed_sparse_indices_kernel
+    at::native::unrolled_elementwise_kernel
+    at::native::vectorized_elementwise_kernel
+    trtllm_fmha Sm100f (sparse MLA)
+    cute:device_kernel(cuBLASLt-like)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    _dsv4_topk_kernel
+    vllm::act_and_mul_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    moe::dev::routing::routingCustom::routingIndicesDynBlockKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    trtllm_moe_bmm_MxE4m3_MxE2m1 (mxfp4 expert GEMM)
+    trtllm_moe_bmm_Bfloat16_MxE2m1 (mxfp4 expert GEMM)
+    moe::dev::finalize::finalizeKernel
+    at::native::vectorized_elementwise_kernel
+    flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel
+    mhc_post_tilelang_kernel
+    ncclDevKernel_AllGather_RING_LL
+    at::native::elementwise_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    ncclDevKernel_AllGather_RING_LL
+    at::native::elementwise_kernel
+    _fused_engram_post_wkv_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    _q_kv_norm_quant_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+    _build_flashinfer_mixed_sparse_indices_kernel
+    at::native::unrolled_elementwise_kernel
+    at::native::vectorized_elementwise_kernel
+    trtllm_fmha Sm100f (sparse MLA)
+    cute:device_kernel(cuBLASLt-like)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    _dsv4_topk_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    moe::dev::routing::routingCustom::routingIndicesDynBlockKernel
+    vllm::act_and_mul_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    trtllm_moe_bmm_MxE4m3_MxE2m1 (mxfp4 expert GEMM)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    trtllm_moe_bmm_Bfloat16_MxE2m1 (mxfp4 expert GEMM)
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    nvjet_sm103 (cuBLAS)
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cutlass::Kernel2
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    cublasLt::splitKreduce_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    cublasLt::splitKreduce_kernel
+    _q_kv_norm_quant_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    _fused_save_compress_norm_kernel
+    vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+    cutlass::Kernel2
+    _rope_plain_insert_kernel
+    _indexer_k_norm_rope_quant_store_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:device_kernel(cuBLASLt-like)
+    at::native::vectorized_elementwise_kernel
+    deep_gemm::sm100_paged_mqa_logits
+    vllm::cooperative::cooperative_topk_cs8
+    _build_flashinfer_mixed_sparse_indices_kernel
+    at::native::unrolled_elementwise_kernel
+    at::native::vectorized_elementwise_kernel
+    trtllm_fmha Sm100f (sparse MLA)
+    cute:device_kernel(cuBLASLt-like)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    _dsv4_topk_kernel
+
+== forward kernel sequence, first iteration 1614 (decode), device 0: 1324 kernels; first 2 layers approx (folded):
+    vllm::vocab_embedding::vocab_parallel_embedding_kernel
+    flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel
+    at::native::vectorized_elementwise_kernel x3
+    _hash_ids_kernel
+    _engram_lookup_kernel
+    at::native::elementwise_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    _engram_lookup_kernel
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    _q_kv_norm_quant_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+    _build_flashinfer_mixed_sparse_indices_kernel
+    at::native::unrolled_elementwise_kernel
+    at::native::vectorized_elementwise_kernel
+    trtllm_fmha Sm100f (sparse MLA)
+    cute:device_kernel(cuBLASLt-like)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_dotprodLLBf16Dotprod
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    _dsv4_topk_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    vllm::act_and_mul_kernel
+    moe::dev::routing::routingCustom::routingIndicesBlockKernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    trtllm_moe_bmm_MxE4m3_MxE2m1 (mxfp4 expert GEMM)
+    trtllm_moe_bmm_Bfloat16_MxE2m1 (mxfp4 expert GEMM)
+    moe::dev::finalize::finalizeKernel
+    at::native::vectorized_elementwise_kernel
+    flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel
+    mhc_post_tilelang_kernel
+    ncclDevKernel_AllGather_RING_LL
+    at::native::elementwise_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    ncclDevKernel_AllGather_RING_LL
+    at::native::elementwise_kernel
+    _fused_engram_post_wkv_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    _q_kv_norm_quant_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+    _build_flashinfer_mixed_sparse_indices_kernel
+    at::native::unrolled_elementwise_kernel
+    at::native::vectorized_elementwise_kernel
+    trtllm_fmha Sm100f (sparse MLA)
+    cute:device_kernel(cuBLASLt-like)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_dotprodLLBf16Dotprod
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    _dsv4_topk_kernel
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel
+    moe::dev::routing::routingCustom::routingIndicesBlockKernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    trtllm_moe_bmm_MxE4m3_MxE2m1 (mxfp4 expert GEMM)
+    vllm::act_and_mul_kernel
+    trtllm_moe_bmm_Bfloat16_MxE2m1 (mxfp4 expert GEMM)
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    nvjet_sm103 (cuBLAS)
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cutlass::Kernel2
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKer
+    cublasLt::splitKreduce_kernel
+    mhc_pre_big_fuse_with_norm_tilelang_kernel
+    cublasLt::splitKreduce_kernel
+    _q_kv_norm_quant_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    _fused_save_compress_norm_kernel
+    vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel
+    cutlass::Kernel2
+    _rope_plain_insert_kernel
+    _indexer_k_norm_rope_quant_store_kernel
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:device_kernel(cuBLASLt-like)
+    at::native::vectorized_elementwise_kernel
+    deep_gemm::sm100_paged_mqa_logits
+    vllm::cooperative::cooperative_topk_cs16
+    _build_flashinfer_mixed_sparse_indices_kernel
+    at::native::unrolled_elementwise_kernel
+    at::native::vectorized_elementwise_kernel
+    trtllm_fmha Sm100f (sparse MLA)
+    cute:device_kernel(cuBLASLt-like)
+    cute:flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmK
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel
+    cute:vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel
+    cute:vllmmodel_executorkernelslinearcute_dsl_ll_bf16_dotprodLLBf16Dotprod
+    deep_gemm::sm100_tf32_hc_prenorm_gemm_impl
+    cute:flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel
+    _dsv4_topk_kernel
+
+== inter-iteration host gaps (dev0): median 1.346 ms, p99 2.909 ms, >50 ms: 0 -> []
+iteration index gaps (missing indices): []
+
+== CUDA graph membership (sqlite graphId) per stage, device 0, sampled iterations
+  decode (8 sampled): kernels 10959, in graphs 10592 (96.7%), distinct graphIds per iteration: [1]
+  mixed/prefill (first 12): kernels 22338, in graphs 0 (0.0%), distinct graphIds per iteration: [0]
+  mixed/prefill (rest): kernels 275253, in graphs 0 (0.0%), distinct graphIds per iteration: [0]
+
+== attention/indexer kernels inside vs outside graphs (device 0, whole capture)
+  fmhaSm100f         in-graph 700720 / 714160
+  mqa_logits         in-graph 157662 / 200096
+  _dsv4_topk         in-graph 700720 / 707440
+  twoshotAllreduce   in-graph 0 / 4212
+  bmm_               in-graph 1401440 / 1414880
+  routing            in-graph 700720 / 712080
+
+== CUDA memcpy / memset / sync in sampled decode iterations (device 0)
+  memcpy cols: ['start', 'end', 'deviceId', 'contextId', 'greenContextId', 'streamId', 'correlationId', 'globalPid', 'bytes', 'copyKind', 'deprecatedSrcId', 'srcKind', 'dstKind', 'srcDeviceId']
+  it 1814: memcpy by copyKind (kind,count,bytes,ns) []; sync events (49, 130432)
+  it 1815: memcpy by copyKind (kind,count,bytes,ns) []; sync events (49, 124352)
+  it 1816: memcpy by copyKind (kind,count,bytes,ns) [(1, 3, 540, 7232), (2, 2, 36, 5120), (8, 3, 43408, 4416)]; sync events (56, 142752)
+  it 3653: memcpy by copyKind (kind,count,bytes,ns) []; sync events (57, 142752)
+g5b rc=0
