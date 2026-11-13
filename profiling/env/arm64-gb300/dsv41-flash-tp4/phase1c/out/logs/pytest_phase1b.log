@@ -1,0 +1,27 @@
+..............F...                                                       [100%]
+=================================== FAILURES ===================================
+_________________ test_phase1a_and_simulator_sources_untouched _________________
+
+    def test_phase1a_and_simulator_sources_untouched():
+        """Phase 1B is additive: outside its own directory the tree equals the Phase 1A commit a7725255 (skips without git)."""
+        repo = os.path.normpath(os.path.join(HERE, "..", "..", "..", "..", "..", ".."))
+        if not os.path.isdir(os.path.join(repo, ".git")):
+            pytest.skip("not inside the git checkout")
+        base = "a7725255"
+        try:
+            subprocess.run(["git", "-C", repo, "cat-file", "-e", f"{base}^{{commit}}"], check=True, capture_output=True)
+        except Exception:
+            pytest.skip("base commit not available")
+        diff = subprocess.run(["git", "-C", repo, "diff", "--name-only", base, "HEAD", "--", ".", ":(exclude)profiling/env/arm64-gb300/dsv41-flash-tp4/phase1b"],
+                              capture_output=True, text=True, check=True).stdout.split()
+>       assert diff == [], f"files outside phase1b changed since {base}: {diff}"
+E       AssertionError: files outside phase1b changed since a7725255: ['profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/.gitignore', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/GPU-EXPERIMENT-MATRIX.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/PHASE1C0-REPORT.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/PROTOCOL.sha256', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/README.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/RUST-INTEGRATION-INTERFACE.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/VALIDATION-PROTOCOL.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/out/logs/pytest_invariants.log', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/out/logs/pytest_phase1b.log', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/out/logs/reliability.log', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/out/logs/verify.log', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/out/logs/wait_decomposition.log', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/repro/MANIFEST.json', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/repro/VERIFY.json', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/repro/common.py', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/repro/make_manifest.py', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/repro/regenerate.sh', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/repro/verify.py', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/schema/seqsim_request.schema.json', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/schema/seqsim_response.schema.json', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/tests/test_invariants.py', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/uncertainty/FINDINGS.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/uncertainty/RELIABILITY.md', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/uncertainty/reliability.json', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/uncertainty/reliability.py', 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/uncertainty/wait_decomposition.py']
+E       assert ['profiling/e...FACE.md', ...] == []
+E         
+E         Left contains 26 more items, first extra item: 'profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/.gitignore'
+E         Use -v to get more diff
+
+tests/test_seqsim.py:345: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_seqsim.py::test_phase1a_and_simulator_sources_untouched - A...
+1 failed, 17 passed in 0.27s

@@ -1,0 +1,141 @@
+{
+ "environment": {
+  "python": "3.12.13",
+  "numpy": "2.5.4",
+  "pyarrow": "26.0.1",
+  "platform": "Linux-6.14.0-1013-nvidia-64k-aarch64-with-glibc2.39",
+  "machine": "aarch64"
+ },
+ "manifest_environment": {
+  "machine": "aarch64",
+  "numpy": "2.5.4",
+  "platform": "Linux-6.14.0-1013-nvidia-64k-aarch64-with-glibc2.39",
+  "pyarrow": "26.0.1",
+  "python": "3.12.13"
+ },
+ "checks": {
+  "coefficients.sha256": {
+   "ok": true,
+   "detail": ""
+  },
+  "partition.sha256": {
+   "ok": true,
+   "detail": ""
+  },
+  "sources unchanged": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_run2/collectives.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_run2/iter_rank.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_run2/iterations.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_run2/meta.json": {
+   "ok": true,
+   "detail": ""
+  },
+  "table quadrant_nsys/collectives.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table quadrant_nsys/iter_rank.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table quadrant_nsys/iterations.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table quadrant_nsys/meta.json": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_salvaged/collectives.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_salvaged/iter_rank.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_salvaged/iterations.parquet": {
+   "ok": true,
+   "detail": ""
+  },
+  "table diverse_nsys_salvaged/meta.json": {
+   "ok": true,
+   "detail": ""
+  },
+  "regeneration ran": {
+   "ok": true,
+   "detail": "162s"
+  },
+  "params.json sha256": {
+   "ok": true,
+   "detail": ""
+  },
+  "canonical iterations_diverse_nsys_run2_recon-gpu.parquet": {
+   "ok": true,
+   "detail": "rows 17686"
+  },
+  "canonical iterations_diverse_nsys_run2_recon-seq.parquet": {
+   "ok": true,
+   "detail": "rows 17686"
+  },
+  "canonical iterations_diverse_nsys_run2_pred-det.parquet": {
+   "ok": true,
+   "detail": "rows 17686"
+  },
+  "canonical iterations_diverse_nsys_run2_pred-mc.parquet": {
+   "ok": true,
+   "detail": "rows 17686"
+  },
+  "canonical iterations_quadrant_nsys_recon-gpu.parquet": {
+   "ok": true,
+   "detail": "rows 4750"
+  },
+  "canonical iterations_quadrant_nsys_recon-seq.parquet": {
+   "ok": true,
+   "detail": "rows 4750"
+  },
+  "canonical iterations_quadrant_nsys_pred-det.parquet": {
+   "ok": true,
+   "detail": "rows 4750"
+  },
+  "canonical iterations_quadrant_nsys_pred-mc.parquet": {
+   "ok": true,
+   "detail": "rows 4750"
+  },
+  "canonical iterations_diverse_nsys_salvaged_recon-gpu.parquet": {
+   "ok": true,
+   "detail": "rows 4687"
+  },
+  "canonical iterations_diverse_nsys_salvaged_recon-seq.parquet": {
+   "ok": true,
+   "detail": "rows 4687"
+  },
+  "canonical iterations_diverse_nsys_salvaged_pred-det.parquet": {
+   "ok": true,
+   "detail": "rows 4687"
+  },
+  "canonical iterations_diverse_nsys_salvaged_pred-mc.parquet": {
+   "ok": true,
+   "detail": "rows 4687"
+  },
+  "results.json metrics identical": {
+   "ok": true,
+   "detail": "0 differences"
+  }
+ },
+ "metric_differences": [],
+ "ok": true,
+ "work_dir": "/tmp/phase1b-verify"
+}

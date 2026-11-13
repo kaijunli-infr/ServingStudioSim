@@ -1,0 +1,31 @@
+[ok] coefficients.sha256 
+[ok] partition.sha256 
+[ok] sources unchanged 
+[ok] table diverse_nsys_run2/collectives.parquet 
+[ok] table diverse_nsys_run2/iter_rank.parquet 
+[ok] table diverse_nsys_run2/iterations.parquet 
+[ok] table diverse_nsys_run2/meta.json 
+[ok] table quadrant_nsys/collectives.parquet 
+[ok] table quadrant_nsys/iter_rank.parquet 
+[ok] table quadrant_nsys/iterations.parquet 
+[ok] table quadrant_nsys/meta.json 
+[ok] table diverse_nsys_salvaged/collectives.parquet 
+[ok] table diverse_nsys_salvaged/iter_rank.parquet 
+[ok] table diverse_nsys_salvaged/iterations.parquet 
+[ok] table diverse_nsys_salvaged/meta.json 
+[ok] regeneration ran 162s
+[ok] params.json sha256 
+[ok] canonical iterations_diverse_nsys_run2_recon-gpu.parquet rows 17686
+[ok] canonical iterations_diverse_nsys_run2_recon-seq.parquet rows 17686
+[ok] canonical iterations_diverse_nsys_run2_pred-det.parquet rows 17686
+[ok] canonical iterations_diverse_nsys_run2_pred-mc.parquet rows 17686
+[ok] canonical iterations_quadrant_nsys_recon-gpu.parquet rows 4750
+[ok] canonical iterations_quadrant_nsys_recon-seq.parquet rows 4750
+[ok] canonical iterations_quadrant_nsys_pred-det.parquet rows 4750
+[ok] canonical iterations_quadrant_nsys_pred-mc.parquet rows 4750
+[ok] canonical iterations_diverse_nsys_salvaged_recon-gpu.parquet rows 4687
+[ok] canonical iterations_diverse_nsys_salvaged_recon-seq.parquet rows 4687
+[ok] canonical iterations_diverse_nsys_salvaged_pred-det.parquet rows 4687
+[ok] canonical iterations_diverse_nsys_salvaged_pred-mc.parquet rows 4687
+[ok] results.json metrics identical 0 differences
+VERIFY PASS

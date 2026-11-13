@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "servingstudio/seqsim/request/1.0",
+  "title": "Sequence-model iteration request (Rust worker -> sequence model)",
+  "type": "object",
+  "required": ["contract_version", "model_version", "iteration", "groups", "previous"],
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "model_version": {"type": "string", "description": "e.g. dsv41-gb300-tp4/1b-29082793; must equal the loaded parameter set's version or the call is refused"},
+    "iteration": {"type": "integer", "minimum": 0, "description": "worker-local iteration counter (monotone)"},
+    "now_ms": {"type": "number", "description": "simulation clock at scheduling time (optional; the model keeps its own timelines)"},
+    "groups": {
+      "type": "array", "minItems": 1,
+      "description": "mirror of UnifiedArchInput.groups (simulator/src/arch/contract.rs)",
+      "items": {
+        "type": "object", "required": ["batch_tokens", "prefill_tokens", "decode_kv_lens", "prefill_chunk_pairs"], "additionalProperties": false,
+        "properties": {
+          "batch_tokens": {"type": "integer", "minimum": 0},
+          "prefill_tokens": {"type": "integer", "minimum": 0},
+          "decode_tokens": {"type": "integer", "minimum": 0},
+          "decode_kv_lens": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+          "prefill_chunk_pairs": {"type": "array", "items": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 2, "maxItems": 2},
+                                  "description": "(prefix_len, append_len) per prefill request, as in ArchGroupInput"},
+          "total_kv_len": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "previous": {
+      "type": "object", "required": ["kinds", "batch_sizes"], "additionalProperties": false,
+      "description": "structural features of the previous two iterations on this worker (the scheduler one-ahead rule keys on b_{i-2})",
+      "properties": {
+        "kinds": {"type": "array", "items": {"enum": ["decode", "graph", "eager", "ring", "none"]}, "minItems": 2, "maxItems": 2},
+        "batch_sizes": {"type": "array", "items": {"type": "integer", "minimum": 0}, "minItems": 2, "maxItems": 2}
+      }
+    },
+    "options": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "mode": {"enum": ["median", "mc"], "default": "median"},
+        "draws": {"type": "integer", "minimum": 1, "maximum": 1024, "default": 32},
+        "seed": {"type": "integer", "default": 0}
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "servingstudio/seqsim/response/1.0",
+  "title": "Sequence-model iteration response (sequence model -> Rust worker)",
+  "type": "object",
+  "required": ["contract_version", "model_version", "iteration", "kind", "status", "gpu_ms", "host_lead_ms", "flags"],
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {"const": "1.0"},
+    "model_version": {"type": "string"},
+    "iteration": {"type": "integer"},
+    "kind": {"enum": ["decode", "graph", "eager", "ring"]},
+    "status": {"enum": ["in-range", "interpolated", "inferred", "extrapolation", "unsupported"],
+               "description": "component status of the cost prediction (Phase 1A/1B semantics); 'unsupported' means no number is returned and gpu_ms is null"},
+    "kv_status": {"enum": ["in-range", "kv-extrapolation"]},
+    "confidence": {"enum": ["normal", "low"], "description": "low for decode b<=2 and host-bound eager mixed iterations (Phase 1B limitations) until a validated revision lifts it"},
+    "gpu_ms": {"type": ["number", "null"], "description": "critical-path iteration wall (first kernel to last kernel end over ranks); median path in mode=median, mean of draws in mode=mc"},
+    "gpu_p10_ms": {"type": ["number", "null"]},
+    "gpu_p90_ms": {"type": ["number", "null"]},
+    "host_lead_ms": {"type": ["number", "null"], "description": "GPU end of the previous iteration minus the earliest host start of this one (positive: host runs ahead); the worker's clock advance is gpu_ms, the lead is informational unless the worker models host occupancy"},
+    "gpu_idle_gap_ms": {"type": ["number", "null"], "description": "GPU idle time between the previous iteration's end and this iteration's first kernel (host-bound iterations)"},
+    "host_start_offset_ms": {"type": "array", "items": {"type": "number"}, "description": "per-rank host start relative to the earliest host start"},
+    "rank_end_offset_ms": {"type": "array", "items": {"type": "number"}, "description": "per-rank GPU end relative to the iteration's first kernel"},
+    "flags": {"type": "array", "items": {"enum": ["seq_extrapolated", "seq_inferred", "seq_kv_extrapolated", "seq_low_confidence", "seq_unsupported", "seq_replayed_measured"]},
+              "description": "rolled into the worker's CoverageFlags (simulator/src/timing/cache/interp.rs) for the run summary"},
+    "message": {"type": "string", "description": "human-readable reason for unsupported / extrapolation"}
+  }
+}
