@@ -137,12 +137,12 @@ delta_launch) is retained unchanged and referenced from the protocol.
 | check | result | log |
 |---|---|---|
 | `phase1c/tests` invariants | 14 passed | `out/logs/pytest_invariants.log` |
-| `phase1b/tests` (unchanged) | 18 passed | `out/logs/pytest_phase1b.log` |
+| `phase1b/tests` (unchanged sources) | 17 passed, 1 failed **by design on this branch**: `test_phase1a_and_simulator_sources_untouched` asserts that nothing outside `phase1b/` changed since a7725255, and `phase1c/` now exists; it passes on 29082793. The Phase 1C equivalent (`test_repository_outside_phase1b_and_phase1c_is_untouched`) passes. The Phase 1B sources are frozen, so the test was not edited | `out/logs/pytest_phase1b.log` |
 | reproducibility verification | 30/30 ok, VERIFY PASS, metrics bit-identical | `out/logs/verify.log`, `repro/VERIFY.json` |
 | reliability audit | completed (467 s) | `out/logs/reliability.log` |
 | collective-wait decomposition | completed | `out/logs/wait_decomposition.log` |
 | repository CPU pytest tier | not re-run in this phase: the diff outside `phase1c/` is empty (asserted) and `phase1c/` is not collected by the repository's pytest configuration; Phase 1B's run on the same tree: 5,063 passed, 2 pre-existing environment failures | Phase 1B report |
 
-Commits: Phase 1B `29082793` (base); Phase 1C-0: this commit (`git log -1 phase1c-prep`).
+Commits: Phase 1B `29082793` (base); Phase 1C-0: `1a648b13` (this directory) followed by a one-line report amendment (`git log 29082793..phase1c-prep`).
 
 **Stop for review.** No GPU execution and no production integration until the experiments are individually approved.
