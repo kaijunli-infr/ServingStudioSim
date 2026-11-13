@@ -1,0 +1,13 @@
+    from cutlass.cute.nvgpu.tcgen05 import OperandMajorMode
+
+tests/test_public_simulate.py::test_presets_list_members_captures_and_what_cannot_run
+tests/test_public_simulate.py::test_presets_list_members_captures_and_what_cannot_run
+  /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/multiprocessing/popen_fork.py:66: DeprecationWarning: This process (pid=203326) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    self.pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_gdn_spec_decode.py::test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+FAILED tests/test_launcher_corpus.py::test_emit_backends_hands_the_builder_a_path_not_a_reference
+2 failed, 5063 passed, 50 skipped, 26 deselected, 10 warnings in 93.65s (0:01:33)
+exit=1

@@ -1,0 +1,42 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint __
+tests/test_gdn_spec_decode.py:117: in test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+    assert torch.equal(pool[slot], running[0].transpose(-1, -2))
+E   assert False
+E    +  where False = <built-in method equal of type object at 0xf4cc8cefc420>(tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]), tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]))
+E    +    where <built-in method equal of type object at 0xf4cc8cefc420> = torch.equal
+E    +    and   tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]) = <built-in method transpose of Tensor object at 0xf4cc4ab27d40>(-1, -2)
+E    +      where <built-in method transpose of Tensor object at 0xf4cc4ab27d40> = tensor([[[ 7.7035e-03, -4.7921e-03, -1.4167e-02,  1.3195e-01,  2.8875e-02,\n          -3.8556e-02,  1.0848e-02,  3.5974...  [-8.4845e-02,  2.1933e-03, -1.7471e-03,  7.5049e-02,  9.0758e-03,\n           7.6630e-03, -4.8364e-02, -8.2713e-02]]]).transpose
+_________ test_emit_backends_hands_the_builder_a_path_not_a_reference __________
+tests/test_launcher_corpus.py:157: in test_emit_backends_hands_the_builder_a_path_not_a_reference
+    assert launcher_main(["--emit-backends", "-", str(_corpus_preset(tmp_path))]) == 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/__main__.py:555: in main
+    return dispatch(list(sys.argv[1:] if argv is None else argv), simulation=run_simulation)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/cli.py:239: in dispatch
+    return simulation(rest)
+           ^^^^^^^^^^^^^^^^
+launcher/__main__.py:713: in run_simulation
+    return _emit_backends(args, _built_schema(args))
+                                ^^^^^^^^^^^^^^^^^^^
+launcher/__main__.py:577: in _built_schema
+    if not cargo_build(args.build_type, build_analyzer=not args.no_analyze):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/exec.py:244: in cargo_build
+    build_result = _PROCESS_SUPERVISOR.run_sync(
+launcher/process/supervisor.py:78: in run_sync
+    process = self._spawn(spec, stdin_stream, stdout_stream, stderr_stream)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/process/supervisor.py:148: in _spawn
+    return subprocess.Popen(
+../../../.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+../../../.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/subprocess.py:1955: in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+E   FileNotFoundError: [Errno 2] No such file or directory: 'cargo'
+=========================== short test summary info ============================
+FAILED tests/test_gdn_spec_decode.py::test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+FAILED tests/test_launcher_corpus.py::test_emit_backends_hands_the_builder_a_path_not_a_reference
+2 failed in 3.36s

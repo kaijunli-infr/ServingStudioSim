@@ -1,0 +1,36 @@
+[baseline] 25.3 s  span_pred_s={}
+[no_queue_throttle] 3.2 s  span_pred_s={}
+[delta_launch_0us] 25.6 s  span_pred_s={}
+[delta_launch_40us] 25.7 s  span_pred_s={}
+
+== Σ walls / span (variant minus baseline)
+baseline {"n_iterations": 17686, "n_excluded_replayed": 49, "span_measured_s": 134.46452900799997, "span_predicted_s": 132.38619380436532, "span_err_pct": -1.5456382578865842, "span_abs_err_s": 2.0783352036346514, "end_drift_ms": -2078.385741134669, "max_abs_drift_ms": 2278.478717134669, "decode_tokens": 129620, "prefill_tokens": 1936076}
+no_queue_throttle {"n_iterations": 17686, "n_excluded_replayed": 49, "span_measured_s": 134.46452900799997, "span_predicted_s": 132.36347013109454, "span_err_pct": -1.5625376390381913, "span_abs_err_s": 2.1010588769054266, "end_drift_ms": -2101.1094144054514, "max_abs_drift_ms": 2301.2023904054513, "decode_tokens": 129620, "prefill_tokens": 1936076}
+delta_launch_0us {"n_iterations": 17686, "n_excluded_replayed": 49, "span_measured_s": 134.46452900799997, "span_predicted_s": 132.37713380436531, "span_err_pct": -1.5523760943010234, "span_abs_err_s": 2.0873952036346566, "end_drift_ms": -2087.4457411346666, "max_abs_drift_ms": 2281.678717134666, "decode_tokens": 129620, "prefill_tokens": 1936076}
+delta_launch_40us {"n_iterations": 17686, "n_excluded_replayed": 49, "span_measured_s": 134.46452900799997, "span_predicted_s": 132.39525380436532, "span_err_pct": -1.5389004214721451, "span_abs_err_s": 2.0692752036346462, "end_drift_ms": -2069.3257411346713, "max_abs_drift_ms": 2275.2787171346718, "decode_tokens": 129620, "prefill_tokens": 1936076}
+
+== per-class predicted-mean delta vs baseline (ms)
+calibration | decode b1-2 {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.0033, 'delta_launch_40us': 0.0033}
+calibration | decode b3-16 {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.0, 'delta_launch_40us': 0.0}
+calibration | mixed-eager (host-bound) {'no_queue_throttle': -1.4843, 'delta_launch_0us': -0.0143, 'delta_launch_40us': 0.0143}
+calibration | mixed-ring (other) {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.004, 'delta_launch_40us': 0.004}
+calibration | prefill 16k chunk {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.0069, 'delta_launch_40us': 0.0069}
+heldout | decode b1-2 {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.0033, 'delta_launch_40us': 0.0033}
+heldout | decode b3-16 {'no_queue_throttle': -0.001, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+heldout | mixed-eager (host-bound) {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.0133, 'delta_launch_40us': 0.0133}
+heldout | mixed-ring (other) {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.005, 'delta_launch_40us': 0.005}
+heldout | prefill 16k chunk {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.0012, 'delta_launch_40us': 0.0012}
+
+== lead median delta vs baseline (ms), by transition
+decode | decode | calibration n=10079 {'no_queue_throttle': 0.0, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+decode | decode | heldout n=7373 {'no_queue_throttle': 0.0, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+decode | eager | calibration n=10 {'no_queue_throttle': 0.0, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+decode | eager | heldout n=2 {'no_queue_throttle': 0.0, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+decode | ring | calibration n=21 {'no_queue_throttle': 0.0, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+decode | ring | heldout n=3 {'no_queue_throttle': 0.0, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+mixed | decode | calibration n=32 {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.02, 'delta_launch_40us': 0.02}
+mixed | decode | heldout n=33 {'no_queue_throttle': 1.006, 'delta_launch_0us': -0.02, 'delta_launch_40us': 0.02}
+mixed | eager | calibration n=4 {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.02, 'delta_launch_40us': 0.02}
+mixed | eager | heldout n=1 {'no_queue_throttle': 0.0, 'delta_launch_0us': -0.02, 'delta_launch_40us': 0.02}
+mixed | ring | calibration n=44 {'no_queue_throttle': 14.16, 'delta_launch_0us': 0.0, 'delta_launch_40us': 0.0}
+mixed | ring | heldout n=34 {'no_queue_throttle': 48.238, 'delta_launch_0us': -0.02, 'delta_launch_40us': 0.02}
