@@ -1,0 +1,169 @@
+/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3037: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3038: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+calibration-only: 10191 of 17686 iterations of diverse_nsys_run2 readable
+{
+ "cells": 19,
+ "with_estimates": 17,
+ "decision": {
+  "regime": {},
+  "kv": {
+   "4": {
+    "kv8-48k": 0.7289,
+    "kv>48k": 0.6423,
+    "range": 0.0866
+   },
+   "6": {
+    "kv8-48k": 0.7639,
+    "kv>48k": 0.804,
+    "range": 0.0401
+   },
+   "7": {
+    "kv8-48k": 0.7537,
+    "kv>48k": 0.7232,
+    "range": 0.0305
+   },
+   "8": {
+    "kv8-48k": 0.7836,
+    "kv>48k": 0.7406,
+    "range": 0.043
+   },
+   "9": {
+    "kv8-48k": 0.6842,
+    "kv>48k": 0.6496,
+    "range": 0.0346
+   },
+   "11": {
+    "kv8-48k": 0.7986,
+    "kv>48k": 0.6606,
+    "range": 0.138
+   }
+  },
+  "pass": {
+   "1": {
+    "f_frozen": 1.5687,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv8-48k": 1.3564
+    },
+    "delta_max_abs": 0.2123
+   },
+   "2": {
+    "f_frozen": 0.9458,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.9996
+    },
+    "delta_max_abs": 0.0538
+   },
+   "3": {
+    "f_frozen": 0.6874,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.5508
+    },
+    "delta_max_abs": 0.1366
+   },
+   "4": {
+    "f_frozen": 0.6752,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.7289,
+     "kv>48k": 0.6423
+    },
+    "delta_max_abs": 0.0537
+   },
+   "6": {
+    "f_frozen": 0.7584,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.7639,
+     "kv>48k": 0.804
+    },
+    "delta_max_abs": 0.0456
+   },
+   "7": {
+    "f_frozen": 0.7947,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.7537,
+     "kv>48k": 0.7232
+    },
+    "delta_max_abs": 0.0715
+   },
+   "8": {
+    "f_frozen": 0.7771,
+    "frozen_sources": [
+     "diverse_nsys_run2"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.7836,
+     "kv>48k": 0.7406
+    },
+    "delta_max_abs": 0.0365
+   },
+   "9": {
+    "f_frozen": 0.6892,
+    "frozen_sources": [
+     "diverse_nsys_run2"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.6842,
+     "kv>48k": 0.6496
+    },
+    "delta_max_abs": 0.0396
+   },
+   "11": {
+    "f_frozen": 0.6782,
+    "frozen_sources": [
+     "diverse_nsys_run2"
+    ],
+    "f_e1": {
+     "kv8-48k": 0.7986,
+     "kv>48k": 0.6606
+    },
+    "delta_max_abs": 0.1204
+   },
+   "12": {
+    "f_frozen": 0.6753,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv>48k": 0.7196
+    },
+    "delta_max_abs": 0.0443
+   },
+   "13": {
+    "f_frozen": 0.6995,
+    "frozen_sources": [
+     "diverse_nsys_run2"
+    ],
+    "f_e1": {
+     "kv>48k": 0.614
+    },
+    "delta_max_abs": 0.0855
+   }
+  }
+ }
+}

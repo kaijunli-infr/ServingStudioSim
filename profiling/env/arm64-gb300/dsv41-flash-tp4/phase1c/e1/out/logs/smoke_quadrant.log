@@ -1,0 +1,105 @@
+/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3037: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/numpy/lib/_function_base_impl.py:3038: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+calibration-only: 3487 of 4750 iterations of quadrant_nsys readable
+{
+ "cells": 29,
+ "with_estimates": 8,
+ "decision": {
+  "regime": {
+   "kv<8k": {
+    "f_b_le16": 1.3291,
+    "f_b_ge24": 0.2913,
+    "delta": -1.0377
+   }
+  },
+  "kv": {},
+  "pass": {
+   "1": {
+    "f_frozen": 1.5687,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 1.3291
+    },
+    "delta_max_abs": 0.2396
+   },
+   "3": {
+    "f_frozen": 0.6874,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.6703
+    },
+    "delta_max_abs": 0.0171
+   },
+   "6": {
+    "f_frozen": 0.7584,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.761
+    },
+    "delta_max_abs": 0.0026
+   },
+   "12": {
+    "f_frozen": 0.6802,
+    "frozen_sources": [
+     "diverse_nsys_run2",
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.6944
+    },
+    "delta_max_abs": 0.0142
+   },
+   "24": {
+    "f_frozen": 0.2929,
+    "frozen_sources": [
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.3472
+    },
+    "delta_max_abs": 0.0543
+   },
+   "25": {
+    "f_frozen": 0.3211,
+    "frozen_sources": [
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.362
+    },
+    "delta_max_abs": 0.0409
+   },
+   "27": {
+    "f_frozen": 0.3063,
+    "frozen_sources": [
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.4861
+    },
+    "delta_max_abs": 0.1798
+   },
+   "48": {
+    "f_frozen": 0.2241,
+    "frozen_sources": [
+     "quadrant_nsys"
+    ],
+    "f_e1": {
+     "kv<8k": 0.2355
+    },
+    "delta_max_abs": 0.0114
+   }
+  }
+ }
+}

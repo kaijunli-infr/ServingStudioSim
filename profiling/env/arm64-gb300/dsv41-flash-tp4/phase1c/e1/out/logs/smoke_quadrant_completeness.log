@@ -1,0 +1,12 @@
+PASS  export validation ok=True nvtx_forward_ranges=19000 kernel_rows=25626612
+PASS  parsed devices [0, 1, 2, 3]
+INFO  profile_kind=nsys request_timing_count=96 corpus_tokens=None
+PASS  metrics records: 4750
+INFO  no --inputs: 0 tagged cells, overrun 0, requests 96, wrong-length 96
+INFO  no routed_experts / token_corpus directory (Option B capture or dry-run off)
+PASS  step_alignment unpaired_steps_by_device={}
+PASS  iterations without 28 NVTX ranges: 0 of 4750
+PASS  iterations with devices_absent: 0
+PASS  JIT-affected iterations after warm-up: 10 (limit 20; exclusion list)
+INFO  exclusion list (JIT-affected iterations, Phase 0 rule) written to /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/out/jit_excl.txt
+RESULT PASS

@@ -1,0 +1,114 @@
+diff --git a/alignment/load_generator/config.py b/alignment/load_generator/config.py
+index 02b4005d..e1ae9844 100644
+--- a/alignment/load_generator/config.py
++++ b/alignment/load_generator/config.py
+@@ -120,12 +120,25 @@ class LoadGeneratorConfig:
+     # `skip_when_reaching_limit`.
+     fail_on_context_overflow: bool = False
+     extra_args: list[str] = field(default_factory=list)
++    # Opt-in (Phase 1C E1): ask the vLLM fork to return every request's routed experts and
++    # persist them beside the timing capture (`<log_dir>/routed_experts`, packed into
++    # `<log_dir>/token_corpus`). Unlike a `token_corpus` pass this leaves the timing
++    # instrumentation (NVTX scopes, request timing records) on, and never asks for EPLB.
++    # Needs a backend that returns routes (`openai`).
++    capture_routed_experts: bool = False
+ 
+     ARRIVAL_MODES: ClassVar[tuple[str, ...]] = ("trace-timed", "saturated")
+ 
+     def __post_init__(self) -> None:
+         if not isinstance(self.warmup, bool):
+             raise ValueError("warmup must be a boolean")
++        if not isinstance(self.capture_routed_experts, bool):
++            raise ValueError("capture_routed_experts must be a boolean")
++        if self.capture_routed_experts and not self.backend.returns_routed_experts:
++            raise ValueError(
++                "capture_routed_experts needs a workload backend that returns routed experts, "
++                f"and {self.backend.type!r} does not"
++            )
+         if self.context_limit_skip_enabled and self.max_model_len is None:
+             raise ValueError(
+                 "skip_when_reaching_limit requires max_model_len"
+diff --git a/alignment/runner.py b/alignment/runner.py
+index ff73ecf4..c7bb7aba 100644
+--- a/alignment/runner.py
++++ b/alignment/runner.py
+@@ -270,7 +270,7 @@ def _prepared_routes_dir(cfg: ProfileConfig, log_dir: Path) -> Path | None:
+     shrank -- would otherwise pack a previous capture's requests into a corpus
+     that then checksums and provenances as if it were one recording.
+     """
+-    if cfg.profile_kind != "token_corpus":
++    if cfg.profile_kind != "token_corpus" and not cfg.workload.capture_routed_experts:
+         return None
+     routes = log_dir / ROUTED_EXPERTS_DIR
+     shutil.rmtree(routes, ignore_errors=True)
+@@ -306,10 +306,14 @@ def _append_backend_server_args(server_argv: list[str], cfg: ProfileConfig) -> N
+         if argument not in server_argv:
+             server_argv.append(argument)
+     if cfg.profile_kind not in ROUTING_PROFILE_KINDS:
+-        return
+-    options = list(_PROFILE_KIND_SERVER_ARGS.get(cfg.profile_kind, ()))
+-    if cfg.captures_expert_load:
+-        options += _EXPERT_LOAD_SERVER_ARGS
++        if not cfg.workload.capture_routed_experts:
++            return
++        # A timing pass that also records routes asks for the corpus flag alone, never EPLB.
++        options = list(_PROFILE_KIND_SERVER_ARGS["token_corpus"])
++    else:
++        options = list(_PROFILE_KIND_SERVER_ARGS.get(cfg.profile_kind, ()))
++        if cfg.captures_expert_load:
++            options += _EXPERT_LOAD_SERVER_ARGS
+     for flag, value in options:
+         # argparse accepts both `--flag value` and `--flag=value`.
+         present = [
+@@ -791,9 +795,27 @@ def _finalize_profile(
+         records=records,
+     )
+ 
++    corpus_artifacts = {}
++    if cfg.workload.capture_routed_experts:
++        # Same packing and coverage check as a token_corpus pass; the routes sit beside the timing
++        # artifacts so one capture carries both (Phase 1C E1).
++        _check_routes_cover_replay(prepared_replay.summary_path, log_dir / ROUTED_EXPERTS_DIR)
++        manifest = token_corpus.pack_token_corpus(
++            log_dir / ROUTED_EXPERTS_DIR,
++            log_dir / TOKEN_CORPUS_DIR,
++            num_experts=_num_routed_experts(cfg),
++            num_target_layers=_num_target_layers(cfg),
++        )
++        corpus_artifacts = {
++            "token_corpus_manifest": str(log_dir / TOKEN_CORPUS_DIR / "manifest.json"),
++            "token_corpus_tokens": manifest["num_tokens"],
++            "token_corpus_layers": manifest["num_layers"],
++        }
++
+     if is_workload_metrics:
+         result = {
+             **spec_artifacts,
++            **corpus_artifacts,
+             "profile_kind": cfg.profile_kind,
+             "engine": cfg.engine,
+             "log_dir": str(log_dir),
+@@ -890,6 +912,7 @@ def _finalize_profile(
+ 
+     result = {
+         **spec_artifacts,
++        **corpus_artifacts,
+         "profile_kind": cfg.profile_kind,
+         "engine": cfg.engine,
+         # Resolved artifact root is the launcher→analyzer handoff. Keep it in the
+diff --git a/launcher/alignment_config.py b/launcher/alignment_config.py
+index 764f11c6..09bddd40 100644
+--- a/launcher/alignment_config.py
++++ b/launcher/alignment_config.py
+@@ -222,6 +222,11 @@ def load_profile_config(path: Path, *, require_python_runtime: bool = True) -> P
+             f"invalid profile config: profile_kind token_corpus requires engine vllm, "
+             f"got {config.engine!r}"
+         )
++    if config.workload.capture_routed_experts and config.engine != "vllm":
++        raise ValueError(
++            "invalid profile config: workload.capture_routed_experts requires engine vllm, "
++            f"got {config.engine!r}"
++        )
+     if config.profile_kind == "token_corpus" and not config.workload.backend.returns_routed_experts:
+         raise ValueError(
+             "invalid profile config: profile_kind token_corpus needs a workload backend "
