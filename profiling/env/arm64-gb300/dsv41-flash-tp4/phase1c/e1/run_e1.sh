@@ -10,9 +10,9 @@ export HOME=/mnt/shared/home/dc GB300_ROOT=$S/gb300
 export PATH=$HOME/.local/bin:$HOME/.cargo/bin:$PATH
 unset CUDA_VISIBLE_DEVICES UV_PROJECT_ENVIRONMENT VIRTUAL_ENV
 PASS=${1:?pass}
-REPO=$S/ServingStudioSim
+REPO=${E1_REPO:-$S/ServingStudioSim}      # launcher code tree (Stage 1: the scratch worktree with the opt-in patch)
 E1=$REPO/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1
-RUN=$REPO/logs/20261114_dsv41_flash_gb300_tp4_e1
+RUN=$S/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1   # artifacts always under the main clone (git-ignored)
 CFG=$E1/configs/$PASS/profile.json
 [ -f "$CFG" ] || { echo "no config $CFG"; exit 2; }
 mkdir -p $RUN/$PASS
@@ -22,7 +22,7 @@ cp $CFG $RUN/$PASS/profile.json
 cd $REPO
 source profiling/env/arm64-gb300/gb300.env       # Sim launcher venv, CUDA 13.1 on PATH
 unset CUDA_VISIBLE_DEVICES                       # the profile config selects the devices
-echo "[$PASS] start $(date -u +%FT%TZ) on $(hostname) repo=$(git rev-parse HEAD) cfg_sha=$(sha256sum $CFG | cut -c1-16)" | tee -a $RUN/$PASS/run.log
+echo "[$PASS] start $(date -u +%FT%TZ) on $(hostname) launcher_tree=$REPO repo=$(git rev-parse HEAD) cfg_sha=$(sha256sum $CFG | cut -c1-16)" | tee -a $RUN/$PASS/run.log
 uv run --no-sync python -m launcher alignment profile "$RUN/$PASS/profile.json" 2>&1 | tee -a $RUN/$PASS/run.log
 rc=${PIPESTATUS[0]}
 echo "[$PASS] rc=$rc end $(date -u +%FT%TZ)" | tee -a $RUN/$PASS/run.log

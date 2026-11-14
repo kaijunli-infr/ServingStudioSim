@@ -222,6 +222,11 @@ def load_profile_config(path: Path, *, require_python_runtime: bool = True) -> P
             f"invalid profile config: profile_kind token_corpus requires engine vllm, "
             f"got {config.engine!r}"
         )
+    if config.workload.capture_routed_experts and config.engine != "vllm":
+        raise ValueError(
+            "invalid profile config: workload.capture_routed_experts requires engine vllm, "
+            f"got {config.engine!r}"
+        )
     if config.profile_kind == "token_corpus" and not config.workload.backend.returns_routed_experts:
         raise ValueError(
             "invalid profile config: profile_kind token_corpus needs a workload backend "

@@ -120,12 +120,25 @@ class LoadGeneratorConfig:
     # `skip_when_reaching_limit`.
     fail_on_context_overflow: bool = False
     extra_args: list[str] = field(default_factory=list)
+    # Opt-in (Phase 1C E1): ask the vLLM fork to return every request's routed experts and
+    # persist them beside the timing capture (`<log_dir>/routed_experts`, packed into
+    # `<log_dir>/token_corpus`). Unlike a `token_corpus` pass this leaves the timing
+    # instrumentation (NVTX scopes, request timing records) on, and never asks for EPLB.
+    # Needs a backend that returns routes (`openai`).
+    capture_routed_experts: bool = False
 
     ARRIVAL_MODES: ClassVar[tuple[str, ...]] = ("trace-timed", "saturated")
 
     def __post_init__(self) -> None:
         if not isinstance(self.warmup, bool):
             raise ValueError("warmup must be a boolean")
+        if not isinstance(self.capture_routed_experts, bool):
+            raise ValueError("capture_routed_experts must be a boolean")
+        if self.capture_routed_experts and not self.backend.returns_routed_experts:
+            raise ValueError(
+                "capture_routed_experts needs a workload backend that returns routed experts, "
+                f"and {self.backend.type!r} does not"
+            )
         if self.context_limit_skip_enabled and self.max_model_len is None:
             raise ValueError(
                 "skip_when_reaching_limit requires max_model_len"

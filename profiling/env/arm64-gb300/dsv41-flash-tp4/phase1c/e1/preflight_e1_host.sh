@@ -7,7 +7,7 @@
 set -u
 export HOME=/mnt/shared/home/dc
 S=$HOME/workspace/serving-studio
-REPO=$S/ServingStudioSim
+REPO=${E1_REPO:-$S/ServingStudioSim}      # launcher code tree (Stage 1: the scratch worktree with the opt-in patch)
 E1=$REPO/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1
 fail=0
 ok()   { echo "PASS  $*"; }
@@ -36,7 +36,8 @@ ver=$($S/gb300/fork-env-v0.31.0/venv/bin/python -c 'import vllm,torch;print(vllm
 [ -f /mnt/shared/weights/DeepSeek-V4.1-Flash-1017/config.json ] && ok "weights present" || bad "weights missing"
 [ "$(stat -c %s $S/corpus/enwik9 2>/dev/null)" = "1000000000" ] && ok "enwik9 corpus 1e9 bytes" || bad "corpus"
 for d in deepgemm triton nv-compute flashinfer-autotune; do [ -n "$(ls -A $S/gb300/cache/$d 2>/dev/null)" ] && ok "cache warm: $d" || bad "cache empty: $d"; done
-rh=$(git -C $REPO rev-parse HEAD); echo "INFO  ServingStudioSim HEAD $rh ($(git -C $REPO branch --show-current))"
+rh=$(git -C $REPO rev-parse HEAD); echo "INFO  launcher tree $REPO HEAD $rh ($(git -C $REPO branch --show-current))"
+fh=$(git -C $REPO/alignment/profiler/vllm rev-parse HEAD 2>/dev/null); [ "$fh" = "0ab18711335780e062d65994a3243da0281d2081" ] && ok "launcher tree fork submodule at 0ab18711" || bad "launcher tree fork submodule HEAD $fh"
 [ -z "$(git -C $REPO status --short --untracked-files=no)" ] && ok "repo tree clean (tracked files)" || bad "repo has uncommitted tracked changes"
 
 # 4. E1 inputs match the committed hashes
@@ -47,7 +48,7 @@ grep -q '"capture_start_delay_seconds": 10.0' $E1/configs/e1_main/profile.json &
 # 5. Disk: capture volume (CephFS) and the tray root (nsys temp)
 free_shared=$(df -BG --output=avail /mnt/shared | tail -1 | tr -dc 0-9); [ "$free_shared" -gt 500 ] && ok "CephFS free ${free_shared} GB (> 500)" || bad "CephFS free ${free_shared} GB"
 free_root=$(df -BG --output=avail / | tail -1 | tr -dc 0-9); [ "$free_root" -gt 100 ] && ok "root disk free ${free_root} GB (> 100)" || bad "root free ${free_root} GB"
-RUN=$REPO/logs/20261114_dsv41_flash_gb300_tp4_e1
+RUN=$S/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1
 [ ! -e "$RUN/e1_main/profile" ] && ok "no previous e1_main output dir" || bad "e1_main output dir exists: $RUN/e1_main/profile"
 
 # 6. Launcher validates the configs (CPU only)

@@ -270,7 +270,7 @@ def _prepared_routes_dir(cfg: ProfileConfig, log_dir: Path) -> Path | None:
     shrank -- would otherwise pack a previous capture's requests into a corpus
     that then checksums and provenances as if it were one recording.
     """
-    if cfg.profile_kind != "token_corpus":
+    if cfg.profile_kind != "token_corpus" and not cfg.workload.capture_routed_experts:
         return None
     routes = log_dir / ROUTED_EXPERTS_DIR
     shutil.rmtree(routes, ignore_errors=True)
@@ -306,10 +306,14 @@ def _append_backend_server_args(server_argv: list[str], cfg: ProfileConfig) -> N
         if argument not in server_argv:
             server_argv.append(argument)
     if cfg.profile_kind not in ROUTING_PROFILE_KINDS:
-        return
-    options = list(_PROFILE_KIND_SERVER_ARGS.get(cfg.profile_kind, ()))
-    if cfg.captures_expert_load:
-        options += _EXPERT_LOAD_SERVER_ARGS
+        if not cfg.workload.capture_routed_experts:
+            return
+        # A timing pass that also records routes asks for the corpus flag alone, never EPLB.
+        options = list(_PROFILE_KIND_SERVER_ARGS["token_corpus"])
+    else:
+        options = list(_PROFILE_KIND_SERVER_ARGS.get(cfg.profile_kind, ()))
+        if cfg.captures_expert_load:
+            options += _EXPERT_LOAD_SERVER_ARGS
     for flag, value in options:
         # argparse accepts both `--flag value` and `--flag=value`.
         present = [
@@ -791,9 +795,27 @@ def _finalize_profile(
         records=records,
     )
 
+    corpus_artifacts = {}
+    if cfg.workload.capture_routed_experts:
+        # Same packing and coverage check as a token_corpus pass; the routes sit beside the timing
+        # artifacts so one capture carries both (Phase 1C E1).
+        _check_routes_cover_replay(prepared_replay.summary_path, log_dir / ROUTED_EXPERTS_DIR)
+        manifest = token_corpus.pack_token_corpus(
+            log_dir / ROUTED_EXPERTS_DIR,
+            log_dir / TOKEN_CORPUS_DIR,
+            num_experts=_num_routed_experts(cfg),
+            num_target_layers=_num_target_layers(cfg),
+        )
+        corpus_artifacts = {
+            "token_corpus_manifest": str(log_dir / TOKEN_CORPUS_DIR / "manifest.json"),
+            "token_corpus_tokens": manifest["num_tokens"],
+            "token_corpus_layers": manifest["num_layers"],
+        }
+
     if is_workload_metrics:
         result = {
             **spec_artifacts,
+            **corpus_artifacts,
             "profile_kind": cfg.profile_kind,
             "engine": cfg.engine,
             "log_dir": str(log_dir),
@@ -890,6 +912,7 @@ def _finalize_profile(
 
     result = {
         **spec_artifacts,
+        **corpus_artifacts,
         "profile_kind": cfg.profile_kind,
         "engine": cfg.engine,
         # Resolved artifact root is the launcher→analyzer handoff. Keep it in the
