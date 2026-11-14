@@ -1,0 +1,13 @@
+INFO  profile_kind=workload_metrics request_timing_count=56 corpus_tokens=57288
+PASS  metrics records: 2160
+PASS  iterations with requests of two cells (overrun): 0
+INFO  ramp iterations (decode_requests != b inside a wave): 220
+PASS  requests seen 56; requests whose emitted tokens != 1024: 0
+PASS  overhead b=8 kv=32: median iteration ratio this/other = 1.0086 (limit 1.02)
+PASS  overhead b=48 kv=32: median iteration ratio this/other = 1.0195 (limit 1.02)
+PASS  routed_experts files 56 vs requests 56
+PASS  corpus tokens 57288 vs 56 x (1024-1) = 57288
+PASS  request segments with length != 1023: 0
+PASS  max expert id 383 < 384
+FAIL  requests whose pure-decode iteration count != corpus rows: 54 (join check)
+RESULT FAIL (1)

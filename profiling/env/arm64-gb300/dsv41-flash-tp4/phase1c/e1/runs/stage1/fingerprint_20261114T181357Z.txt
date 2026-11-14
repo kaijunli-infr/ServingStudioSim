@@ -1,0 +1,45 @@
+# Stage 1 environment fingerprint 2026-11-14T18:13:57Z pod4-gb300-10-tray16-f3
+launcher tree: /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 7e1bbbf0f74f9acf098d3584a250ebeb6f5ffd59 branch phase1c-e1-stage1
+main clone: 5c86ae1cc3f448ae01587ceecdba1ca0b9257374 branch phase1c-e1-packet
+fork (worktree): 0ab18711335780e062d65994a3243da0281d2081
+fork (main): 0ab18711335780e062d65994a3243da0281d2081
+vllm 0.31.1.dev17+g0ab187113 torch 2.13.0+cu130 flashinfer 0.7.0.post1
+NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0
+index, name, driver_version, memory.used [MiB]
+0, NVIDIA GB300, 595.71.05, 0 MiB
+1, NVIDIA GB300, 595.71.05, 0 MiB
+2, NVIDIA GB300, 595.71.05, 0 MiB
+3, NVIDIA GB300, 595.71.05, 0 MiB
+6.14.0-1013-nvidia-64k
+## e1 file hashes (worktree)
+db215f8e41959d0bba4bda445f581fd65071e97779ed8dd39161eb38eb16a3e7  ./E1-AUTHORIZATION-PACKET.md
+6d0e7971bd115937f1f231a8185a3ed7264fcf569a37a317a7690c4638801dd2  ./E1-INPUTS.json
+a618dbfd10a62e6554476f1884f66f7725027f74ad3d422e1340e67b799923c4  ./INPUTS.sha256
+42f3063da420eb91348c2a5488d2f914900992460b8bbcb0306d3266ebea89e7  ./README.md
+838cac9e0fdcbe0814c0db4b9f04ef861954f350b64d25f6c2417f05d9ddb6f5  ./analysis/e1_identify.py
+995acd924010db41b9a151db517f6d70921d9257bbfb11f4b5e613a5f0250339  ./checks/e1_completeness.py
+25838f370f707f39b664362dac64d8c695f57cdfcd51baf0a667c149a6ffecd1  ./collect_e1.sh
+9567412994b78332742b6077c323847d6ef59c10bd516e642e4e8d2bcb4b0683  ./configs/e1_dry_off/profile.json
+c7630db64831b326170e86765818228a97e5eeea5121cde80c71ae6c1232a371  ./configs/e1_dry_on/profile.json
+87577adcf4313733aa80c1a708b5c5a4dd32bb3015bc52fba2b7b4315a786b49  ./configs/e1_main/profile.json
+a852cfd4ab480ed3c9e4be899be6290d8606bb93111c7f7b0523b9fde7585fcc  ./configs/e1_main_norouts/profile.json
+cbd7c9f876462a5432d708792cd412bbe4f7df2214176d2208c699d3f27fd73e  ./make_e1_inputs.py
+f17b3013622e2ace76e6c0a8e2ec41be248a95e7e10cc3f6be99617b8135c0f6  ./make_partition_1c.py
+4a5662c369b1f07fb0947e3810a75b3aa6593e562fb6657e81ded2518cdc472d  ./patch/apply_routes_optin.py
+6247f96186731384e08ced9b0356c6bc18e87e617f4d5f84578e20476b80150a  ./patch/launcher-routes-optin.patch
+aff78fec1b472ba4d756f4621121d804158f9d0cfec8bd2de9ec9d14af60c2ef  ./patch/test_alignment_routes_optin.py
+1db667d84db8884db281c0a7dcdcebd23f469075497dfa70088c3fcff6b2e593  ./preflight_e1_host.sh
+d3940203577450501b47025ffe840cc4d4c3b183a58831c66febd8773c1a689b  ./run_e1.sh
+c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158  ./traces/e1_dry.csv
+2e147402b5a24f9e2078bf12e3623691c2fd6d5c8378bab09d7e86ee23bcc2ef  ./traces/e1_main.csv
+## SHA256SUMS check vs packet (expected diffs: preflight_e1_host.sh run_e1.sh after E1_REPO parameterization)
+./preflight_e1_host.sh: FAILED
+./run_e1.sh: FAILED
+sha256sum: WARNING: 2 computed checksums did NOT match
+## cache dirs
+3.0M	/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm
+20M	/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton
+961M	/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute
+97K	/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune
+verda-ai-research-eval@e0077b48-04f9-11f0-b083-a390cefc5e7a.fin03.nvme.customers=/volumes/customers/verda-ai-research-eval/abcc8060-bf61-4163-a4bb-05c7700e3c98   50T   30T   21T  59% /mnt/shared
+/dev/nvme3n1p2                                                                                                                                                   1.8T  506G  1.2T  31% /

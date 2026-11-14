@@ -1,0 +1,13 @@
+{
+  "source_trace": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv",
+  "frontend_type": "independent",
+  "backend_type": "openai",
+  "log_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_off/profile/load_generator/replay.jsonl",
+  "summary_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_off/profile/load_generator/summary.json",
+  "warmup": true,
+  "routed_experts_dir": null,
+  "replay_start_monotonic_ns": 2676323533997932,
+  "replay_end_monotonic_ns": 2676374242904056,
+  "measurement_log_offset": 912282,
+  "reached_idle": true
+}

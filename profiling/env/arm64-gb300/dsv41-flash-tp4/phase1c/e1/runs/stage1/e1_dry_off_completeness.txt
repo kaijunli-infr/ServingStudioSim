@@ -1,0 +1,7 @@
+INFO  profile_kind=workload_metrics request_timing_count=56 corpus_tokens=None
+PASS  metrics records: 2160
+PASS  iterations with requests of two cells (overrun): 0
+INFO  ramp iterations (decode_requests != b inside a wave): 220
+PASS  requests seen 56; requests whose emitted tokens != 1024: 0
+INFO  no routed_experts / token_corpus directory (Option B capture or dry-run off)
+RESULT PASS

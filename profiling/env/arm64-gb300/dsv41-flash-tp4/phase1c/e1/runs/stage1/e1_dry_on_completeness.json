@@ -1,0 +1,37 @@
+{
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile",
+ "profile_result": {
+  "profile_kind": "workload_metrics",
+  "validation": null,
+  "parsed_device_ids": null,
+  "request_timing_count": 56,
+  "token_corpus_tokens": 57288
+ },
+ "cells": {
+  "b8_kv32_w0": {
+   "pure": 1008,
+   "mixed": 0,
+   "elapsed_ms_median": 4.7508870000000005,
+   "elapsed_ms_p90": 4.8147817
+  },
+  "b48_kv32_w0": {
+   "pure": 928,
+   "mixed": 0,
+   "elapsed_ms_median": 8.794729,
+   "elapsed_ms_p90": 8.921414799999999
+  }
+ },
+ "overrun": 0,
+ "wrong_token_counts": {},
+ "overhead_ratios": {
+  "b8_kv32_w0": 1.0086,
+  "b48_kv32_w0": 1.0195
+ },
+ "corpus": {
+  "num_tokens": 57288,
+  "checksum_fnv1a64": 1477837206235762622,
+  "bad_len": 0,
+  "join_mismatch": 54
+ },
+ "fails": 1
+}

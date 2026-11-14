@@ -1,0 +1,27 @@
+# E1 host preflight on pod4-gb300-10-tray16-f3 at 2026-11-14T18:14:32Z
+PASS  not an off-limits tray
+PASS  no compute apps on GPUs
+PASS  GPU memory used total 0 MiB
+PASS  4 GPUs visible
+PASS  driver 595.71.05 (Phase 0)
+PASS  no leftover vllm/nsys/req-frontend processes
+PASS  fork submodule at 0ab18711
+PASS  venv 0.31.1.dev17+g0ab187113 2.13.0+cu130
+PASS  nsys 2025.6.3.541
+PASS  weights present
+PASS  enwik9 corpus 1e9 bytes
+PASS  cache warm: deepgemm
+PASS  cache warm: triton
+PASS  cache warm: nv-compute
+PASS  cache warm: flashinfer-autotune
+INFO  launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 HEAD 7e1bbbf0f74f9acf098d3584a250ebeb6f5ffd59 (phase1c-e1-stage1)
+PASS  launcher tree fork submodule at 0ab18711
+PASS  repo tree clean (tracked files)
+PASS  E1 traces/configs match INPUTS.sha256
+PASS  nsys delayed start 10 s, no bounded stop
+PASS  no capture_duration_seconds (Phase 0 lesson)
+PASS  CephFS free 21100 GB (> 500)
+PASS  root disk free 1165 GB (> 100)
+PASS  no previous e1_main output dir
+PASS  launcher dry-run e1_main
+# result: PREFLIGHT PASS

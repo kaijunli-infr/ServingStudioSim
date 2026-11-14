@@ -1,0 +1,30 @@
+{
+  "token_corpus_manifest": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/token_corpus/manifest.json",
+  "token_corpus_tokens": 57288,
+  "token_corpus_layers": 40,
+  "profile_kind": "workload_metrics",
+  "engine": "vllm",
+  "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile",
+  "metrics_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_dry_on_metrics.jsonl",
+  "request_timings_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_dry_on_request_timings.jsonl",
+  "request_timing_count": 56,
+  "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_dry_on_server.log",
+  "gpu": "NVIDIA GB300",
+  "server_tp_size": 4,
+  "server_dp_size": 1,
+  "cuda_visible_devices": "0,1,2,3",
+  "replay_result": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/load_generator/replay.jsonl",
+  "drive_summary": {
+    "source_trace": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv",
+    "frontend_type": "independent",
+    "backend_type": "openai",
+    "log_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/load_generator/replay.jsonl",
+    "summary_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/load_generator/summary.json",
+    "warmup": true,
+    "routed_experts_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_on/profile/routed_experts",
+    "replay_start_monotonic_ns": 2677942441081367,
+    "replay_end_monotonic_ns": 2677993612590196,
+    "measurement_log_offset": 912999,
+    "reached_idle": true
+  }
+}

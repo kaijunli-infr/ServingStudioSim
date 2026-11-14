@@ -1,0 +1,10 @@
+== off: iterations 181..2342 n=2160
+  b=8: pure n=1008 iters 198..1205 median=4.711 max=7.16 >1.5x-median=[(198, 7.16)] (total 1)
+  b=48: pure n=928 iters 1320..2247 median=8.627 max=12.30 >1.5x-median=[] (total 0)
+  tokens (positions 1..1023) emitted in non-pure iterations per request: min 15 median 95 max 95; requests with 0 such tokens: 0 of 56
+  iterations >250 ms: [] total 0
+== on: iterations 181..2342 n=2160
+  b=8: pure n=1008 iters 198..1205 median=4.751 max=7.25 >1.5x-median=[(198, 7.25)] (total 1)
+  b=48: pure n=928 iters 1320..2247 median=8.795 max=12.44 >1.5x-median=[] (total 0)
+  tokens (positions 1..1023) emitted in non-pure iterations per request: min 15 median 95 max 95; requests with 0 such tokens: 0 of 56
+  iterations >250 ms: [] total 0

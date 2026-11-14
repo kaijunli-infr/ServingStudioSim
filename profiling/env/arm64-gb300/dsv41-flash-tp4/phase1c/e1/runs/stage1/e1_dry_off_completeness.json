@@ -1,0 +1,27 @@
+{
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/20261114_dsv41_flash_gb300_tp4_e1/e1_dry_off/profile",
+ "profile_result": {
+  "profile_kind": "workload_metrics",
+  "validation": null,
+  "parsed_device_ids": null,
+  "request_timing_count": 56,
+  "token_corpus_tokens": null
+ },
+ "cells": {
+  "b8_kv32_w0": {
+   "pure": 1008,
+   "mixed": 0,
+   "elapsed_ms_median": 4.710572,
+   "elapsed_ms_p90": 4.7706360000000005
+  },
+  "b48_kv32_w0": {
+   "pure": 928,
+   "mixed": 0,
+   "elapsed_ms_median": 8.626757999999999,
+   "elapsed_ms_p90": 8.7710115
+  }
+ },
+ "overrun": 0,
+ "wrong_token_counts": {},
+ "fails": 0
+}

@@ -1,0 +1,24 @@
+# Stage 1 fingerprint addendum, 2026-11-14T18:31:30Z
+worktree /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 HEAD 7e1bbbf0f74f9acf098d3584a250ebeb6f5ffd59 branch phase1c-e1-stage1 status_lines 0
+main clone HEAD 5c86ae1cc3f448ae01587ceecdba1ca0b9257374 branch phase1c-e1-packet
+frozen/ref branch kevin/dsv41-gb300-main 
+frozen/ref branch test-ss 
+frozen/ref branch phase1-planning cc06d9c2
+frozen/ref branch phase1a-costmodel a7725255
+frozen/ref branch phase1b-seqsim 29082793
+frozen/ref branch phase1c-prep 2e53072d
+frozen/ref branch phase1c-e1-packet 5c86ae1c
+req-frontend submodule (worktree) 2cd7990c527f9750d2bda1fb1dfe35e77000a5f8 (main) 2cd7990c527f9750d2bda1fb1dfe35e77000a5f8
+vllm fork (worktree) 0ab18711335780e062d65994a3243da0281d2081 (main) 0ab18711335780e062d65994a3243da0281d2081
+cargo cargo 1.98.1 (797e8a9bc 2026-08-05)
+session_runner worktree 557bd2722cf7ee39284bb203b968ead99716b93a01900485be69623b05bf6ffb main 98973f7c9dce3ccfee55c85d1fdd5d6d304a3b7719d9b28f73e6ec3d9fa923a0 (differ: build path embedded; same source commit)
+vllm build artifacts copied main->worktree: 2005 files, verified identical (stage1/vllm_build_artifacts_copied.sha256)
+e1 scripts (worktree):
+1db667d84db8884db281c0a7dcdcebd23f469075497dfa70088c3fcff6b2e593  preflight_e1_host.sh
+d3940203577450501b47025ffe840cc4d4c3b183a58831c66febd8773c1a689b  run_e1.sh
+25838f370f707f39b664362dac64d8c695f57cdfcd51baf0a667c149a6ffecd1  collect_e1.sh
+cbd7c9f876462a5432d708792cd412bbe4f7df2214176d2208c699d3f27fd73e  make_e1_inputs.py
+995acd924010db41b9a151db517f6d70921d9257bbfb11f4b5e613a5f0250339  checks/e1_completeness.py
+9567412994b78332742b6077c323847d6ef59c10bd516e642e4e8d2bcb4b0683  configs/e1_dry_off/profile.json
+c7630db64831b326170e86765818228a97e5eeea5121cde80c71ae6c1232a371  configs/e1_dry_on/profile.json
+c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158  traces/e1_dry.csv
