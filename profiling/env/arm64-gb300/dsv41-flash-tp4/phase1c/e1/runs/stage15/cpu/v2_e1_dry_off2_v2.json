@@ -1,0 +1,146 @@
+{
+ "checker_version": "2.0.0",
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off2_v2/profile",
+ "profile_result": {
+  "profile_kind": "workload_metrics",
+  "validation": null,
+  "parsed_device_ids": null,
+  "request_timing_count": 56,
+  "token_corpus_tokens": null
+ },
+ "cells": {
+  "b8_kv32768_w0": {
+   "pure": 1008,
+   "ramp": 30,
+   "elapsed_ms_median": 4.704256,
+   "elapsed_ms_p90": 4.7735146
+  },
+  "b48_kv32768_w0": {
+   "pure": 928,
+   "ramp": 190,
+   "elapsed_ms_median": 9.027007999999999,
+   "elapsed_ms_p90": 9.1470279
+  }
+ },
+ "plan": "dry",
+ "token_accounting": {
+  "requests": 56,
+  "ramp_emitted_min": 15,
+  "ramp_emitted_median": 95.0,
+  "ramp_emitted_max": 95
+ },
+ "join": {
+  "duplicate": 0,
+  "missing": 0,
+  "non_monotone": 0
+ },
+ "overhead": {
+  "b8_kv32768_w0": {
+   "ratio_median": 0.99712,
+   "n_this": 1008,
+   "n_other": 1008,
+   "block_bootstrap_ci95": [
+    0.99526,
+    0.999
+   ],
+   "block": 25
+  },
+  "b48_kv32768_w0": {
+   "ratio_median": 1.0004,
+   "n_this": 928,
+   "n_other": 928,
+   "block_bootstrap_ci95": [
+    0.9979,
+    1.00263
+   ],
+   "block": 25
+  }
+ },
+ "checks": [
+  {
+   "status": "INFO",
+   "msg": "profile_kind=workload_metrics request_timing_count=56 corpus_tokens=None"
+  },
+  {
+   "status": "PASS",
+   "msg": "metrics records: 2160"
+  },
+  {
+   "status": "INFO",
+   "msg": "ramp iterations (prefill present or decode_requests != b inside a cell): 220"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations carrying requests of two cells (overrun): 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "plan 'dry' (2 cells, 56 requests) selected by --plan auto; every planned cell is checked"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190"
+  },
+  {
+   "status": "PASS",
+   "msg": "observed cells not in the plan: []"
+  },
+  {
+   "status": "PASS",
+   "msg": "request ids without an E1 tag: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests seen 56; requests whose emitted tokens != 1024: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "progress entries with emitted_tokens not in {0,1}: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs emitted in more than one iteration (duplicate join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs never emitted (missing join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose position->iteration map is not strictly increasing: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "overhead b8_kv32768_w0: median iteration ratio this/other = 0.9971 (pre-registered point gate <= 1.02)"
+  },
+  {
+   "status": "PASS",
+   "msg": "  prospective criterion b8_kv32768_w0: moving-block bootstrap 95 % CI [0.9953, 0.9990] (block 25) upper <= 1.02 (reported, not gating)"
+  },
+  {
+   "status": "PASS",
+   "msg": "overhead b48_kv32768_w0: median iteration ratio this/other = 1.0004 (pre-registered point gate <= 1.02)"
+  },
+  {
+   "status": "PASS",
+   "msg": "  prospective criterion b48_kv32768_w0: moving-block bootstrap 95 % CI [0.9979, 1.0026] (block 25) upper <= 1.02 (reported, not gating)"
+  },
+  {
+   "status": "PASS",
+   "msg": "overhead cells compared: 2"
+  },
+  {
+   "status": "INFO",
+   "msg": "no routed_experts / token_corpus directory (hook-off arm or Option B capture)"
+  }
+ ],
+ "fails": 0
+}

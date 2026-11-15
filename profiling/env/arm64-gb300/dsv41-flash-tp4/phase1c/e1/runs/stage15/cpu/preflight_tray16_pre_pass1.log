@@ -1,0 +1,53 @@
+# Stage 1.5 preflight on pod4-gb300-10-tray16-f3 at 2026-11-15T08:15:53Z
+  # E1 host preflight on pod4-gb300-10-tray16-f3 at 2026-11-15T08:15:53Z
+  PASS  not an off-limits tray
+  PASS  no compute apps on GPUs
+  PASS  GPU memory used total 0 MiB
+  PASS  4 GPUs visible
+  PASS  driver 595.71.05 (Phase 0)
+  PASS  no leftover vllm/nsys/req-frontend processes
+  PASS  fork submodule at 0ab18711
+  PASS  venv 0.31.1.dev17+g0ab187113 2.13.0+cu130
+  PASS  nsys 2025.6.3.541
+  PASS  weights present
+  PASS  enwik9 corpus 1e9 bytes
+  PASS  cache warm: deepgemm
+  PASS  cache warm: triton
+  PASS  cache warm: nv-compute
+  PASS  cache warm: flashinfer-autotune
+  INFO  launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 HEAD e52929d55024a77baefd87087c527bc9c48e8003 (phase1c-e1-stage15)
+  PASS  launcher tree fork submodule at 0ab18711
+  PASS  repo tree clean (tracked files)
+  PASS  E1 traces/configs match INPUTS.sha256
+  PASS  nsys delayed start 10 s, no bounded stop
+  PASS  no capture_duration_seconds (Phase 0 lesson)
+  PASS  CephFS free 21100 GB (> 500)
+  PASS  root disk free 1165 GB (> 100)
+  PASS  no previous e1_main output dir
+  PASS  launcher dry-run e1_main
+  # result: PREFLIGHT PASS
+PASS  Stage 1 host preflight
+PASS  configs_v2 / trace match INPUTS_v2.sha256
+PASS  e1_dry_off_v2: stream=false explicit
+PASS  no previous output dir for e1_dry_off_v2
+PASS  e1_dry_on_v2: stream=false explicit
+PASS  no previous output dir for e1_dry_on_v2
+PASS  e1_dry_off2_v2: stream=false explicit
+PASS  no previous output dir for e1_dry_off2_v2
+PASS  e1_nsys_val: stream=false explicit
+PASS  no previous output dir for e1_nsys_val
+PASS  e1_nsys_val: nsys delayed start 10 s
+PASS  e1_nsys_val: no bounded stop
+PASS  config identity off_v2/on_v2 and off_v2/off2_v2
+PASS  launcher: workload.stream opt-out applied
+PASS  submodule gitlink pinned to 5c20a259618976ecc360bda84abcc3653a04006e
+PASS  req-frontend checkout HEAD == pinned commit
+PASS  req-frontend checkout clean
+PASS  session_runner sha256 == provenance (7f6eb81d45e6b98f)
+PASS  session_runner supports --stream
+PASS  launcher dry-run e1_dry_off_v2
+PASS  launcher dry-run e1_dry_on_v2
+PASS  launcher dry-run e1_dry_off2_v2
+PASS  launcher dry-run e1_nsys_val
+INFO  flashinfer-autotune cache: 2 hash dirs, newest 2026-11-14 19:16:44; expect ~19 min of tuning per launch regardless
+# result: PREFLIGHT PASS

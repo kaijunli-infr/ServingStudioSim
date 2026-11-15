@@ -1,0 +1,20 @@
+[e1_dry_off_v2] start 2026-11-15T08:20:47Z on pod4-gb300-10-tray16-f3 launcher_tree=/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 repo=e52929d55024a77baefd87087c527bc9c48e8003 cfg_sha=88b88abc032b43c3 session_runner=7f6eb81d45e6b98f
+    Finished `release` profile [optimized] target(s) in 4.10s
+[replay] warmup.serial started
+requests arrival rate | saturated (recorded arrivals ignored, bounded by --max-concurrency 1)
+independent-request workload | requests=1 max_input_len=32768 max_output_len=32 total_output_len=32 max_arrival_time_ms=0.000
+[replay] warmup started
+requests arrival rate | saturated (recorded arrivals ignored, unbounded)
+independent-request workload | requests=56 max_input_len=32768 max_output_len=32 total_output_len=1792 max_arrival_time_ms=18627.200
+[replay] warmup drained; prefix cache reset
+requests arrival rate | trace=2.952671/s (unchanged)
+independent-request workload | requests=56 max_input_len=32768 max_output_len=1024 total_output_len=57344 max_arrival_time_ms=18627.200
+[alignment] profiling: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2/profile.json
+[profile] launching (bare workload metrics): /mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /mnt/shared/weights/DeepSeek-V4.1-Flash-1017 --api-server-count ... (log: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_dry_off_v2_server.log)
+[profile] server ready; driving workload
+[profile] frontend ready; measurement begins
+[profile] workload done: {'source_trace': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv', 'frontend_type': 'independent', 'backend_type': 'openai', 'log_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2/profile/load_generator/replay.jsonl', 'summary_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2/profile/load_generator/summary.json', 'warmup': True, 'routed_experts_dir': None, 'replay_start_monotonic_ns': 2726286900076514, 'replay_end_monotonic_ns': 2726338093270520, 'measurement_log_offset': 859842, 'reached_idle': True}
+[profile] workload metrics: iterations=2160 request_timings=56
+[alignment] profiling complete: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_dry_off_v2_metrics.jsonl (kind=workload_metrics)
+[e1_dry_off_v2] rc=0 end 2026-11-15T08:45:52Z
+[e1_dry_off_v2] shutdown trigger at server-log line 7658; EngineDeadError-family lines: 7673 7680 ; before shutdown: 0 (accepted)

@@ -1,0 +1,17 @@
+INFO         profile_kind=workload_metrics request_timing_count=56 corpus_tokens=None
+PASS         metrics records: 2160
+INFO         ramp iterations (prefill present or decode_requests != b inside a cell): 220
+PASS         iterations carrying requests of two cells (overrun): 0
+INFO         plan 'dry' (2 cells, 56 requests) selected by --plan auto; every planned cell is checked
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         observed cells not in the plan: []
+PASS         request ids without an E1 tag: 0 []
+PASS         requests seen 56; requests whose emitted tokens != 1024: 0 []
+PASS         progress entries with emitted_tokens not in {0,1}: 0
+PASS         per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95
+PASS         (request, position) pairs emitted in more than one iteration (duplicate join): 0
+PASS         (request, position) pairs never emitted (missing join): 0
+PASS         requests whose position->iteration map is not strictly increasing: 0
+INFO         no routed_experts / token_corpus directory (hook-off arm or Option B capture)
+RESULT PASS [checker v2.0.0]

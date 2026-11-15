@@ -36,6 +36,7 @@ Stage 1.5 (CPU-only remediation, branch `phase1c-e1-stage15`; GPU passes await a
 | `BINARY-PROVENANCE.json`, `patch/request-factory-e1-stage15-stream-flag.bundle`, `checks/stream_wire_check.py` | pinned `session_runner` source (req-frontend branch `e1-stage15-stream-flag` = 5c20a259), build hash, mock-server wire-mode verification |
 | `runs/stage15/engine-dead-error.md` | Stage 1 teardown `EngineDeadError`: explanation and abort conditions |
 | `runs/stage15/cpu/` | every CPU output referenced above |
+| `E1-STAGE15-REPORT.md` | **Stage 1.5 execution report (passes 1-3 run 2026-11-15 on tray16)**; `runs/stage15/e1_dry_*_v2/` derived files, `runs/stage15/cpu/final/` analysis; `postpass_e1_stage15.sh`, `analyze_e1_stage15.sh` the gate and analysis drivers |
 
 Regenerate / re-check on tray14 (CPU only):
 

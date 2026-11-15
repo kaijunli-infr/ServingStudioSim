@@ -1,0 +1,104 @@
+{
+ "checker_version": "2.0.0",
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2/profile",
+ "profile_result": {
+  "profile_kind": "workload_metrics",
+  "validation": null,
+  "parsed_device_ids": null,
+  "request_timing_count": 56,
+  "token_corpus_tokens": null
+ },
+ "cells": {
+  "b8_kv32768_w0": {
+   "pure": 1008,
+   "ramp": 30,
+   "elapsed_ms_median": 4.7178385,
+   "elapsed_ms_p90": 4.7761846
+  },
+  "b48_kv32768_w0": {
+   "pure": 928,
+   "ramp": 190,
+   "elapsed_ms_median": 9.023419,
+   "elapsed_ms_p90": 9.1531669
+  }
+ },
+ "plan": "dry",
+ "token_accounting": {
+  "requests": 56,
+  "ramp_emitted_min": 15,
+  "ramp_emitted_median": 95.0,
+  "ramp_emitted_max": 95
+ },
+ "join": {
+  "duplicate": 0,
+  "missing": 0,
+  "non_monotone": 0
+ },
+ "checks": [
+  {
+   "status": "INFO",
+   "msg": "profile_kind=workload_metrics request_timing_count=56 corpus_tokens=None"
+  },
+  {
+   "status": "PASS",
+   "msg": "metrics records: 2160"
+  },
+  {
+   "status": "INFO",
+   "msg": "ramp iterations (prefill present or decode_requests != b inside a cell): 220"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations carrying requests of two cells (overrun): 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "plan 'dry' (2 cells, 56 requests) selected by --plan auto; every planned cell is checked"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190"
+  },
+  {
+   "status": "PASS",
+   "msg": "observed cells not in the plan: []"
+  },
+  {
+   "status": "PASS",
+   "msg": "request ids without an E1 tag: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests seen 56; requests whose emitted tokens != 1024: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "progress entries with emitted_tokens not in {0,1}: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs emitted in more than one iteration (duplicate join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs never emitted (missing join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose position->iteration map is not strictly increasing: 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "no routed_experts / token_corpus directory (hook-off arm or Option B capture)"
+  }
+ ],
+ "fails": 0
+}

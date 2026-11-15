@@ -1,0 +1,31 @@
+{
+ "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off_v2",
+ "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_dry_off2_v2",
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "profile configs identical apart from ['log_dir', 'name', 'workload.capture_routed_experts']"
+  },
+  {
+   "status": "PASS",
+   "msg": "effective wire mode (stream and not capture): a=non-streaming b=non-streaming"
+  },
+  {
+   "status": "PASS",
+   "msg": "argv: only in a [], only in b [] (permitted: ['--enable-return-routed-experts'])"
+  },
+  {
+   "status": "PASS",
+   "msg": "server_argv: only in a [], only in b [] (permitted: ['--enable-return-routed-experts'])"
+  },
+  {
+   "status": "PASS",
+   "msg": "server env differs in [] (ignored: ['PATH'])"
+  },
+  {
+   "status": "PASS",
+   "msg": "launch records identical apart from the hook flag"
+  }
+ ],
+ "fails": 0
+}

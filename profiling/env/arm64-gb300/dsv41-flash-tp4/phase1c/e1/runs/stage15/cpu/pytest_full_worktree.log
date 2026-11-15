@@ -1,0 +1,531 @@
+........................................................................ [  1%]
+........................................................................ [  2%]
+........................................................................ [  4%]
+........................................................................ [  5%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 11%]
+..........................................sss........................... [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+.....................................................................s.. [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+........................................................................ [ 26%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 30%]
+........................................................................ [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+........................s............................................... [ 47%]
+.s...................................................................... [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+.................................................F...................... [ 54%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+........................................................................ [ 58%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+....ssssss.................................s............................ [ 66%]
+................................F..FFF....................s.........s... [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 70%]
+.................s...................s.....s...........s................ [ 72%]
+........................................................................ [ 73%]
+.........................................ss............................. [ 75%]
+........................................................................ [ 76%]
+........................................................................ [ 77%]
+..................s.........................s........................... [ 79%]
+...................................s.................................... [ 80%]
+........................................................................ [ 82%]
+........................................................................ [ 83%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+........................................................................ [ 87%]
+........................................................................ [ 89%]
+........................................................................ [ 90%]
+........................................................................ [ 91%]
+........................................................................ [ 93%]
+.........F.................................F............................ [ 94%]
+............sssssssss.......s........................................... [ 96%]
+........................................................................ [ 97%]
+........................................................................ [ 98%]
+..............................sssss............................          [100%]
+=================================== FAILURES ===================================
+_ test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint __
+
+    def test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint() -> None:
+        # Catches reading the wrong source checkpoint or skipping per-token writes.
+        batch, per_request = 3, 4
+        ops = _recurrence(batch, per_request)
+        query, key, value = ops.semantic_qkv()
+        a, b = ops.a.contiguous(), ops.b.contiguous()
+        pool = ops.state.clone()
+        output, pool = gdn_recurrent_spec_decode_reference(
+            query, key, value, a, b, ops.A_log, ops.dt_bias, pool, ops.state_indices, ops.num_accepted
+        )
+        for request in range(batch):
+            source = int(ops.state_indices[request, int(ops.num_accepted[request]) - 1])
+            running = ops.state[source].transpose(-1, -2).unsqueeze(0).contiguous()
+            for token in range(per_request):
+                row = slice(request * per_request + token, request * per_request + token + 1)
+                expected, running = gdn_recurrent_decode_reference(
+                    query[row], key[row], value[row], a[row], b[row], ops.A_log, ops.dt_bias, running
+                )
+                assert torch.equal(output[row], expected)
+                slot = int(ops.state_indices[request, token])
+>               assert torch.equal(pool[slot], running[0].transpose(-1, -2))
+E               assert False
+E                +  where False = <built-in method equal of type object at 0xf29628c9c420>(tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]), tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]))
+E                +    where <built-in method equal of type object at 0xf29628c9c420> = torch.equal
+E                +    and   tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]) = <built-in method transpose of Tensor object at 0xf295a20b2710>(-1, -2)
+E                +      where <built-in method transpose of Tensor object at 0xf295a20b2710> = tensor([[[ 7.7035e-03, -4.7921e-03, -1.4167e-02,  1.3195e-01,  2.8875e-02,\n          -3.8556e-02,  1.0848e-02,  3.5974...  [-8.4845e-02,  2.1933e-03, -1.7471e-03,  7.5049e-02,  9.0758e-03,\n           7.6630e-03, -4.8364e-02, -8.2713e-02]]]).transpose
+
+tests/test_gdn_spec_decode.py:117: AssertionError
+__________________ test_energy_perf_uses_total_energy_counter __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf295a1541940>
+
+    def test_energy_perf_uses_total_energy_counter(monkeypatch: pytest.MonkeyPatch):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        class FakeCuda:
+            sync_calls = 0
+    
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                FakeCuda.sync_calls += 1
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_reads = [777, 1000, 1300]
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-counter"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                return self.total_energy_reads.pop(0)
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(lambda *_, **__: 3))
+        monkeypatch.setattr(energy_mod.time, "perf_counter", iter([0.0, 1.0]).__next__)
+    
+>       assert Energy.perf(fn, warmup=0, min_duration_ms=1000) == pytest.approx(0.1)
+E       assert 0.0 == 0.1 ± 1.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 0.1 ± 1.0e-07
+
+tests/test_l1_single_gemm.py:333: AssertionError
+___________ test_energy_perf_uses_passed_timing_for_iteration_count ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf295a152b860>
+
+    def test_energy_perf_uses_passed_timing_for_iteration_count(
+        monkeypatch: pytest.MonkeyPatch,
+    ):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        class FakeCuda:
+            sync_calls = 0
+    
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                FakeCuda.sync_calls += 1
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_reads = [777, 1000, 1400]
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-passed-timing"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                return self.total_energy_reads.pop(0)
+    
+        def unexpected_estimate(*args: object, **kwargs: object) -> int:
+            del args, kwargs
+            raise AssertionError("passed timing must bypass Energy._estimate_iters")
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(unexpected_estimate))
+        monkeypatch.setattr(energy_mod.time, "perf_counter", iter([0.0, 1.0]).__next__)
+    
+>       assert Energy.perf(
+            fn,
+            warmup=0,
+            min_duration_ms=1000,
+            per_iter_time_ms=250.0,
+        ) == pytest.approx(0.1)
+E       assert 0.0 == 0.1 ± 1.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 0.1 ± 1.0e-07
+
+tests/test_l1_single_gemm.py:532: AssertionError
+_______ test_energy_window_restarts_cleanly_when_planned_iters_are_short _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf295a152a3f0>
+
+    def test_energy_window_restarts_cleanly_when_planned_iters_are_short(
+        monkeypatch: pytest.MonkeyPatch,
+    ):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        perf_counter_values = iter([0.0, 0.4, 10.0, 11.1])
+        monkeypatch.setattr(energy_mod.time, "perf_counter", lambda: next(perf_counter_values))
+    
+        class FakeCuda:
+            sync_calls = 0
+    
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                FakeCuda.sync_calls += 1
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_reads = [777, 1000, 1040, 2000, 3000]
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-clean-restart"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                return self.total_energy_reads.pop(0)
+    
+        def unexpected_estimate(*args: object, **kwargs: object) -> int:
+            del args, kwargs
+            raise AssertionError("passed timing must bypass Energy._estimate_iters")
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(unexpected_estimate))
+    
+>       assert Energy.perf(
+            fn,
+            warmup=0,
+            min_duration_ms=1000,
+            per_iter_time_ms=250.0,
+        ) == pytest.approx(0.1)
+E       assert 0.0 == 0.1 ± 1.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 0.1 ± 1.0e-07
+
+tests/test_l1_single_gemm.py:615: AssertionError
+_________________ test_energy_perf_falls_back_to_power_polling _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf295a14ada30>
+
+    def test_energy_perf_falls_back_to_power_polling(monkeypatch: pytest.MonkeyPatch):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        class FakeCuda:
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                pass
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_calls = 0
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-polling"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                self.total_energy_calls += 1
+                raise FakeNVMLError(self.NVML_ERROR_NOT_SUPPORTED)
+    
+        class FakePoller:
+            def __init__(self, pynvml: object, handle: object, *, poll_hz: int) -> None:
+                assert pynvml is fake_pynvml
+                assert handle == "handle"
+                assert poll_hz == 100
+                self.avg_watts = 50.0
+                self.elapsed_s = 2.0
+                self.error = None
+    
+            def __enter__(self) -> FakePoller:
+                return self
+    
+            def __exit__(self, *args: object) -> None:
+                pass
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(lambda *_, **__: 4))
+        monkeypatch.setattr(energy_mod, "_NvmlPoller", FakePoller)
+    
+>       assert Energy.perf(fn, warmup=0, min_duration_ms=1000) == pytest.approx(25.0)
+E       assert 0.0 == 25.0 ± 2.5e-05
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 25.0 ± 2.5e-05
+
+tests/test_l1_single_gemm.py:706: AssertionError
+________________________ test_every_member_is_measured _________________________
+
+index = <public_api.deployments.DeploymentIndex object at 0xf295a0f2de50>
+
+    @pytest.mark.presets
+    @pytest.mark.needs_binary
+    @pytest.mark.needs_db
+    def test_every_member_is_measured(index):
+        """Each member, with its captures, builds and finds every profile.db row its
+        kernels read in the shipped profile.db: the site offers only deployments it
+        can predict from measurements."""
+        unmeasured = [
+            (preset.id, member.params, member.error or member.missing)
+            for preset in index.presets.values()
+            for member in preset.members
+            if member.error or member.missing
+        ]
+>       assert not unmeasured
+E       AssertionError: assert not [('DeepSeek-V4-Flash-0731/deepseek_v4_vllm', {'workload': 'shape_grid_128'}, {'mhc_pre_rms_norm': 68, 'fp8_per_token_g...iverse_100'}, {'elementwise': 1505, 'all_reduce': 19, 'single_gemm': 474, 'q_pad_kv_rope_mxfp8_insert': 26, ...}), ...]
+
+tests/test_public_presets.py:151: AssertionError
+_________________ test_every_sim_member_builds_and_is_measured _________________
+
+sims = <public_api.sim_preset.SimIndex object at 0xf295a0b7e030>
+
+    @pytest.mark.presets
+    @pytest.mark.needs_binary
+    @pytest.mark.needs_db
+    def test_every_sim_member_builds_and_is_measured(sims):
+        """Each member, on each capture it offers, builds through the deployment's
+        ``build_flow`` and finds every profile.db row in the shipped profile.db:
+        the site offers only simulations it can run from measurements. A capture
+        longer than a member's context is a misfit of its requests, not of the
+        member (the test below)."""
+        unavailable = [
+            (preset.id, member.params, capture, reason)
+            for preset in sims.presets.values()
+            for member in preset.members
+            for capture, reason in member.summary(sims.index)["unavailable"].items()
+            if "misfit" not in reason
+        ]
+>       assert not unavailable
+E       AssertionError: assert not [('DeepSeek-V4-Flash-0731/deepseek_v4_vllm_chunked_prefill', {'replicas': 1}, 'shape_grid_128', {'missing': {'unified....d.layer1.engram.all_gather': 19, 'unified.layer1.engram.gather_copy': 63, 'unified.layer1.engram.wkv': 58, ...}}), ...]
+
+tests/test_public_sim_presets.py:107: AssertionError
+=============================== warnings summary ===============================
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/blockscaled_contiguous_gather_grouped_gemm_swiglu_fusion.py:3032: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2060: DeprecationWarning: tcgen05.OperandMajorMode is deprecated, use cute.nvgpu.OperandMajorMode instead
+    a_major_mode: tcgen05.OperandMajorMode,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2062: DeprecationWarning: tcgen05.OperandMajorMode is deprecated, use cute.nvgpu.OperandMajorMode instead
+    b_major_mode: tcgen05.OperandMajorMode,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2065: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:95: DeprecationWarning: cutlass.utils.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils import TensorMapManager, TensorMapUpdateMode
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:99: DeprecationWarning: tcgen05.OperandMajorMode is deprecated, use cute.nvgpu.OperandMajorMode instead
+    from cutlass.cute.nvgpu.tcgen05 import OperandMajorMode
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_gdn_spec_decode.py::test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_uses_total_energy_counter
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_uses_passed_timing_for_iteration_count
+FAILED tests/test_l1_single_gemm.py::test_energy_window_restarts_cleanly_when_planned_iters_are_short
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_falls_back_to_power_polling
+FAILED tests/test_public_presets.py::test_every_member_is_measured - Assertio...
+FAILED tests/test_public_sim_presets.py::test_every_sim_member_builds_and_is_measured
+7 failed, 5129 passed, 39 skipped, 8 warnings in 180.06s (0:03:00)
