@@ -1,0 +1,15 @@
+{
+ "a": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/configs_v2/e1_dry_off_v2/profile.json",
+ "b": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/configs_v2/e1_dry_off2_v2/profile.json",
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "profile configs identical apart from ['log_dir', 'name', 'workload.capture_routed_experts']"
+  },
+  {
+   "status": "PASS",
+   "msg": "effective wire mode (stream and not capture): a=non-streaming b=non-streaming"
+  }
+ ],
+ "fails": 0
+}

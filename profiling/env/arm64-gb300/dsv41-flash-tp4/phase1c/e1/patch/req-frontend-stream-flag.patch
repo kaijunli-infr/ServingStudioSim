@@ -1,0 +1,129 @@
+diff --git a/src/backend/client.rs b/src/backend/client.rs
+index d59956d..d6eb010 100644
+--- a/src/backend/client.rs
++++ b/src/backend/client.rs
+@@ -35,6 +35,9 @@ pub(crate) struct GenerationClient {
+     temperature: f64,
+     stream_idle_timeout_secs: u64,
+     record_timeline: bool,
++    /// `--stream`: whether requests ask for a streamed response. Capturing
++    /// routes overrides it to non-streaming.
++    stream: bool,
+     /// Where each request's routed experts are written. `Some` turns the run
+     /// non-streaming: the routing is one array for the whole generation, so it
+     /// can only ride on a completed body.
+@@ -70,6 +73,7 @@ impl GenerationClient {
+             temperature: args.temperature,
+             stream_idle_timeout_secs: args.stream_idle_timeout_secs,
+             record_timeline: args.timeline,
++            stream: args.stream,
+             routed_experts_dir,
+             backend,
+         })
+@@ -87,13 +91,15 @@ impl GenerationClient {
+         // Submit raw token ids: no client-side decode, so even million-token prompts cost nothing
+         // here and the server's prefix-cache keys match the exact ids we built.
+         let capturing_routes = self.routed_experts_dir.is_some();
++        // `--stream false` and a route capture both mean one completed body per request.
++        let streaming = self.stream && !capturing_routes;
+         let payload = self.backend.build_payload(&GenRequest {
+             model: &self.model,
+             request_id: &request_id,
+             prompt,
+             max_tokens,
+             temperature: self.temperature,
+-            stream: !capturing_routes,
++            stream: streaming,
+             // The last prompt token, not the first generated one: its forward is
+             // the step that produced token 0, so starting a row earlier is what
+             // makes every later row attributable to an accepted token.
+@@ -106,11 +112,12 @@ impl GenerationClient {
+         let send_instant = Instant::now();
+ 
+         let mut fold = StreamAccumulator::new(max_tokens, self.record_timeline);
+-        if let Some(directory) = &self.routed_experts_dir {
+-            self.fold_body(&request_id, &payload, send_instant, &mut fold, directory)
++        if streaming {
++            self.fold_response(&request_id, &payload, send_instant, &mut fold)
+                 .await;
+         } else {
+-            self.fold_response(&request_id, &payload, send_instant, &mut fold)
++            let directory = self.routed_experts_dir.as_deref();
++            self.fold_body(&request_id, &payload, send_instant, &mut fold, directory)
+                 .await;
+         }
+ 
+@@ -327,8 +334,8 @@ impl GenerationClient {
+         }
+     }
+ 
+-    /// Drive one request as a single non-streaming response and persist the
+-    /// routed experts it carries.
++    /// Drive one request as a single non-streaming response and, when a
++    /// directory is given, persist the routed experts it carries.
+     ///
+     /// The routing is one array covering the whole generation, so no chunk
+     /// could carry it and there is nothing to fold incrementally. The response
+@@ -343,7 +350,7 @@ impl GenerationClient {
+         payload: &Value,
+         send_instant: Instant,
+         fold: &mut StreamAccumulator,
+-        directory: &std::path::Path,
++        directory: Option<&std::path::Path>,
+     ) {
+         let response = self
+             .client
+@@ -369,6 +376,12 @@ impl GenerationClient {
+         // break out of; the accumulator's stop signal has nothing left to stop.
+         let _ = fold.absorb(self.backend.parse_event(&value), elapsed_ms(send_instant));
+ 
++        // `--stream false` without a capture: the body was the whole answer and
++        // there is nothing to persist.
++        let Some(directory) = directory else {
++            return;
++        };
++
+         let Some(encoded) = self.backend.routed_experts(&value) else {
+             // Not a warning: a capture that silently produced no routes would
+             // be discovered only as an empty corpus, a whole GPU run later.
+diff --git a/src/cli.rs b/src/cli.rs
+index 04133c9..3a18a61 100644
+--- a/src/cli.rs
++++ b/src/cli.rs
+@@ -102,6 +102,15 @@ pub struct Args {
+     #[arg(long)]
+     pub token_pool_limit: Option<usize>,
+ 
++    /// Ask the server to stream (`"stream": true`, the default) or to return one completed body.
++    ///
++    /// `--stream false` makes a run non-streaming *without* capturing routes, so a timing arm can
++    /// use the same wire mode as a `--routed-experts-dir` arm (Phase 1C E1: the hook-off control).
++    /// Non-streaming runs have no per-event timeline: TTFT equals the total duration and TPOT is
++    /// not measured. Capturing routes always implies non-streaming, whatever this flag says.
++    #[arg(long, action = clap::ArgAction::Set, default_value_t = true)]
++    pub stream: bool,
++
+     /// Max seconds to wait for the next streaming chunk before failing a request.
+     #[arg(long, default_value_t = 600)]
+     pub stream_idle_timeout_secs: u64,
+@@ -200,6 +209,20 @@ mod tests {
+         assert_eq!(parsed.input_file_format, "image-to-text-independent");
+     }
+ 
++    #[test]
++    fn streaming_is_on_by_default_and_can_be_turned_off() {
++        let parsed = Args::try_parse_from(required_arguments()).unwrap();
++        assert!(parsed.stream);
++
++        let mut off = required_arguments();
++        off.extend(["--stream", "false"]);
++        assert!(!Args::try_parse_from(off).unwrap().stream);
++
++        let mut bare = required_arguments();
++        bare.push("--stream");
++        assert!(Args::try_parse_from(bare).is_err());
++    }
++
+     #[test]
+     fn retired_split_format_and_family_flags_are_rejected() {
+         let mut old_format = required_arguments();

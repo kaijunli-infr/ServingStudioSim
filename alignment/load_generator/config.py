@@ -126,6 +126,10 @@ class LoadGeneratorConfig:
     # instrumentation (NVTX scopes, request timing records) on, and never asks for EPLB.
     # Needs a backend that returns routes (`openai`).
     capture_routed_experts: bool = False
+    # Phase 1.5: wire mode of the replay. True streams (per-token events, TTFT/TPOT measured); False asks
+    # for one completed body per request, which is what a routed-experts capture does anyway. Set it to
+    # False on a hook-off control arm so both arms of a comparison use the same wire mode.
+    stream: bool = True
 
     ARRIVAL_MODES: ClassVar[tuple[str, ...]] = ("trace-timed", "saturated")
 
@@ -134,6 +138,8 @@ class LoadGeneratorConfig:
             raise ValueError("warmup must be a boolean")
         if not isinstance(self.capture_routed_experts, bool):
             raise ValueError("capture_routed_experts must be a boolean")
+        if not isinstance(self.stream, bool):
+            raise ValueError("stream must be a boolean")
         if self.capture_routed_experts and not self.backend.returns_routed_experts:
             raise ValueError(
                 "capture_routed_experts needs a workload backend that returns routed experts, "
@@ -153,6 +159,11 @@ class LoadGeneratorConfig:
                 "rate rescales the trace's arrival timeline, which "
                 "arrival_mode 'saturated' discards; set one or the other"
             )
+
+    @property
+    def effective_stream(self) -> bool:
+        """Wire mode session_runner will use: capturing routes forces non-streaming."""
+        return self.stream and not self.capture_routed_experts
 
     @property
     def context_limit_skip_enabled(self) -> bool:

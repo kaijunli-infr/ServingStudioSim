@@ -1,0 +1,3 @@
+PASS  profile configs identical apart from ['log_dir', 'name', 'workload.capture_routed_experts']
+PASS  effective wire mode (stream and not capture): a=non-streaming b=non-streaming
+RESULT PASS

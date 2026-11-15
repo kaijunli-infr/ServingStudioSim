@@ -1,0 +1,114 @@
+{
+ "design": {
+  "B": [
+   1,
+   2,
+   4,
+   8,
+   16,
+   24,
+   32,
+   48
+  ],
+  "KV": [
+   4096,
+   32768,
+   98304
+  ],
+  "OUT_LEN": 1024,
+  "WAVES": {
+   "1": 2,
+   "2": 2,
+   "4": 2,
+   "8": 2,
+   "16": 1,
+   "24": 1,
+   "32": 1,
+   "48": 1
+  },
+  "CHUNK_S": 0.235,
+  "WALL_MS": {
+   "1": 4.65,
+   "2": 4.41,
+   "4": 4.6,
+   "8": 5.2,
+   "16": 6.3,
+   "24": 7.73,
+   "32": 8.54,
+   "48": 9.93
+  },
+  "MARGIN": 1.5,
+  "GAP_S": 5.0,
+  "MIN_PURE_DECODE": 400
+ },
+ "main": {
+  "plan": []
+ },
+ "dry": {
+  "requests": 56,
+  "trace_span_s": 72.7,
+  "plan": [
+   {
+    "b": 8,
+    "kv": 32768,
+    "wave": 0,
+    "arrival_s": 0.0,
+    "prefill_iters": 16,
+    "est_duration_s": 9.1,
+    "pure_decode_iters_min": 1008
+   },
+   {
+    "b": 48,
+    "kv": 32768,
+    "wave": 0,
+    "arrival_s": 18.6,
+    "prefill_iters": 96,
+    "est_duration_s": 32.7,
+    "pure_decode_iters_min": 928
+   }
+  ]
+ },
+ "passes": {
+  "e1_dry_off_v2": {
+   "kind": "workload_metrics",
+   "trace": "e1_dry.csv",
+   "backend": "openai",
+   "routes": false,
+   "stream": false
+  },
+  "e1_dry_on_v2": {
+   "kind": "workload_metrics",
+   "trace": "e1_dry.csv",
+   "backend": "openai",
+   "routes": true,
+   "stream": false
+  },
+  "e1_dry_off2_v2": {
+   "kind": "workload_metrics",
+   "trace": "e1_dry.csv",
+   "backend": "openai",
+   "routes": false,
+   "stream": false
+  },
+  "e1_nsys_val": {
+   "kind": "nsys",
+   "trace": "e1_dry.csv",
+   "backend": "openai",
+   "routes": true,
+   "stream": false
+  }
+ },
+ "run_order": [
+  "e1_dry_off_v2",
+  "e1_dry_on_v2",
+  "e1_dry_off2_v2",
+  "e1_nsys_val"
+ ],
+ "sha256": {
+  "traces/e1_dry.csv": "c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158",
+  "configs_v2/e1_dry_off_v2/profile.json": "88b88abc032b43c310feddf051bb49c478bb9e361f9da40ca04c6627017bc0fe",
+  "configs_v2/e1_dry_on_v2/profile.json": "72484095234ecd30d34ce078fcce8c88ddc69b7e59c816aa3d87d062ee59abb2",
+  "configs_v2/e1_dry_off2_v2/profile.json": "46f81df1af77e0aef98a1717ba777de8f28cdbe6c19b1d0cae238f52f72bd104",
+  "configs_v2/e1_nsys_val/profile.json": "df949648153e862746cf5a8446bfb0a1ead0169388f2306fc5d9c5acc4a659ff"
+ }
+}

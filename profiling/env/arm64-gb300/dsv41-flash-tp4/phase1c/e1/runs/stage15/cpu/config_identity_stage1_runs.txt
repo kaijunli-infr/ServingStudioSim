@@ -1,0 +1,7 @@
+PASS  profile configs identical apart from ['log_dir', 'name', 'workload.capture_routed_experts']
+FAIL  effective wire mode (stream and not capture): a=streaming b=non-streaming
+PASS  argv: only in a [], only in b ['--enable-return-routed-experts'] (permitted: ['--enable-return-routed-experts'])
+PASS  server_argv: only in a [], only in b ['--enable-return-routed-experts'] (permitted: ['--enable-return-routed-experts'])
+FAIL  server env differs in ['PATH'] (ignored: [])
+PASS  launch records identical apart from the hook flag
+RESULT FAIL (2)

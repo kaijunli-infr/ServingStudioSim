@@ -1,0 +1,6 @@
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_uses_passed_timing_for_iteration_count
+FAILED tests/test_l1_single_gemm.py::test_energy_window_restarts_cleanly_when_planned_iters_are_short
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_falls_back_to_power_polling
+FAILED tests/test_public_presets.py::test_every_member_is_measured - Assertio...
+FAILED tests/test_public_sim_presets.py::test_every_sim_member_builds_and_is_measured
+7 failed, 256 warnings in 37.31s

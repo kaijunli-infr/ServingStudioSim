@@ -1,0 +1,55 @@
+PASS  export validation ok=True kernel_rows=25626612 kernel_span_ms=49839.325045
+PASS  nvtx_forward_ranges 19000 == 4 x 4750 parsed iterations
+PASS  parsed devices [0, 1, 2, 3]
+PASS  nsys .nsys-rep present: dsv41_flash_1017_gb300_tp4_quadrant_nsys.nsys-rep 0.70 GB
+PASS  nsys .sqlite present: dsv41_flash_1017_gb300_tp4_quadrant_nsys.sqlite 3.82 GB
+PASS  step_alignment unpaired_steps_by_device={} (rule iteration_index, steps 4750)
+PASS  iterations without 28 NVTX ranges: 0 of 4750
+PASS  iterations with devices_absent: 0
+PASS  iterations whose NVTX iteration index differs between devices: 0
+INFO  NVTX phases per device: {'bookkeep': 38000, 'eplb': 19000, 'forward': 19000, 'postprocess': 19000, 'preprocess': 19000, 'sample': 19000}
+INFO  iterations whose four host-side forward NVTX windows do not overlap: 4287 of 4750 (host forward is a sub-ms graph launch; GPU-window overlap is checked from the tables)
+PASS  devices whose iteration start sequence is not strictly increasing: 0
+INFO  forward start spread across devices: median 0.3630 ms, p90 0.7069 ms, max 73.0502 ms (host launch skew, reported)
+PASS  JIT-affected iterations after warm-up: 10 (limit 20)
+PASS  tables iterations 4750 == parsed iterations 4750
+PASS  iterations whose four ranks' GPU kernel windows do not overlap: 0 of 4750
+INFO  GPU first-kernel start spread across ranks: median 0.0092 ms, p90 0.0146 ms, max 3.5479 ms
+INFO  pure-decode iterations without rank-aligned collectives (unequal K across ranks): 0 of 4726
+PASS  collective end spread b=1: median 0.0011 ms (<= 0.02), p90 0.0083 ms (<= 0.05); n=42054; modal K=163 in 258 iterations, n_other_K=0
+PASS  collective end spread b=2: median 0.0009 ms (<= 0.02), p90 0.0040 ms (<= 0.05); n=489; modal K=163 in 3 iterations, n_other_K=0
+PASS  collective end spread b=3: median 0.0009 ms (<= 0.02), p90 0.0041 ms (<= 0.05); n=20864; modal K=163 in 128 iterations, n_other_K=0
+PASS  collective end spread b=4: median 0.0011 ms (<= 0.02), p90 0.0047 ms (<= 0.05); n=163; modal K=163 in 1 iterations, n_other_K=0
+PASS  collective end spread b=5: median 0.0009 ms (<= 0.02), p90 0.0080 ms (<= 0.05); n=163; modal K=163 in 1 iterations, n_other_K=0
+PASS  collective end spread b=6: median 0.0009 ms (<= 0.02), p90 0.0086 ms (<= 0.05); n=20701; modal K=163 in 127 iterations, n_other_K=0
+PASS  collective end spread b=7: median 0.0009 ms (<= 0.02), p90 0.0067 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0
+PASS  collective end spread b=10: median 0.0011 ms (<= 0.02), p90 0.0070 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0
+PASS  collective end spread b=12: median 0.0011 ms (<= 0.02), p90 0.0081 ms (<= 0.05); n=20701; modal K=163 in 127 iterations, n_other_K=0
+PASS  collective end spread b=15: median 0.0010 ms (<= 0.02), p90 0.0085 ms (<= 0.05); n=163; modal K=163 in 1 iterations, n_other_K=0
+PASS  collective end spread b=17: median 0.0003 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=19: median 0.0003 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=20: median 0.0003 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=23: median 0.0003 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0
+PASS  collective end spread b=24: median 0.0003 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=20468; modal K=86 in 238 iterations, n_other_K=0
+PASS  collective end spread b=25: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=22532; modal K=86 in 262 iterations, n_other_K=0
+PASS  collective end spread b=26: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=11094; modal K=86 in 129 iterations, n_other_K=0
+PASS  collective end spread b=27: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=11008; modal K=86 in 128 iterations, n_other_K=0
+PASS  collective end spread b=28: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=29: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0
+PASS  collective end spread b=30: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=10922; modal K=86 in 127 iterations, n_other_K=0
+PASS  collective end spread b=32: median 0.0001 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0
+PASS  collective end spread b=33: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=34: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=258; modal K=86 in 3 iterations, n_other_K=0
+PASS  collective end spread b=36: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=10836; modal K=86 in 126 iterations, n_other_K=0
+PASS  collective end spread b=37: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=39: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0
+PASS  collective end spread b=40: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=41: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=42: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=43: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0
+PASS  collective end spread b=44: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0
+PASS  collective end spread b=45: median 0.0001 ms (<= 0.02), p90 0.0002 ms (<= 0.05); n=86; modal K=86 in 1 iterations, n_other_K=0
+PASS  collective end spread b=46: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=258; modal K=86 in 3 iterations, n_other_K=0
+PASS  collective end spread b=47: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=516; modal K=86 in 6 iterations, n_other_K=0
+PASS  collective end spread b=48: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=260752; modal K=86 in 3032 iterations, n_other_K=0
+RESULT PASS

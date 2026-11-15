@@ -1,0 +1,2 @@
+FAILED tests/test_l1_single_gemm.py::test_energy_perf_falls_back_to_power_polling
+4 failed, 5092 passed, 78 skipped, 1 deselected, 10 warnings in 188.47s (0:03:08)

@@ -17,6 +17,24 @@ branch.** Read `E1-AUTHORIZATION-PACKET.md` first; its section 12 lists the deci
 | `out/` | CPU smoke outputs on frozen calibration rows, tray16 preflight log |
 | `SHA256SUMS` | hashes of every file above (`sha256sum -c SHA256SUMS`) |
 
+Stage 1 (dry-run pair, accepted at c7e8ed9b): `E1-STAGE1-REPORT.md`, `runs/e1_dry_*`, `runs/stage1/`, `analysis/e1_pair_compare.py`.
+
+Stage 1.5 (CPU-only remediation, branch `phase1c-e1-stage15`; GPU passes await authorization):
+
+| path | what |
+|---|---|
+| `E1-STAGE15-REMEDIATION.md` | the Stage 1.5 report (start here); `E1-STAGE15-GPU-AUTHORIZATION-REQUEST.md` the request |
+| `checks/e1_completeness_v2.py`, `tests/test_e1_completeness_v2.py` | corrected, versioned checker; old vs new on Stage 1 in `runs/stage15/checker_v1_vs_v2.md` |
+| `checks/e1_config_identity.py`, `tests/test_e1_config_identity.py` | configuration identity between arms (configs and launch records) |
+| `patch/apply_stream_optin.py`, `patch/apply_stream_flag_rs.py`, `patch/req-frontend-stream-flag.patch` | explicit `workload.stream` / `session_runner --stream` (same wire mode for both arms) |
+| `make_e1_inputs_v2.py` -> `configs_v2/`, `INPUTS_v2.sha256`, `E1-STAGE15-INPUTS.json` | Stage 1.5 passes: off_v2, on_v2, off2_v2 (control), nsys_val |
+| `analysis/AUTOTUNER-INVESTIGATION.md`, `analysis/autotune_cache_diff.py` | why every launch re-tunes ~19 min; tactic drift between launches |
+| `E1-OVERHEAD-METHODOLOGY.md`, `analysis/e1_pair_compare_v2.py` | Gate A preserved; prospective block-bootstrap Gate B; off/off reading rules |
+| `E1-OFFOFF-PROTOCOL.md`, `E1-NSYS-VALIDATION-PROTOCOL.md`, `checks/e1_nsys_validation.py` | the prepared GPU passes and their checkers |
+| `E1-STAGE15-BUDGET.md` | occupancy and storage |
+| `preflight_e1_stage15.sh`, `run_e1_stage15.sh`, `collect_e1_stage15.sh` | Stage 1.5 drivers (Stage 1 scripts unchanged) |
+| `runs/stage15/cpu/` | every CPU output referenced above |
+
 Regenerate / re-check on tray14 (CPU only):
 
 ```

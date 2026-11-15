@@ -131,6 +131,9 @@ def run_replay(
         argv.append("--measurement-gate")
     if routed_experts_dir is not None:
         argv.extend(["--routed-experts-dir", str(routed_experts_dir)])
+    if not config.stream:
+        # `--stream false` (clap ArgAction::Set): one completed body per request, no routes written.
+        argv.extend(["--stream", "false"])
     argv.extend(config.extra_args)
 
     if measurement_ready is None:
