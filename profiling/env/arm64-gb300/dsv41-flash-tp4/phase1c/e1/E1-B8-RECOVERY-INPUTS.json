@@ -1,0 +1,96 @@
+{
+ "design": {
+  "B": [
+   1,
+   2,
+   4,
+   8,
+   16,
+   24,
+   32,
+   48
+  ],
+  "KV": [
+   4096,
+   32768,
+   98304
+  ],
+  "OUT_LEN": 1024,
+  "WAVES": {
+   "1": 2,
+   "2": 2,
+   "4": 2,
+   "8": 2,
+   "16": 1,
+   "24": 1,
+   "32": 1,
+   "48": 1
+  },
+  "CHUNK_S": 0.235,
+  "WALL_MS": {
+   "1": 4.65,
+   "2": 4.41,
+   "4": 4.6,
+   "8": 5.2,
+   "16": 6.3,
+   "24": 7.73,
+   "32": 8.54,
+   "48": 9.93
+  },
+  "MARGIN": 1.5,
+  "GAP_S": 5.0,
+  "MIN_PURE_DECODE": 400
+ },
+ "derived_from": {
+  "inputs": "E1-STAGE15-INPUTS.json",
+  "trace": "traces/e1_dry.csv rows 1-8 (byte-identical)",
+  "config": "configs_v2/e1_nsys_val/profile.json"
+ },
+ "deviation_from_stage15": [
+  "the 48 b=48 requests are absent from the trace (b=8-only recovery; b=48 is not re-run)",
+  "nsys.capture_start_delay_seconds removed (Phase 0 quadrant_nsys block; profiler armed before the first request)"
+ ],
+ "main": {
+  "plan": []
+ },
+ "dry": {
+  "requests": 8,
+  "trace_span_s": 13.6,
+  "plan": [
+   {
+    "b": 8,
+    "kv": 32768,
+    "wave": 0,
+    "arrival_s": 0.0,
+    "prefill_iters": 16,
+    "est_duration_s": 9.1,
+    "pure_decode_iters_min": 1008
+   }
+  ]
+ },
+ "passes": {
+  "e1_b8_recovery": {
+   "kind": "nsys",
+   "trace": "e1_b8_recovery.csv",
+   "backend": "openai",
+   "routes": true,
+   "stream": false,
+   "nsys": {
+    "executable": "/usr/local/bin/nsys",
+    "capture_mode": "cuda_profiler_api",
+    "cuda_graph_trace": "node",
+    "cuda_event_trace": false
+   },
+   "delay_s": null
+  }
+ },
+ "run_order": [
+  "e1_b8_recovery"
+ ],
+ "sha256": {
+  "traces/e1_b8_recovery.csv": "398c317e093e0192ad6dc7e26cceb78825163f4ab9957a787aabc1c1629bdc77",
+  "configs_v2/e1_b8_recovery/profile.json": "1f8f97389a4c8bf8875e4359b3353d6e2af2c07718753eecd50cfff073bd789d",
+  "traces/e1_dry.csv": "c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158",
+  "configs_v2/e1_nsys_val/profile.json": "df949648153e862746cf5a8446bfb0a1ead0169388f2306fc5d9c5acc4a659ff"
+ }
+}

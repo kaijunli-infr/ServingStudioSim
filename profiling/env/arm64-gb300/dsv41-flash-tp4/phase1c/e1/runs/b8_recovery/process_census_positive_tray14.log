@@ -1,0 +1,39 @@
+# positive test of checks/e1_process_census.sh on pod4-gb300-10-tray14-f3 2026-11-15T17:37:11Z: plant a log watcher and a cwd-resident sleep, expect NOT CLEAN, kill by pid, expect CLEAN
+planted pids: tail=830133 830137 830147  sleep=830140 
+## census with planted processes
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+FAIL  log watchers (tail -F/-f, less +F) on experiment logs: pids 830137 
+       830137 dc       Sun Nov 15 17:37:10 2026 tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+FAIL  other processes whose cmdline references the experiment dirs: pids 830137 
+       830137 dc       Sun Nov 15 17:37:10 2026 tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log
+FAIL  processes whose cwd is inside the experiment dirs: pids 830140 
+       830140 dc       Sun Nov 15 17:37:10 2026 sleep 600
+FAIL  tmux sessions alive: kvsim kvsim-watchdog 
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+# process census on pod4-gb300-10-tray14-f3 at 2026-11-15T17:37:19Z: NOT CLEAN (pids: 830137  830137  830140 )
+census rc=1 (expected 1)
+## killed the planted processes by pid (830137 tail watcher, 830140 cwd-resident sleep) at 2026-11-15T17:38:33Z; the first attempt had killed the test shell itself because its own command line contained the planted tail command text
+## census after killing by pid (tmux check narrowed to experiment-named sessions; other sessions reported as INFO)
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*): none
+INFO  other tmux sessions on this tray (not experiment-owned): kvsim kvsim-watchdog 
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+# process census on pod4-gb300-10-tray14-f3 at 2026-11-15T17:38:41Z: CLEAN
+census rc=0 (expected 0)

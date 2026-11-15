@@ -1,0 +1,97 @@
+{
+ "pass": "e1_nsys_val",
+ "replay_span_s": 51.197,
+ "metrics_iterations": 2160,
+ "metrics_index_range": [
+  181,
+  2342
+ ],
+ "kinds_all": {
+  "prefill_only": 4,
+  "mixed_b8": 15,
+  "pure_b8": 1008,
+  "decode_ramp_b8": 15,
+  "mixed_b48": 95,
+  "pure_b48": 928,
+  "decode_ramp_b48": 95
+ },
+ "waves": {
+  "b8": {
+   "first_iteration": 181,
+   "first_start_s": 0.033314609,
+   "first_pure_iteration": 198,
+   "first_pure_start_s": 3.723010533,
+   "last_pure_iteration": 1205,
+   "last_pure_end_s": 8.984309445,
+   "wave_end_s": 9.055324019,
+   "n_pure": 1008,
+   "n_owned": 1040
+  },
+  "b48": {
+   "first_iteration": 1223,
+   "first_start_s": 18.672724948,
+   "first_pure_iteration": 1320,
+   "first_pure_start_s": 40.387098081,
+   "last_pure_iteration": 2247,
+   "last_pure_end_s": 49.953245632,
+   "wave_end_s": 50.712729523,
+   "n_pure": 928,
+   "n_owned": 1120
+  }
+ },
+ "parsed": {
+  "iterations": 1120,
+  "index_range": [
+   1223,
+   2342
+  ],
+  "missing_in_metrics": [],
+  "contiguous": true,
+  "kinds": {
+   "prefill_only": 2,
+   "mixed_b48": 95,
+   "pure_b48": 928,
+   "decode_ramp_b48": 95
+  },
+  "owners": {
+   "-": 2,
+   "b48_kv32k": 1118
+  },
+  "parser_stage": {
+   "prefill": 2,
+   "mixed": 95,
+   "decode": 1023
+  },
+  "jit_iterations": [
+   [
+    1271,
+    "mixed_b48"
+   ],
+   [
+    1287,
+    "mixed_b48"
+   ],
+   [
+    1303,
+    "mixed_b48"
+   ],
+   [
+    1319,
+    "mixed_b48"
+   ]
+  ],
+  "first_parsed_start_s": 18.6727,
+  "previous_metrics_iteration": {
+   "index": 1220,
+   "end_s": 9.0553,
+   "kind": "decode_ramp_b8"
+  },
+  "nsys": {
+   "executable": "/usr/local/bin/nsys",
+   "capture_mode": "cuda_profiler_api",
+   "cuda_graph_trace": "node",
+   "cuda_event_trace": false,
+   "capture_start_delay_seconds": 10.0
+  }
+ }
+}

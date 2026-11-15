@@ -1,0 +1,981 @@
+{
+ "cell": 8,
+ "need": 400,
+ "duration_s": null,
+ "passes": {
+  "e1_dry_off_v2": {
+   "replay_span_s": 51.193194006,
+   "wave": {
+    "first_iteration": 181,
+    "first_start_s": 0.036586767,
+    "first_pure_iteration": 198,
+    "first_pure_start_s": 3.608202623,
+    "last_pure_iteration": 1205,
+    "last_pure_end_s": 8.817743502,
+    "wave_end_s": 8.887406371,
+    "n_pure": 1008,
+    "n_owned": 1040
+   },
+   "rows": [
+    {
+     "delay_s": null,
+     "window": [
+      -Infinity,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 0.0,
+     "window": [
+      0.0,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 1.0,
+     "window": [
+      1.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [185]",
+     "captured_total": 2155,
+     "first_captured": 186,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 12,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 2.0,
+     "window": [
+      2.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [189]",
+     "captured_total": 2151,
+     "first_captured": 190,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 8,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.0,
+     "window": [
+      3.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [194]",
+     "captured_total": 2146,
+     "first_captured": 195,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 3,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.5,
+     "window": [
+      3.5,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [196]",
+     "captured_total": 2144,
+     "first_captured": 197,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 1,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.6,
+     "window": [
+      3.6,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [197]",
+     "captured_total": 2143,
+     "first_captured": 198,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.7,
+     "window": [
+      3.7,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 990 of 1008 (need >= 400); straddling iterations 1 [215]",
+     "captured_total": 2125,
+     "first_captured": 216,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 990,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "pure_b8": 1
+     }
+    },
+    {
+     "delay_s": 4.0,
+     "window": [
+      4.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 932 of 1008 (need >= 400); straddling iterations 1 [273]",
+     "captured_total": 2067,
+     "first_captured": 274,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 932,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "pure_b8": 1
+     }
+    },
+    {
+     "delay_s": 10.0,
+     "window": [
+      10.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 0 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 1120,
+     "first_captured": 1223,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    }
+   ]
+  },
+  "e1_dry_on_v2": {
+   "replay_span_s": 50.692179846,
+   "wave": {
+    "first_iteration": 181,
+    "first_start_s": 0.034838313,
+    "first_pure_iteration": 198,
+    "first_pure_start_s": 3.617288937,
+    "last_pure_iteration": 1205,
+    "last_pure_end_s": 8.981197675,
+    "wave_end_s": 9.052773441,
+    "n_pure": 1008,
+    "n_owned": 1040
+   },
+   "rows": [
+    {
+     "delay_s": null,
+     "window": [
+      -Infinity,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 0.0,
+     "window": [
+      0.0,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 1.0,
+     "window": [
+      1.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [185]",
+     "captured_total": 2155,
+     "first_captured": 186,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 12,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 2.0,
+     "window": [
+      2.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [189]",
+     "captured_total": 2151,
+     "first_captured": 190,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 8,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.0,
+     "window": [
+      3.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [194]",
+     "captured_total": 2146,
+     "first_captured": 195,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 3,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.5,
+     "window": [
+      3.5,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [196]",
+     "captured_total": 2144,
+     "first_captured": 197,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 1,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.6,
+     "window": [
+      3.6,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [197]",
+     "captured_total": 2143,
+     "first_captured": 198,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.7,
+     "window": [
+      3.7,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 993 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2128,
+     "first_captured": 213,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 993,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 4.0,
+     "window": [
+      4.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 936 of 1008 (need >= 400); straddling iterations 1 [269]",
+     "captured_total": 2071,
+     "first_captured": 270,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 936,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "pure_b8": 1
+     }
+    },
+    {
+     "delay_s": 10.0,
+     "window": [
+      10.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 0 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 1120,
+     "first_captured": 1223,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    }
+   ]
+  },
+  "e1_dry_off2_v2": {
+   "replay_span_s": 51.189134124,
+   "wave": {
+    "first_iteration": 181,
+    "first_start_s": 0.032609716,
+    "first_pure_iteration": 198,
+    "first_pure_start_s": 3.611538528,
+    "last_pure_iteration": 1205,
+    "last_pure_end_s": 8.834659702,
+    "wave_end_s": 8.904150125,
+    "n_pure": 1008,
+    "n_owned": 1040
+   },
+   "rows": [
+    {
+     "delay_s": null,
+     "window": [
+      -Infinity,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 0.0,
+     "window": [
+      0.0,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 1.0,
+     "window": [
+      1.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [185]",
+     "captured_total": 2155,
+     "first_captured": 186,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 12,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 2.0,
+     "window": [
+      2.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [189]",
+     "captured_total": 2151,
+     "first_captured": 190,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 8,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.0,
+     "window": [
+      3.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [194]",
+     "captured_total": 2146,
+     "first_captured": 195,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 3,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.5,
+     "window": [
+      3.5,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [196]",
+     "captured_total": 2144,
+     "first_captured": 197,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 1,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.6,
+     "window": [
+      3.6,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [197]",
+     "captured_total": 2143,
+     "first_captured": 198,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.7,
+     "window": [
+      3.7,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 991 of 1008 (need >= 400); straddling iterations 1 [214]",
+     "captured_total": 2126,
+     "first_captured": 215,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 991,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "pure_b8": 1
+     }
+    },
+    {
+     "delay_s": 4.0,
+     "window": [
+      4.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 933 of 1008 (need >= 400); straddling iterations 1 [272]",
+     "captured_total": 2068,
+     "first_captured": 273,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 933,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "pure_b8": 1
+     }
+    },
+    {
+     "delay_s": 10.0,
+     "window": [
+      10.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 0 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 1120,
+     "first_captured": 1223,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    }
+   ]
+  },
+  "e1_nsys_val": {
+   "replay_span_s": 51.196575581,
+   "wave": {
+    "first_iteration": 181,
+    "first_start_s": 0.033314609,
+    "first_pure_iteration": 198,
+    "first_pure_start_s": 3.723010533,
+    "last_pure_iteration": 1205,
+    "last_pure_end_s": 8.984309445,
+    "wave_end_s": 9.055324019,
+    "n_pure": 1008,
+    "n_owned": 1040
+   },
+   "rows": [
+    {
+     "delay_s": null,
+     "window": [
+      -Infinity,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 0.0,
+     "window": [
+      0.0,
+      Infinity
+     ],
+     "gate": "PASS",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 2160,
+     "first_captured": 181,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 4,
+      "mixed_b8": 15,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    },
+    {
+     "delay_s": 1.0,
+     "window": [
+      1.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [185]",
+     "captured_total": 2155,
+     "first_captured": 186,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 12,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 2.0,
+     "window": [
+      2.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [189]",
+     "captured_total": 2151,
+     "first_captured": 190,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 8,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.0,
+     "window": [
+      3.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [194]",
+     "captured_total": 2146,
+     "first_captured": 195,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 3,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.5,
+     "window": [
+      3.5,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [196]",
+     "captured_total": 2144,
+     "first_captured": 197,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "mixed_b8": 1,
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.6,
+     "window": [
+      3.6,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [197]",
+     "captured_total": 2143,
+     "first_captured": 198,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 3.7,
+     "window": [
+      3.7,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 1008 of 1008 (need >= 400); straddling iterations 1 [197]",
+     "captured_total": 2143,
+     "first_captured": 198,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 1008,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "mixed_b8": 1
+     }
+    },
+    {
+     "delay_s": 4.0,
+     "window": [
+      4.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 955 of 1008 (need >= 400); straddling iterations 1 [250]",
+     "captured_total": 2090,
+     "first_captured": 251,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "pure_b8": 955,
+      "decode_ramp_b8": 15,
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {
+      "pure_b8": 1
+     }
+    },
+    {
+     "delay_s": 10.0,
+     "window": [
+      10.0,
+      Infinity
+     ],
+     "gate": "FAIL",
+     "msg": "pure b=8: captured 0 of 1008 (need >= 400); straddling iterations 0 []",
+     "captured_total": 1120,
+     "first_captured": 1223,
+     "last_captured": 2342,
+     "captured_by_kind": {
+      "prefill_only": 2,
+      "mixed_b48": 95,
+      "pure_b48": 928,
+      "decode_ramp_b48": 95
+     },
+     "straddling_by_kind": {}
+    }
+   ]
+  }
+ }
+}

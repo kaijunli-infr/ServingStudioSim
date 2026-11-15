@@ -1,0 +1,24 @@
+# closeout e1_nsys_val on pod4-gb300-10-tray16-f3 at 2026-11-15T17:36:32Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  tmux sessions: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+# process census on pod4-gb300-10-tray16-f3 at 2026-11-15T17:36:39Z: CLEAN
+INFO  [e1_nsys_val] rc=0 end 2026-11-15T13:15:44Z
+INFO  [e1_nsys_val] shutdown trigger at server-log line 7684; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+INFO  raw size 1.6G; nsys files: 223141300 dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep  1088155648 dsv41_flash_1017_gb300_tp4_e1_nsys_val.sqlite  
+INFO  reservation pod (from the laptop): HTTPS_PROXY=socks5://127.0.0.1:11080 kubectl --request-timeout=90s -n inference-bench delete pod dsv41-gb300-reserve-tray16 ; then kubectl get pods -A -o wide --field-selector spec.nodeName=pod4-gb300-10-tray16 (only daemonsets expected)
+# closeout result: CLEAN
