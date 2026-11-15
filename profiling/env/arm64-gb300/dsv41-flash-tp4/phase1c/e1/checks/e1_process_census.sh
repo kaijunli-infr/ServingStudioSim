@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-# Experiment-owned process census on THIS tray (read-only; nothing is killed). Exit 1 if anything experiment-owned is alive.
-#   bash checks/e1_process_census.sh            # PASS/FAIL lines + the offending processes (pid, start, cmd)
+# Process DISCOVERY on THIS tray (read-only; nothing is killed, nothing is classified as owned). Exit 1 if any candidate is alive.
+#   bash checks/e1_process_census.sh            # PASS/FOUND lines + the candidate processes (pid, start, cmd)
+# A match here is a *candidate* for review: command-line or cwd matches never establish ownership. Ownership comes only from
+# the registry written by the driver / `e1_pids.py spawn` (pid + start time + boot id + uid), and termination is done only by
+# `e1_pids.py cleanup --execute`, which re-verifies each identity immediately before signalling (see E1-B8-RECOVERY-PACKET.md §5).
+# With E1_PID_REGISTRY set, the registry plan (owned / stale / refused / lookalike) is printed after the discovery.
 # Covers what the Stage 1.5 closeout missed (three `tail -F` log watchers survived passes 1-3): not only the GPU-holding
 # processes (vllm, nsys, session_runner) but every shell job the experiment spawns or an operator leaves behind: tmux
 # sessions/servers, driver and launcher shells, log watchers (tail/less), nvidia-smi loops, sleep-based watchers, python
@@ -12,7 +16,7 @@ RUN_ROOT_RE='dsv41_flash_gb300_tp4_e1|phase1c/e1|20261114_dsv41_flash_gb300_tp4_
 me=$$; anc=""; p=$me; while [ "$p" != 1 ] && [ -n "$p" ]; do anc="$anc $p"; p=$(ps -o ppid= -p $p 2>/dev/null | tr -d ' '); [ -z "$p" ] && break; done
 fail=0; found=""
 report() { local label=$1 pids=$2; pids=$(echo "$pids" | tr ' ' '\n' | grep -v '^$' | sort -un | while read -r x; do case " $anc " in *" $x "*) ;; *) echo $x;; esac; done | tr '\n' ' ')
-  if [ -n "${pids// /}" ]; then echo "FAIL  $label: pids $pids"; for x in $pids; do echo "      $(ps -o pid=,user=,lstart=,args= -p $x 2>/dev/null | cut -c1-200)"; done; fail=1; found="$found $pids"; else echo "PASS  $label: none"; fi; }
+  if [ -n "${pids// /}" ]; then echo "FOUND $label: pids $pids (candidate; ownership only via the registry)"; for x in $pids; do echo "      $(ps -o pid=,user=,lstart=,args= -p $x 2>/dev/null | cut -c1-200)"; done; fail=1; found="$found $pids"; else echo "PASS  $label: none"; fi; }
 report "vllm server processes"            "$(pgrep -f 'vllm.entrypoints.cli.mai[n]|vllm.entrypoints.openai.api_serve[r]|VLLM::EngineCor[e]')"
 report "nsys profiler sessions"           "$(pgrep -f 'nsys profil[e]|nsys expor[t]|nsys stat[s]')"
 report "req-frontend session_runner"      "$(pgrep -f 'session_runne[r]')"
@@ -26,12 +30,13 @@ report "processes whose cwd is inside the experiment dirs" "$(for d in /proc/[0-
 # tmux: sessions on any server socket of this user
 # tmux: experiment-named sessions (e1-*, e15-*, e1b8-*) are a FAIL; other users' sessions on a shared tray are reported only
 tm=$(tmux ls 2>/dev/null | cut -d: -f1 | tr '\n' ' '); tme=$(echo "$tm" | tr ' ' '\n' | grep -E '^(e1|e15|e1b8)[-_]' | tr '\n' ' ')
-if [ -n "${tme// /}" ]; then echo "FAIL  experiment tmux sessions alive: $tme"; fail=1; else echo "PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*): none"; fi
+if [ -n "${tme// /}" ]; then echo "FOUND experiment tmux sessions alive: $tme (closed by terminating the registered driver tree; never killed by name)"; fail=1; else echo "PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*): none"; fi
 [ -n "${tm// /}" ] && echo "INFO  other tmux sessions on this tray (not experiment-owned): $tm"
 # GPUs
 apps=$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader 2>/dev/null)
-if [ -n "$apps" ]; then echo "FAIL  GPU compute apps:"; echo "$apps" | sed 's/^/      /'; fail=1; else echo "PASS  GPU compute apps: none"; fi
+if [ -n "$apps" ]; then echo "FOUND GPU compute apps:"; echo "$apps" | sed 's/^/      /'; fail=1; else echo "PASS  GPU compute apps: none"; fi
 used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits 2>/dev/null | tr '\n' ' ')
 echo "INFO  GPU memory used MiB per GPU: $used"
-echo "# process census on $(hostname) at $(date -u +%FT%TZ): $([ $fail = 0 ] && echo CLEAN || echo "NOT CLEAN (pids:$found)")"
+if [ -n "${E1_PID_REGISTRY:-}" ]; then echo "## registry plan ($E1_PID_REGISTRY)"; python3 -I "$(dirname "${BASH_SOURCE[0]}")/e1_pids.py" plan --registry "$E1_PID_REGISTRY" | sed 's/^/  /'; fi
+echo "# process discovery on $(hostname) at $(date -u +%FT%TZ): $([ $fail = 0 ] && echo CLEAN || echo "CANDIDATES FOUND (pids:$found) -> review against the registry; nothing was signalled")"
 exit $fail

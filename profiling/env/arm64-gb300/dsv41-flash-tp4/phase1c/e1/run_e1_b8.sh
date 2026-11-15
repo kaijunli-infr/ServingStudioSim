@@ -20,6 +20,9 @@ E1_REPO=$REPO bash $E1/preflight_e1_b8.sh 2>&1 | tee $RUN/$PASS/preflight.log
 # defence in depth, immediately before launch: the config's trace is the 8-row b=8 trace
 [ "$(tail -n +2 $TRACE | grep -c .)" = 8 ] && ! grep -q b48 $TRACE && grep -q "\"path\": \"$TRACE\"" $CFG || { echo "trace/config guard failed; not starting"; exit 4; }
 cp $CFG $RUN/$PASS/profile.json; cp $TRACE $RUN/$PASS/trace.csv
+# experiment-owned process record: this driver shell (pid + start time + boot id); the launcher and everything it starts are its
+# descendants, so `e1_pids.py cleanup` can terminate exactly this tree and nothing else (closeout_e1.sh / packet §5)
+REG=$RUN/pids/owned.tsv; python3 -I $E1/checks/e1_pids.py register --registry $REG --label driver:$PASS $$ | tee -a $RUN/$PASS/run.log
 cd $REPO
 source profiling/env/arm64-gb300/gb300.env
 unset CUDA_VISIBLE_DEVICES
@@ -38,6 +41,6 @@ if [ -n "$SL" ]; then
   echo "[$PASS] shutdown trigger at server-log line ${sd}; EngineDeadError-family lines: ${ede:-none}; before shutdown: $before $([ $before = 0 ] && echo "(accepted)" || echo "(ABORT CONDITION)")" | tee -a $RUN/$PASS/run.log
 fi
 sleep 20
-# closeout census (this driver's own shell is still alive and is excluded; the tmux session that holds it is reported by closeout_e1.sh afterwards)
-bash $E1/checks/e1_process_census.sh 2>&1 | grep -v "tmux sessions" | tee -a $RUN/$PASS/run.log
+# closeout discovery + registry plan (this driver's own shell is still alive and is owned by design; it exits right after this)
+E1_PID_REGISTRY=$REG bash $E1/checks/e1_process_census.sh 2>&1 | grep -v "tmux sessions" | tee -a $RUN/$PASS/run.log
 exit $rc

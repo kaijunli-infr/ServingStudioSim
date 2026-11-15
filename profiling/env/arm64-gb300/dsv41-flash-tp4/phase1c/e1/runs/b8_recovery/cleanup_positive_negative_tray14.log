@@ -1,0 +1,87 @@
+# 2026-11-15T18:03:14Z on pod4-gb300-10-tray14-f3: positive = registered tail -F on a run log + registered bash tree with cwd in the run dir; negative (unregistered; recorded in a separate registry only so they can be removed afterwards by verified identity) = a bash whose argv quotes the planted tail command (the Stage 1.5 failure mode) and a bash carrying the experiment marker as a positional argument; test shell pid 934165 (ssh session), parent 934163
+{"pid": 944353, "starttime": 276039713, "boot_id": "75b98d51-e62a-49bf-abf7-47871fa60b9b", "uid": 1000, "label": "test:tail", "registered_at": "2026-11-15T18:03:14Z", "host": "pod4-gb300-10-tray14-f3", "registered_by": 944352, "cmd": "tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log", "argv": ["tail", "-F", "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log"]}
+{"pid": 944355, "starttime": 276039716, "boot_id": "75b98d51-e62a-49bf-abf7-47871fa60b9b", "uid": 1000, "label": "test:tree", "registered_at": "2026-11-15T18:03:14Z", "host": "pod4-gb300-10-tray14-f3", "registered_by": 944354, "cmd": "bash -c sleep 600 & wait", "argv": ["bash", "-c", "sleep 600 & wait"]}
+{"pid": 944358, "starttime": 276039719, "boot_id": "75b98d51-e62a-49bf-abf7-47871fa60b9b", "uid": 1000, "label": "negative:quoted", "registered_at": "2026-11-15T18:03:14Z", "host": "pod4-gb300-10-tray14-f3", "registered_by": 944357, "cmd": "bash -c sleep 600; true # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log", "argv": ["bash", "-c", "sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log"]}
+{"pid": 944361, "starttime": 276039721, "boot_id": "75b98d51-e62a-49bf-abf7-47871fa60b9b", "uid": 1000, "label": "negative:marker", "registered_at": "2026-11-15T18:03:14Z", "host": "pod4-gb300-10-tray14-f3", "registered_by": 944360, "cmd": "bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val", "argv": ["bash", "-c", "sleep 600; true", "lookalike", "#dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val"]}
+## negatives cmdlines
+pid 944358: bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log 
+pid 944361: bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val 
+## discovery (report only)
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+FOUND log watchers (tail -F/-f, less +F) on experiment logs: pids 944353 944358  (candidate; ownership only via the registry)
+       944353 dc       Sun Nov 15 18:03:14 2026 tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log
+       944358 dc       Sun Nov 15 18:03:14 2026 bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+FOUND other processes whose cmdline references the experiment dirs: pids 944353 944358 944361  (candidate; ownership only via the registry)
+       944353 dc       Sun Nov 15 18:03:14 2026 tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log
+       944358 dc       Sun Nov 15 18:03:14 2026 bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/run.log
+       944361 dc       Sun Nov 15 18:03:14 2026 bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val
+FOUND processes whose cwd is inside the experiment dirs: pids 944355 944356  (candidate; ownership only via the registry)
+       944355 dc       Sun Nov 15 18:03:14 2026 bash -c sleep 600 & wait
+       944356 dc       Sun Nov 15 18:03:14 2026 sleep 600
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*): none
+INFO  other tmux sessions on this tray (not experiment-owned): kvsim kvsim-watchdog 
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/pidtest_180314/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray14-f3 at 2026-11-15T18:03:23Z: registry /mnt/shared/home/dc/workspace/serving-studio/pidtest_180314/owned.tsv (2 records); cleanup pid 954648, excluded ancestry [1, 12797, 934114, 934163, 934165, 944379, 954648]
+  OWNED    pid 944356 depth 1 [descendant] start 276039716 sleep: sleep 600
+  OWNED    pid 944353 depth 0 [test:tail] start 276039713 tail: tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/
+  OWNED    pid 944355 depth 0 [test:tree] start 276039716 bash: bash -c sleep 600 & wait
+  LOOKALIKE pid 944358 uid 1000 bash: bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_ (cwd /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1) -> NOT owned, not touched; stop-and-report
+  LOOKALIKE pid 944361 uid 1000 bash: bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val (cwd /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1) -> NOT owned, not touched; stop-and-report
+  summary: owned 3, stale 0, gone 0, refused 0, lookalikes 2
+# process discovery on pod4-gb300-10-tray14-f3 at 2026-11-15T18:03:23Z: CANDIDATES FOUND (pids: 944353 944358  944353 944358 944361  944355 944356 ) -> review against the registry; nothing was signalled
+discovery rc=1 (1 expected: candidates found)
+## cleanup dry-run
+# e1_pids plan on pod4-gb300-10-tray14-f3 at 2026-11-15T18:03:23Z: registry /mnt/shared/home/dc/workspace/serving-studio/pidtest_180314/owned.tsv (2 records); cleanup pid 954654, excluded ancestry [1, 12797, 934114, 934163, 934165, 954654]
+OWNED    pid 944356 depth 1 [descendant] start 276039716 sleep: sleep 600
+OWNED    pid 944353 depth 0 [test:tail] start 276039713 tail: tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/
+OWNED    pid 944355 depth 0 [test:tree] start 276039716 bash: bash -c sleep 600 & wait
+LOOKALIKE pid 944358 uid 1000 bash: bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_ (cwd /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1) -> NOT owned, not touched; stop-and-report
+LOOKALIKE pid 944361 uid 1000 bash: bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val (cwd /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1) -> NOT owned, not touched; stop-and-report
+summary: owned 3, stale 0, gone 0, refused 0, lookalikes 2
+RESULT DRY-RUN: 3 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 2 would never be touched
+dry-run rc=2 (2 expected: lookalikes present)
+## cleanup --execute: owned tree only
+# e1_pids plan on pod4-gb300-10-tray14-f3 at 2026-11-15T18:03:23Z: registry /mnt/shared/home/dc/workspace/serving-studio/pidtest_180314/owned.tsv (2 records); cleanup pid 954655, excluded ancestry [1, 12797, 934114, 934163, 934165, 954655]
+OWNED    pid 944356 depth 1 [descendant] start 276039716 sleep: sleep 600
+OWNED    pid 944353 depth 0 [test:tail] start 276039713 tail: tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/
+OWNED    pid 944355 depth 0 [test:tree] start 276039716 bash: bash -c sleep 600 & wait
+LOOKALIKE pid 944358 uid 1000 bash: bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_ (cwd /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1) -> NOT owned, not touched; stop-and-report
+LOOKALIKE pid 944361 uid 1000 bash: bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val (cwd /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1) -> NOT owned, not touched; stop-and-report
+summary: owned 3, stale 0, gone 0, refused 0, lookalikes 2
+ACTION   {"pid": 944356, "action": "SIGTERM", "cmd": "sleep 600", "starttime": 276039716}
+ACTION   {"pid": 944353, "action": "SIGTERM", "cmd": "tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/", "starttime": 276039713}
+ACTION   {"pid": 944355, "action": "skip", "reason": "gone before signal"}
+RESULT NOT CLEAN: signalled 2, skipped 1, survivors 0, lookalikes 2 (never signalled)
+execute rc=2 (2 expected: owned terminated, lookalikes alive and reported)
+## negatives must be alive
+OWNED    pid 944362 depth 1 [descendant] start 276039722 sleep: sleep 600
+OWNED    pid 944359 depth 1 [descendant] start 276039719 sleep: sleep 600
+OWNED    pid 944358 depth 0 [negative:quoted] start 276039719 bash: bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_
+OWNED    pid 944361 depth 0 [negative:marker] start 276039721 bash: bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val
+summary: owned 4, stale 0, gone 0, refused 0, lookalikes 0
+## test shell 934165 alive:  934165 Sun Nov 15 18:02:55 2026 bash -c export HOME=/mnt/shared/home/dc; S=/mnt
+## remove the negatives through their own registry by verified identity (never by pattern)
+# e1_pids plan on pod4-gb300-10-tray14-f3 at 2026-11-15T18:03:24Z: registry /mnt/shared/home/dc/workspace/serving-studio/pidtest_180314/lookalike.tsv (2 records); cleanup pid 954662, excluded ancestry [1, 12797, 934114, 934163, 934165, 954662]
+OWNED    pid 944362 depth 1 [descendant] start 276039722 sleep: sleep 600
+OWNED    pid 944359 depth 1 [descendant] start 276039719 sleep: sleep 600
+OWNED    pid 944358 depth 0 [negative:quoted] start 276039719 bash: bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_
+OWNED    pid 944361 depth 0 [negative:marker] start 276039721 bash: bash -c sleep 600; true lookalike #dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val
+summary: owned 4, stale 0, gone 0, refused 0, lookalikes 0
+ACTION   {"pid": 944362, "action": "SIGTERM", "cmd": "sleep 600", "starttime": 276039722}
+ACTION   {"pid": 944359, "action": "SIGTERM", "cmd": "sleep 600", "starttime": 276039719}
+ACTION   {"pid": 944358, "action": "SIGTERM", "cmd": "bash -c sleep 600; true  # tail -F /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_", "starttime": 276039719}
+ACTION   {"pid": 944361, "action": "skip", "reason": "gone before signal"}
+RESULT CLEAN: signalled 3, skipped 1, survivors 0, lookalikes 0 (never signalled)
+negatives cleanup rc=0 (0 expected)
+## final discovery
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+# process discovery on pod4-gb300-10-tray14-f3 at 2026-11-15T18:03:31Z: CLEAN
+test shell alive at the end: 934165 Sun Nov 15 18:02:55 2026

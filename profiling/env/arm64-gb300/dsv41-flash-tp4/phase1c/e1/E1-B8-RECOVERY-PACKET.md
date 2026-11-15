@@ -123,15 +123,35 @@ Abort conditions (stop, archive what exists, run `closeout_e1.sh`, report; no re
 > 30 min; any GPU process or GPU pod on tray16 that is not the launch or the reservation; `EngineDeadError`-family line before
 the shutdown trigger; `validation.ok == false` or export failure; disk below the preflight thresholds; reservation hard stop.
 
-Process cleanup (item 9): `checks/e1_process_census.sh` enumerates vllm/EngineCore, nsys, `session_runner`, launcher, E1
-driver/preflight/postrun shells, `tail`/`less` watchers on experiment logs, nvidia-smi loops and `watch`, python monitors,
-any process whose command line or cwd references the experiment directories, experiment-named tmux sessions (`e1-*`, `e15-*`,
-`e1b8-*`; other users' sessions on a shared tray are reported as INFO) and GPU compute apps; exits 1 if anything is alive. It
-runs in the preflight (must be clean before the go), at the end of the driver and in `closeout_e1.sh` (with per-GPU memory and
-the reservation-delete reminder). Positive test on tray14 (`runs/b8_recovery/process_census_positive_tray14.log`): a planted
-`tail -F` on a run log and a `sleep` with its cwd in the run directory were both reported (NOT CLEAN), killed by pid, and the
-census returned CLEAN. Read-only closeout on tray16 at 17:36Z: CLEAN (16 PASS). Note from the positive test: a shell whose own
-command line quotes the planted command text matches `pgrep -f` of that text; kill by explicit pid only.
+Process cleanup (item 9; corrected 2026-11-15 after review, see §11). Discovery and termination are separate programs:
+
+* **Discovery, report only** — `checks/e1_process_census.sh` lists *candidates*: vllm/EngineCore, nsys, `session_runner`,
+  launcher, E1 driver/preflight/postrun shells, `tail`/`less` watchers on experiment logs, nvidia-smi loops and `watch`,
+  python monitors, any process whose command line or cwd references the experiment directories, experiment-named tmux
+  sessions and GPU compute apps. A match is never ownership and nothing is signalled; exit 1 only means "review".
+* **Ownership, explicit records** — `checks/e1_pids.py` keeps a registry (`<run root>/pids/owned.tsv`) of process
+  identities: pid, start time (clock ticks since boot, `/proc/<pid>/stat` field 22), boot id, uid, label, command. The driver
+  registers its own shell at start (`run_e1_b8.sh`: one added line; the launcher, vLLM, nsys and `session_runner` are its
+  descendants); operator background jobs are started through `e1_pids.py spawn --label …` which registers them. A process is
+  owned iff it is a registered identity that still matches, or a live descendant of one.
+* **Termination, verified** — `e1_pids.py cleanup --registry … --execute` (dry-run without `--execute`): every record is
+  re-verified (gone → GONE, start time / boot / uid mismatch → STALE, skipped); the current process, its ancestors (shell,
+  sshd, tmux), pid 1 and other users' processes are REFUSED, and any refusal aborts the whole run with nothing signalled
+  (rc 3); owned processes receive SIGTERM deepest-first with the identity re-read immediately before each signal (a changed
+  start time → skip); survivors after the grace period are reported (`--kill9` repeats with SIGKILL, same verification).
+  Lookalikes (candidates that are not owned) are listed and never signalled; their presence is a stop-and-report condition
+  (rc 2). Every action is appended as JSON to the `--log` file.
+* `closeout_e1.sh` runs discovery plus the dry-run plan and prints the exact `--execute` command; it never terminates
+  anything itself. The preflight requires the plan to show no owned process, no lookalike and no refusal.
+* Tests: `tests/test_e1_pids_cleanup.py` (positive: real registered background processes incl. a process tree and a log
+  watcher are terminated; negative: unregistered command-line lookalikes incl. the Stage 1.5 regression case, a shell whose
+  argv quotes the planted `tail -F` command, survive; stale record / pid reuse skipped; identity re-check immediately before
+  the signal; refusal of the test process, its parent and a grandparent; dry-run signals nothing; CLI round trip; the test
+  process and its parent are asserted alive after every case) and the real run on tray14
+  (`runs/b8_recovery/cleanup_positive_negative_tray14.log`, with the ssh shell pid recorded alive before and after).
+* The earlier failing case is preserved: `runs/b8_recovery/process_census_positive_tray14.log` (17:37Z) shows the pattern
+  kill (`pgrep -f` of the planted tail command) matching the test shell's own command line and killing it; the regression
+  test and the real run show the same shell surviving under the corrected procedure.
 
 ## 6. Pre-GPU verification already done (CPU, 2026-11-15)
 
@@ -215,7 +235,18 @@ Nothing from this pass feeds model coefficients, the Rust path, the database or 
 | `make_e1_inputs_b8.py` → `traces/e1_b8_recovery.csv`, `configs_v2/e1_b8_recovery/profile.json`, `INPUTS_b8.sha256`, `E1-B8-RECOVERY-INPUTS.json` | deterministic derivation from the hashed Stage 1.5 inputs |
 | `analysis/e1_capture_window.py` | census of a pass's iterations; delayed-start simulation; coverage gate |
 | `tests/test_e1_capture_window.py` (repo `tests/`) | CPU regression tests incl. delayed-start boundary cases and the real-data reproduction |
-| `checks/e1_process_census.sh` | experiment-owned process enumeration (preflight, driver end, closeout) |
+| `checks/e1_process_census.sh` | process discovery, report only (preflight, driver end, closeout) |
+| `checks/e1_pids.py`, `tests/test_e1_pids_cleanup.py` (repo `tests/`) | experiment-owned process registry (identity = pid + start time + boot id + uid), spawn, dry-run plan, verified termination; regression tests |
+| `hash_scripts_b8.sh` → `SCRIPTS_b8.sha256` | pinned hashes of the recovery scripts, checks, analysis and tests, verified by the preflight |
 | `checks/e1_workload_identity.py` | per-request identity of the b=8 requests between runs |
 | `preflight_e1_b8.sh`, `run_e1_b8.sh`, `postrun_e1_b8.sh`, `closeout_e1.sh`, `collect_e1_b8.sh` | preflight, one-pass driver, gates, closeout, collection |
-| `runs/b8_recovery/` | census and simulation outputs, preflight and closeout logs from tray16, process-census positive test |
+| `runs/b8_recovery/` | census and simulation outputs, preflight and closeout logs from tray16, process-census positive test (17:37Z, preserved failing case), cleanup positive/negative run, pytest results, `CLEANUP-CORRECTION.md` |
+
+## 11. Revision 2026-11-15 (cleanup-safety correction, CPU only)
+
+Kevin's conditional acceptance of 9275abbd required separating process discovery from termination. Changes: `checks/e1_pids.py`
+(registry, spawn, plan, verified cleanup), `tests/test_e1_pids_cleanup.py`, `checks/e1_process_census.sh` reworded to report
+candidates only, `run_e1_b8.sh` registers its own pid (one line; pass selection, trace guard, launch and bookkeeping
+unchanged), `closeout_e1.sh` prints the dry-run plan and never signals, `preflight_e1_b8.sh` verifies `SCRIPTS_b8.sha256` and
+requires a clean registry plan, `hash_scripts_b8.sh`. Workload, Nsight settings, validation thresholds and model untouched
+(`INPUTS_b8.sha256` unchanged). Details and results: `runs/b8_recovery/CLEANUP-CORRECTION.md`.
