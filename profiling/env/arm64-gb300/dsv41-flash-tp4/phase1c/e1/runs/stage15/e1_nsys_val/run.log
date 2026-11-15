@@ -1,0 +1,182 @@
+[e1_nsys_val] start 2026-11-15T12:46:41Z on pod4-gb300-10-tray16-f3 launcher_tree=/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 repo=927160181ffe2fe3964b4098fa39acc5a4668635 cfg_sha=df949648153e8627 session_runner=7f6eb81d45e6b98f
+    Finished `release` profile [optimized] target(s) in 0.17s
+[replay] warmup.serial started
+requests arrival rate | saturated (recorded arrivals ignored, bounded by --max-concurrency 1)
+independent-request workload | requests=1 max_input_len=32768 max_output_len=32 total_output_len=32 max_arrival_time_ms=0.000
+requests 0/1 | steps 0/1 completed=0 submitted=1 active=1 failed=0 runtime_global_queue_depth=0 | elapsed=0.5s
+requests 1/1 | steps 1/1 completed=1 submitted=1 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=1.0s
+[replay] warmup started
+requests arrival rate | saturated (recorded arrivals ignored, unbounded)
+independent-request workload | requests=56 max_input_len=32768 max_output_len=32 total_output_len=1792 max_arrival_time_ms=18627.200
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=0.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=1.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=1.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=2.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=2.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=3.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=3.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=4.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=4.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=5.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=5.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=6.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=6.5s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=7.0s
+requests 0/56 | steps 0/56 completed=0 submitted=56 active=56 failed=0 runtime_global_queue_depth=0 | elapsed=7.5s
+requests 1/56 | steps 1/56 completed=1 submitted=56 active=55 failed=0 runtime_global_queue_depth=0 | elapsed=8.0s
+requests 2/56 | steps 2/56 completed=2 submitted=56 active=54 failed=0 runtime_global_queue_depth=0 | elapsed=8.5s
+requests 3/56 | steps 3/56 completed=3 submitted=56 active=53 failed=0 runtime_global_queue_depth=0 | elapsed=9.0s
+requests 4/56 | steps 4/56 completed=4 submitted=56 active=52 failed=0 runtime_global_queue_depth=0 | elapsed=9.5s
+requests 6/56 | steps 6/56 completed=6 submitted=56 active=50 failed=0 runtime_global_queue_depth=0 | elapsed=10.0s
+requests 7/56 | steps 7/56 completed=7 submitted=56 active=49 failed=0 runtime_global_queue_depth=0 | elapsed=10.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=11.0s
+requests 9/56 | steps 9/56 completed=9 submitted=56 active=47 failed=0 runtime_global_queue_depth=0 | elapsed=11.5s
+requests 10/56 | steps 10/56 completed=10 submitted=56 active=46 failed=0 runtime_global_queue_depth=0 | elapsed=12.0s
+requests 11/56 | steps 11/56 completed=11 submitted=56 active=45 failed=0 runtime_global_queue_depth=0 | elapsed=12.5s
+requests 12/56 | steps 12/56 completed=12 submitted=56 active=44 failed=0 runtime_global_queue_depth=0 | elapsed=13.0s
+requests 13/56 | steps 13/56 completed=13 submitted=56 active=43 failed=0 runtime_global_queue_depth=0 | elapsed=13.5s
+requests 15/56 | steps 15/56 completed=15 submitted=56 active=41 failed=0 runtime_global_queue_depth=0 | elapsed=14.0s
+requests 16/56 | steps 16/56 completed=16 submitted=56 active=40 failed=0 runtime_global_queue_depth=0 | elapsed=14.5s
+requests 17/56 | steps 17/56 completed=17 submitted=56 active=39 failed=0 runtime_global_queue_depth=0 | elapsed=15.0s
+requests 18/56 | steps 18/56 completed=18 submitted=56 active=38 failed=0 runtime_global_queue_depth=0 | elapsed=15.5s
+requests 19/56 | steps 19/56 completed=19 submitted=56 active=37 failed=0 runtime_global_queue_depth=0 | elapsed=16.0s
+requests 20/56 | steps 20/56 completed=20 submitted=56 active=36 failed=0 runtime_global_queue_depth=0 | elapsed=16.5s
+requests 21/56 | steps 21/56 completed=21 submitted=56 active=35 failed=0 runtime_global_queue_depth=0 | elapsed=17.0s
+requests 22/56 | steps 22/56 completed=22 submitted=56 active=34 failed=0 runtime_global_queue_depth=0 | elapsed=17.5s
+requests 23/56 | steps 23/56 completed=23 submitted=56 active=33 failed=0 runtime_global_queue_depth=0 | elapsed=18.0s
+requests 25/56 | steps 25/56 completed=25 submitted=56 active=31 failed=0 runtime_global_queue_depth=0 | elapsed=18.5s
+requests 26/56 | steps 26/56 completed=26 submitted=56 active=30 failed=0 runtime_global_queue_depth=0 | elapsed=19.0s
+requests 27/56 | steps 27/56 completed=27 submitted=56 active=29 failed=0 runtime_global_queue_depth=0 | elapsed=19.5s
+requests 28/56 | steps 28/56 completed=28 submitted=56 active=28 failed=0 runtime_global_queue_depth=0 | elapsed=20.0s
+requests 29/56 | steps 29/56 completed=29 submitted=56 active=27 failed=0 runtime_global_queue_depth=0 | elapsed=20.5s
+requests 30/56 | steps 30/56 completed=30 submitted=56 active=26 failed=0 runtime_global_queue_depth=0 | elapsed=21.0s
+requests 31/56 | steps 31/56 completed=31 submitted=56 active=25 failed=0 runtime_global_queue_depth=0 | elapsed=21.5s
+requests 32/56 | steps 32/56 completed=32 submitted=56 active=24 failed=0 runtime_global_queue_depth=0 | elapsed=22.0s
+requests 34/56 | steps 34/56 completed=34 submitted=56 active=22 failed=0 runtime_global_queue_depth=0 | elapsed=22.6s
+requests 35/56 | steps 35/56 completed=35 submitted=56 active=21 failed=0 runtime_global_queue_depth=0 | elapsed=23.1s
+requests 36/56 | steps 36/56 completed=36 submitted=56 active=20 failed=0 runtime_global_queue_depth=0 | elapsed=23.6s
+requests 37/56 | steps 37/56 completed=37 submitted=56 active=19 failed=0 runtime_global_queue_depth=0 | elapsed=24.1s
+requests 38/56 | steps 38/56 completed=38 submitted=56 active=18 failed=0 runtime_global_queue_depth=0 | elapsed=24.6s
+requests 39/56 | steps 39/56 completed=39 submitted=56 active=17 failed=0 runtime_global_queue_depth=0 | elapsed=25.1s
+requests 40/56 | steps 40/56 completed=40 submitted=56 active=16 failed=0 runtime_global_queue_depth=0 | elapsed=25.6s
+requests 41/56 | steps 41/56 completed=41 submitted=56 active=15 failed=0 runtime_global_queue_depth=0 | elapsed=26.1s
+requests 56/56 | steps 56/56 completed=56 submitted=56 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=26.6s
+[replay] warmup drained; prefix cache reset
+requests arrival rate | trace=2.952671/s (unchanged)
+independent-request workload | requests=56 max_input_len=32768 max_output_len=1024 total_output_len=57344 max_arrival_time_ms=18627.200
+[alignment] profiling: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile.json
+[profile] launching (external nsys): /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys profile --trace-fork-before-exec=true --trace=cuda,nvtx --sample=none --cpuctxsw=none ... (log: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_nsys_val_server.log)
+[profile] server ready; driving workload
+[profile] frontend ready; measurement begins
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=0.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=1.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=1.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=2.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=2.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=3.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=3.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=4.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=4.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=5.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=5.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=6.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=6.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=7.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=7.5s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=8.0s
+requests 0/56 | steps 0/56 completed=0 submitted=8 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=8.5s
+requests 2/56 | steps 2/56 completed=2 submitted=8 active=6 failed=0 runtime_global_queue_depth=0 | elapsed=9.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=9.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=10.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=10.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=11.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=11.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=12.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=12.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=13.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=13.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=14.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=14.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=15.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=15.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=16.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=16.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=17.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=17.5s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=18.0s
+requests 8/56 | steps 8/56 completed=8 submitted=8 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=18.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=19.0s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=19.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=20.0s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=20.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=21.0s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=21.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=22.0s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=22.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=23.0s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=23.5s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=24.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=24.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=25.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=25.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=26.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=26.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=27.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=27.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=28.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=28.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=29.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=29.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=30.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=30.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=31.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=31.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=32.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=32.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=33.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=33.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=34.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=34.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=35.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=35.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=36.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=36.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=37.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=37.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=38.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=38.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=39.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=39.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=40.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=40.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=41.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=41.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=42.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=42.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=43.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=43.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=44.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=44.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=45.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=45.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=46.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=46.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=47.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=47.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=48.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=48.6s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=49.1s
+requests 8/56 | steps 8/56 completed=8 submitted=56 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=49.6s
+requests 15/56 | steps 15/56 completed=15 submitted=56 active=41 failed=0 runtime_global_queue_depth=0 | elapsed=50.1s
+requests 45/56 | steps 45/56 completed=45 submitted=56 active=11 failed=0 runtime_global_queue_depth=0 | elapsed=50.6s
+requests 56/56 | steps 56/56 completed=56 submitted=56 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=51.1s
+Processing 9678566 events: 
+[1%                                                                            ][2%                                                                            ][3%                                                                            ][=4%                                                                           ][=5%                                                                           ][==6%                                                                          ][===7%                                                                         ][====8%                                                                        ][=====9%                                                                       ][====10%                                                                       ][=====11%                                                                      ][======12%                                                                     ][=======13%                                                                    ][=======14%                                                                    ][========15%                                                                   ][=========16%                                                                  ][==========17%                                                                 ][===========18%                                                                ][===========19%                                                                ][============20%                                                               ][=============21%                                                              ][==============22%                                                             ][==============23%                                                             ][===============24%                                                            ][================25%                                                           ][=================26%                                                          ][==================27%                                                         ][==================28%                                                         ][===================29%                                                        ][====================30%                                                       ][=====================31%                                                      ][=====================32%                                                      ][======================33%                                                     ][=======================34%                                                    ][========================35%                                                   ][=========================36%                                                  ][=========================37%                                                  ][==========================38%                                                 ][===========================39%                                                ][============================40%                                               ][============================41%                                               ][=============================42%                                              ][==============================43%                                             ][===============================44%                                            ][================================45%                                           ][================================46%                                           ][=================================47%                                          ][==================================48%                                         ][===================================49%                                        ][====================================50%                                       ][====================================51%                                       ][=====================================52%                                      ][======================================53%                                     ][=======================================54%                                    ][=======================================55%                                    ][========================================56%                                   ][=========================================57%                                  ][==========================================58%                                 ][===========================================59%                                ][===========================================60%                                ][============================================61%                               ][=============================================62%                              ][==============================================63%                             ][==============================================64%                             ][===============================================65%                            ][================================================66%                           ][=================================================67%                          ][==================================================68%                         ][==================================================69%                         ][===================================================70%                        ][====================================================71%                       ][=====================================================72%                      ][=====================================================73%                      ][======================================================74%                     ][=======================================================75%                    ][========================================================76%                   ][=========================================================77%                  ][=========================================================78%                  ][==========================================================79%                 ][===========================================================80%                ][============================================================81%               ][============================================================82%               ][=============================================================83%              ][==============================================================84%             ][===============================================================85%            ][================================================================86%           ][================================================================87%           ][=================================================================88%          ][==================================================================89%         ][===================================================================90%        ][===================================================================91%        ][====================================================================92%       ][=====================================================================93%      ][======================================================================94%     ][=======================================================================95%    ][=======================================================================96%    ][========================================================================97%   ][=========================================================================98%  ][==========================================================================99% ][==========================================================================100%]
+[profile] workload done: {'source_trace': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv', 'frontend_type': 'independent', 'backend_type': 'openai', 'log_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/load_generator/replay.jsonl', 'summary_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/load_generator/summary.json', 'warmup': True, 'routed_experts_dir': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/routed_experts', 'replay_start_monotonic_ns': 2742258196804451, 'replay_end_monotonic_ns': 2742309393380032, 'measurement_log_offset': 861031, 'reached_idle': True}
+[profile] export ok: sqlite=dsv41_flash_1017_gb300_tp4_e1_nsys_val.sqlite metrics_iters=2160 request_timings=56 validation={'nvtx_forward_ranges': 4480, 'kernel_rows': 6363588, 'kernel_span_ms': 32039.306918, 'ok': True}
+[profile] parsed 1120 iteration(s), 6363588 kernel row(s) → parsed.json
+[profile] host 6 thread(s), 130642 nvtx range(s), 2727723 api call(s) → host_timeline.json
+[alignment] profiling complete: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/parsed.json
+[alignment] inspect parsed.json, then create timing_predict.yaml
+[e1_nsys_val] rc=0 end 2026-11-15T13:15:44Z
+[e1_nsys_val] shutdown trigger at server-log line 7684; EngineDeadError-family lines: none; before shutdown: 0 (accepted)

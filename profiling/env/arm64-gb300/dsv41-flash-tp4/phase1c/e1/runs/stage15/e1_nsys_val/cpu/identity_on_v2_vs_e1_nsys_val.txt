@@ -1,0 +1,14 @@
+FAIL  config key differs: nsys.capture_mode: '<absent>' vs 'cuda_profiler_api'
+FAIL  config key differs: nsys.capture_start_delay_seconds: '<absent>' vs 10.0
+FAIL  config key differs: nsys.cuda_event_trace: '<absent>' vs False
+FAIL  config key differs: nsys.cuda_graph_trace: '<absent>' vs 'node'
+FAIL  config key differs: nsys.executable: '<absent>' vs '/usr/local/bin/nsys'
+FAIL  config key differs: profile_kind: 'workload_metrics' vs 'nsys'
+FAIL  profile configs identical apart from ['log_dir', 'name', 'workload.capture_routed_experts']
+PASS  effective wire mode (stream and not capture): a=non-streaming b=non-streaming
+FAIL  argv: only in a [], only in b ['/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys', 'profile', '--trace-fork-before-exec=true', '--trace=cuda,nvtx', '--sample=none', '--cpuctxsw=none', '--cuda-graph-trace=node', '--cuda-event-trace=false', '--force-overwrite=true', '-o', '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val', '--capture-range=cudaProfilerApi', '--capture-range-end=stop', '--profiler-config.profiler=cuda'] (permitted: ['--enable-return-routed-experts'])
+FAIL  server_argv: only in a [], only in b ['--profiler-config.profiler=cuda'] (permitted: ['--enable-return-routed-experts'])
+PASS  server env differs in [] (ignored: ['PATH'])
+FAIL  launch nsys_config differs: ['nsys_config.capture_start_delay_seconds', 'nsys_config.executable']
+FAIL  launch records identical apart from the hook flag
+RESULT FAIL (11)

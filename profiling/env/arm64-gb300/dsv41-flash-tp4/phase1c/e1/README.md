@@ -37,6 +37,7 @@ Stage 1.5 (CPU-only remediation, branch `phase1c-e1-stage15`; GPU passes await a
 | `runs/stage15/engine-dead-error.md` | Stage 1 teardown `EngineDeadError`: explanation and abort conditions |
 | `runs/stage15/cpu/` | every CPU output referenced above |
 | `E1-STAGE15-REPORT.md` | **Stage 1.5 execution report (passes 1-3 run 2026-11-15 on tray16)**; `runs/stage15/e1_dry_*_v2/` derived files, `runs/stage15/cpu/final/` analysis; `postpass_e1_stage15.sh`, `analyze_e1_stage15.sh` the gate and analysis drivers |
+| `E1-NSYS-VAL-REPORT.md`, `runs/stage15/e1_nsys_val/`, `postrun_e1_nsys_val.sh`, `analysis/e1_nsys_rank_kernels.py`, `analysis/e1_nsys_capture_window.py` | Stage 1.5 pass 4 (`e1_nsys_val`, 2026-11-15): pre-GPU verification, timeline, all nsys validation gates PASS on the b=48 cell, per-rank execution / collective wait / kernel identities, capture-window limitation (b=8 cell not captured), fork proposal |
 
 Regenerate / re-check on tray14 (CPU only):
 

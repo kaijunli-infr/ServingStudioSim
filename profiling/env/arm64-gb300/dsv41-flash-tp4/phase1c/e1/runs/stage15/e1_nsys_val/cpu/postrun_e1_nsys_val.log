@@ -1,0 +1,61 @@
+# postrun e1_nsys_val 2026-11-15T13:17:05Z on pod4-gb300-10-tray14-f3
+[e1_nsys_val] rc=0 end 2026-11-15T13:15:44Z
+[e1_nsys_val] shutdown trigger at server-log line 7684; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+## sizes
+114936918 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/host_timeline.json
+58069331 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/parsed.json
+40575307 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/parsed.kernels.parquet
+ 
+ 
+ 
+223141300 dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep
+1088155648 dsv41_flash_1017_gb300_tp4_e1_nsys_val.sqlite
+validation: {'nvtx_forward_ranges': 4480, 'kernel_rows': 6363588, 'kernel_span_ms': 32039.306918, 'ok': True}
+nsys_profiler: {'executable': '/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys', 'version': 'NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0'}
+parsed_device_ids: [0, 1, 2, 3]
+## 1. completeness v2 (routing-to-iteration joins, hook on)
+INFO         ramp iterations (prefill present or decode_requests != b inside a cell): 220
+PASS         iterations carrying requests of two cells (overrun): 0
+INFO         plan 'dry' (2 cells, 56 requests) selected by --plan auto; every planned cell is checked
+PASS         requests seen 56; requests whose emitted tokens != 1024: 0 []
+PASS         (request, position) pairs emitted in more than one iteration (duplicate join): 0
+PASS         (request, position) pairs never emitted (missing join): 0
+PASS         requests whose position->iteration map is not strictly increasing: 0
+PASS         routed_experts files 56 vs requests 56; missing [] extra []
+completeness_v2 rc=0
+## 2. input hashes + Phase 1A tables (costmodel.extract)
+f62ea563588baab7742f44f6ccb7236560cc8c2a7a399e8ec6d082a9d2bff0c0 run/e1_nsys_val/profile/ parsed.json
+a3810e42691d4723921b523192ba0e0bbd4bd5cba5f5b88083b8365127528b97 run/e1_nsys_val/profile/ parsed.kernels.parquet
+48fdb8b472fe89ff91522459b0d07449b60b0b8f2f3e998e444ed329e76644f8 run/e1_nsys_val/profile/ host_timeline.json
+[e1_nsys_val] parsed.json: 1120 iterations, 202 kernel names, devices [0, 1, 2, 3]
+[e1_nsys_val] kernels: 6363588 rows sorted in 1s
+[e1_nsys_val] host_timeline: 2727723 api calls
+[e1_nsys_val] 0/1120 iterations, 2s
+[e1_nsys_val] done: 1120 iterations, 4480 rank rows, 395136 collective rows, unaligned 0, 4s
+extract rc=0
+## 3. nsys validation checker
+RESULT PASS [checker v2.0.0]
+RESULT PASS
+PASS lines: 90
+nsys_validation rc=0
+## 4. per-rank execution, collective wait, kernel identities (+ cross-session reference quadrant_nsys)
+rank_kernels rc=0 (149 lines)
+## 5. identify smoke test (estimator pipeline on a 2-cell pass; no estimate is used)
+  "pass": {}
+ }
+}
+identify smoke rc=0 (informational)
+## 6. configuration identity of the launch record vs e1_dry_on_v2 (informational: profile_kind/nsys/name/log_dir differ by design)
+FAIL  config key differs: nsys.capture_mode: '<absent>' vs 'cuda_profiler_api'
+FAIL  config key differs: nsys.capture_start_delay_seconds: '<absent>' vs 10.0
+FAIL  config key differs: nsys.cuda_event_trace: '<absent>' vs False
+FAIL  config key differs: nsys.cuda_graph_trace: '<absent>' vs 'node'
+FAIL  config key differs: nsys.executable: '<absent>' vs '/usr/local/bin/nsys'
+FAIL  config key differs: profile_kind: 'workload_metrics' vs 'nsys'
+FAIL  profile configs identical apart from ['log_dir', 'name', 'workload.capture_routed_experts']
+FAIL  argv: only in a [], only in b ['/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys', 'profile', '--trace-fork-before-exec=true', '--trace=cuda,nvtx', '--sample=none', '--cpuctxsw=none', '--cuda-graph-trace=node', '--cuda-event-trace=false', '--force-overwrite=true', '-o', '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val', '--capture-range=cudaProfilerApi', '--capture-range-end=stop', '--profiler-config.profiler=cuda'] (permitted: ['--enable-return-routed-experts'])
+FAIL  server_argv: only in a [], only in b ['--profiler-config.profiler=cuda'] (permitted: ['--enable-return-routed-experts'])
+FAIL  launch nsys_config differs: ['nsys_config.capture_start_delay_seconds', 'nsys_config.executable']
+FAIL  launch records identical apart from the hook flag
+RESULT FAIL (11)
+GATES e1_nsys_val: completeness_v2 rc=0 extract rc=0 nsys_validation rc=0 -> PASS

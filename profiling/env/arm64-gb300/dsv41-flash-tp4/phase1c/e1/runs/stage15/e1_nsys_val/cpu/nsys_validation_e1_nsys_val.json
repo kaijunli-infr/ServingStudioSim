@@ -1,0 +1,758 @@
+{
+ "size.nsys-rep": 223141300,
+ "size.sqlite": 1088155648,
+ "forward_start_spread_ms": {
+  "median": 0.348256,
+  "p90": 0.575184,
+  "max": 65.981728
+ },
+ "iterations": 1120,
+ "bad_ranges": 0,
+ "bad_devices": 0,
+ "bad_index": 0,
+ "jit_iterations": [
+  1287,
+  1303,
+  1319
+ ],
+ "gpu_start_spread_ms": {
+  "median": 0.00741,
+  "p90": 0.0131942,
+  "max": 2.152743
+ },
+ "collective_end_spread": {
+  "1": {
+   "median_ms": 0.001077,
+   "p90_ms": 0.0068585,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "2": {
+   "median_ms": 0.001005,
+   "p90_ms": 0.004488000000000001,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "3": {
+   "median_ms": 0.000925,
+   "p90_ms": 0.0038,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "4": {
+   "median_ms": 0.001128,
+   "p90_ms": 0.0056655,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "5": {
+   "median_ms": 0.0008655,
+   "p90_ms": 0.005885,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "6": {
+   "median_ms": 0.0008815,
+   "p90_ms": 0.00696,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "7": {
+   "median_ms": 0.0009584999999999999,
+   "p90_ms": 0.006413,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "8": {
+   "median_ms": 0.000899,
+   "p90_ms": 0.007384,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "9": {
+   "median_ms": 0.001028,
+   "p90_ms": 0.008674,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "10": {
+   "median_ms": 0.000972,
+   "p90_ms": 0.009426,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "11": {
+   "median_ms": 0.00104,
+   "p90_ms": 0.009596,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "12": {
+   "median_ms": 0.0010739999999999999,
+   "p90_ms": 0.009611999999999999,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "13": {
+   "median_ms": 0.0010479999999999999,
+   "p90_ms": 0.009308,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "14": {
+   "median_ms": 0.001008,
+   "p90_ms": 0.009232,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "15": {
+   "median_ms": 0.001012,
+   "p90_ms": 0.008893999999999999,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "16": {
+   "median_ms": 0.000982,
+   "p90_ms": 0.00898,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "17": {
+   "median_ms": 0.000208,
+   "p90_ms": 0.0004428000000000001,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "18": {
+   "median_ms": 0.000235,
+   "p90_ms": 0.00042050000000000003,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "19": {
+   "median_ms": 0.00024799999999999996,
+   "p90_ms": 0.0004315,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "20": {
+   "median_ms": 0.000267,
+   "p90_ms": 0.00042050000000000003,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "21": {
+   "median_ms": 0.000251,
+   "p90_ms": 0.0005059,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "22": {
+   "median_ms": 0.00024,
+   "p90_ms": 0.00045740000000000006,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "23": {
+   "median_ms": 0.000235,
+   "p90_ms": 0.00045630000000000014,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "24": {
+   "median_ms": 0.000235,
+   "p90_ms": 0.000448,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "25": {
+   "median_ms": 0.0001335,
+   "p90_ms": 0.0004315,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "26": {
+   "median_ms": 0.000144,
+   "p90_ms": 0.00039250000000000005,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "27": {
+   "median_ms": 0.000152,
+   "p90_ms": 0.000362,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "28": {
+   "median_ms": 0.000154,
+   "p90_ms": 0.0004,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "29": {
+   "median_ms": 0.000154,
+   "p90_ms": 0.000394,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "30": {
+   "median_ms": 0.000154,
+   "p90_ms": 0.00035940000000000017,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "31": {
+   "median_ms": 0.00017,
+   "p90_ms": 0.00042340000000000015,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "32": {
+   "median_ms": 0.000144,
+   "p90_ms": 0.00036740000000000004,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "33": {
+   "median_ms": 0.00015700000000000002,
+   "p90_ms": 0.000329,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "34": {
+   "median_ms": 0.000153,
+   "p90_ms": 0.000329,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "35": {
+   "median_ms": 0.000144,
+   "p90_ms": 0.000297,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "36": {
+   "median_ms": 0.000137,
+   "p90_ms": 0.00036730000000000004,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "37": {
+   "median_ms": 0.000153,
+   "p90_ms": 0.00035940000000000006,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "38": {
+   "median_ms": 0.000137,
+   "p90_ms": 0.00031930000000000006,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "39": {
+   "median_ms": 0.0001315,
+   "p90_ms": 0.000297,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "40": {
+   "median_ms": 0.000136,
+   "p90_ms": 0.00030320000000000005,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "41": {
+   "median_ms": 0.000144,
+   "p90_ms": 0.000304,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "42": {
+   "median_ms": 0.000136,
+   "p90_ms": 0.00029440000000000005,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "43": {
+   "median_ms": 0.000136,
+   "p90_ms": 0.000328,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "44": {
+   "median_ms": 0.000156,
+   "p90_ms": 0.000296,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "45": {
+   "median_ms": 0.0001475,
+   "p90_ms": 0.0003279,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "46": {
+   "median_ms": 0.000144,
+   "p90_ms": 0.0003008000000000002,
+   "n": 172,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "47": {
+   "median_ms": 0.000137,
+   "p90_ms": 0.000295,
+   "n": 258,
+   "K_mode": 86,
+   "n_other_K": 0
+  },
+  "48": {
+   "median_ms": 0.000144,
+   "p90_ms": 0.000299,
+   "n": 79808,
+   "K_mode": 86,
+   "n_other_K": 0
+  }
+ },
+ "completeness_v2": [
+  {
+   "status": "PASS",
+   "msg": "export validation ok=True nvtx_forward_ranges=4480 kernel_rows=6363588"
+  },
+  {
+   "status": "PASS",
+   "msg": "parsed devices [0, 1, 2, 3]"
+  },
+  {
+   "status": "INFO",
+   "msg": "profile_kind=nsys request_timing_count=56 corpus_tokens=57288"
+  },
+  {
+   "status": "PASS",
+   "msg": "metrics records: 2160"
+  },
+  {
+   "status": "INFO",
+   "msg": "ramp iterations (prefill present or decode_requests != b inside a cell): 220"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations carrying requests of two cells (overrun): 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "plan 'dry' (2 cells, 56 requests) selected by --plan auto; every planned cell is checked"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190"
+  },
+  {
+   "status": "PASS",
+   "msg": "observed cells not in the plan: []"
+  },
+  {
+   "status": "PASS",
+   "msg": "request ids without an E1 tag: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests seen 56; requests whose emitted tokens != 1024: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "progress entries with emitted_tokens not in {0,1}: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs emitted in more than one iteration (duplicate join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs never emitted (missing join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose position->iteration map is not strictly increasing: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "routed_experts files 56 vs requests 56; missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with shape != (1024, 40, 6): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with dtype != uint16: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with an expert id >= 384: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(token, layer) rows with a duplicate expert in the top-6: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus num_tokens 57288 vs 56 x (1024-1) = 57288"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus file size 27498240 vs num_tokens*L*K*2 = 27498240"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus max expert id 383 < 384"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments 56, unique request names 56"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments with length != 1023: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments contiguous, non-overlapping and covering [0, num_tokens)"
+  },
+  {
+   "status": "PASS",
+   "msg": "segment names == metrics request ids: missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments whose every row maps to exactly one iteration: 56 of 56"
+  }
+ ],
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "export validation ok=True kernel_rows=6363588 kernel_span_ms=32039.306918"
+  },
+  {
+   "status": "PASS",
+   "msg": "nvtx_forward_ranges 4480 == 4 x 1120 parsed iterations"
+  },
+  {
+   "status": "PASS",
+   "msg": "parsed devices [0, 1, 2, 3]"
+  },
+  {
+   "status": "PASS",
+   "msg": "nsys .nsys-rep present: dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep 0.22 GB"
+  },
+  {
+   "status": "PASS",
+   "msg": "nsys .sqlite present: dsv41_flash_1017_gb300_tp4_e1_nsys_val.sqlite 1.09 GB"
+  },
+  {
+   "status": "PASS",
+   "msg": "step_alignment unpaired_steps_by_device={} (rule iteration_index, steps 1120)"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations without 28 NVTX ranges: 0 of 1120"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations with devices_absent: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations whose NVTX iteration index differs between devices: 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "NVTX phases per device: {'bookkeep': 8960, 'eplb': 4480, 'forward': 4480, 'postprocess': 4480, 'preprocess': 4480, 'sample': 4480}"
+  },
+  {
+   "status": "INFO",
+   "msg": "iterations whose four host-side forward NVTX windows do not overlap: 964 of 1120 (host forward is a sub-ms graph launch; GPU-window overlap is checked from the tables)"
+  },
+  {
+   "status": "PASS",
+   "msg": "devices whose iteration start sequence is not strictly increasing: 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "forward start spread across devices: median 0.3483 ms, p90 0.5752 ms, max 65.9817 ms (host launch skew, reported)"
+  },
+  {
+   "status": "PASS",
+   "msg": "JIT-affected iterations after warm-up: 3 (limit 20)"
+  },
+  {
+   "status": "PASS",
+   "msg": "tables iterations 1120 == parsed iterations 1120"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations whose four ranks' GPU kernel windows do not overlap: 0 of 1120"
+  },
+  {
+   "status": "INFO",
+   "msg": "GPU first-kernel start spread across ranks: median 0.0074 ms, p90 0.0132 ms, max 2.1527 ms"
+  },
+  {
+   "status": "INFO",
+   "msg": "pure-decode iterations without rank-aligned collectives (unequal K across ranks): 0 of 1023"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=1: median 0.0011 ms (<= 0.02), p90 0.0069 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=2: median 0.0010 ms (<= 0.02), p90 0.0045 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=3: median 0.0009 ms (<= 0.02), p90 0.0038 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=4: median 0.0011 ms (<= 0.02), p90 0.0057 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=5: median 0.0009 ms (<= 0.02), p90 0.0059 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=6: median 0.0009 ms (<= 0.02), p90 0.0070 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=7: median 0.0010 ms (<= 0.02), p90 0.0064 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=8: median 0.0009 ms (<= 0.02), p90 0.0074 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=9: median 0.0010 ms (<= 0.02), p90 0.0087 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=10: median 0.0010 ms (<= 0.02), p90 0.0094 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=11: median 0.0010 ms (<= 0.02), p90 0.0096 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=12: median 0.0011 ms (<= 0.02), p90 0.0096 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=13: median 0.0010 ms (<= 0.02), p90 0.0093 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=14: median 0.0010 ms (<= 0.02), p90 0.0092 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=15: median 0.0010 ms (<= 0.02), p90 0.0089 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=16: median 0.0010 ms (<= 0.02), p90 0.0090 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=17: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=18: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=19: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=20: median 0.0003 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=21: median 0.0003 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=22: median 0.0002 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=23: median 0.0002 ms (<= 0.02), p90 0.0005 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=24: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=25: median 0.0001 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=26: median 0.0001 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=27: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=28: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=29: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=30: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=31: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=32: median 0.0001 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=33: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=34: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=35: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=36: median 0.0001 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=37: median 0.0002 ms (<= 0.02), p90 0.0004 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=38: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=39: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=40: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=41: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=42: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=43: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=44: median 0.0002 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=45: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=46: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=172; modal K=86 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=47: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=258; modal K=86 in 3 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=48: median 0.0001 ms (<= 0.02), p90 0.0003 ms (<= 0.05); n=79808; modal K=86 in 928 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "completeness v2 on the same profile: 0 FAIL"
+  }
+ ],
+ "fails": 0
+}

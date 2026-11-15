@@ -1,0 +1,6 @@
+[e1_nsys_val] inputs verified in 0s
+[e1_nsys_val] parsed.json: 1120 iterations, 202 kernel names, devices [0, 1, 2, 3]
+[e1_nsys_val] kernels: 6363588 rows sorted in 1s
+[e1_nsys_val] host_timeline: 2727723 api calls
+[e1_nsys_val] 0/1120 iterations, 2s
+[e1_nsys_val] done: 1120 iterations, 4480 rank rows, 395136 collective rows, unaligned 0, 4s

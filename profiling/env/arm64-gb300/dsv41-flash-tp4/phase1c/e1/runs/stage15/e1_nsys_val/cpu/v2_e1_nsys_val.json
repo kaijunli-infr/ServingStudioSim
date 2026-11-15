@@ -1,0 +1,185 @@
+{
+ "checker_version": "2.0.0",
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile",
+ "profile_result": {
+  "profile_kind": "nsys",
+  "validation": {
+   "nvtx_forward_ranges": 4480,
+   "kernel_rows": 6363588,
+   "kernel_span_ms": 32039.306918,
+   "ok": true
+  },
+  "parsed_device_ids": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "request_timing_count": 56,
+  "token_corpus_tokens": 57288
+ },
+ "cells": {
+  "b8_kv32768_w0": {
+   "pure": 1008,
+   "ramp": 30,
+   "elapsed_ms_median": 4.683852,
+   "elapsed_ms_p90": 4.7433496
+  },
+  "b48_kv32768_w0": {
+   "pure": 928,
+   "ramp": 190,
+   "elapsed_ms_median": 8.526900999999999,
+   "elapsed_ms_p90": 8.656886
+  }
+ },
+ "plan": "dry",
+ "token_accounting": {
+  "requests": 56,
+  "ramp_emitted_min": 15,
+  "ramp_emitted_median": 95.0,
+  "ramp_emitted_max": 95
+ },
+ "join": {
+  "duplicate": 0,
+  "missing": 0,
+  "non_monotone": 0
+ },
+ "corpus": {
+  "num_tokens": 57288,
+  "segments": 56,
+  "bad_len": 0,
+  "npy_mismatch": 0,
+  "dup_topk": 0
+ },
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "export validation ok=True nvtx_forward_ranges=4480 kernel_rows=6363588"
+  },
+  {
+   "status": "PASS",
+   "msg": "parsed devices [0, 1, 2, 3]"
+  },
+  {
+   "status": "INFO",
+   "msg": "profile_kind=nsys request_timing_count=56 corpus_tokens=57288"
+  },
+  {
+   "status": "PASS",
+   "msg": "metrics records: 2160"
+  },
+  {
+   "status": "INFO",
+   "msg": "ramp iterations (prefill present or decode_requests != b inside a cell): 220"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations carrying requests of two cells (overrun): 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "plan 'dry' (2 cells, 56 requests) selected by --plan auto; every planned cell is checked"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190"
+  },
+  {
+   "status": "PASS",
+   "msg": "observed cells not in the plan: []"
+  },
+  {
+   "status": "PASS",
+   "msg": "request ids without an E1 tag: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests seen 56; requests whose emitted tokens != 1024: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "progress entries with emitted_tokens not in {0,1}: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs emitted in more than one iteration (duplicate join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs never emitted (missing join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose position->iteration map is not strictly increasing: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "routed_experts files 56 vs requests 56; missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with shape != (1024, 40, 6): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with dtype != uint16: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with an expert id >= 384: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(token, layer) rows with a duplicate expert in the top-6: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus num_tokens 57288 vs 56 x (1024-1) = 57288"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus file size 27498240 vs num_tokens*L*K*2 = 27498240"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus max expert id 383 < 384"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments 56, unique request names 56"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments with length != 1023: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments contiguous, non-overlapping and covering [0, num_tokens)"
+  },
+  {
+   "status": "PASS",
+   "msg": "segment names == metrics request ids: missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments whose every row maps to exactly one iteration: 56 of 56"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus checksum_fnv1a64 6027467512941320394 vs manifest 6027467512941320394"
+  }
+ ],
+ "fails": 0
+}
