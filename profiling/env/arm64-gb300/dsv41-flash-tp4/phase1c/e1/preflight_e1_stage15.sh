@@ -34,11 +34,23 @@ grep -q '"capture_start_delay_seconds": 10.0' $E1/configs_v2/e1_nsys_val/profile
   uv run --no-sync python $E1/checks/e1_config_identity.py --a $E1/configs_v2/e1_dry_off_v2/profile.json --b $E1/configs_v2/e1_dry_off2_v2/profile.json ) >/dev/null 2>&1 \
   && ok "config identity off_v2/on_v2 and off_v2/off2_v2" || bad "config identity (checks/e1_config_identity.py)"
 
-# D. Launcher tree supports stream=false: Python opt-out present, Rust binary lists --stream
+# D. Launcher tree supports stream=false, and the binary's provenance is pinned (BINARY-PROVENANCE.json)
 grep -q "effective_stream" $REPO/alignment/load_generator/config.py && ok "launcher: workload.stream opt-out applied" || bad "launcher lacks workload.stream (patch/apply_stream_optin.py)"
-BIN=$REPO/alignment/load_generator/req-frontend/target/release/session_runner
-if [ -x "$BIN" ] && $BIN --help 2>/dev/null | grep -q -- "--stream <STREAM>"; then ok "session_runner supports --stream ($(sha256sum $BIN | cut -c1-16))"
-else bad "session_runner lacks --stream: apply patch/apply_stream_flag_rs.py + cargo build, or install \$S/bundles/session_runner.stream-flag.2cd7990+patch"; fi
+RF=$REPO/alignment/load_generator/req-frontend
+BIN=$RF/target/release/session_runner
+PROV=$E1/BINARY-PROVENANCE.json
+want_commit=$(python3 -c "import json;print(json.load(open('$PROV'))['req_frontend_commit'])")
+want_sha=$(python3 -c "import json;print(json.load(open('$PROV'))['sha256'])")
+gitlink=$(git -C $REPO ls-tree HEAD alignment/load_generator/req-frontend | awk '{print $3}')
+sub_head=$(git -C $RF rev-parse HEAD 2>/dev/null)
+[ "$gitlink" = "$want_commit" ] && ok "submodule gitlink pinned to $want_commit" || bad "gitlink $gitlink != provenance $want_commit"
+[ "$sub_head" = "$want_commit" ] && ok "req-frontend checkout HEAD == pinned commit" || bad "req-frontend HEAD $sub_head != $want_commit"
+[ -z "$(git -C $RF status --short 2>/dev/null)" ] && ok "req-frontend checkout clean" || bad "req-frontend checkout has uncommitted changes"
+if [ -x "$BIN" ]; then
+  have_sha=$(sha256sum $BIN | awk '{print $1}')
+  [ "$have_sha" = "$want_sha" ] && ok "session_runner sha256 == provenance (${have_sha:0:16})" || bad "session_runner sha256 ${have_sha:0:16} != provenance ${want_sha:0:16} (rebuild from the pinned commit)"
+  $BIN --help 2>/dev/null | grep -q -- "--stream <STREAM>" && ok "session_runner supports --stream" || bad "session_runner lacks --stream"
+else bad "session_runner binary missing at $BIN"; fi
 
 # E. Launcher validates every v2 config (CPU only)
 for c in e1_dry_off_v2 e1_dry_on_v2 e1_dry_off2_v2 e1_nsys_val; do

@@ -30,6 +30,14 @@ echo "[$PASS] rc=$rc end $(date -u +%FT%TZ)" | tee -a $RUN/$PASS/run.log
 for f in $(grep -ao "Using FlashInfer autotune cache file: [^ ]*" $RUN/$PASS/profile/vllm/*_server.log 2>/dev/null | awk '{print $NF}' | sort -u); do
   [ -f "$f" ] && cp -p "$f" $RUN/$PASS/autotune_configs.$(basename $(dirname $f) | cut -c1-12).json
 done
+# EngineDeadError bookkeeping (runs/stage15/engine-dead-error.md): report where such lines sit relative to the shutdown trigger
+SL=$(ls $RUN/$PASS/profile/vllm/*_server.log 2>/dev/null | head -1)
+if [ -n "$SL" ]; then
+  sd=$(grep -an "\[shutdown\].*trigger received" "$SL" | head -1 | cut -d: -f1); sd=${sd:-0}
+  ede=$(grep -an "EngineDeadError\|EngineCore encountered an issue\|output_handler failed" "$SL" | cut -d: -f1 | tr "\n" " ")
+  before=0; for l in $ede; do [ "$sd" = 0 ] || [ "$l" -lt "$sd" ] && before=$((before+1)); done
+  echo "[$PASS] shutdown trigger at server-log line ${sd}; EngineDeadError-family lines: ${ede:-none}; before shutdown: $before $([ $before = 0 ] && echo "(accepted)" || echo "(ABORT CONDITION)")" | tee -a $RUN/$PASS/run.log
+fi
 sleep 20
 left=$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader)
 if [ -n "$left" ]; then echo "[$PASS] WARNING compute apps still on the GPUs after exit:" | tee -a $RUN/$PASS/run.log; echo "$left" | tee -a $RUN/$PASS/run.log; fi

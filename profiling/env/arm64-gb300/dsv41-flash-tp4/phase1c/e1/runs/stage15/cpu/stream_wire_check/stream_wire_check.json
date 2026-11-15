@@ -1,0 +1,36 @@
+{
+ "bin": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/load_generator/req-frontend/target/release/session_runner",
+ "sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "runs": {
+  "false": {
+   "rc": 0,
+   "completions_received": 4,
+   "stream_field_values": [
+    false
+   ],
+   "chunk_counts": [
+    1
+   ],
+   "statuses": [
+    "SUCCESS"
+   ],
+   "records": 4,
+   "ok": true
+  },
+  "true": {
+   "rc": 0,
+   "completions_received": 4,
+   "stream_field_values": [
+    true
+   ],
+   "chunk_counts": [
+    13
+   ],
+   "statuses": [
+    "SUCCESS"
+   ],
+   "records": 4,
+   "ok": true
+  }
+ }
+}
