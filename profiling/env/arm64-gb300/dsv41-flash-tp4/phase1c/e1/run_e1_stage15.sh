@@ -16,7 +16,7 @@ RUN=$S/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15   # artifacts unde
 CFG=$E1/configs_v2/$PASS/profile.json
 [ -f "$CFG" ] || { echo "no config $CFG"; exit 2; }
 mkdir -p $RUN/$PASS
-E1_REPO=$REPO bash $E1/preflight_e1_stage15.sh 2>&1 | tee $RUN/$PASS/preflight.log
+E1_REPO=$REPO E1_PASS=$PASS bash $E1/preflight_e1_stage15.sh 2>&1 | tee $RUN/$PASS/preflight.log
 [ "${PIPESTATUS[0]}" = "0" ] || { echo "preflight failed; not starting"; exit 3; }
 cp $CFG $RUN/$PASS/profile.json
 cd $REPO

@@ -23,6 +23,9 @@ E1_REPO=$REPO bash $E1/preflight_e1_host.sh | sed 's/^/  /'
 ( cd $E1 && sha256sum -c INPUTS_v2.sha256 --quiet ) && ok "configs_v2 / trace match INPUTS_v2.sha256" || bad "INPUTS_v2.sha256 mismatch"
 for c in e1_dry_off_v2 e1_dry_on_v2 e1_dry_off2_v2 e1_nsys_val; do
   grep -q '"stream": false' $E1/configs_v2/$c/profile.json && ok "$c: stream=false explicit" || bad "$c: stream key missing"
+done
+# the output directory must not exist for the pass about to run (E1_PASS, set by run_e1_stage15.sh); earlier passes' outputs are expected
+for c in ${E1_PASS:-e1_dry_off_v2 e1_dry_on_v2 e1_dry_off2_v2 e1_nsys_val}; do
   [ ! -e "$RUN15/$c/profile" ] && ok "no previous output dir for $c" || bad "output dir exists: $RUN15/$c/profile"
 done
 grep -q '"capture_start_delay_seconds": 10.0' $E1/configs_v2/e1_nsys_val/profile.json && ok "e1_nsys_val: nsys delayed start 10 s" || bad "e1_nsys_val nsys block"
