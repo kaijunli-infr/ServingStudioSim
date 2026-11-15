@@ -50,4 +50,5 @@ the registered driver shell, so `e1_pids.py cleanup` can terminate exactly that 
 * Final read-only preflight on tray16: see the last `runs/b8_recovery/preflight_tray16_*.log` (result line below, filled at
   commit time) and `closeout_tray16_*.log` (CLEAN: GPUs 0 MiB, discovery clean, registry plan 0 owned / 0 lookalikes).
 
-PREFLIGHT_RESULT_PLACEHOLDER
+**Final read-only preflight** (`preflight_tray16_20261115T180737Z.log`, tree = commit f1b66cde, clean): **PREFLIGHT PASS**, 18 recovery checks + 56 nested Stage 1.5 / Stage 1 checks, 0 FAIL. An earlier run at 18:04:00Z on the uncommitted tree failed only the Stage 1 check "repo has uncommitted tracked changes" (`preflight_tray16_20261115T180400Z.log`, kept). Closeout dry-run on tray16 at 18:04:22Z: CLEAN.
+
