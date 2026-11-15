@@ -57,6 +57,7 @@ def identity(pid: int) -> dict | None:
         return None
     starttime = int(after[19])                        # field 22
     ppid = int(after[1])                              # field 4
+    sid = int(after[3])                               # field 6: session id (a tmux pane / ssh login shell is a session leader)
     uid = int(next(l for l in status.splitlines() if l.startswith("Uid:")).split()[1])
     name = next(l for l in status.splitlines() if l.startswith("Name:")).split(None, 1)[1]
     try:
@@ -67,7 +68,7 @@ def identity(pid: int) -> dict | None:
         cwd = os.readlink(f"/proc/{pid}/cwd")
     except OSError:
         cwd = ""
-    return {"pid": pid, "starttime": starttime, "boot_id": boot_id(), "uid": uid, "ppid": ppid, "name": name, "cmd": cmd, "cwd": cwd}
+    return {"pid": pid, "starttime": starttime, "boot_id": boot_id(), "uid": uid, "ppid": ppid, "sid": sid, "name": name, "cmd": cmd, "cwd": cwd}
 
 
 def same_identity(rec: dict, ident: dict | None) -> bool:
@@ -162,6 +163,13 @@ def plan(path: str) -> dict:
     excluded = {me, 1} | set(ancestors(me))
     recs = read_registry(path)
     pm = ppid_map()
+    # own invocation pipeline: processes whose parent is this process or one of its ancestors (the invoking driver's `tee`, an
+    # operator's `| tee`/`| sed`); they are part of the invocation itself, never lookalikes. They stay eligible as refusals.
+    # ... AND in the same session as this process: a tmux pane / ssh login shell is a session leader, so this names exactly the
+    # invocation pipeline (driver -> preflight -> `| tee`), never other panes of the same tmux server and never processes that
+    # were reparented to pid 1 (a setsid'd watcher left behind is NOT ours just because init adopted it)
+    my_sid = (identity(me) or {}).get("sid")
+    own_pipeline = {p for p, pp in pm.items() if pp in excluded and pp != 1 and p != me and (identity(p) or {}).get("sid") == my_sid}
     verified, stale, gone, refused = [], [], [], []
     for rec in recs:
         pid = int(rec["pid"]); ident = identity(pid)
@@ -193,7 +201,7 @@ def plan(path: str) -> dict:
     owned_pids = {o["pid"] for o in owned}
     lookalikes = []
     for pid in pm:
-        if pid in owned_pids or pid in excluded or pid == me:
+        if pid in owned_pids or pid in excluded or pid == me or pid in own_pipeline:
             continue
         ident = identity(pid)
         if not ident:
@@ -203,12 +211,12 @@ def plan(path: str) -> dict:
         if LOOKALIKE_RE.search(ident["cmd"]) or LOOKALIKE_RE.search(ident["cwd"]):
             lookalikes.append({"pid": pid, "uid": ident["uid"], "name": ident["name"], "cmd": ident["cmd"][:200], "cwd": ident["cwd"]})
     return {"registry": path, "host": socket.gethostname(), "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "cleanup_pid": me, "excluded_ancestry": sorted(excluded), "records": len(recs), "verified": verified, "gone": gone,
+            "cleanup_pid": me, "excluded_ancestry": sorted(excluded), "own_pipeline": sorted(own_pipeline), "records": len(recs), "verified": verified, "gone": gone,
             "stale": stale, "refused": refused, "owned": sorted(owned, key=lambda o: -o["depth"]), "lookalikes": lookalikes}
 
 
 def render_plan(p: dict) -> str:
-    L = [f"# e1_pids plan on {p['host']} at {p['at']}: registry {p['registry']} ({p['records']} records); cleanup pid {p['cleanup_pid']}, excluded ancestry {p['excluded_ancestry']}"]
+    L = [f"# e1_pids plan on {p['host']} at {p['at']}: registry {p['registry']} ({p['records']} records); cleanup pid {p['cleanup_pid']}, excluded ancestry {p['excluded_ancestry']}, own pipeline {p.get('own_pipeline', [])}"]
     for r in p["gone"]:
         L.append(f"GONE     pid {r['pid']} [{r['label']}] start {r['starttime']}: no such process (already exited)")
     for r in p["stale"]:

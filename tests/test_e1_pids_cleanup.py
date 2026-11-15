@@ -10,6 +10,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -75,16 +76,35 @@ def guard():
 
 
 def spawn_lookalike(guard, cwd=None, text=f"tail -F /x/{MARK}/e1_nsys_val/run.log"):
-    """A bash whose command line quotes the planted command text (the Stage 1.5 positive-test failure mode)."""
+    """Unregistered lookalikes that are NOT children of the test process (a direct child would be part of our own invocation
+    pipeline and is rightly excluded): `setsid -f` double-forks them, so their parent is init / the subreaper, like a watcher
+    left behind by an earlier ssh session. Each carries a unique token so the test can find its pid in /proc without any
+    experiment pattern, verify its identity, and reap it at the end."""
+    import uuid
+    tok = uuid.uuid4().hex
     # a bash whose own argv quotes the planted command text; `; true` stops bash from exec'ing the single command, so the
     # bash (with the quoted text in /proc/<pid>/cmdline) stays alive and sleep is its child
-    p = subprocess.Popen(["bash", "-c", f"sleep 300; true  # {text}"], cwd=cwd, start_new_session=True,
-                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["setsid", "-f", "bash", "-c", f"sleep 300; true  # {text} {tok}A"], cwd=cwd, check=True,
+                   stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     # a bash carrying the experiment marker as a positional argument (argv lookalike without any experiment command)
-    q = subprocess.Popen(["bash", "-c", "sleep 300; true", "lookalike", f"#{MARK}"], cwd=cwd, start_new_session=True,
-                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    guard += [p.pid, q.pid]
-    return p.pid, q.pid
+    subprocess.run(["setsid", "-f", "bash", "-c", "sleep 300; true", "lookalike", f"#{MARK}", f"{tok}B"], cwd=cwd, check=True,
+                   stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    found = {}
+    for _ in range(50):
+        for p in pids.all_pids():
+            i = pids.identity(p)
+            if i and i["name"] == "bash":
+                if f"{tok}A" in i["cmd"]:
+                    found["A"] = p
+                if f"{tok}B" in i["cmd"]:
+                    found["B"] = p
+        if len(found) == 2:
+            break
+        time.sleep(0.1)
+    assert len(found) == 2, "lookalikes did not start"
+    guard += [found["A"], found["B"]]
+    assert os.getpid() not in (pids.identity(found["A"])["ppid"], pids.identity(found["B"])["ppid"])
+    return found["A"], found["B"]
 
 
 def test_register_identity_and_verify(reg, guard):
@@ -215,3 +235,52 @@ def test_cli_round_trip(reg, guard, tmp_path):
     r = subprocess.run([py, "-I", script, "cleanup", "--registry", reg, "--execute", "--grace", "5", "--json", str(tmp_path / "c.json")], capture_output=True, text=True)
     assert r.returncode in (0, 2) and "survivors 0" in r.stdout and wait_gone(pid)
     assert json.load(open(tmp_path / "c.json"))["actions"][0]["action"] == "SIGTERM"
+
+
+def test_own_pipeline_sibling_is_not_a_lookalike(reg, guard, tmp_path):
+    """GO attempt 1 (2026-11-15 18:26Z): the driver's own `tee .../dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/preflight.log`
+    was reported as a lookalike by the preflight running inside the driver, which then refused to start. A process whose parent
+    is the invoker (or one of its ancestors) belongs to the invocation pipeline and must not be a lookalike."""
+    log = tmp_path / MARK / "e1_b8_recovery" / "preflight.log"; log.parent.mkdir(parents=True)
+    # a sibling of this test process: child of our parent shell is not reproducible here, so use a child of *this* process
+    # (ppid == me, which is in the excluded set) carrying the marker in argv
+    tee = subprocess.Popen(["tee", str(log)], stdin=subprocess.PIPE, stdout=subprocess.DEVNULL); guard.append(tee.pid)
+    time.sleep(0.3)
+    pl = pids.plan(reg)
+    assert tee.pid in pl["own_pipeline"]
+    assert tee.pid not in {l["pid"] for l in pl["lookalikes"]}
+    tee.stdin.close()
+
+
+@pytest.mark.skipif(subprocess.run(["which", "tmux"], capture_output=True).returncode != 0, reason="tmux not installed")
+def test_census_and_plan_pass_from_inside_the_driver_context(reg, tmp_path):
+    """Exact shape of run_e1_b8.sh: inside a tmux session named e1b8-*, `bash <check> 2>&1 | tee <run root>/.../preflight.log`.
+    Discovery must report CLEAN (own tee and own tmux session excluded) and the registry plan must have 0 lookalikes."""
+    run = tmp_path / MARK / "e1_b8_recovery"; run.mkdir(parents=True)
+    census = E1 / "checks" / "e1_process_census.sh"; script = E1 / "checks" / "e1_pids.py"
+    sess = f"e1b8-test{os.getpid()}"
+    done = tmp_path / "done"
+    cmd = (f"bash {census} 2>&1 | tee {run}/preflight.log > /dev/null; echo census_rc=${{PIPESTATUS[0]}} >> {run}/preflight.log; "
+           f"{sys.executable} -I {script} plan --registry {reg} 2>&1 | tee -a {run}/preflight.log > /dev/null; echo plan_rc=${{PIPESTATUS[0]}} >> {run}/preflight.log; touch {done}")
+    subprocess.run(["tmux", "new", "-d", "-s", sess, cmd], check=True)          # default server: what the driver uses
+    for _ in range(600):
+        if done.exists():
+            break
+        time.sleep(0.1)
+    subprocess.run(["tmux", "kill-session", "-t", sess], capture_output=True)     # only our own, by its unique name
+    text = (run / "preflight.log").read_text()
+    assert done.exists(), text
+    assert "own invocation pipeline" in text and "own tmux session (excluded): " + sess in text, text
+    pipe_line = next(l for l in text.splitlines() if "own invocation pipeline" in l)
+    pipe = {int(x) for x in re.findall(r"(\d+)\[", pipe_line)}
+    assert "[tee]" in pipe_line and pipe, pipe_line                      # our own `| tee` is in the pipeline, not a candidate
+    found = {int(x) for l in text.splitlines() if l.lstrip().startswith("FOUND") for x in re.findall(r"\b(\d{2,})\b", l)}
+    looka = {int(x) for x in re.findall(r"LOOKALIKE pid (\d+)", text)}
+    assert not (pipe & found) and not (pipe & looka), (pipe, found, looka)   # nothing of ours is a candidate / lookalike
+    assert "FOUND experiment tmux" not in text, text
+    # unrelated candidates may exist on a shared host (e.g. another login shell whose command line names the dirs): then the
+    # census reports them and the plan returns 2 (stop-and-report); with none, both must be clean
+    if looka or found:
+        assert "plan_rc=2" in text, text
+    else:
+        assert "plan_rc=0" in text and "census_rc=0" in text, text

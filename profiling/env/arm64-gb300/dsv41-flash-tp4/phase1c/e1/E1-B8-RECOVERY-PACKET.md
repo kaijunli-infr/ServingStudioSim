@@ -250,3 +250,14 @@ candidates only, `run_e1_b8.sh` registers its own pid (one line; pass selection,
 unchanged), `closeout_e1.sh` prints the dry-run plan and never signals, `preflight_e1_b8.sh` verifies `SCRIPTS_b8.sha256` and
 requires a clean registry plan, `hash_scripts_b8.sh`. Workload, Nsight settings, validation thresholds and model untouched
 (`INPUTS_b8.sha256` unchanged). Details and results: `runs/b8_recovery/CLEANUP-CORRECTION.md`.
+
+## 12. Revision 2026-11-15 (after GO attempt 1 refused itself; CPU only)
+
+GO attempt 1 (18:26:33Z, commit 496b9233) was stopped by the driver's own preflight: discovery classified the driver's own
+`| tee <run root>/<pass>/preflight.log` as a lookalike and its own tmux session as an experiment session. No GPU process was
+started; the reservation was held about 3 minutes. Correction: the census and `e1_pids.py::plan()` exclude the *own invocation
+pipeline* (parent in the checker's ancestry and same session id) and the own tmux session; ownership rules, registry, identity
+verification and stop-and-report are unchanged; the driver and the frozen inputs are byte-identical. Two tests added, the
+lookalike fixtures double-fork (`setsid -f`) so they stay genuine lookalikes; 21 tests pass. Read-only driver-context preflight on
+tray16: discovery CLEAN. Full note: `runs/b8_recovery/GO-ATTEMPT-20261115T182633Z.md`. §7 (procedure) and §5 (limits) are
+unchanged; the GO of 2026-11-15 is consumed and a new GO naming the new commit is required.

@@ -52,3 +52,13 @@ the registered driver shell, so `e1_pids.py cleanup` can terminate exactly that 
 
 **Final read-only preflight** (`preflight_tray16_20261115T180737Z.log`, tree = commit f1b66cde, clean): **PREFLIGHT PASS**, 18 recovery checks + 56 nested Stage 1.5 / Stage 1 checks, 0 FAIL. An earlier run at 18:04:00Z on the uncommitted tree failed only the Stage 1 check "repo has uncommitted tracked changes" (`preflight_tray16_20261115T180400Z.log`, kept). Closeout dry-run on tray16 at 18:04:22Z: CLEAN.
 
+
+## Addendum 2026-11-15 18:26Z–18:55Z: the checker must not report itself
+
+GO attempt 1 was refused by the driver's own preflight because the rules above classified the driver's own `tee` (run-root
+path in its argv) as a lookalike and the driver's own tmux session (`e1b8-recovery`) as an experiment session. Fix (same
+commit as this addendum): the *own invocation pipeline* — processes whose parent is the checker or one of its ancestors and
+that share the checker's session id — and the own tmux session are excluded from the candidate / lookalike classes and
+printed as INFO. The session-id test matters: without it, children of pid 1 (any `setsid`'d orphan) were excluded too, which
+the lookalike tests caught immediately. Ownership for *termination* is still only the registry; nothing in this addendum
+makes any process killable. Details, timeline and evidence: `GO-ATTEMPT-20261115T182633Z.md`.
