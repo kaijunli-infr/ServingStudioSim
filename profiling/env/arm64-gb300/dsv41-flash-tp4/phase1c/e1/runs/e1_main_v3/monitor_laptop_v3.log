@@ -1,0 +1,569 @@
+== 2026-11-16T08:53:56Z e1_main_v3 driver=462764 alive=y elapsed_min=0 tmux=e1main-v3,
+phase: startup_complete=0
+0 measurement_begun=0
+0 workload_done=0
+0 running
+gpu: 3 MiB, 0 %;3 MiB, 0 %;3 MiB, 0 %;3 MiB, 0 %;
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T08:55:18Z e1_main_v3 driver=462764 alive=y elapsed_min=1 tmux=e1main-v3,
+phase: startup_complete=0
+0 measurement_begun=0
+0 workload_done=0
+0 running
+gpu: 84091 MiB, 3 %;84091 MiB, 3 %;84091 MiB, 6 %;84091 MiB, 8 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+ABORT-CONDITION GPUs still held 336364 MiB more than 20 min after the workload ended
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T08:56:25Z e1_main_v3 driver=462764 alive=y elapsed_min=2 tmux=e1main-v3,
+phase: startup_complete=0
+0 measurement_begun=0
+0 workload_done=0
+0 running
+gpu: 253859 MiB, 0 %;253859 MiB, 0 %;253859 MiB, 0 %;253859 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+ABORT-CONDITION GPUs still held 1015436 MiB more than 20 min after the workload ended
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T08:58:36Z e1_main_v3 driver=462764 alive=y elapsed_min=4 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 256303 MiB, 0 %;256303 MiB, 0 %;256303 MiB, 0 %;256303 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T08:59:59Z e1_main_v3 driver=462764 alive=y elapsed_min=6 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 256789 MiB, 7 %;256789 MiB, 16 %;256789 MiB, 16 %;256789 MiB, 7 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:01:05Z e1_main_v3 driver=462764 alive=y elapsed_min=7 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255793 MiB, 6 %;255797 MiB, 8 %;255795 MiB, 7 %;255797 MiB, 7 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:02:12Z e1_main_v3 driver=462764 alive=y elapsed_min=8 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255819 MiB, 4 %;255823 MiB, 5 %;255821 MiB, 3 %;255823 MiB, 8 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:03:23Z e1_main_v3 driver=462764 alive=y elapsed_min=9 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255805 MiB, 12 %;255823 MiB, 7 %;255819 MiB, 10 %;255823 MiB, 7 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:04:31Z e1_main_v3 driver=462764 alive=y elapsed_min=10 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255869 MiB, 10 %;255845 MiB, 13 %;255819 MiB, 9 %;255869 MiB, 10 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:05:43Z e1_main_v3 driver=462764 alive=y elapsed_min=12 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255961 MiB, 14 %;255961 MiB, 13 %;255815 MiB, 20 %;255961 MiB, 15 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:06:48Z e1_main_v3 driver=462764 alive=y elapsed_min=13 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255885 MiB, 35 %;255885 MiB, 51 %;255885 MiB, 10 %;255883 MiB, 34 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:07:57Z e1_main_v3 driver=462764 alive=y elapsed_min=14 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 255903 MiB, 27 %;255899 MiB, 24 %;255831 MiB, 29 %;255903 MiB, 17 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:09:09Z e1_main_v3 driver=462764 alive=y elapsed_min=15 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 256071 MiB, 46 %;256181 MiB, 53 %;256181 MiB, 46 %;256181 MiB, 44 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:10:18Z e1_main_v3 driver=462764 alive=y elapsed_min=16 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 256245 MiB, 31 %;256245 MiB, 29 %;256243 MiB, 21 %;256097 MiB, 36 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:11:42Z e1_main_v3 driver=462764 alive=y elapsed_min=18 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 256897 MiB, 17 %;256897 MiB, 22 %;256893 MiB, 15 %;256629 MiB, 23 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:12:50Z e1_main_v3 driver=462764 alive=y elapsed_min=19 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 257753 MiB, 4 %;257753 MiB, 11 %;257753 MiB, 5 %;257753 MiB, 5 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:13:58Z e1_main_v3 driver=462764 alive=y elapsed_min=20 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 254163 MiB, 5 %;254183 MiB, 5 %;254181 MiB, 6 %;254163 MiB, 5 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:15:07Z e1_main_v3 driver=462764 alive=y elapsed_min=21 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 254159 MiB, 7 %;254163 MiB, 7 %;254183 MiB, 7 %;254183 MiB, 7 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+== 2026-11-16T09:16:13Z e1_main_v3 driver=462764 alive=y elapsed_min=22 tmux=e1main-v3,
+phase: startup_complete=0 measurement_begun=0 workload_done=0 running
+gpu: 254373 MiB, 30 %;254375 MiB, 0 %;254381 MiB, 25 %;254381 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+    Finished `release` profile [optimized] target(s) in 2.22s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:17:28Z e1_main_v3 driver=462764 alive=y elapsed_min=23 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=0 workload_done=0 running
+gpu: 254389 MiB, 0 %;254389 MiB, 0 %;254389 MiB, 0 %;254389 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+independent-request workload | requests=1 max_input_len=4096 max_output_len=32 total_output_len=32 max_arrival_time_ms=0.000
+== 2026-11-16T09:18:36Z e1_main_v3 driver=462764 alive=y elapsed_min=24 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=0 workload_done=0 running
+gpu: 261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+requests 131/450 | steps 131/450 completed=131 submitted=450 active=319 failed=0 runtime_global_queue_depth=0 | elapsed=44.1s
+== 2026-11-16T09:19:43Z e1_main_v3 driver=462764 alive=y elapsed_min=26 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=0 workload_done=0 running
+gpu: 261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+requests 223/450 | steps 223/450 completed=223 submitted=450 active=227 failed=0 runtime_global_queue_depth=0 | elapsed=111.7s
+== 2026-11-16T09:20:50Z e1_main_v3 driver=462764 alive=y elapsed_min=27 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=0 workload_done=0 running
+gpu: 261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+requests 274/450 | steps 274/450 completed=274 submitted=450 active=176 failed=0 runtime_global_queue_depth=0 | elapsed=177.9s
+== 2026-11-16T09:21:57Z e1_main_v3 driver=462764 alive=y elapsed_min=28 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=0 workload_done=0 running
+gpu: 261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;261245 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+requests 336/450 | steps 336/450 completed=336 submitted=450 active=114 failed=0 runtime_global_queue_depth=0 | elapsed=245.6s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:23:10Z e1_main_v3 driver=462764 alive=y elapsed_min=29 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 0 min since measurement began (limit 25)
+gpu: 261247 MiB, 83 %;261247 MiB, 99 %;261247 MiB, 99 %;261247 MiB, 99 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1160 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 4/450 | steps 4/450 completed=4 submitted=4 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=30.6s
+== 2026-11-16T09:24:19Z e1_main_v3 driver=462764 alive=y elapsed_min=30 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 1 min since measurement began (limit 25)
+gpu: 261247 MiB, 0 %;261247 MiB, 0 %;261247 MiB, 0 %;261247 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1152 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 30/450 | steps 30/450 completed=30 submitted=30 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=99.2s
+== 2026-11-16T09:25:32Z e1_main_v3 driver=462764 alive=y elapsed_min=31 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 2 min since measurement began (limit 25)
+gpu: 261247 MiB, 0 %;261247 MiB, 0 %;261247 MiB, 0 %;261247 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1146 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 150/450 | steps 150/450 completed=150 submitted=150 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=172.4s
+== 2026-11-16T09:26:38Z e1_main_v3 driver=462764 alive=y elapsed_min=33 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 3 min since measurement began (limit 25)
+gpu: 261247 MiB, 99 %;261247 MiB, 99 %;261247 MiB, 99 %;261247 MiB, 99 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1140 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 156/450 | steps 156/450 completed=156 submitted=160 active=4 failed=0 runtime_global_queue_depth=0 | elapsed=239.0s
+== 2026-11-16T09:27:45Z e1_main_v3 driver=462764 alive=y elapsed_min=34 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 4 min since measurement began (limit 25)
+gpu: 261247 MiB, 100 %;261247 MiB, 100 %;261247 MiB, 100 %;261247 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1134 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 180/450 | steps 180/450 completed=180 submitted=196 active=16 failed=0 runtime_global_queue_depth=0 | elapsed=305.7s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:29:33Z e1_main_v3 driver=462764 alive=y elapsed_min=35 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 6 min since measurement began (limit 25)
+gpu: 261251 MiB, 100 %;261251 MiB, 100 %;261251 MiB, 100 %;261251 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1130 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 252/450 | steps 252/450 completed=252 submitted=300 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=413.9s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:31:06Z e1_main_v3 driver=462764 alive=y elapsed_min=37 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 7 min since measurement began (limit 25)
+gpu: 261251 MiB, 81 %;261251 MiB, 99 %;261251 MiB, 100 %;261251 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1124 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 304/450 | steps 304/450 completed=304 submitted=306 active=2 failed=0 runtime_global_queue_depth=0 | elapsed=507.1s
+== 2026-11-16T09:32:12Z e1_main_v3 driver=462764 alive=y elapsed_min=38 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 9 min since measurement began (limit 25)
+gpu: 261255 MiB, 100 %;261251 MiB, 100 %;261251 MiB, 100 %;261251 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1120 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 314/450 | steps 314/450 completed=314 submitted=322 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=572.7s
+== 2026-11-16T09:33:23Z e1_main_v3 driver=462764 alive=y elapsed_min=39 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 10 min since measurement began (limit 25)
+gpu: 261255 MiB, 100 %;261251 MiB, 100 %;261251 MiB, 100 %;261251 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1118 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 330/450 | steps 330/450 completed=330 submitted=346 active=16 failed=0 runtime_global_queue_depth=0 | elapsed=643.4s
+== 2026-11-16T09:34:34Z e1_main_v3 driver=462764 alive=y elapsed_min=40 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 11 min since measurement began (limit 25)
+gpu: 261255 MiB, 0 %;261251 MiB, 0 %;261251 MiB, 0 %;261251 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1116 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 370/450 | steps 370/450 completed=370 submitted=370 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=714.0s
+== 2026-11-16T09:35:46Z e1_main_v3 driver=462764 alive=y elapsed_min=42 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 12 min since measurement began (limit 25)
+gpu: 261257 MiB, 84 %;261253 MiB, 98 %;261253 MiB, 99 %;261253 MiB, 99 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1115 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 402/450 | steps 402/450 completed=402 submitted=402 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=787.2s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:37:06Z e1_main_v3 driver=462764 alive=y elapsed_min=43 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 13 min since measurement began (limit 25)
+gpu: 261257 MiB, 100 %;261253 MiB, 100 %;261253 MiB, 100 %;261253 MiB, 100 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1114 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 402/450 | steps 402/450 completed=402 submitted=450 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=866.9s
+== 2026-11-16T09:38:15Z e1_main_v3 driver=462764 alive=y elapsed_min=44 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 15 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1100 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:39:28Z e1_main_v3 driver=462764 alive=y elapsed_min=45 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 16 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1099 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:40:39Z e1_main_v3 driver=462764 alive=y elapsed_min=47 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 17 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1099 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:41:47Z e1_main_v3 driver=462764 alive=y elapsed_min=48 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 18 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1098 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:43:07Z e1_main_v3 driver=462764 alive=y elapsed_min=49 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 19 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1098 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:44:19Z e1_main_v3 driver=462764 alive=y elapsed_min=50 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 21 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1098 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:45:30Z e1_main_v3 driver=462764 alive=y elapsed_min=51 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 22 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1097 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:46:41Z e1_main_v3 driver=462764 alive=y elapsed_min=53 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 23 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1097 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:47:48Z e1_main_v3 driver=462764 alive=y elapsed_min=54 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 24 min since measurement began (limit 25)
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1096 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:49:18Z e1_main_v3 driver=462764 alive=y elapsed_min=55 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 26 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 26 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1096 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:50:28Z e1_main_v3 driver=462764 alive=y elapsed_min=56 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 27 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 27 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1095 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:51:37Z e1_main_v3 driver=462764 alive=y elapsed_min=58 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 28 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 28 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1095 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:52:45Z e1_main_v3 driver=462764 alive=y elapsed_min=59 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 29 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 29 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1160 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:54:00Z e1_main_v3 driver=462764 alive=y elapsed_min=60 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 30 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 30 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1160 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+gpu pods on node: inference-bench/dsv41-gb300-reserve-tray16:Running
+== 2026-11-16T09:55:50Z e1_main_v3 driver=462764 alive=y elapsed_min=62 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 32 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 32 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1160 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:56:56Z e1_main_v3 driver=462764 alive=y elapsed_min=63 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 33 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 33 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1160 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:58:01Z e1_main_v3 driver=462764 alive=y elapsed_min=64 tmux=e1main-v3,
+phase: startup_complete=1 measurement_begun=1 workload_done=0 running
+capture running 34 min since measurement began (limit 25)
+ABORT-CONDITION workload not finished 34 min after measurement began
+gpu: 261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;261257 MiB, 0 %;
+gpuproc 478137 own=y VLLM::Worker_TP0                                                                
+gpuproc 478138 own=y VLLM::Worker_TP1                                                                
+gpuproc 478139 own=y VLLM::Worker_TP2                                                                
+gpuproc 478140 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+[profile] frontend ready; measurement begins
+requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+== 2026-11-16T09:59:09Z e1_main_v3 driver=462764 alive=n elapsed_min=65 tmux=
+phase: startup_complete=1 measurement_begun=1 workload_done=1 [e1_main_v3] rc=1
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+pass dir 1 GB (ceiling 80); root free 1165 GB; CephFS free 21100 GB
+[profile] workload done: {'source_trace': '/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/
+[e1_main_v3] rc=1 end 2026-11-16T09:58:06Z
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-16T09:58:37Z: CANDIDATES FOUND (pids: 477312 477870 ) -> review against the registry; nothing was sign

@@ -63,3 +63,11 @@ $S/gb300/venv/bin/python checks/e1_completeness.py --profile $S/artifacts/phase0
 | `analysis/e1_schedule_sim.py` | full-E1 wave/capture-window simulation from measured Stage 1.5 rates (iterations, rows, storage, durations) |
 | `make_e1_inputs_v3.py` → `configs_v3/e1_main_v3/profile.json`, `INPUTS_v3.sha256`, `E1-MAIN-V3-INPUTS.json` | v3 inputs derived mechanically from the accepted `configs_v2/e1_nsys_val` recipe (name, log_dir, trace path, delay removed) |
 | `preflight_e1_main_v3.sh`, `run_e1_main_v3.sh`, `monitor_e1.sh`, `postrun_e1_main_v3.sh`, `collect_e1_main_v3.sh`, `hash_scripts_v3.sh` → `SCRIPTS_v3.sha256` | full-E1 procedure scripts (NOT run; the driver refuses any pass other than `e1_main_v3`) |
+
+## e1_main_v3 capture attempt (2026-11-16, GO on e4ce9108) — FAILED in the profiler-stop path; no trace; GO consumed
+
+| file | purpose |
+|---|---|
+| `runs/e1_main_v3/E1-MAIN-V3-INCIDENT-REPORT.md` | prerequisites, timeline, hard limits (GPU release exceeded by ≈ 71–93 s through the launcher's own failure path), surviving/lost artifacts, all gates FAIL, root cause (launcher `/stop_profile` bound 600 s × 2 vs Nsight stop ≈ 22–25 min; `_shutdown` SIGINT aborts the import and deletes the stream), monitor defect, cleanup verification, proposals |
+| `runs/e1_main_v3/` | evidence: driver-context preflight (21 PASS), negative control (STOP by design), driver preflight/run logs, launch records, closeout (CLEAN), post-run gates log, laptop monitor log, `cpu/` checker outputs |
+| raw | `$S/artifacts/phase1c-e1-main-dsv41-flash-gb300-tp4-20261116/run/e1_main_v3/` + `SHA256SUMS` (468 files, 379 MB: 450 routing npy, server log with 39 412 host iteration-metric lines, load generator results) |

@@ -1,0 +1,61 @@
+{
+  "workload": {
+    "kind": "independent_requests",
+    "requests": 450,
+    "first_context_overflow_request_id": null,
+    "first_context_overflow_input_len": null,
+    "first_context_overflow_requested_total_len": null,
+    "max_input_len": 98304,
+    "max_output_len": 1024,
+    "total_output_len": 460800,
+    "max_arrival_time_ms": 818901.3
+  },
+  "replay": {
+    "kind": "independent_requests",
+    "common": {
+      "attempted_steps": 450,
+      "success_steps": 450,
+      "failed_steps": 0,
+      "target_output_tokens": 460800,
+      "actual_output_tokens": 460800,
+      "output_mismatch_steps": 0,
+      "output_token_delta": 0,
+      "total_duration_ms_sum": 11961162.539999997,
+      "total_duration_ms_avg": 26580.361199999992,
+      "total_duration_ms_p50": 16668.96,
+      "total_duration_ms_p90": 75120.488,
+      "total_duration_ms_max": 77280.57,
+      "ttft_ms_avg": 26577.527577777775,
+      "ttft_ms_p50": 16665.42,
+      "ttft_ms_p90": 75117.694,
+      "ttft_ms_max": 77276.95,
+      "ttft_token_id_steps": 450,
+      "ttft_text_fallback_steps": 0,
+      "run_duration_ms": 896184.7014427185,
+      "request_throughput_per_s": 0.5021286340589944,
+      "output_token_throughput_per_s": 514.1797212764103,
+      "tpot_measured_steps": 0,
+      "tpot_ms_avg": null,
+      "tpot_ms_p50": null,
+      "tpot_ms_p90": null,
+      "tpot_ms_max": null,
+      "completion_amortized_tpot_measured_steps": 450,
+      "completion_amortized_tpot_ms_avg": 0.002769914195720616,
+      "completion_amortized_tpot_ms_p50": 0.002668621700880228,
+      "completion_amortized_tpot_ms_p90": 0.003480938416426612,
+      "completion_amortized_tpot_ms_max": 0.006480938416423283,
+      "context_overflow_steps": 0
+    }
+  },
+  "client_runtime": {
+    "tokio_worker_threads": 144,
+    "sampled_global_queue_depth_peak": 0
+  },
+  "timeline": {
+    "path": "session_runner_timeline.parquet",
+    "requests_written": 450,
+    "events_written": 450,
+    "dropped_requests": 0
+  },
+  "slo": null
+}

@@ -1,0 +1,35 @@
+# closeout e1_main_v3 on pod4-gb300-10-tray16-f3 at 2026-11-16T10:02:31Z; driver 462764 alive: no; tmux: no server running on /tmp/tmux-1000/default 
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+compute apps: 0
+INFO  own invocation pipeline (excluded from candidates): 515454[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-16T10:02:42Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/pids/owned.tsv (1 records); cleanup pid 529121, excluded ancestry [1, 9360, 515376, 515452, 515454, 515488, 529121], own pipeline [515454, 515488, 529122]
+  GONE     pid 462764 [driver:e1_main_v3] start 281319705: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-16T10:02:42Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-16T10:02:42Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/pids/owned.tsv (1 records); cleanup pid 529127, excluded ancestry [1, 9360, 515376, 515452, 515454, 529127], own pipeline [515454]
+GONE     pid 462764 [driver:e1_main_v3] start 281319705: no such process (already exited)
+summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive
+INFO  [e1_main_v3] rc=1 end 2026-11-16T09:58:06Z
+INFO  [e1_main_v3] shutdown trigger at server-log line 0; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+INFO  raw size 379M; nsys files: 
+# closeout result: CLEAN
