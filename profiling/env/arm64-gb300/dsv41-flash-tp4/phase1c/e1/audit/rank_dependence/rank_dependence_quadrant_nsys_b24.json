@@ -1,0 +1,425 @@
+{
+ "label": "quadrant_nsys",
+ "b": 24,
+ "n_pure_decode": 238,
+ "n_modal_K": 238,
+ "K": 86,
+ "kind_sequence_identical_across_ranks": true,
+ "reconstruction": {
+  "collective_end_spread_ms": {
+   "p50": 0.0003,
+   "p90": 0.0005,
+   "p99": 0.0013,
+   "max": 0.003,
+   "mean": 0.0003
+  },
+  "arrival_spread_ms_all_k": {
+   "p50": 0.002,
+   "p90": 0.0048,
+   "p99": 0.0149,
+   "max": 0.0308,
+   "mean": 0.0027
+  },
+  "arrival_spread_ms_first_collective": {
+   "p50": 0.0176,
+   "p90": 0.0241,
+   "p99": 0.0294,
+   "max": 0.0308,
+   "mean": 0.0178
+  },
+  "intrinsic_direct_ms_per_iteration_sum": {
+   "p50": 0.4337,
+   "p90": 0.4511,
+   "p99": 0.4585,
+   "max": 0.4667,
+   "mean": 0.4369
+  },
+  "intrinsic_proxy_ms_per_iteration_sum": {
+   "p50": 0.4361,
+   "p90": 0.4614,
+   "p99": 0.4704,
+   "max": 0.4821,
+   "mean": 0.4404
+  },
+  "intrinsic_direct_minus_proxy_ms_per_collective": {
+   "p50": -0.0,
+   "p90": 0.0001,
+   "p99": 0.0005,
+   "max": 0.0014,
+   "mean": -0.0
+  },
+  "fraction_of_collectives_with_end_spread_gt_20us": 0.0,
+  "intrinsic_by_kind_ms_p50": {
+   "1": 0.00438,
+   "4": 0.0129
+  },
+  "collectives_per_kind": {
+   "1": 81,
+   "4": 5
+  }
+ },
+ "wait_per_rank": {
+  "0": {
+   "direct_sum_ms": {
+    "p50": 0.1803,
+    "p90": 0.3173,
+    "p99": 0.3792,
+    "max": 0.3846,
+    "mean": 0.2078
+   },
+   "proxy_sum_ms": {
+    "p50": 0.1683,
+    "p90": 0.294,
+    "p99": 0.3549,
+    "max": 0.3604,
+    "mean": 0.1927
+   },
+   "comm_sum_ms": {
+    "p50": 0.6024,
+    "p90": 0.7515,
+    "p99": 0.8149,
+    "max": 0.8266,
+    "mean": 0.633
+   },
+   "wait_share_of_comm_p50": 0.2791,
+   "wait_share_of_wall_p50": 0.0218
+  },
+  "1": {
+   "direct_sum_ms": {
+    "p50": 0.0764,
+    "p90": 0.1431,
+    "p99": 0.2242,
+    "max": 0.2506,
+    "mean": 0.0914
+   },
+   "proxy_sum_ms": {
+    "p50": 0.078,
+    "p90": 0.1461,
+    "p99": 0.2162,
+    "max": 0.2374,
+    "mean": 0.0925
+   },
+   "comm_sum_ms": {
+    "p50": 0.5196,
+    "p90": 0.5827,
+    "p99": 0.6813,
+    "max": 0.7107,
+    "mean": 0.5328
+   },
+   "wait_share_of_comm_p50": 0.1509,
+   "wait_share_of_wall_p50": 0.0101
+  },
+  "2": {
+   "direct_sum_ms": {
+    "p50": 0.0652,
+    "p90": 0.1159,
+    "p99": 0.1719,
+    "max": 0.2101,
+    "mean": 0.0752
+   },
+   "proxy_sum_ms": {
+    "p50": 0.0661,
+    "p90": 0.1164,
+    "p99": 0.1662,
+    "max": 0.2055,
+    "mean": 0.0754
+   },
+   "comm_sum_ms": {
+    "p50": 0.5081,
+    "p90": 0.5629,
+    "p99": 0.6171,
+    "max": 0.6412,
+    "mean": 0.5158
+   },
+   "wait_share_of_comm_p50": 0.1314,
+   "wait_share_of_wall_p50": 0.0086
+  },
+  "3": {
+   "direct_sum_ms": {
+    "p50": 0.0712,
+    "p90": 0.1264,
+    "p99": 0.1629,
+    "max": 0.2076,
+    "mean": 0.0798
+   },
+   "proxy_sum_ms": {
+    "p50": 0.0698,
+    "p90": 0.1235,
+    "p99": 0.1623,
+    "max": 0.2059,
+    "mean": 0.0794
+   },
+   "comm_sum_ms": {
+    "p50": 0.51,
+    "p90": 0.5687,
+    "p99": 0.6102,
+    "max": 0.6388,
+    "mean": 0.5198
+   },
+   "wait_share_of_comm_p50": 0.1369,
+   "wait_share_of_wall_p50": 0.009
+  }
+ },
+ "wait_direct_vs_proxy_abs_diff_ms_per_iteration": {
+  "p50": 0.0033,
+  "p90": 0.0148,
+  "p99": 0.0253,
+  "max": 0.0292,
+  "mean": 0.006
+ },
+ "last_arriving_rank_share_per_collective": {
+  "0": 0.0546,
+  "1": 0.3327,
+  "2": 0.3104,
+  "3": 0.3022
+ },
+ "last_arriving_rank_share_first_collective": {
+  "0": 0.0,
+  "1": 0.0084,
+  "2": 0.5588,
+  "3": 0.4328
+ },
+ "last_arriving_rank_share_final_collective": {
+  "0": 0.0168,
+  "1": 0.2059,
+  "2": 0.3782,
+  "3": 0.3992
+ },
+ "critical_path_rank_share_least_waiting": {
+  "0": 0.0126,
+  "1": 0.2017,
+  "2": 0.4664,
+  "3": 0.3193
+ },
+ "wait_proxy_by_kind_ms_p50_p90": {
+  "1": [
+   0.00074,
+   0.00317
+  ],
+  "4": [
+   0.00058,
+   0.00224
+  ]
+ },
+ "first_collective_lateness_ms_mean_per_rank": {
+  "0": 0.0002,
+  "1": 0.007,
+  "2": 0.016,
+  "3": 0.0155
+ },
+ "segment_cross_rank_correlation": {
+  "rho_variance_weighted": 0.8294,
+  "rho_p10_p50_p90": [
+   0.051,
+   0.212,
+   0.945
+  ],
+  "c_common_normalized": 0.8277,
+  "n_segments": 86
+ },
+ "per_iteration_cross_rank_corr": {
+  "busy": [
+   [
+    1.0,
+    0.983,
+    0.986,
+    0.986
+   ],
+   [
+    0.983,
+    1.0,
+    0.99,
+    0.992
+   ],
+   [
+    0.986,
+    0.99,
+    1.0,
+    0.991
+   ],
+   [
+    0.986,
+    0.992,
+    0.991,
+    1.0
+   ]
+  ],
+  "span": [
+   [
+    1.0,
+    0.999,
+    0.999,
+    0.999
+   ],
+   [
+    0.999,
+    1.0,
+    0.999,
+    0.999
+   ],
+   [
+    0.999,
+    0.999,
+    1.0,
+    0.999
+   ],
+   [
+    0.999,
+    0.999,
+    0.999,
+    1.0
+   ]
+  ],
+  "moe_group_time": [
+   [
+    1.0,
+    0.929,
+    0.923,
+    0.927
+   ],
+   [
+    0.929,
+    1.0,
+    0.945,
+    0.945
+   ],
+   [
+    0.923,
+    0.945,
+    1.0,
+    0.958
+   ],
+   [
+    0.927,
+    0.945,
+    0.958,
+    1.0
+   ]
+  ],
+  "wait_proxy_sum": [
+   [
+    1.0,
+    0.328,
+    0.269,
+    0.274
+   ],
+   [
+    0.328,
+    1.0,
+    0.088,
+    0.102
+   ],
+   [
+    0.269,
+    0.088,
+    1.0,
+    0.087
+   ],
+   [
+    0.274,
+    0.102,
+    0.087,
+    1.0
+   ]
+  ]
+ },
+ "moe_group_time_ms_p50_per_rank": {
+  "0": 3.4512,
+  "1": 3.479,
+  "2": 3.4825,
+  "3": 3.4823
+ },
+ "corr_rank_own_segment_total_vs_own_wait": [
+  -0.193,
+  -0.122,
+  -0.095,
+  0.011
+ ],
+ "autocorrelation": {
+  "wall": {
+   "1": 0.604,
+   "2": 0.558,
+   "3": 0.49,
+   "5": 0.4,
+   "10": 0.316,
+   "20": 0.31,
+   "50": -0.251,
+   "100": -0.037
+  },
+  "mean_rank_busy": {
+   "1": 0.609,
+   "2": 0.564,
+   "3": 0.496,
+   "5": 0.401,
+   "10": 0.311,
+   "20": 0.309,
+   "50": -0.261,
+   "100": -0.034
+  },
+  "common_mode_segment_sum": {
+   "1": 0.424,
+   "2": 0.364,
+   "3": 0.252,
+   "5": 0.143,
+   "10": 0.078,
+   "20": 0.209,
+   "50": -0.222,
+   "100": 0.143
+  },
+  "rank0_wait_sum": {
+   "1": 0.76,
+   "2": 0.741,
+   "3": 0.689,
+   "5": 0.644,
+   "10": 0.556,
+   "20": 0.445,
+   "50": -0.163,
+   "100": -0.297
+  },
+  "rank_independent_part_sum": {
+   "1": 0.642,
+   "2": 0.611,
+   "3": 0.597,
+   "5": 0.518,
+   "10": 0.446,
+   "20": 0.353,
+   "50": -0.115,
+   "100": -0.21
+  },
+  "last_arriving_rank_final_collective_lag1_persistence": 0.338,
+  "last_arriving_rank_final_collective_chance": 0.345
+ },
+ "composition_no_coefficients": {
+  "W_meas_chain_ms_per_rank": [
+   0.1924,
+   0.0923,
+   0.0749,
+   0.0787
+  ],
+  "W_meas_proxy_ms_per_rank": [
+   0.1927,
+   0.0925,
+   0.0754,
+   0.0794
+  ],
+  "W_ind_permutation_ms_per_rank": [
+   0.3124,
+   0.2122,
+   0.1948,
+   0.1986
+  ],
+  "W_cm_quantile_ms_per_rank": [
+   0.1307,
+   0.0305,
+   0.0131,
+   0.0169
+  ],
+  "f_ind": 0.34,
+  "f_ind_ci90": [
+   0.316,
+   0.339
+  ],
+  "boot": 100,
+  "note": "chain = barrier composition of the measured segments with the fastest-rank intrinsic; 'proxy' = Phase 1A measured wait; both are measured quantities, W_ind/W_cm are counterfactual compositions"
+ }
+}

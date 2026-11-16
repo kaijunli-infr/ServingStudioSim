@@ -1,0 +1,1454 @@
+{
+ "caches": {
+  "stage1_off": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  },
+  "stage1_on": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  },
+  "off_v2": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  },
+  "on_v2": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  },
+  "off2_v2": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  },
+  "nsys_val": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  },
+  "b8_recovery": {
+   "keys": 160,
+   "meta": {
+    "flashinfer_version": "0.7.0.post1",
+    "cuda_version": "13.0",
+    "cublas_version": "13.1.1",
+    "cudnn_version": "92000",
+    "cudnn_frontend_version": "1.31.0",
+    "cutlass_dsl_version": "nvidia-cutlass-dsl-libs-base==4.7.1;nvidia-cutlass-dsl-libs-core==4.7.1;nvidia-cutlass-dsl-libs-cu12==4.7.1;nvidia-cutlass-dsl-libs-cu13==4.7.1;nvidia-cutlass-dsl==4.7.1",
+    "gpu": "NVIDIA GB300"
+   }
+  }
+ },
+ "pairwise": [
+  {
+   "a": "stage1_off",
+   "b": "stage1_on",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 87,
+   "differing_frac": 0.544,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "8/27",
+    "mxfp8_gemm": "78/132"
+   }
+  },
+  {
+   "a": "stage1_off",
+   "b": "off_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 83,
+   "differing_frac": 0.519,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "10/27",
+    "mxfp8_gemm": "72/132"
+   }
+  },
+  {
+   "a": "stage1_off",
+   "b": "on_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 89,
+   "differing_frac": 0.556,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "11/27",
+    "mxfp8_gemm": "77/132"
+   }
+  },
+  {
+   "a": "stage1_off",
+   "b": "off2_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 86,
+   "differing_frac": 0.537,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "13/27",
+    "mxfp8_gemm": "72/132"
+   }
+  },
+  {
+   "a": "stage1_off",
+   "b": "nsys_val",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 99,
+   "differing_frac": 0.619,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "11/27",
+    "mxfp8_gemm": "87/132"
+   }
+  },
+  {
+   "a": "stage1_off",
+   "b": "b8_recovery",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 104,
+   "differing_frac": 0.65,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "12/27",
+    "mxfp8_gemm": "91/132"
+   }
+  },
+  {
+   "a": "stage1_on",
+   "b": "off_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 86,
+   "differing_frac": 0.537,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "10/27",
+    "mxfp8_gemm": "75/132"
+   }
+  },
+  {
+   "a": "stage1_on",
+   "b": "on_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 107,
+   "differing_frac": 0.669,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "12/27",
+    "mxfp8_gemm": "94/132"
+   }
+  },
+  {
+   "a": "stage1_on",
+   "b": "off2_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 94,
+   "differing_frac": 0.588,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "13/27",
+    "mxfp8_gemm": "80/132"
+   }
+  },
+  {
+   "a": "stage1_on",
+   "b": "nsys_val",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 102,
+   "differing_frac": 0.637,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "12/27",
+    "mxfp8_gemm": "89/132"
+   }
+  },
+  {
+   "a": "stage1_on",
+   "b": "b8_recovery",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 99,
+   "differing_frac": 0.619,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "13/27",
+    "mxfp8_gemm": "85/132"
+   }
+  },
+  {
+   "a": "off_v2",
+   "b": "on_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 88,
+   "differing_frac": 0.55,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "11/27",
+    "mxfp8_gemm": "76/132"
+   }
+  },
+  {
+   "a": "off_v2",
+   "b": "off2_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 93,
+   "differing_frac": 0.581,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "14/27",
+    "mxfp8_gemm": "78/132"
+   }
+  },
+  {
+   "a": "off_v2",
+   "b": "nsys_val",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 98,
+   "differing_frac": 0.613,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "12/27",
+    "mxfp8_gemm": "85/132"
+   }
+  },
+  {
+   "a": "off_v2",
+   "b": "b8_recovery",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 96,
+   "differing_frac": 0.6,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "14/27",
+    "mxfp8_gemm": "81/132"
+   }
+  },
+  {
+   "a": "on_v2",
+   "b": "off2_v2",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 94,
+   "differing_frac": 0.588,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "10/27",
+    "mxfp8_gemm": "83/132"
+   }
+  },
+  {
+   "a": "on_v2",
+   "b": "nsys_val",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 103,
+   "differing_frac": 0.644,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "13/27",
+    "mxfp8_gemm": "89/132"
+   }
+  },
+  {
+   "a": "on_v2",
+   "b": "b8_recovery",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 94,
+   "differing_frac": 0.588,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "10/27",
+    "mxfp8_gemm": "83/132"
+   }
+  },
+  {
+   "a": "off2_v2",
+   "b": "nsys_val",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 103,
+   "differing_frac": 0.644,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "15/27",
+    "mxfp8_gemm": "87/132"
+   }
+  },
+  {
+   "a": "off2_v2",
+   "b": "b8_recovery",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 100,
+   "differing_frac": 0.625,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "11/27",
+    "mxfp8_gemm": "88/132"
+   }
+  },
+  {
+   "a": "nsys_val",
+   "b": "b8_recovery",
+   "common_keys": 160,
+   "only_a": 0,
+   "only_b": 0,
+   "differing": 82,
+   "differing_frac": 0.512,
+   "by_op": {
+    "_generation": "1/1",
+    "flashinfer::trtllm_fp4_block_scale_moe": "12/27",
+    "mxfp8_gemm": "69/132"
+   }
+  }
+ ],
+ "kernel_families": [
+  {
+   "label": "e1_nsys_val",
+   "b": 48,
+   "n_iterations": 928,
+   "gpu_time_ms_per_iteration_4ranks": 47.1574,
+   "families_ms_per_iteration": {
+    "attention": 3.4496,
+    "collective": 3.0283,
+    "dense_gemm": 12.5608,
+    "moe_bmm": 19.0992,
+    "moe_routing": 2.5438,
+    "other": 5.2973,
+    "quantize": 1.1783
+   },
+   "families_count_per_iteration": {
+    "attention": 344.0,
+    "collective": 368.0,
+    "dense_gemm": 1396.0,
+    "moe_bmm": 320.0,
+    "moe_routing": 604.0,
+    "other": 1857.2,
+    "quantize": 648.0
+   },
+   "tactic_dependent_ms": 32.8383,
+   "top": [
+    {
+     "kernel": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x16x256u2_s6_et128x16_m256x16x32_c2x1x1_rM_TN_transO",
+     "family": "moe_bmm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 12.4442
+    },
+    {
+     "kernel": "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x16x256_s6_et128x16_m256x16x32_c2x1x1_rM_TN_transOut_sc",
+     "family": "moe_bmm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 6.655
+    },
+    {
+     "kernel": "void deep_gemm::sm100_mega_mhc_impl<(unsigned int)5120, (unsigned int)40, (unsigned int)152, (bool)1",
+     "family": "dense_gemm",
+     "count_per_iter": 308.0,
+     "ms_per_iter": 4.3842
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDen",
+     "family": "dense_gemm",
+     "count_per_iter": 480.0,
+     "ms_per_iter": 3.8051
+    },
+    {
+     "kernel": "fmhaSm100fKernel_QkvE4m3OBfloat16H512PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128Static",
+     "family": "attention",
+     "count_per_iter": 152.0,
+     "ms_per_iter": 2.8608
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDen",
+     "family": "dense_gemm",
+     "count_per_iter": 360.0,
+     "ms_per_iter": 2.6168
+    },
+    {
+     "kernel": "void flashinfer::trtllm_mnnvl_allreduce::twoshotAllreduceKernel<(unsigned char)4, __nv_bfloat16, (bo",
+     "family": "collective",
+     "count_per_iter": 324.0,
+     "ms_per_iter": 2.3744
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o4816512div85121_tensorptri64gmemo481_tensorptr",
+     "family": "dense_gemm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.9896
+    },
+    {
+     "kernel": "nvjet_sm103_tss_64x16_64x16_2x4_2cta_h_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 164.0,
+     "ms_per_iter": 0.9043
+    },
+    {
+     "kernel": "_dsv4_topk_kernel",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6863
+    },
+    {
+     "kernel": "void moe::dev::finalize::finalizeKernel<moe::dev::finalize::KernelParams<cutlass::bfloat16_t, float,",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.682
+    },
+    {
+     "kernel": "void moe::dev::routing::routingCustom::routingIndicesClusterKernel<moe::dev::routing::routingCustom:",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.647
+    },
+    {
+     "kernel": "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, float, float, float, (bool)0, float",
+     "family": "other",
+     "count_per_iter": 176.0,
+     "ms_per_iter": 0.6154
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 0.5644
+    },
+    {
+     "kernel": "void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (b",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.5439
+    },
+    {
+     "kernel": "_build_flashinfer_mixed_sparse_indices_kernel",
+     "family": "attention",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.4775
+    },
+    {
+     "kernel": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+     "family": "collective",
+     "count_per_iter": 20.0,
+     "ms_per_iter": 0.4671
+    },
+    {
+     "kernel": "_q_kv_norm_quant_kernel",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3688
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3683
+    },
+    {
+     "kernel": "void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vll",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3335
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)8, at::native::CUDAFunctor_add<c10::BFloat16>, s",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2865
+    },
+    {
+     "kernel": "void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::na",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2729
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_sparse_mqa_logits<(unsigned int)128, (unsigned int)8, (unsigned int)2, (",
+     "family": "dense_gemm",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.25
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel_object_at",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2304
+    },
+    {
+     "kernel": "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctor_add<int>, std::array<char *, (u",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2234
+    },
+    {
+     "kernel": "nvjet_sm103_tst_256x48_64x5_4x1_v_bz_TNT",
+     "family": "other",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.2216
+    },
+    {
+     "kernel": "void vllm::cooperative::cooperative_topk_cs2<(unsigned int)512>(vllm::cooperative::CooperativeTopKPa",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.2001
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.1954
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsign",
+     "family": "dense_gemm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.1926
+    },
+    {
+     "kernel": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::na",
+     "family": "other",
+     "count_per_iter": 24.0,
+     "ms_per_iter": 0.1579
+    },
+    {
+     "kernel": "nvjet_sm103_tst_64x16_64x16_1x4_h_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.1155
+    },
+    {
+     "kernel": "mhc_post_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.1113
+    },
+    {
+     "kernel": "void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSe",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1034
+    },
+    {
+     "kernel": "_engram_lookup_kernel",
+     "family": "other",
+     "count_per_iter": 8.0,
+     "ms_per_iter": 0.1009
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsign",
+     "family": "dense_gemm",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.1004
+    },
+    {
+     "kernel": "nvjet_sm103_tss_64x16_64x16_2x1_2cta_v_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0814
+    },
+    {
+     "kernel": "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0781
+    },
+    {
+     "kernel": "mhc_pre_big_fuse_with_norm_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0754
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char",
+     "family": "other",
+     "count_per_iter": 56.0,
+     "ms_per_iter": 0.0671
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptri64gmemo1_tensorptrbf16gmemalign32o32128i64div16i64div161_tens",
+     "family": "dense_gemm",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0653
+    }
+   ]
+  },
+  {
+   "label": "quadrant_nsys",
+   "b": 48,
+   "n_iterations": 3032,
+   "gpu_time_ms_per_iteration_4ranks": 45.2722,
+   "families_ms_per_iteration": {
+    "attention": 3.3177,
+    "collective": 2.9886,
+    "dense_gemm": 11.6809,
+    "moe_bmm": 18.8148,
+    "moe_routing": 2.4053,
+    "other": 4.8873,
+    "quantize": 1.1776
+   },
+   "families_count_per_iteration": {
+    "attention": 344.0,
+    "collective": 368.0,
+    "dense_gemm": 1396.0,
+    "moe_bmm": 320.0,
+    "moe_routing": 604.0,
+    "other": 1695.5,
+    "quantize": 648.0
+   },
+   "tactic_dependent_ms": 31.6733,
+   "top": [
+    {
+     "kernel": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x16x256u2_s6_et128x16_m256x16x32_c2x1x1_rM_TN_transO",
+     "family": "moe_bmm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 12.233
+    },
+    {
+     "kernel": "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x16x256_s6_et128x16_m256x16x32_c2x1x1_rM_TN_transOut_sc",
+     "family": "moe_bmm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 6.5818
+    },
+    {
+     "kernel": "void deep_gemm::sm100_mega_mhc_impl<(unsigned int)5120, (unsigned int)40, (unsigned int)152, (bool)1",
+     "family": "dense_gemm",
+     "count_per_iter": 308.0,
+     "ms_per_iter": 4.3658
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDen",
+     "family": "dense_gemm",
+     "count_per_iter": 520.0,
+     "ms_per_iter": 3.2885
+    },
+    {
+     "kernel": "fmhaSm100fKernel_QkvE4m3OBfloat16H512PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128Static",
+     "family": "attention",
+     "count_per_iter": 152.0,
+     "ms_per_iter": 2.735
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDen",
+     "family": "dense_gemm",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 2.5769
+    },
+    {
+     "kernel": "void flashinfer::trtllm_mnnvl_allreduce::twoshotAllreduceKernel<(unsigned char)4, __nv_bfloat16, (bo",
+     "family": "collective",
+     "count_per_iter": 324.0,
+     "ms_per_iter": 2.3253
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o4816512div85121_tensorptri64gmemo481_tensorptr",
+     "family": "dense_gemm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.9896
+    },
+    {
+     "kernel": "nvjet_sm103_tss_64x16_64x16_2x4_2cta_h_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 164.0,
+     "ms_per_iter": 0.8944
+    },
+    {
+     "kernel": "_dsv4_topk_kernel",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.7025
+    },
+    {
+     "kernel": "void moe::dev::finalize::finalizeKernel<moe::dev::finalize::KernelParams<cutlass::bfloat16_t, float,",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6859
+    },
+    {
+     "kernel": "void moe::dev::routing::routingCustom::routingIndicesClusterKernel<moe::dev::routing::routingCustom:",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6502
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 0.5707
+    },
+    {
+     "kernel": "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, float, float, float, (bool)0, float",
+     "family": "other",
+     "count_per_iter": 176.0,
+     "ms_per_iter": 0.5414
+    },
+    {
+     "kernel": "void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (b",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.534
+    },
+    {
+     "kernel": "_build_flashinfer_mixed_sparse_indices_kernel",
+     "family": "attention",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.4717
+    },
+    {
+     "kernel": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+     "family": "collective",
+     "count_per_iter": 20.0,
+     "ms_per_iter": 0.4711
+    },
+    {
+     "kernel": "_q_kv_norm_quant_kernel",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.371
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3628
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)8, at::native::CUDAFunctor_add<c10::BFloat16>, s",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2913
+    },
+    {
+     "kernel": "void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vll",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2829
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel_object_at",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.229
+    },
+    {
+     "kernel": "nvjet_sm103_tst_256x48_64x5_4x1_v_bz_TNT",
+     "family": "other",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.2224
+    },
+    {
+     "kernel": "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctor_add<int>, std::array<char *, (u",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2108
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.1961
+    },
+    {
+     "kernel": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::na",
+     "family": "other",
+     "count_per_iter": 24.0,
+     "ms_per_iter": 0.1635
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_sparse_mqa_logits<(unsigned int)128, (unsigned int)8, (unsigned int)2, (",
+     "family": "dense_gemm",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.136
+    },
+    {
+     "kernel": "_engram_lookup_kernel",
+     "family": "other",
+     "count_per_iter": 8.0,
+     "ms_per_iter": 0.1201
+    },
+    {
+     "kernel": "nvjet_sm103_tst_64x16_64x16_1x4_h_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.1151
+    },
+    {
+     "kernel": "mhc_post_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.1122
+    },
+    {
+     "kernel": "nvjet_sm103_tss_64x16_64x16_2x1_2cta_v_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0816
+    },
+    {
+     "kernel": "mhc_pre_big_fuse_with_norm_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.08
+    },
+    {
+     "kernel": "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0783
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsign",
+     "family": "dense_gemm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0775
+    },
+    {
+     "kernel": "void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSe",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.0766
+    },
+    {
+     "kernel": "void vllm::cooperative::cooperative_topk_cs2<(unsigned int)512>(vllm::cooperative::CooperativeTopKPa",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.0681
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char",
+     "family": "other",
+     "count_per_iter": 56.0,
+     "ms_per_iter": 0.0671
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptri64gmemo1_tensorptrbf16gmemalign32o32128i64div16i64div161_tens",
+     "family": "dense_gemm",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0643
+    },
+    {
+     "kernel": "void at::native::radixSortKVInPlace<(int)2, (int)-1, (int)64, (int)32, float, long, unsigned int>(at",
+     "family": "other",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.0577
+    },
+    {
+     "kernel": "_fused_save_compress_norm_kernel",
+     "family": "other",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.0548
+    }
+   ]
+  },
+  {
+   "label": "e1_b8_recovery",
+   "b": 8,
+   "n_iterations": 1008,
+   "gpu_time_ms_per_iteration_4ranks": 28.4282,
+   "families_ms_per_iteration": {
+    "attention": 2.131,
+    "collective": 4.5036,
+    "dense_gemm": 8.0606,
+    "moe_bmm": 6.9653,
+    "moe_routing": 1.9406,
+    "other": 3.6192,
+    "quantize": 1.2079
+   },
+   "families_count_per_iteration": {
+    "attention": 344.0,
+    "collective": 996.0,
+    "dense_gemm": 1556.0,
+    "moe_bmm": 320.0,
+    "moe_routing": 384.0,
+    "other": 1391.0,
+    "quantize": 648.0
+   },
+   "tactic_dependent_ms": 16.2337,
+   "top": [
+    {
+     "kernel": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_sc",
+     "family": "moe_bmm",
+     "count_per_iter": 148.0,
+     "ms_per_iter": 4.0177
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDen",
+     "family": "dense_gemm",
+     "count_per_iter": 520.0,
+     "ms_per_iter": 2.6406
+    },
+    {
+     "kernel": "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd",
+     "family": "moe_bmm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 2.6101
+    },
+    {
+     "kernel": "void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int",
+     "family": "dense_gemm",
+     "count_per_iter": 316.0,
+     "ms_per_iter": 1.912
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitK",
+     "family": "dense_gemm",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 1.7831
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel_o",
+     "family": "collective",
+     "count_per_iter": 308.0,
+     "ms_per_iter": 1.744
+    },
+    {
+     "kernel": "mhc_pre_big_fuse_with_norm_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 332.0,
+     "ms_per_iter": 1.7369
+    },
+    {
+     "kernel": "fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16",
+     "family": "attention",
+     "count_per_iter": 152.0,
+     "ms_per_iter": 1.5744
+    },
+    {
+     "kernel": "_dsv4_topk_kernel",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.8033
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 0.692
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o816512div85121_tensorptri64gmemo81_tensorptrf3",
+     "family": "dense_gemm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6861
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK_object_at__",
+     "family": "dense_gemm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6375
+    },
+    {
+     "kernel": "void moe::dev::routing::routingCustom::routingIndicesDynBlockKernel<moe::dev::routing::routingCustom",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.5159
+    },
+    {
+     "kernel": "void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (b",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.5046
+    },
+    {
+     "kernel": "_build_flashinfer_mixed_sparse_indices_kernel",
+     "family": "attention",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.4568
+    },
+    {
+     "kernel": "_q_kv_norm_quant_kernel",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.4176
+    },
+    {
+     "kernel": "void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::na",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3769
+    },
+    {
+     "kernel": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_sc",
+     "family": "moe_bmm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.3375
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDevic",
+     "family": "collective",
+     "count_per_iter": 148.0,
+     "ms_per_iter": 0.3337
+    },
+    {
+     "kernel": "void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vll",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3149
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2813
+    },
+    {
+     "kernel": "void at::native::sbtopk::gatherTopK<float, unsigned int, (int)2, (bool)0>(at::cuda::detail::TensorIn",
+     "family": "moe_routing",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.2747
+    },
+    {
+     "kernel": "void cutlass::Kernel2<cutlass_80_tensorop_s16816gemm_bf16_64x64_64x6_tn_align8>(T1::Params)",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.2657
+    },
+    {
+     "kernel": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+     "family": "collective",
+     "count_per_iter": 20.0,
+     "ms_per_iter": 0.2609
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceK",
+     "family": "collective",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2332
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel_object_at",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2197
+    },
+    {
+     "kernel": "nvjet_sm103_tst_128x8_64x12_1x1_h_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.2152
+    },
+    {
+     "kernel": "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctor_add<int>, std::array<char *, (u",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2118
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.1752
+    },
+    {
+     "kernel": "void vllm::cooperative::cooperative_topk_cs8<(unsigned int)512>(vllm::cooperative::CooperativeTopKPa",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1531
+    },
+    {
+     "kernel": "void flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel<(unsigned char)4, __nv_bfloat1",
+     "family": "collective",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1333
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_sparse_mqa_logits<(unsigned int)128, (unsigned int)8, (unsigned int)2, (",
+     "family": "dense_gemm",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1327
+    },
+    {
+     "kernel": "void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSe",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1059
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsign",
+     "family": "dense_gemm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0853
+    },
+    {
+     "kernel": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::na",
+     "family": "other",
+     "count_per_iter": 24.0,
+     "ms_per_iter": 0.0851
+    },
+    {
+     "kernel": "nvjet_sm103_tss_64x8_64x16_4x1_v_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0712
+    },
+    {
+     "kernel": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_64x6_tn_align8>(T1::Params",
+     "family": "other",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.0685
+    },
+    {
+     "kernel": "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0653
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char",
+     "family": "other",
+     "count_per_iter": 56.0,
+     "ms_per_iter": 0.0646
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptri64gmemo1_tensorptrbf16gmemalign32o32128i64div16i64div161_tens",
+     "family": "dense_gemm",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0621
+    }
+   ]
+  },
+  {
+   "label": "diverse_nsys_run2",
+   "b": 8,
+   "n_iterations": 1675,
+   "gpu_time_ms_per_iteration_4ranks": 28.3142,
+   "families_ms_per_iteration": {
+    "attention": 2.1313,
+    "collective": 4.5937,
+    "dense_gemm": 8.1561,
+    "moe_bmm": 6.9586,
+    "moe_routing": 1.9834,
+    "other": 3.2189,
+    "quantize": 1.2722
+   },
+   "families_count_per_iteration": {
+    "attention": 344.0,
+    "collective": 996.0,
+    "dense_gemm": 1556.0,
+    "moe_bmm": 320.0,
+    "moe_routing": 384.0,
+    "other": 1229.9,
+    "quantize": 648.0
+   },
+   "tactic_dependent_ms": 16.387,
+   "top": [
+    {
+     "kernel": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_sc",
+     "family": "moe_bmm",
+     "count_per_iter": 148.0,
+     "ms_per_iter": 3.9132
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDen",
+     "family": "dense_gemm",
+     "count_per_iter": 520.0,
+     "ms_per_iter": 2.8304
+    },
+    {
+     "kernel": "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd",
+     "family": "moe_bmm",
+     "count_per_iter": 148.0,
+     "ms_per_iter": 2.5101
+    },
+    {
+     "kernel": "void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int",
+     "family": "dense_gemm",
+     "count_per_iter": 316.0,
+     "ms_per_iter": 1.9156
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel_o",
+     "family": "collective",
+     "count_per_iter": 308.0,
+     "ms_per_iter": 1.8206
+    },
+    {
+     "kernel": "mhc_pre_big_fuse_with_norm_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 332.0,
+     "ms_per_iter": 1.7453
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitK",
+     "family": "dense_gemm",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 1.684
+    },
+    {
+     "kernel": "fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16",
+     "family": "attention",
+     "count_per_iter": 152.0,
+     "ms_per_iter": 1.5769
+    },
+    {
+     "kernel": "_dsv4_topk_kernel",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.7659
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 320.0,
+     "ms_per_iter": 0.6923
+    },
+    {
+     "kernel": "kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o816512div85121_tensorptri64gmemo81_tensorptrf3",
+     "family": "dense_gemm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6846
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK_object_at__",
+     "family": "dense_gemm",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.6396
+    },
+    {
+     "kernel": "void moe::dev::routing::routingCustom::routingIndicesDynBlockKernel<moe::dev::routing::routingCustom",
+     "family": "moe_routing",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.5522
+    },
+    {
+     "kernel": "void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (b",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.5269
+    },
+    {
+     "kernel": "_build_flashinfer_mixed_sparse_indices_kernel",
+     "family": "attention",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.4553
+    },
+    {
+     "kernel": "_q_kv_norm_quant_kernel",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.4177
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.3405
+    },
+    {
+     "kernel": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512u2_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_",
+     "family": "moe_bmm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.3303
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDevic",
+     "family": "collective",
+     "count_per_iter": 148.0,
+     "ms_per_iter": 0.316
+    },
+    {
+     "kernel": "void at::native::sbtopk::gatherTopK<float, unsigned int, (int)2, (bool)0>(at::cuda::detail::TensorIn",
+     "family": "moe_routing",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.3154
+    },
+    {
+     "kernel": "void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vll",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2764
+    },
+    {
+     "kernel": "void cutlass::Kernel2<cutlass_80_tensorop_s16816gemm_bf16_64x64_64x6_tn_align8>(T1::Params)",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.265
+    },
+    {
+     "kernel": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+     "family": "collective",
+     "count_per_iter": 20.0,
+     "ms_per_iter": 0.2624
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceK",
+     "family": "collective",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2393
+    },
+    {
+     "kernel": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel_object_at",
+     "family": "quantize",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2245
+    },
+    {
+     "kernel": "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctor_add<int>, std::array<char *, (u",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.2163
+    },
+    {
+     "kernel": "nvjet_sm103_tst_128x8_64x12_1x1_h_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 4.0,
+     "ms_per_iter": 0.2159
+    },
+    {
+     "kernel": "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s5_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd",
+     "family": "moe_bmm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.2051
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::",
+     "family": "other",
+     "count_per_iter": 160.0,
+     "ms_per_iter": 0.1744
+    },
+    {
+     "kernel": "void vllm::cooperative::cooperative_topk_cs8<(unsigned int)512>(vllm::cooperative::CooperativeTopKPa",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1679
+    },
+    {
+     "kernel": "void flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel<(unsigned char)4, __nv_bfloat1",
+     "family": "collective",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1485
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_sparse_mqa_logits<(unsigned int)128, (unsigned int)8, (unsigned int)2, (",
+     "family": "dense_gemm",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.1334
+    },
+    {
+     "kernel": "void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSe",
+     "family": "moe_routing",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.0963
+    },
+    {
+     "kernel": "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsign",
+     "family": "dense_gemm",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0863
+    },
+    {
+     "kernel": "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::na",
+     "family": "other",
+     "count_per_iter": 24.0,
+     "ms_per_iter": 0.0854
+    },
+    {
+     "kernel": "nvjet_sm103_tss_64x8_64x16_4x1_v_bz_splitK_TNT",
+     "family": "other",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0709
+    },
+    {
+     "kernel": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_64x6_tn_align8>(T1::Params",
+     "family": "other",
+     "count_per_iter": 16.0,
+     "ms_per_iter": 0.0681
+    },
+    {
+     "kernel": "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char",
+     "family": "other",
+     "count_per_iter": 56.0,
+     "ms_per_iter": 0.0649
+    },
+    {
+     "kernel": "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16",
+     "family": "other",
+     "count_per_iter": 32.0,
+     "ms_per_iter": 0.0647
+    },
+    {
+     "kernel": "mhc_post_tilelang_kernel",
+     "family": "collective",
+     "count_per_iter": 12.0,
+     "ms_per_iter": 0.0616
+    }
+   ]
+  }
+ ]
+}

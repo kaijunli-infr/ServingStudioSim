@@ -48,3 +48,18 @@ cd $D/phase1c/e1 && python3 make_e1_inputs.py --out . && sha256sum -c INPUTS.sha
 $S/gb300/venv/bin/python analysis/e1_identify.py --tables $S/phase1a-tables/quadrant_nsys --label quadrant_nsys --calibration-only $D/phase1a/partition/partition.json --out out/smoke_quadrant --boot 50
 $S/gb300/venv/bin/python checks/e1_completeness.py --profile $S/artifacts/phase0-dsv41-flash-gb300-tp4-20261112/run/quadrant_nsys/profile --parsed --out out/smoke_quadrant_completeness.json
 ```
+
+## CPU-only E1 readiness audit and authorization packet v2 (2026-11-16, branch `phase1c-e1-audit`; no GPU use)
+
+| file | purpose |
+|---|---|
+| `audit/E1-READINESS-AUDIT.md` | Parts A–C: frozen-evidence manifests, rank-dependence analysis of the accepted b=8 / b=48 traces, discrepancy investigation (empty reference section, configuration-identity differences, autotune tactics) |
+| `E1-AUTHORIZATION-PACKET-v2.md` | Part D: revised full-E1 request (`e1_main_v3`, one launch, no nsys delay, 4 h reservation, GPU-held ≈ 60 min, raw ≈ 43 GB / ceiling 80 GB), measurement strategy, partitions, preflight/monitor/abort/cleanup, hashes, acceptance criteria, risks |
+| `audit/FROZEN-EVIDENCE.sha256`, `audit/FROZEN-EVIDENCE-EXTERNAL.sha256` | checksums of the accepted Stage 1.5 evidence (repo files; archives and Phase 1A tables, made read-only on CephFS) |
+| `audit/rank_dependence/`, `audit/identify/`, `audit/tactics/`, `audit/schedule/`, `audit/rank_kernels_b8_vs_run2.md` | outputs of the audit analyses (markdown + JSON) |
+| `audit/preflight/` | read-only v3 preflight logs from tray16 in the driver context (21 PASS) |
+| `analysis/e1_rank_dependence.py` | per-rank arrival/wait/intrinsic reconstruction, tails, critical-path shares, cross-rank covariance, autocorrelation, coefficient-free W_ind/W_cm composition (numpy + pyarrow) |
+| `analysis/e1_autotune_tactics.py` | pairwise autotune-tactic agreement between launches and GPU time per tactic-dependent kernel family |
+| `analysis/e1_schedule_sim.py` | full-E1 wave/capture-window simulation from measured Stage 1.5 rates (iterations, rows, storage, durations) |
+| `make_e1_inputs_v3.py` → `configs_v3/e1_main_v3/profile.json`, `INPUTS_v3.sha256`, `E1-MAIN-V3-INPUTS.json` | v3 inputs derived mechanically from the accepted `configs_v2/e1_nsys_val` recipe (name, log_dir, trace path, delay removed) |
+| `preflight_e1_main_v3.sh`, `run_e1_main_v3.sh`, `monitor_e1.sh`, `postrun_e1_main_v3.sh`, `collect_e1_main_v3.sh`, `hash_scripts_v3.sh` → `SCRIPTS_v3.sha256` | full-E1 procedure scripts (NOT run; the driver refuses any pass other than `e1_main_v3`) |

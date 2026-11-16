@@ -1,0 +1,122 @@
+{
+ "label": "e1_b8_recovery",
+ "tables": "/mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_b8_recovery",
+ "metrics": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_b8_recovery_metrics.jsonl",
+ "corpus": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/token_corpus",
+ "calibration_only": null,
+ "draws": 1024,
+ "boot": 200,
+ "seed": 0,
+ "n_cells": 1,
+ "cells": [
+  {
+   "b": 8,
+   "kv": 32768,
+   "phase": "pure",
+   "n": 1008,
+   "K": 163,
+   "n_other_K": 0,
+   "wall_ms_median": 5.283103499999999,
+   "wall_ms_mean": 5.293114297619048,
+   "wall_ms_cv": 0.01300242583867229,
+   "w_meas": [
+    0.2259,
+    0.171,
+    0.1575,
+    0.1737
+   ],
+   "w_med": [
+    0.1061,
+    0.0414,
+    0.036,
+    0.0506
+   ],
+   "w_ind": [
+    0.2592,
+    0.2062,
+    0.1928,
+    0.2084
+   ],
+   "w_cm": [
+    0.0947,
+    0.04,
+    0.0259,
+    0.0422
+   ],
+   "f_ind": 0.7913,
+   "f_ind_ci90": [
+    0.7723,
+    0.7983
+   ],
+   "rho": 0.2974468064093688,
+   "c_common": 0.23074162658482206,
+   "rho_first_segment": 0.45675929691737177,
+   "rho_max_var_segment": 0.45675929691737177,
+   "first_arrival_spread_ms_median": 0.0149495,
+   "first_arrival_spread_ms_p90": 0.021058800000000006,
+   "last_arriving_rank_hist": [
+    7,
+    51,
+    544,
+    406
+   ],
+   "mean_lateness_ms_per_rank": [
+    0.0004,
+    0.007,
+    0.0146,
+    0.013
+   ],
+   "collective_end_spread_ms_median": 0.001738,
+   "collective_end_spread_ms_p90": 0.008176,
+   "moe_ms_mean": 1.9641081493055554,
+   "moe_cross_rank_corr": 0.6777150188541259,
+   "moe_wall_corr": 0.5157296548353935,
+   "r2_wall_on_routing": 0.05691739729886025,
+   "r2_moe_on_routing": 0.7479819165224761,
+   "routing_stat_means": [
+    4.273,
+    38.779,
+    51.705
+   ]
+  }
+ ],
+ "frozen": {
+  "8": {
+   "status": "measured",
+   "n": 1038,
+   "K": 163,
+   "sources": [
+    "diverse_nsys_run2"
+   ],
+   "f_ind": 0.7748145417791349,
+   "w_meas": [
+    0.2251,
+    0.188,
+    0.1823,
+    0.183
+   ],
+   "w_med": [
+    0.1016,
+    0.0386,
+    0.0383,
+    0.0416
+   ]
+  }
+ },
+ "decision": {
+  "regime": {},
+  "kv": {},
+  "pass": {
+   "8": {
+    "f_frozen": 0.7748,
+    "frozen_sources": [
+     "diverse_nsys_run2"
+    ],
+    "f_e1": {
+     "32768": 0.7913
+    },
+    "delta_max_abs": 0.0165
+   }
+  }
+ }
+}

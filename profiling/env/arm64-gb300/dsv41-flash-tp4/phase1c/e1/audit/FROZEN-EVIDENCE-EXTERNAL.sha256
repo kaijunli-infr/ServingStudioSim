@@ -1,0 +1,11 @@
+# outside git (absolute paths): raw archive copies, their SHA256SUMS, Phase 1A compact tables 2026-11-16T07:09:54Z
+1067ecbc86ad35bdb0da8bceef64bec02580a927d13476bac7f16f0542930379  /mnt/shared/home/dc/workspace/serving-studio/artifacts/phase1c-e1-stage15-dsv41-flash-gb300-tp4-20261115/SHA256SUMS
+b806c8ab92ac042768747e41a48cdc10defd9b38ff9f7f45b91296caa94dad5b  /mnt/shared/home/dc/workspace/serving-studio/artifacts/phase1c-e1-stage15-dsv41-flash-gb300-tp4-20261115/SHA256SUMS.b8
+50f7ff1bf27c876959e8abc73aded081401612a532127c5b4d316bf601a36e83  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_nsys_val/collectives.parquet
+5226693c6741f770d82a62d72f3d40d719d5e3be154c2dd9cb2be24fb3721774  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_nsys_val/iter_rank.parquet
+2238f677d5e70e641eba3641f346676ea20acdaec548a99d673b3893583f948a  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_nsys_val/iterations.parquet
+15047adb5bebe0b699ad7cb26122d2b1718a4eb0533014c025916ea461a2a402  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_nsys_val/meta.json
+bb32c3c40ae56576776a79658f540ea19f5d5800f7f411db0719094d5dc11f83  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_b8_recovery/collectives.parquet
+3c6b4707a24e7c263beb7794353fc006af406e376b6fa0a10d08d58a776d1159  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_b8_recovery/iter_rank.parquet
+1cf35720815ecd09e573bdf77498e1f0f4a422ce3f2c3f5affd4a26f22f52478  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_b8_recovery/iterations.parquet
+2d9f68990bc393c529df71d08182922cbad29f8bbf35e155e07c4750d14a744f  /mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_b8_recovery/meta.json

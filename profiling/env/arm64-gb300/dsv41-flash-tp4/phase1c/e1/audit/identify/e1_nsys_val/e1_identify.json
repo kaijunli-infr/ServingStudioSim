@@ -1,0 +1,111 @@
+{
+ "label": "e1_nsys_val",
+ "tables": "/mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_nsys_val",
+ "metrics": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_nsys_val_metrics.jsonl",
+ "corpus": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/token_corpus",
+ "calibration_only": null,
+ "draws": 1024,
+ "boot": 200,
+ "seed": 0,
+ "n_cells": 1,
+ "cells": [
+  {
+   "b": 48,
+   "kv": 32768,
+   "phase": "pure",
+   "n": 928,
+   "K": 86,
+   "n_other_K": 0,
+   "wall_ms_median": 10.3022235,
+   "wall_ms_mean": 10.312052001077586,
+   "wall_ms_cv": 0.019839099939379823,
+   "w_meas": [
+    0.2089,
+    0.1069,
+    0.0979,
+    0.0933
+   ],
+   "w_med": [
+    0.1243,
+    0.0177,
+    0.0116,
+    0.0137
+   ],
+   "w_ind": [
+    0.3611,
+    0.2588,
+    0.2487,
+    0.2474
+   ],
+   "w_cm": [
+    0.1325,
+    0.0304,
+    0.0214,
+    0.0167
+   ],
+   "f_ind": 0.3345,
+   "f_ind_ci90": [
+    0.3108,
+    0.3656
+   ],
+   "rho": 0.5842990207871531,
+   "c_common": 0.21461250459638415,
+   "rho_first_segment": 0.5088090845993274,
+   "rho_max_var_segment": 0.5088090845993274,
+   "first_arrival_spread_ms_median": 0.0141565,
+   "first_arrival_spread_ms_p90": 0.0202493,
+   "last_arriving_rank_hist": [
+    8,
+    10,
+    520,
+    390
+   ],
+   "mean_lateness_ms_per_rank": [
+    0.0007,
+    0.0036,
+    0.0129,
+    0.0178
+   ],
+   "collective_end_spread_ms_median": 0.000144,
+   "collective_end_spread_ms_p90": 0.000299,
+   "moe_ms_mean": 5.19041749299569,
+   "moe_cross_rank_corr": 0.9646291456526453,
+   "moe_wall_corr": 0.45652325153128126,
+   "r2_wall_on_routing": 0.1747783697636689,
+   "r2_moe_on_routing": 0.9853589247299032,
+   "routing_stat_means": [
+    24.324,
+    140.194,
+    31.154
+   ]
+  }
+ ],
+ "frozen": {
+  "48": {
+   "status": "measured",
+   "n": 2425,
+   "K": 86,
+   "sources": [
+    "quadrant_nsys"
+   ],
+   "f_ind": 0.2246812630484072,
+   "w_meas": [
+    0.1397,
+    0.1151,
+    0.0761,
+    0.0768
+   ],
+   "w_med": [
+    0.0788,
+    0.0497,
+    0.013,
+    0.0093
+   ]
+  }
+ },
+ "decision": {
+  "regime": {},
+  "kv": {},
+  "pass": {}
+ }
+}
