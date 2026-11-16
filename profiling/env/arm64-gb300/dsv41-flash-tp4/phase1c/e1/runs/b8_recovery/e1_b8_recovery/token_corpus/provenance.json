@@ -1,0 +1,91 @@
+{
+  "source": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/routed_experts",
+  "encoding": "little-endian u16, C order [token, layer, top_k]",
+  "scope": "accepted generated tokens; no prompt or rejected draft routes",
+  "num_model_layers": 40,
+  "model_layer_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+  ],
+  "tokens_dropped_without_draft_routes": 0,
+  "request_segments": [
+    {
+      "request": "independent_e1_b8_kv32k_w0_r00",
+      "start": 0,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r01",
+      "start": 1023,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r02",
+      "start": 2046,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r03",
+      "start": 3069,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r04",
+      "start": 4092,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r05",
+      "start": 5115,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r06",
+      "start": 6138,
+      "length": 1023
+    },
+    {
+      "request": "independent_e1_b8_kv32k_w0_r07",
+      "start": 7161,
+      "length": 1023
+    }
+  ]
+}

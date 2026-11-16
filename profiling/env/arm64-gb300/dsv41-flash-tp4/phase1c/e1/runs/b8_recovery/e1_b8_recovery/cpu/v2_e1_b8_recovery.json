@@ -1,0 +1,175 @@
+{
+ "checker_version": "2.0.0",
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile",
+ "profile_result": {
+  "profile_kind": "nsys",
+  "validation": {
+   "nvtx_forward_ranges": 4160,
+   "kernel_rows": 5887244,
+   "kernel_span_ms": 8985.76119,
+   "ok": true
+  },
+  "parsed_device_ids": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "request_timing_count": 8,
+  "token_corpus_tokens": 8184
+ },
+ "cells": {
+  "b8_kv32768_w0": {
+   "pure": 1008,
+   "ramp": 30,
+   "elapsed_ms_median": 4.731215499999999,
+   "elapsed_ms_p90": 4.7959808
+  }
+ },
+ "plan": "dry",
+ "token_accounting": {
+  "requests": 8,
+  "ramp_emitted_min": 15,
+  "ramp_emitted_median": 15.0,
+  "ramp_emitted_max": 15
+ },
+ "join": {
+  "duplicate": 0,
+  "missing": 0,
+  "non_monotone": 0
+ },
+ "corpus": {
+  "num_tokens": 8184,
+  "segments": 8,
+  "bad_len": 0,
+  "npy_mismatch": 0,
+  "dup_topk": 0
+ },
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "export validation ok=True nvtx_forward_ranges=4160 kernel_rows=5887244"
+  },
+  {
+   "status": "PASS",
+   "msg": "parsed devices [0, 1, 2, 3]"
+  },
+  {
+   "status": "INFO",
+   "msg": "profile_kind=nsys request_timing_count=8 corpus_tokens=8184"
+  },
+  {
+   "status": "PASS",
+   "msg": "metrics records: 1040"
+  },
+  {
+   "status": "INFO",
+   "msg": "ramp iterations (prefill present or decode_requests != b inside a cell): 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations carrying requests of two cells (overrun): 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "plan 'dry' (1 cells, 8 requests) selected by --plan auto; every planned cell is checked"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "observed cells not in the plan: []"
+  },
+  {
+   "status": "PASS",
+   "msg": "request ids without an E1 tag: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests seen 8; requests whose emitted tokens != 1024: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "progress entries with emitted_tokens not in {0,1}: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/15/15"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs emitted in more than one iteration (duplicate join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs never emitted (missing join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose position->iteration map is not strictly increasing: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "routed_experts files 8 vs requests 8; missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with shape != (1024, 40, 6): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with dtype != uint16: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with an expert id >= 384: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(token, layer) rows with a duplicate expert in the top-6: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus num_tokens 8184 vs 8 x (1024-1) = 8184"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus file size 3928320 vs num_tokens*L*K*2 = 3928320"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus max expert id 383 < 384"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments 8, unique request names 8"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments with length != 1023: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments contiguous, non-overlapping and covering [0, num_tokens)"
+  },
+  {
+   "status": "PASS",
+   "msg": "segment names == metrics request ids: missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments whose every row maps to exactly one iteration: 8 of 8"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus checksum_fnv1a64 16609194028753919376 vs manifest 16609194028753919376"
+  }
+ ],
+ "fails": 0
+}

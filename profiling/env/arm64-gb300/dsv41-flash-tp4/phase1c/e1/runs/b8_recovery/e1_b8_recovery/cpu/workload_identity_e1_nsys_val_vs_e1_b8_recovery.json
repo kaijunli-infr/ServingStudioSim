@@ -1,0 +1,222 @@
+{
+ "requests": {
+  "e1_b8_kv32k_w0_r00": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r00",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.07645670572916667
+   }
+  },
+  "e1_b8_kv32k_w0_r01": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r01",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.085400390625
+   }
+  },
+  "e1_b8_kv32k_w0_r02": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r02",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.07630615234375
+   }
+  },
+  "e1_b8_kv32k_w0_r03": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r03",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.13645833333333332
+   }
+  },
+  "e1_b8_kv32k_w0_r04": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r04",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.05788981119791667
+   }
+  },
+  "e1_b8_kv32k_w0_r05": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r05",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.02803955078125
+   }
+  },
+  "e1_b8_kv32k_w0_r06": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r06",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.10037841796875
+   }
+  },
+  "e1_b8_kv32k_w0_r07": {
+   "a": {
+    "id": "e1_b8_kv32k_w0_r07",
+    "input_len": 32768,
+    "prompt_len": 32768,
+    "output_len_target": 1024,
+    "arrival_time_ms": 0.0,
+    "output_len_actual": 1024,
+    "output_len_text_tokens": 1024,
+    "echoed_prompt_tokens": 0,
+    "finish_reason": "length",
+    "usage.prompt_tokens": 32768,
+    "usage.completion_tokens": 1024,
+    "usage.cached_prompt_tokens": 0
+   },
+   "diff": {},
+   "routes": {
+    "shape": [
+     1024,
+     40,
+     6
+    ],
+    "agree": 0.0959716796875
+   }
+  }
+ },
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "requests with prefix 'e1_b8_': a=8 b=8 common=8"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose replay record fields differ (id, input_len, prompt_len, output_len_target, arrival_time_ms, output_len_actual, output_len_text_tokens, echoed_prompt_tokens, finish_reason, usage.*): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "routed-experts arrays with equal shape: 8 of 8"
+  },
+  {
+   "status": "INFO",
+   "msg": "routed-experts element agreement (informational): min 0.0280 median 0.0854"
+  }
+ ]
+}

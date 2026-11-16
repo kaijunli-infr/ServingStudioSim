@@ -1,0 +1,48 @@
+# postrun e1_b8_recovery 2026-11-16T06:06:29Z on pod4-gb300-10-tray14-f3
+[e1_b8_recovery] rc=0 end 2026-11-16T06:03:03Z
+[e1_b8_recovery] shutdown trigger at server-log line 3831; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+## sizes
+35069597 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/host_timeline.json
+26237219 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/parsed.json
+37301839 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/parsed.kernels.parquet
+ 
+ 
+ 
+170126141 dsv41_flash_1017_gb300_tp4_e1_b8_recovery.nsys-rep
+874708992 dsv41_flash_1017_gb300_tp4_e1_b8_recovery.sqlite
+validation: {'nvtx_forward_ranges': 4160, 'kernel_rows': 5887244, 'kernel_span_ms': 8985.76119, 'ok': True}
+parsed_device_ids: [0, 1, 2, 3]
+## 0. capture-window coverage gate (analysis/e1_capture_window.py census): every pure b=8 iteration captured, none straddling
+PASS  pure b=8 captured 1008 of 1008 (need all, >= 400); parsed contiguous=True; owners {'-': 2, 'b8_kv32k': 1038}; parsed 1040 of 1040 metrics iterations; first captured starts 0.0384 s
+capture_window census rc=0 gate rc=0
+## 1. completeness v2 (routing-to-iteration joins, hook on; plan = the b=8 cell)
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         requests seen 8; requests whose emitted tokens != 1024: 0 []
+RESULT PASS [checker v2.0.0]
+completeness_v2 rc=0
+## 2. input hashes + Phase 1A tables (costmodel.extract)
+b3801caaa505e0145fcbb56d83fe9270e246fc1125bc6aeac13dc8c095f8a017 run/e1_b8_recovery/profile/ parsed.json
+21aa075e87e1cea0f6620d29d587509dbc9ba737eb479468992c1a9ce4818353 run/e1_b8_recovery/profile/ parsed.kernels.parquet
+90d77c0d60c9284a4a33774d96b647a0eb077284e9dd552b106ac6641bc52d61 run/e1_b8_recovery/profile/ host_timeline.json
+[e1_b8_recovery] parsed.json: 1040 iterations, 168 kernel names, devices [0, 1, 2, 3]
+[e1_b8_recovery] kernels: 5887244 rows sorted in 0s
+[e1_b8_recovery] host_timeline: 871841 api calls
+[e1_b8_recovery] 0/1040 iterations, 1s
+[e1_b8_recovery] done: 1040 iterations, 4160 rank rows, 672844 collective rows, unaligned 0, 3s
+extract rc=0
+## 3. nsys validation checker (thresholds unchanged: spread median <= 0.02 ms, p90 <= 0.05 ms, JIT <= 20)
+RESULT PASS [checker v2.0.0]
+RESULT PASS
+PASS lines: 49
+nsys_validation rc=0
+## 4. workload identity of the 8 requests vs e1_dry_on_v2 and e1_nsys_val (replay records; routes informational)
+vs e1_dry_on_v2 rc=0 : RESULT PASS 
+vs e1_nsys_val rc=0 : RESULT PASS 
+## 5. per-rank execution, collective wait, kernel identities (b=8; reference quadrant_nsys, hypothesis material only)
+rank_kernels rc=0 (66 lines)
+## 6. configuration identity of the launch record vs e1_nsys_val (informational: name/log_dir/trace path/delay differ by design)
+FAIL  argv: only in a ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val'], only in b ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_b8_recovery'] (permitted: ['--enable-return-routed-experts'])
+FAIL  launch nsys_config differs: ['nsys_config.capture_start_delay_seconds']
+FAIL  launch records identical apart from the hook flag
+RESULT FAIL (3)
+GATES e1_b8_recovery: capture_window rc=0 completeness_v2 rc=0 extract rc=0 nsys_validation rc=0 workload_identity fails=0 -> PASS

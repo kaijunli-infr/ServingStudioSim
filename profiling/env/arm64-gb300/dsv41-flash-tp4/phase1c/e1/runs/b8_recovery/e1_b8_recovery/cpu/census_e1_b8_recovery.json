@@ -1,0 +1,61 @@
+{
+ "pass": "e1_b8_recovery",
+ "replay_span_s": 9.613,
+ "metrics_iterations": 1040,
+ "metrics_index_range": [
+  85,
+  1124
+ ],
+ "kinds_all": {
+  "prefill_only": 2,
+  "mixed_b8": 15,
+  "pure_b8": 1008,
+  "decode_ramp_b8": 15
+ },
+ "waves": {
+  "b8": {
+   "first_iteration": 85,
+   "first_start_s": 0.038383103,
+   "first_pure_iteration": 102,
+   "first_pure_start_s": 3.614752617,
+   "last_pure_iteration": 1109,
+   "last_pure_end_s": 8.948132561,
+   "wave_end_s": 9.021852228,
+   "n_pure": 1008,
+   "n_owned": 1040
+  }
+ },
+ "parsed": {
+  "iterations": 1040,
+  "index_range": [
+   85,
+   1124
+  ],
+  "missing_in_metrics": [],
+  "contiguous": true,
+  "kinds": {
+   "prefill_only": 2,
+   "mixed_b8": 15,
+   "pure_b8": 1008,
+   "decode_ramp_b8": 15
+  },
+  "owners": {
+   "-": 2,
+   "b8_kv32k": 1038
+  },
+  "parser_stage": {
+   "prefill": 2,
+   "mixed": 15,
+   "decode": 1023
+  },
+  "jit_iterations": [],
+  "first_parsed_start_s": 0.0384,
+  "previous_metrics_iteration": null,
+  "nsys": {
+   "executable": "/usr/local/bin/nsys",
+   "capture_mode": "cuda_profiler_api",
+   "cuda_graph_trace": "node",
+   "cuda_event_trace": false
+  }
+ }
+}

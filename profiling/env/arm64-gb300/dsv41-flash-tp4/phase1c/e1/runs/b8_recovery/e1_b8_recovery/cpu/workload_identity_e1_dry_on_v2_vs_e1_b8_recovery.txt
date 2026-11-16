@@ -1,0 +1,5 @@
+PASS  requests with prefix 'e1_b8_': a=8 b=8 common=8
+PASS  requests whose replay record fields differ (id, input_len, prompt_len, output_len_target, arrival_time_ms, output_len_actual, output_len_text_tokens, echoed_prompt_tokens, finish_reason, usage.*): 0
+PASS  routed-experts arrays with equal shape: 8 of 8
+INFO  routed-experts element agreement (informational): min 0.0506 median 0.0830
+RESULT PASS

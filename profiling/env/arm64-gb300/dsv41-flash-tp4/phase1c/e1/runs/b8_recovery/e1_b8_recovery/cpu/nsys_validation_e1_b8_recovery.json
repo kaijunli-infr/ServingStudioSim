@@ -1,0 +1,310 @@
+{
+ "size.nsys-rep": 170126141,
+ "size.sqlite": 874708992,
+ "forward_start_spread_ms": {
+  "median": 0.37318399999999996,
+  "p90": 0.4847168,
+  "max": 35.859136
+ },
+ "iterations": 1040,
+ "bad_ranges": 0,
+ "bad_devices": 0,
+ "bad_index": 0,
+ "jit_iterations": [],
+ "gpu_start_spread_ms": {
+  "median": 0.004165,
+  "p90": 0.0089975,
+  "max": 0.354766
+ },
+ "collective_end_spread": {
+  "1": {
+   "median_ms": 0.001095,
+   "p90_ms": 0.006599,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "2": {
+   "median_ms": 0.000863,
+   "p90_ms": 0.0034869999999999996,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "3": {
+   "median_ms": 0.000912,
+   "p90_ms": 0.0038640000000000002,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "4": {
+   "median_ms": 0.001072,
+   "p90_ms": 0.006384,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "5": {
+   "median_ms": 0.000896,
+   "p90_ms": 0.00792,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "6": {
+   "median_ms": 0.0009475,
+   "p90_ms": 0.007924500000000001,
+   "n": 326,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "7": {
+   "median_ms": 0.000976,
+   "p90_ms": 0.007690999999999993,
+   "n": 489,
+   "K_mode": 163,
+   "n_other_K": 0
+  },
+  "8": {
+   "median_ms": 0.00096,
+   "p90_ms": 0.007954700000000012,
+   "n": 164304,
+   "K_mode": 163,
+   "n_other_K": 0
+  }
+ },
+ "completeness_v2": [
+  {
+   "status": "PASS",
+   "msg": "export validation ok=True nvtx_forward_ranges=4160 kernel_rows=5887244"
+  },
+  {
+   "status": "PASS",
+   "msg": "parsed devices [0, 1, 2, 3]"
+  },
+  {
+   "status": "INFO",
+   "msg": "profile_kind=nsys request_timing_count=8 corpus_tokens=8184"
+  },
+  {
+   "status": "PASS",
+   "msg": "metrics records: 1040"
+  },
+  {
+   "status": "INFO",
+   "msg": "ramp iterations (prefill present or decode_requests != b inside a cell): 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations carrying requests of two cells (overrun): 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "plan 'dry' (1 cells, 8 requests) selected by --plan auto; every planned cell is checked"
+  },
+  {
+   "status": "PASS",
+   "msg": "cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30"
+  },
+  {
+   "status": "PASS",
+   "msg": "observed cells not in the plan: []"
+  },
+  {
+   "status": "PASS",
+   "msg": "request ids without an E1 tag: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests seen 8; requests whose emitted tokens != 1024: 0 []"
+  },
+  {
+   "status": "PASS",
+   "msg": "progress entries with emitted_tokens not in {0,1}: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/15/15"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs emitted in more than one iteration (duplicate join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(request, position) pairs never emitted (missing join): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose position->iteration map is not strictly increasing: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "routed_experts files 8 vs requests 8; missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with shape != (1024, 40, 6): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with dtype != uint16: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": ".npy files with an expert id >= 384: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "(token, layer) rows with a duplicate expert in the top-6: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus num_tokens 8184 vs 8 x (1024-1) = 8184"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus file size 3928320 vs num_tokens*L*K*2 = 3928320"
+  },
+  {
+   "status": "PASS",
+   "msg": "corpus max expert id 383 < 384"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments 8, unique request names 8"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments with length != 1023: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments contiguous, non-overlapping and covering [0, num_tokens)"
+  },
+  {
+   "status": "PASS",
+   "msg": "segment names == metrics request ids: missing [] extra []"
+  },
+  {
+   "status": "PASS",
+   "msg": "requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "segments whose every row maps to exactly one iteration: 8 of 8"
+  }
+ ],
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "export validation ok=True kernel_rows=5887244 kernel_span_ms=8985.76119"
+  },
+  {
+   "status": "PASS",
+   "msg": "nvtx_forward_ranges 4160 == 4 x 1040 parsed iterations"
+  },
+  {
+   "status": "PASS",
+   "msg": "parsed devices [0, 1, 2, 3]"
+  },
+  {
+   "status": "PASS",
+   "msg": "nsys .nsys-rep present: dsv41_flash_1017_gb300_tp4_e1_b8_recovery.nsys-rep 0.17 GB"
+  },
+  {
+   "status": "PASS",
+   "msg": "nsys .sqlite present: dsv41_flash_1017_gb300_tp4_e1_b8_recovery.sqlite 0.87 GB"
+  },
+  {
+   "status": "PASS",
+   "msg": "step_alignment unpaired_steps_by_device={} (rule iteration_index, steps 1040)"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations without 28 NVTX ranges: 0 of 1040"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations with devices_absent: 0"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations whose NVTX iteration index differs between devices: 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "NVTX phases per device: {'bookkeep': 8320, 'eplb': 4160, 'forward': 4160, 'postprocess': 4160, 'preprocess': 4160, 'sample': 4160}"
+  },
+  {
+   "status": "INFO",
+   "msg": "iterations whose four host-side forward NVTX windows do not overlap: 975 of 1040 (host forward is a sub-ms graph launch; GPU-window overlap is checked from the tables)"
+  },
+  {
+   "status": "PASS",
+   "msg": "devices whose iteration start sequence is not strictly increasing: 0"
+  },
+  {
+   "status": "INFO",
+   "msg": "forward start spread across devices: median 0.3732 ms, p90 0.4847 ms, max 35.8591 ms (host launch skew, reported)"
+  },
+  {
+   "status": "PASS",
+   "msg": "JIT-affected iterations after warm-up: 0 (limit 20)"
+  },
+  {
+   "status": "PASS",
+   "msg": "tables iterations 1040 == parsed iterations 1040"
+  },
+  {
+   "status": "PASS",
+   "msg": "iterations whose four ranks' GPU kernel windows do not overlap: 0 of 1040"
+  },
+  {
+   "status": "INFO",
+   "msg": "GPU first-kernel start spread across ranks: median 0.0042 ms, p90 0.0090 ms, max 0.3548 ms"
+  },
+  {
+   "status": "INFO",
+   "msg": "pure-decode iterations without rank-aligned collectives (unequal K across ranks): 0 of 1023"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=1: median 0.0011 ms (<= 0.02), p90 0.0066 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=2: median 0.0009 ms (<= 0.02), p90 0.0035 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=3: median 0.0009 ms (<= 0.02), p90 0.0039 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=4: median 0.0011 ms (<= 0.02), p90 0.0064 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=5: median 0.0009 ms (<= 0.02), p90 0.0079 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=6: median 0.0009 ms (<= 0.02), p90 0.0079 ms (<= 0.05); n=326; modal K=163 in 2 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=7: median 0.0010 ms (<= 0.02), p90 0.0077 ms (<= 0.05); n=489; modal K=163 in 3 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "collective end spread b=8: median 0.0010 ms (<= 0.02), p90 0.0080 ms (<= 0.05); n=164304; modal K=163 in 1008 iterations, n_other_K=0"
+  },
+  {
+   "status": "PASS",
+   "msg": "completeness v2 on the same profile: 0 FAIL"
+  }
+ ],
+ "fails": 0
+}

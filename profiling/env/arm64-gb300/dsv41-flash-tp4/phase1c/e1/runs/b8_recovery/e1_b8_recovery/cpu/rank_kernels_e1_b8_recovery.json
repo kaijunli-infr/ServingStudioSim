@@ -1,0 +1,740 @@
+{
+ "label": "e1_b8_recovery",
+ "profile": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile",
+ "tables": "/mnt/shared/home/dc/workspace/serving-studio/phase1a-tables/e1_b8_recovery",
+ "cells": {
+  "8": {
+   "n_pure_decode_iterations": 1008,
+   "A_rank_exec": {
+    "0": {
+     "n_iterations": 1008,
+     "span_ms": {
+      "p50": 5.2789,
+      "p90": 5.3531
+     },
+     "busy_ms": {
+      "p50": 5.1305,
+      "p90": 5.2022
+     },
+     "compute_union_ms": {
+      "p50": 4.4999,
+      "p90": 4.558
+     },
+     "comm_union_ms": {
+      "p50": 0.6944,
+      "p90": 0.7611
+     },
+     "idle_ms": {
+      "p50": 0.1489,
+      "p90": 0.1605
+     },
+     "comp_in_comm_sum_ms": {
+      "p50": 0.0699,
+      "p90": 0.0716
+     },
+     "seg_idle_sum_ms": {
+      "p50": 0.2356,
+      "p90": 0.2519
+     },
+     "api_launch_sum_ms": {
+      "p50": 0.5806,
+      "p90": 0.64
+     },
+     "api_sync_sum_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "api_sync_max_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "gpu_tail_after_host_ms": {
+      "p50": 5.7881,
+      "p90": 5.9441
+     },
+     "fwd_window_ms": {
+      "p50": 0.179,
+      "p90": 0.2042
+     },
+     "n_kernels": {
+      "p50": 1410.0,
+      "p90": 1412.0
+     },
+     "n_streams": {
+      "p50": 10.0,
+      "p90": 10.0
+     },
+     "api_launch_n": {
+      "p50": 47.0,
+      "p90": 49.0
+     },
+     "api_sync_n": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "n_comm_episodes": {
+      "p50": 163.0,
+      "p90": 163.0
+     }
+    },
+    "1": {
+     "n_iterations": 1008,
+     "span_ms": {
+      "p50": 5.2791,
+      "p90": 5.3526
+     },
+     "busy_ms": {
+      "p50": 5.1286,
+      "p90": 5.2046
+     },
+     "compute_union_ms": {
+      "p50": 4.5538,
+      "p90": 4.6094
+     },
+     "comm_union_ms": {
+      "p50": 0.6394,
+      "p90": 0.6952
+     },
+     "idle_ms": {
+      "p50": 0.149,
+      "p90": 0.1626
+     },
+     "comp_in_comm_sum_ms": {
+      "p50": 0.0683,
+      "p90": 0.0702
+     },
+     "seg_idle_sum_ms": {
+      "p50": 0.236,
+      "p90": 0.2541
+     },
+     "api_launch_sum_ms": {
+      "p50": 0.5653,
+      "p90": 0.6222
+     },
+     "api_sync_sum_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "api_sync_max_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "gpu_tail_after_host_ms": {
+      "p50": 5.9216,
+      "p90": 6.0709
+     },
+     "fwd_window_ms": {
+      "p50": 0.1757,
+      "p90": 0.2013
+     },
+     "n_kernels": {
+      "p50": 1409.0,
+      "p90": 1411.0
+     },
+     "n_streams": {
+      "p50": 10.0,
+      "p90": 10.0
+     },
+     "api_launch_n": {
+      "p50": 46.0,
+      "p90": 48.0
+     },
+     "api_sync_n": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "n_comm_episodes": {
+      "p50": 163.0,
+      "p90": 163.0
+     }
+    },
+    "2": {
+     "n_iterations": 1008,
+     "span_ms": {
+      "p50": 5.2778,
+      "p90": 5.3531
+     },
+     "busy_ms": {
+      "p50": 5.1255,
+      "p90": 5.1992
+     },
+     "compute_union_ms": {
+      "p50": 4.5616,
+      "p90": 4.6275
+     },
+     "comm_union_ms": {
+      "p50": 0.6287,
+      "p90": 0.6757
+     },
+     "idle_ms": {
+      "p50": 0.1512,
+      "p90": 0.1672
+     },
+     "comp_in_comm_sum_ms": {
+      "p50": 0.0683,
+      "p90": 0.0703
+     },
+     "seg_idle_sum_ms": {
+      "p50": 0.2386,
+      "p90": 0.2613
+     },
+     "api_launch_sum_ms": {
+      "p50": 0.6816,
+      "p90": 0.7151
+     },
+     "api_sync_sum_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "api_sync_max_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "gpu_tail_after_host_ms": {
+      "p50": 5.4381,
+      "p90": 5.5744
+     },
+     "fwd_window_ms": {
+      "p50": 0.1929,
+      "p90": 0.2061
+     },
+     "n_kernels": {
+      "p50": 1409.0,
+      "p90": 1411.0
+     },
+     "n_streams": {
+      "p50": 10.0,
+      "p90": 10.0
+     },
+     "api_launch_n": {
+      "p50": 46.0,
+      "p90": 48.0
+     },
+     "api_sync_n": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "n_comm_episodes": {
+      "p50": 163.0,
+      "p90": 163.0
+     }
+    },
+    "3": {
+     "n_iterations": 1008,
+     "span_ms": {
+      "p50": 5.2785,
+      "p90": 5.3532
+     },
+     "busy_ms": {
+      "p50": 5.1268,
+      "p90": 5.2
+     },
+     "compute_union_ms": {
+      "p50": 4.5496,
+      "p90": 4.6136
+     },
+     "comm_union_ms": {
+      "p50": 0.6448,
+      "p90": 0.6982
+     },
+     "idle_ms": {
+      "p50": 0.1509,
+      "p90": 0.1646
+     },
+     "comp_in_comm_sum_ms": {
+      "p50": 0.0693,
+      "p90": 0.0713
+     },
+     "seg_idle_sum_ms": {
+      "p50": 0.2373,
+      "p90": 0.2549
+     },
+     "api_launch_sum_ms": {
+      "p50": 0.643,
+      "p90": 0.6737
+     },
+     "api_sync_sum_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "api_sync_max_ms": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "gpu_tail_after_host_ms": {
+      "p50": 5.5876,
+      "p90": 5.7425
+     },
+     "fwd_window_ms": {
+      "p50": 0.1863,
+      "p90": 0.2001
+     },
+     "n_kernels": {
+      "p50": 1409.0,
+      "p90": 1411.0
+     },
+     "n_streams": {
+      "p50": 10.0,
+      "p90": 10.0
+     },
+     "api_launch_n": {
+      "p50": 46.0,
+      "p90": 48.0
+     },
+     "api_sync_n": {
+      "p50": 0.0,
+      "p90": 0.0
+     },
+     "n_comm_episodes": {
+      "p50": 163.0,
+      "p90": 163.0
+     }
+    }
+   },
+   "B_alignment": {
+    "n_iterations_with_4_ranks": 1008,
+    "first_start_spread_ms": {
+     "p50": 0.0041,
+     "p90": 0.009,
+     "max": 0.0172
+    },
+    "last_end_spread_ms": {
+     "p50": 0.0036,
+     "p90": 0.0064,
+     "max": 0.0115
+    },
+    "gpu_windows_overlap_all_ranks": 1008,
+    "earliest_rank_first_start_counts": {
+     "0": 174,
+     "1": 777,
+     "2": 17,
+     "3": 40
+    },
+    "latest_rank_last_end_counts": {
+     "0": 67,
+     "1": 4,
+     "2": 575,
+     "3": 362
+    }
+   },
+   "C_collective_wait": {
+    "n_iterations": 1008,
+    "collectives_per_iteration": {
+     "p50": 163.0,
+     "p90": 163.0
+    },
+    "per_rank": {
+     "0": {
+      "wait_sum_ms": {
+       "p50": 0.2196,
+       "p90": 0.2799
+      },
+      "comm_sum_ms": {
+       "p50": 0.7118,
+       "p90": 0.7786
+      },
+      "wait_share_of_comm_p50": 0.3088
+     },
+     "1": {
+      "wait_sum_ms": {
+       "p50": 0.1637,
+       "p90": 0.2166
+      },
+      "comm_sum_ms": {
+       "p50": 0.6563,
+       "p90": 0.7126
+      },
+      "wait_share_of_comm_p50": 0.2492
+     },
+     "2": {
+      "wait_sum_ms": {
+       "p50": 0.1535,
+       "p90": 0.1959
+      },
+      "comm_sum_ms": {
+       "p50": 0.646,
+       "p90": 0.6931
+      },
+      "wait_share_of_comm_p50": 0.2379
+     },
+     "3": {
+      "wait_sum_ms": {
+       "p50": 0.1695,
+       "p90": 0.2192
+      },
+      "comm_sum_ms": {
+       "p50": 0.6618,
+       "p90": 0.7156
+      },
+      "wait_share_of_comm_p50": 0.2559
+     }
+    },
+    "per_kind": {
+     "0": {
+      "n": 620928,
+      "wait_ms_p50": 0.0001,
+      "wait_ms_p90": 0.0033,
+      "comm_ms_p50": 0.0034
+     },
+     "1": {
+      "n": 16128,
+      "wait_ms_p50": 0.002,
+      "wait_ms_p90": 0.0096,
+      "comm_ms_p50": 0.0063
+     },
+     "4": {
+      "n": 20160,
+      "wait_ms_p50": 0.0009,
+      "wait_ms_p90": 0.0028,
+      "comm_ms_p50": 0.0122
+     }
+    },
+    "end_spread_ms": {
+     "p50": 0.00096,
+     "p90": 0.00795,
+     "max": 0.0249
+    },
+    "least_waiting_rank_(straggler)": 2,
+    "most_waiting_rank": 0
+   },
+   "D_kernels": {
+    "n_iterations": 1008,
+    "per_rank_kernels_per_iteration": {
+     "0": 1410.49,
+     "1": 1409.49,
+     "2": 1409.49,
+     "3": 1409.49
+    },
+    "top_kernels": [
+     {
+      "name": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 148.0,
+      "mean_us": 27.15,
+      "share_of_gpu_time": 0.1413,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 4.0177
+     },
+     {
+      "name": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmKernel_object_",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 520.0,
+      "mean_us": 5.08,
+      "share_of_gpu_time": 0.0929,
+      "n_streams": 9,
+      "sum_ms_per_iteration_all_ranks": 2.6406
+     },
+     {
+      "name": "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 16.31,
+      "share_of_gpu_time": 0.0918,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 2.6101
+     },
+     {
+      "name": "void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int)64, (unsigned int)3",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 316.0,
+      "mean_us": 6.05,
+      "share_of_gpu_time": 0.0673,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 1.912
+     },
+     {
+      "name": "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKernel_object_at",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 320.0,
+      "mean_us": 5.57,
+      "share_of_gpu_time": 0.0627,
+      "n_streams": 9,
+      "sum_ms_per_iteration_all_ranks": 1.7831
+     },
+     {
+      "name": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel_object_at__tensorptrb",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 308.0,
+      "mean_us": 5.66,
+      "share_of_gpu_time": 0.0613,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 1.744
+     },
+     {
+      "name": "mhc_pre_big_fuse_with_norm_tilelang_kernel",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 332.0,
+      "mean_us": 5.23,
+      "share_of_gpu_time": 0.0611,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 1.7369
+     },
+     {
+      "name": "fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128StaticSwapsAbFo",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 152.0,
+      "mean_us": 10.36,
+      "share_of_gpu_time": 0.0554,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 1.5744
+     },
+     {
+      "name": "_dsv4_topk_kernel",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 5.02,
+      "share_of_gpu_time": 0.0283,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.8033
+     },
+     {
+      "name": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gme",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 320.0,
+      "mean_us": 2.16,
+      "share_of_gpu_time": 0.0243,
+      "n_streams": 9,
+      "sum_ms_per_iteration_all_ranks": 0.692
+     },
+     {
+      "name": "kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o816512div85121_tensorptri64gmemo81_tensorptrf32gmemo64641_cutlassc",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 4.29,
+      "share_of_gpu_time": 0.0241,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.6861
+     },
+     {
+      "name": "kernel_cutlass_kernel_vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK_object_at__tensorptrbf16_gmem_a",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 3.98,
+      "share_of_gpu_time": 0.0224,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.6375
+     },
+     {
+      "name": "void moe::dev::routing::routingCustom::routingIndicesDynBlockKernel<moe::dev::routing::routingCustom::KernelParams<__nv_",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 3.22,
+      "share_of_gpu_time": 0.0181,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.5159
+     },
+     {
+      "name": "void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (bool)0>(T1 *, unsigne",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 3.15,
+      "share_of_gpu_time": 0.0177,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.5046
+     },
+     {
+      "name": "_build_flashinfer_mixed_sparse_indices_kernel",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 2.86,
+      "share_of_gpu_time": 0.0161,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.4568
+     },
+     {
+      "name": "_q_kv_norm_quant_kernel",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 2.61,
+      "share_of_gpu_time": 0.0147,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.4176
+     },
+     {
+      "name": "void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_ke",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 2.36,
+      "share_of_gpu_time": 0.0133,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.3769
+     },
+     {
+      "name": "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 12.0,
+      "mean_us": 28.13,
+      "share_of_gpu_time": 0.0119,
+      "n_streams": 3,
+      "sum_ms_per_iteration_all_ranks": 0.3375
+     },
+     {
+      "name": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDeviceKernel_object_at__t",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 148.0,
+      "mean_us": 2.25,
+      "share_of_gpu_time": 0.0117,
+      "n_streams": 6,
+      "sum_ms_per_iteration_all_ranks": 0.3337
+     },
+     {
+      "name": "void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vllm::packed_silu_kerne",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 1.97,
+      "share_of_gpu_time": 0.0111,
+      "n_streams": 3,
+      "sum_ms_per_iteration_all_ranks": 0.3149
+     },
+     {
+      "name": "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gme",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 1.76,
+      "share_of_gpu_time": 0.0099,
+      "n_streams": 3,
+      "sum_ms_per_iteration_all_ranks": 0.2813
+     },
+     {
+      "name": "void at::native::sbtopk::gatherTopK<float, unsigned int, (int)2, (bool)0>(at::cuda::detail::TensorInfo<const T1, T2>, T2",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 4.0,
+      "mean_us": 68.67,
+      "share_of_gpu_time": 0.0097,
+      "n_streams": 1,
+      "sum_ms_per_iteration_all_ranks": 0.2747
+     },
+     {
+      "name": "void cutlass::Kernel2<cutlass_80_tensorop_s16816gemm_bf16_64x64_64x6_tn_align8>(T1::Params)",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 32.0,
+      "mean_us": 8.3,
+      "share_of_gpu_time": 0.0093,
+      "n_streams": 3,
+      "sum_ms_per_iteration_all_ranks": 0.2657
+     },
+     {
+      "name": "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+      "moe_gemm_family": false,
+      "count_per_iteration_all_ranks": 20.0,
+      "mean_us": 13.04,
+      "share_of_gpu_time": 0.0092,
+      "n_streams": 5,
+      "sum_ms_per_iteration_all_ranks": 0.2609
+     },
+     {
+      "name": "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel_object_at__ten",
+      "moe_gemm_family": true,
+      "count_per_iteration_all_ranks": 160.0,
+      "mean_us": 1.46,
+      "share_of_gpu_time": 0.0082,
+      "n_streams": 7,
+      "sum_ms_per_iteration_all_ranks": 0.2332
+     }
+    ],
+    "n_distinct_names": 95,
+    "name_set": [
+     "_apply_write_kernel",
+     "_block_scores_kernel",
+     "_build_flashinfer_mixed_sparse_indices_kernel",
+     "_combine_sampled_and_draft_tokens_kernel",
+     "_compute_slot_mappings_kernel",
+     "_compute_swa_indices_and_lens_kernel",
+     "_dsv4_topk_kernel",
+     "_engram_lookup_kernel",
+     "_expand_candidates_kernel",
+     "_fused_engram_post_wkv_kernel",
+     "_fused_save_compress_norm_kernel",
+     "_gather_block_tables_kernel",
+     "_gather_lookback_kernel",
+     "_get_num_sampled_and_rejected_kernel",
+     "_gumbel_sample_kernel",
+     "_hash_ids_kernel",
+     "_hc_head_reduce_store_kernel",
+     "_indexer_decode_metadata_kernel",
+     "_indexer_k_norm_rope_quant_store_kernel",
+     "_post_update_kernel",
+     "_prepare_pos_seq_lens_kernel",
+     "_q_kv_norm_quant_kernel",
+     "_ring_slot_mapping_kernel",
+     "_rope_plain_insert_kernel",
+     "_sparse_topk_remap_kernel",
+     "_store_candidates_kernel",
+     "_token_request_mapping_kernel",
+     "_zero_kv_blocks_kernel",
+     "bmm_Bfloat16_MxE2m1MxE4m3_Fp32_Ab32_Bb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_rgTma_clmp_dynB_sm100f",
+     "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x256_s6_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_clmp_swiGlu_dynB_sm100f",
+     "bmm_MxE4m3_MxE2m1MxE4m3_Fp32_Ab32_Bb32_Cb32_t128x8x512_s3_et128x8_m128x8x32_c1x1x1_rM_TN_transOut_schPd2x1x2x3_biasFp32M_bN_tma_ldgstsSf_rgTma_clmp_swiGlu_dynB_sm100f",
+     "fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1MultiCtasKvVarSeqQ16Kv128StaticSwapsAbForGen",
+     "fmhaSm100fKernel_QkvE4m3OBfloat16H512HVPerCta128PagedKvDenseDynamicTokenSparseP1VarSeqQ8Kv128PersistentSwapsAbForGen",
+     "kernel",
+     "kernel_cutlass_device_kernel_tensorptrbf16gmemalign16o816512div85121_tensorptri64gmemo81_tensorptrf32gmemo64641_cutlasscutenvgpucpasynchelpersTmaInfoobjectat_cutlasscutenvgpucpasynchelper_0",
+     "kernel_cutlass_device_kernel_tensorptri64gmemo1_tensorptrbf16gmemalign32o32128i64div16i64div161_tensorptrf32gmemalign32o64i64div81_tensorptrbf16gmemalign16o32i64div81_tensorptri8gmemalign_0",
+     "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100Sm100BlockScaledPersistentDenseGemmKernel_object_at__TiledMMA_ThrLayoutVMNK11110000_PermutationMNK____MMAAtom_ThrID1_0",
+     "kernel_cutlass_kernel_flashinfergemmkernelsdense_blockscaled_gemm_sm100_splitkSm100BlockScaledSplitKGemmKernel_object_at__TiledMMA_ThrLayoutVMNK11110000_PermutationMNK____MMAAtom_ThrID10__0",
+     "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeLinearKernel_object_at__tensorptrbf16gmemalign16o512051201_tensorptri8gmemalign16o512051201_tensorptri8gmemal_0",
+     "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o512051201_tensorptri8gmemalign16o512051201_tensorptri8gmem_0",
+     "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o5765761_tensorptri8gmemalign16o5765761_tensorptri8gmemalig_0",
+     "kernel_cutlass_kernel_flashinferquantizationkernelsmxfp8_quantizeMXFP8QuantizeSwizzledKernel_object_at__tensorptrbf16gmemalign16o614461441_tensorptri8gmemalign16o614461441_tensorptri8gmem_0",
+     "kernel_cutlass_kernel_vllmmodel_executorkernelslinearcute_dsl_ll_bf16_splitkLLBf16SplitK_object_at__tensorptrbf16_gmem_align16_o_i64_div81_tensorptrbf16_gmem_align16_o_i64_div81_tensorptr_0",
+     "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_LamportMHCDeviceKernel_object_at__tensorptrbf16gmemalign16o9830401_tensorptrbf16gmemalign16odiv204801_tensorptr_0",
+     "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_QuadFinalizePublishDeviceKernel_object_at__tensorptrbf16gmemalign16odiv51201_tensorptrf32gmemodiv61_tensorptri3_0",
+     "kernel_cutlass_kernel_vllmmodelsdeepseek_v41nvidiaopscute_dslall_reduce_mhc_SharedOnlyPublishDeviceKernel_object_at__tensorptrbf16gmemalign16odiv51201_tensorptri32gmemo21__0",
+     "mhc_post_tilelang_kernel",
+     "mhc_pre_big_fuse_with_norm_tilelang_kernel",
+     "ncclDevKernel_AllGather_RING_LL(ncclDevKernelArgsStorage<(unsigned long)4096>)",
+     "nvjet_sm103_tss_32x64_64x16_4x1_v_bz_splitK_TNN",
+     "nvjet_sm103_tss_64x8_64x16_4x1_v_bz_splitK_TNT",
+     "nvjet_sm103_tst_128x8_64x12_1x1_h_bz_splitK_TNT",
+     "void <unnamed>::elementwise_kernel_with_index<int, at::native::arange_cuda_out(const c10::Scalar &, const c10::Scalar &, const c10::Scalar &, at::Tensor &)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 3)]::operator ()() const::[lambda(long) (instance 1)]>(T1, T2, function_traits<T2>::result_type *)",
+     "void at::native::_scatter_gather_elementwise_kernel<(int)128, (int)8, void at::native::_cuda_scatter_gather_internal_kernel<(bool)0, at::native::OpaqueType<(int)8>, long>::operator ()<at::native::TensorAssign>(at::TensorIterator &, long, long, long, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+     "void at::native::elementwise_kernel<(int)128, (int)2, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 3)]::operator ()() const::[lambda(int) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+     "void at::native::elementwise_kernel<(int)128, (int)4, void at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 12)]::operator ()() const::[lambda(c10::BFloat16) (instance 1)]>(at::TensorIteratorBase &, const T1 &)::[lambda(int) (instance 1)]>(int, T3)",
+     "void at::native::index_elementwise_kernel<(int)128, (int)4, void at::native::gpu_index_kernel<void at::native::index_kernel_impl<at::native::OpaqueType<(int)4>>(at::TensorIteratorBase &, c10::ArrayRef<long>, c10::ArrayRef<long>)::[lambda(char *, const char *, long) (instance 1)]>(at::TensorIteratorBase &, c10::ArrayRef<long>, c10::ArrayRef<long>, const T1 &, bool)::[lambda(int) (instance 1)]>(long, T3)",
+     "void at::native::index_elementwise_kernel<(int)128, (int)4, void at::native::gpu_index_kernel<void at::native::index_kernel_impl<at::native::OpaqueType<(int)8>>(at::TensorIteratorBase &, c10::ArrayRef<long>, c10::ArrayRef<long>)::[lambda(char *, const char *, long) (instance 1)]>(at::TensorIteratorBase &, c10::ArrayRef<long>, c10::ArrayRef<long>, const T1 &, bool)::[lambda(int) (instance 1)]>(long, T3)",
+     "void at::native::radixSortKVInPlace<(int)2, (int)-1, (int)64, (int)32, float, long, unsigned int>(at::cuda::detail::TensorInfo<T5, T7>, T7, T7, T7, at::cuda::detail::TensorInfo<T6, T7>, T7, bool)",
+     "void at::native::reduce_kernel<(int)512, (int)1, at::native::ReduceOp<float, at::native::ArgMaxOps<float>, unsigned int, long, (int)4, (int)4>>(T3)",
+     "void at::native::sbtopk::gatherTopK<float, unsigned int, (int)2, (bool)0>(at::cuda::detail::TensorInfo<const T1, T2>, T2, T2, bool, T2, T2, at::cuda::detail::TensorInfo<T1, T2>, T2, at::cuda::detail::TensorInfo<long, T2>, T2, T1 *)",
+     "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctor_add<int>, std::array<char *, (unsigned long)3>, (int)4, TrivialOffsetCalculator<(int)2, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, T1, T2, T4, T5, T6, T7)",
+     "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 3)]::operator ()() const::[lambda() (instance 14)]::operator ()() const::[lambda(unsigned short) (instance 1)], std::array<char *, (unsigned long)2>, (int)4, TrivialOffsetCalculator<(int)1, unsigned int>, TrivialOffsetCalculator<(int)1, unsigned int>, at::native::memory::LoadWithCast<(int)1>, at::native::memory::StoreWithCast<(int)1>>(int, T1, T2, T4, T5, T6, T7)",
+     "void at::native::vectorized_elementwise_kernel<(int)2, at::native::FillFunctor<long>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)4, at::native::<unnamed>::launch_clamp_scalar(at::TensorIteratorBase &, c10::Scalar, c10::Scalar, at::native::detail::ClampLimits)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 3)]::operator ()() const::[lambda(int) (instance 1)], std::array<char *, (unsigned long)2>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)4, at::native::BUnaryFunctor<int, int, int, at::native::binary_internal::div_floor_kernel_cuda(at::TensorIteratorBase &)::[lambda() (instance 1)]::operator ()() const::[lambda() (instance 3)]::operator ()() const::[lambda(int, int) (instance 1)]>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)4, at::native::FillFunctor<int>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)8, at::native::AUnaryFunctor<int, int, bool, at::native::<unnamed>::CompareEqFunctor<int>>, std::array<char *, (unsigned long)2>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)8, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char *, (unsigned long)3>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<bool>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)8, at::native::FillFunctor<unsigned char>, std::array<char *, (unsigned long)1>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)8, at::native::bitwise_not_kernel_cuda(at::TensorIteratorBase &)::[lambda(bool) (instance 1)], std::array<char *, (unsigned long)2>>(int, T2, T3)",
+     "void at::native::vectorized_elementwise_kernel<(int)8, void at::native::compare_scalar_kernel<long>(at::TensorIteratorBase &, at::native::<unnamed>::OpType, T1)::[lambda(long) (instance 1)], std::array<char *, (unsigned long)2>>(int, T2, T3)",
+     "void at::native::vectorized_gather_kernel<(int)16, long>(char *, char *, T2 *, int, long, long, long, long, bool)",
+     "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16, (bool)0, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, (bool)1, (bool)0, (bool)0, (bool)0>(cublasLt::cublasSplitKParams<T6>, const T4 *, const T10 *, T9 *, T5 *, const T6 *, const T6 *, const T11 *, const T4 *, T11 *, void *, long, T6 *, int *, T6 *, T6 *, const T6 *, const T6 *, const T6 *, const T6 *, const T6 *)",
+     "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, __nv_bfloat16, float, __nv_bfloat16, (bool)0, float, __nv_bfloat16, __nv_bfloat16, (bool)1, (bool)0, (bool)0, (bool)0>(cublasLt::cublasSplitKParams<T6>, const T4 *, const T10 *, T9 *, T5 *, const T6 *, const T6 *, const T11 *, const T4 *, T11 *, void *, long, T6 *, int *, T6 *, T6 *, const T6 *, const T6 *, const T6 *, const T6 *, const T6 *)",
+     "void cublasLt::splitKreduce_kernel<(int)32, (int)16, int, float, float, float, float, (bool)0, float, float, float, (bool)1, (bool)0, (bool)0, (bool)0>(cublasLt::cublasSplitKParams<T6>, const T4 *, const T10 *, T9 *, T5 *, const T6 *, const T6 *, const T11 *, const T4 *, T11 *, void *, long, T6 *, int *, T6 *, T6 *, const T6 *, const T6 *, const T6 *, const T6 *, const T6 *)",
+     "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_64x64_64x6_tn_align8>(T1::Params)",
+     "void cutlass::Kernel2<cutlass_80_tensorop_s16816gemm_bf16_64x64_64x6_tn_align8>(T1::Params)",
+     "void deep_gemm::sched::sm100_paged_mqa_logits_metadata<(unsigned int)1, (bool)1, (bool)1, (unsigned int)256, (unsigned int)152>(unsigned int, unsigned int, const unsigned int *, const unsigned int *, unsigned int *)",
+     "void deep_gemm::sched::sparse_mqa_logits::sm100_sparse_mqa_logits_metadata<(bool)1, (bool)0, (unsigned int)2, (unsigned int)640, (unsigned int)8, (unsigned int)2048, (unsigned int)128, (unsigned int)8, (unsigned int)152, (unsigned int)256>(unsigned int, unsigned int, const unsigned int *, const unsigned int *, const unsigned int *, const unsigned int *, unsigned int, const unsigned int *, const unsigned int *, unsigned char *, unsigned char *)",
+     "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsigned int)128, (bool)1, (bool)1, (bool)1, (unsigned int)3, (unsigned int)10, (unsigned int)256, (unsigned int)16, (unsigned int)128, (unsigned int)256, cutlass::float_e2m1_t, float, float, (unsigned int)2>(unsigned int, unsigned int, unsigned int, const unsigned int *, T15 *, const unsigned int *, const unsigned int *, const unsigned int *, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st)",
+     "void deep_gemm::sm100_paged_mqa_logits<(unsigned int)1, (unsigned int)32, (unsigned int)128, (unsigned int)64, (bool)1, (bool)1, (bool)1, (unsigned int)3, (unsigned int)10, (unsigned int)256, (unsigned int)16, (unsigned int)128, (unsigned int)256, cutlass::float_e2m1_t, float, float, (unsigned int)2>(unsigned int, unsigned int, unsigned int, const unsigned int *, T15 *, const unsigned int *, const unsigned int *, const unsigned int *, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st)",
+     "void deep_gemm::sm100_paged_sparse_mqa_logits<(unsigned int)128, (unsigned int)8, (unsigned int)2, (unsigned int)5, (unsigned int)5, (unsigned int)5, (unsigned int)152, (unsigned int)2, (bool)1>(unsigned int, unsigned int, __nv_bfloat16 *, const unsigned char *, const unsigned char *, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st)",
+     "void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)20480, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned int)16, (unsigned int)128, (unsigned int)12, (unsigned int)128, (unsigned int)128>(unsigned int, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, float *)",
+     "void deep_gemm::sm100_tf32_hc_prenorm_gemm_impl<(unsigned int)24, (unsigned int)5120, (unsigned int)64, (unsigned int)32, (unsigned int)64, (unsigned int)16, (unsigned int)128, (unsigned int)12, (unsigned int)128, (unsigned int)128>(unsigned int, CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, float *)",
+     "void flashinfer::trtllm_mnnvl_allreduce::oneshotAllreduceFusionKernel<(unsigned char)4, __nv_bfloat16, (bool)0, (flashinfer::trtllm_mnnvl_allreduce::QuantType)0, float4>(flashinfer::trtllm_mnnvl_allreduce::AllReduceKernelParams<T2>)",
+     "void moe::dev::finalize::finalizeKernel<moe::dev::finalize::KernelParams<cutlass::bfloat16_t, float, (int)2, (bool)1>>(T1)",
+     "void moe::dev::routing::routingCustom::routingIndicesDynBlockKernel<moe::dev::routing::routingCustom::KernelParams<__nv_bfloat16, __nv_bfloat16, (int)512, (int)8, moe::dev::routing::TopKExpertSelect<moe::dev::routing::NoOpPreprocess, moe::dev::routing::SoftmaxPostprocess>>>(T1)",
+     "void topk_select_bf16_normal::topk_kernel<topk_select_bf16_normal::TopkSelectKernelBF16Normal<TopkSelectConfig<__nv_bfloat16, int, (bool)0, (bool)0, (bool)0, (unsigned int)512, (unsigned int)512, (unsigned int)1, (unsigned int)8192, (unsigned int)4096, (unsigned int)5, (unsigned int)512, (unsigned int)1>>>(TopkSelectArgs, T1::TmaParams)",
+     "void vllm::act_and_mul_kernel<c10::BFloat16, __nv_bfloat162, &vllm::silu_kernel<c10::BFloat16>, &vllm::packed_silu_kernel<__nv_bfloat162>, (bool)1, (bool)1, (bool)1, (bool)0>(T1 *, const T1 *, int, float, float, float)",
+     "void vllm::cooperative::cooperative_topk_cs8<(unsigned int)512>(vllm::cooperative::CooperativeTopKParams<T1>)",
+     "void vllm::deepseek_v4_fused_ops::fusedDeepseekV4FullCacheKernel<c10::BFloat16, (bool)1, (bool)1, (bool)0>(T1 *, unsigned char *, long, long, const T1 *, unsigned char *, const long *, const long *, const float *, const float *, const float *, float, int, int, int, int, long, long)",
+     "void vllm::rms_norm_kernel<c10::BFloat16, (int)8, (int)2, (bool)1>(T1 *, const T1 *, long, long, long, long, long, const T1 *, long, float, int, int)",
+     "void vllm::vocab_embedding::vocab_parallel_embedding_kernel<int, uint4>(T2 *, const T1 *, const T2 *, long, long, long, long, long, long, long)"
+    ]
+   },
+   "E_reference": {
+    "ref_label": "quadrant_nsys",
+    "ref_n_iterations": 0
+   }
+  }
+ }
+}

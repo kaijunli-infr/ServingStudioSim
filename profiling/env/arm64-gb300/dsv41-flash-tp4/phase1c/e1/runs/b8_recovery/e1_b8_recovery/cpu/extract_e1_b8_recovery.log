@@ -1,0 +1,6 @@
+[e1_b8_recovery] inputs verified in 0s
+[e1_b8_recovery] parsed.json: 1040 iterations, 168 kernel names, devices [0, 1, 2, 3]
+[e1_b8_recovery] kernels: 5887244 rows sorted in 0s
+[e1_b8_recovery] host_timeline: 871841 api calls
+[e1_b8_recovery] 0/1040 iterations, 1s
+[e1_b8_recovery] done: 1040 iterations, 4160 rank rows, 672844 collective rows, unaligned 0, 3s

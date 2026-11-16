@@ -1,0 +1,35 @@
+{
+ "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val",
+ "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery",
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "profile configs identical apart from ['log_dir', 'name', 'nsys.capture_start_delay_seconds', 'workload.frontend.path']"
+  },
+  {
+   "status": "PASS",
+   "msg": "effective wire mode (stream and not capture): a=non-streaming b=non-streaming"
+  },
+  {
+   "status": "FAIL",
+   "msg": "argv: only in a ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val'], only in b ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_b8_recovery/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_b8_recovery'] (permitted: ['--enable-return-routed-experts'])"
+  },
+  {
+   "status": "PASS",
+   "msg": "server_argv: only in a [], only in b [] (permitted: ['--enable-return-routed-experts'])"
+  },
+  {
+   "status": "PASS",
+   "msg": "server env differs in [] (ignored: ['PATH'])"
+  },
+  {
+   "status": "FAIL",
+   "msg": "launch nsys_config differs: ['nsys_config.capture_start_delay_seconds']"
+  },
+  {
+   "status": "FAIL",
+   "msg": "launch records identical apart from the hook flag"
+  }
+ ],
+ "fails": 3
+}

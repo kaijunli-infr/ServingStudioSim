@@ -1,0 +1,93 @@
+# b=8 recovery preflight on pod4-gb300-10-tray16-f3 at 2026-11-16T05:32:38Z
+  # Stage 1.5 preflight on pod4-gb300-10-tray16-f3 at 2026-11-16T05:32:38Z
+    # E1 host preflight on pod4-gb300-10-tray16-f3 at 2026-11-16T05:32:38Z
+    PASS  not an off-limits tray
+    PASS  no compute apps on GPUs
+    PASS  GPU memory used total 0 MiB
+    PASS  4 GPUs visible
+    PASS  driver 595.71.05 (Phase 0)
+    PASS  no leftover vllm/nsys/req-frontend processes
+    PASS  fork submodule at 0ab18711
+    PASS  venv 0.31.1.dev17+g0ab187113 2.13.0+cu130
+    PASS  nsys 2025.6.3.541
+    PASS  weights present
+    PASS  enwik9 corpus 1e9 bytes
+    PASS  cache warm: deepgemm
+    PASS  cache warm: triton
+    PASS  cache warm: nv-compute
+    PASS  cache warm: flashinfer-autotune
+    INFO  launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1 HEAD b21a52fb1816fb599755910897e093ba2ed2a4c9 (phase1c-e1-stage15)
+    PASS  launcher tree fork submodule at 0ab18711
+    PASS  repo tree clean (tracked files)
+    PASS  E1 traces/configs match INPUTS.sha256
+    PASS  nsys delayed start 10 s, no bounded stop
+    PASS  no capture_duration_seconds (Phase 0 lesson)
+    PASS  CephFS free 21100 GB (> 500)
+    PASS  root disk free 1165 GB (> 100)
+    PASS  no previous e1_main output dir
+    PASS  launcher dry-run e1_main
+    # result: PREFLIGHT PASS
+  PASS  Stage 1 host preflight
+  PASS  configs_v2 / trace match INPUTS_v2.sha256
+  PASS  e1_dry_off_v2: stream=false explicit
+  PASS  e1_dry_on_v2: stream=false explicit
+  PASS  e1_dry_off2_v2: stream=false explicit
+  PASS  e1_nsys_val: stream=false explicit
+  PASS  no previous output dir for e1_b8_recovery
+  PASS  e1_nsys_val: nsys delayed start 10 s
+  PASS  e1_nsys_val: no bounded stop
+  PASS  config identity off_v2/on_v2 and off_v2/off2_v2
+  PASS  launcher: workload.stream opt-out applied
+  PASS  submodule gitlink pinned to 5c20a259618976ecc360bda84abcc3653a04006e
+  PASS  req-frontend checkout HEAD == pinned commit
+  PASS  req-frontend checkout clean
+  PASS  session_runner sha256 == provenance (7f6eb81d45e6b98f)
+  PASS  session_runner supports --stream
+  PASS  launcher dry-run e1_dry_off_v2
+  PASS  launcher dry-run e1_dry_on_v2
+  PASS  launcher dry-run e1_dry_off2_v2
+  PASS  launcher dry-run e1_nsys_val
+  INFO  flashinfer-autotune cache: 2 hash dirs, newest 2026-11-15 13:08:37; expect ~19 min of tuning per launch regardless
+  # result: PREFLIGHT PASS
+PASS  Stage 1.5 preflight (incl. Stage 1 host preflight)
+PASS  recovery trace/config and their Stage 1.5 sources match INPUTS_b8.sha256
+PASS  trace == header + first 8 rows of traces/e1_dry.csv (byte-identical)
+PASS  trace has 8 requests
+PASS  all 8 rows are e1_b8_kv32k_w0_r00..07, 32768/1024, arrival 0.0
+PASS  no b=48 request in the trace
+PASS  config points at the recovery trace
+PASS  stream=false explicit
+PASS  hook on (capture_routed_experts)
+PASS  no bounded stop
+PASS  no delayed start: profiler armed before the first request (Phase 0 quadrant_nsys block)
+PASS  nsys block == Phase 0 quadrant_nsys nsys block
+PASS  config identity vs e1_nsys_val: only name, log_dir, trace path, capture_start_delay differ
+PASS  E1-B8-RECOVERY-INPUTS.json: one plan cell (b=8, kv 32768), 8 requests, run_order [e1_b8_recovery]
+PASS  launcher dry-run e1_b8_recovery
+PASS  recovery scripts, checks, analysis and tests match SCRIPTS_b8.sha256 (19 files)
+/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_process_census.sh: line 39: /proc/319614/cmdline: No such file or directory
+  INFO  own invocation pipeline (excluded from candidates): 316748[bash] 316749[bash] 316750[tee] 317587[sed]
+  PASS  vllm server processes: none
+  PASS  nsys profiler sessions: none
+  PASS  req-frontend session_runner: none
+  PASS  launcher (alignment profile): none
+  PASS  E1 driver / preflight / postrun shells: none
+  PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+  PASS  nvidia-smi loops / watch: none
+  PASS  python monitors/checkers of the experiment: none
+  PASS  other processes whose cmdline references the experiment dirs: none
+  PASS  processes whose cwd is inside the experiment dirs: none
+  INFO  own tmux session (excluded): e1b8-ctxtest 
+  PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+  INFO  other tmux sessions on this tray (not experiment-owned): e1b8-ctxtest 
+  PASS  GPU compute apps: none
+  INFO  GPU memory used MiB per GPU: 0 0 0 0 
+  # process discovery on pod4-gb300-10-tray16-f3 at 2026-11-16T05:32:54Z: CLEAN
+PASS  process discovery: no candidate alive
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-16T05:32:54Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/pids/owned.tsv (0 records); cleanup pid 331252, excluded ancestry [1, 316747, 316748, 316749, 331252], own pipeline [316748, 316749, 316750, 331253]
+  summary: owned 0, stale 0, gone 0, refused 0, lookalikes 0
+PASS  registry plan: no owned process alive, no lookalike, no refusal
+INFO  expected raw for this pass: rep ~0.2 GB, sqlite ~1.0 GB (ceilings 0.6 / 3 GB), parquet/json ~0.1 GB; CephFS free 21100 GB
+INFO  reservation (from the laptop): pod dsv41-gb300-reserve-tray16 must be Running and no other GPU pod on the node before the go
+# result: PREFLIGHT PASS
+preflight_rc=0
