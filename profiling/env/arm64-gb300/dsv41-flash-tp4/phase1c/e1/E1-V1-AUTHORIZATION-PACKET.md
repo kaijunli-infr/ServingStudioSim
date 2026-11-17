@@ -100,7 +100,7 @@ report-dir free space).
 
 CPU preflight result on **pod4-gb300-10-tray16-f3** at **2026-11-17 22:36:33–22:37:25Z** (driver context: tmux `e1v1-*` + tee into the run root, the
 same way the driver runs it): **32 PASS, 0 FAIL (Stage 1/1.5 chain PASS; identity preflight 26 checks, 0 FAIL; 43 tests passed on the tray; discovery CLEAN; registry plan clean)** — log `runs/v1/preflight/preflight_v1_tray16_driver_context_20261117T223725Z.log`, identity record
-`runs/v1/preflight/identity_20261117T223633Z` (pytest log `pytest_20261117T223633Z.json`. Two earlier attempts the same evening are recorded in the final report, not kept as files: 22:30Z 1 FAIL (`config trace path`: the generated config still pointed at the main clone's copy of the trace; fixed by pointing it at this tree's `traces/e1_dry.csv`, same bytes) and 22:34Z 2 FAIL (`launcher tree has uncommitted tracked changes` from that fix before it was committed; the code commit was amended, the pins regenerated). The passing run is on the committed tree ece6dacf.
+`runs/v1/preflight/identity_20261117T223633Z.json`, pytest log `runs/v1/preflight/pytest_20261117T223633Z.log`. Two earlier attempts the same evening are recorded in the final report, not kept as files: 22:30Z 1 FAIL (`config trace path`: the generated config still pointed at the main clone's copy of the trace; fixed by pointing it at this tree's `traces/e1_dry.csv`, same bytes) and 22:34Z 2 FAIL (`launcher tree has uncommitted tracked changes` from that fix before it was committed; the code commit was amended, the pins regenerated). The passing run is on the committed tree ece6dacf.
 
 ## 7. Proof requirements (GO item 7) — evaluated by `checks/e1_lifecycle_gates.py` from `lifecycle.json`, any FAIL = STOP
 
