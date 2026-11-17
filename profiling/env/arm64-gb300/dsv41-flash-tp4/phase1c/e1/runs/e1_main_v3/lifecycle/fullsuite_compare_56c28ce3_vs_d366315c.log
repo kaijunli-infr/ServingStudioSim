@@ -1,0 +1,20 @@
+=== wt-lifecycle 56c28ce3 (patched)
+FAILED tests/test_gdn_spec_decode.py::test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+FAILED tests/test_launcher_corpus.py::test_emit_backends_hands_the_builder_a_path_not_a_reference
+ERROR tests/test_throughput_regression.py::test_total_throughput_matches_golden
+ERROR tests/test_throughput_regression.py::test_completion_rate_matches_golden
+ERROR tests/test_throughput_regression.py::test_pd_1p32d_throughput_matches_golden
+ERROR tests/test_throughput_regression.py::test_pd_1p32d_completion_rate_matches_golden
+2 failed, 5129 passed, 77 skipped, 8 warnings, 4 errors in 120.08s (0:02:00)
+=== wt-e1stage1 d366315c
+FAILED tests/test_backend_selection.py::test_emit_backends_reads_the_real_binary
+FAILED tests/test_e1_pids_cleanup.py::test_census_and_plan_pass_from_inside_the_driver_context
+FAILED tests/test_gdn_spec_decode.py::test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint
+FAILED tests/test_launcher_corpus.py::test_emit_backends_hands_the_builder_a_path_not_a_reference
+FAILED tests/test_public_presets.py::test_every_member_is_measured - Assertio...
+FAILED tests/test_public_sim_presets.py::test_every_sim_member_builds_and_is_measured
+ERROR tests/test_throughput_regression.py::test_total_throughput_matches_golden
+ERROR tests/test_throughput_regression.py::test_completion_rate_matches_golden
+ERROR tests/test_throughput_regression.py::test_pd_1p32d_throughput_matches_golden
+ERROR tests/test_throughput_regression.py::test_pd_1p32d_completion_rate_matches_golden
+6 failed, 5162 passed, 24 skipped, 266 warnings, 4 errors in 157.95s (0:02:37)

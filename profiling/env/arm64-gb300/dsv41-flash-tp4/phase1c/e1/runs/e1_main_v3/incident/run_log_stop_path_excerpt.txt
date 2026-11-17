@@ -1,0 +1,81 @@
+2370: requests 402/450 | steps 402/450 completed=402 submitted=450 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=892.9s
+2371: requests 402/450 | steps 402/450 completed=402 submitted=450 active=48 failed=0 runtime_global_queue_depth=0 | elapsed=893.4s
+2372: requests 403/450 | steps 403/450 completed=403 submitted=450 active=47 failed=0 runtime_global_queue_depth=0 | elapsed=893.9s
+2373: requests 411/450 | steps 411/450 completed=411 submitted=450 active=39 failed=0 runtime_global_queue_depth=0 | elapsed=894.4s
+2374: requests 420/450 | steps 420/450 completed=420 submitted=450 active=30 failed=0 runtime_global_queue_depth=0 | elapsed=894.9s
+2375: requests 430/450 | steps 430/450 completed=430 submitted=450 active=20 failed=0 runtime_global_queue_depth=0 | elapsed=895.4s
+2376: requests 442/450 | steps 442/450 completed=442 submitted=450 active=8 failed=0 runtime_global_queue_depth=0 | elapsed=895.9s
+2377: requests 450/450 | steps 450/450 completed=450 submitted=450 active=0 failed=0 runtime_global_queue_depth=0 | elapsed=896.4s
+2378: Traceback (most recent call last):
+2379:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm_server.py", line 329, in set_cuda_profile
+2380:     with urllib.request.urlopen(request, timeout=timeout) as response:
+2381:          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2382:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/urllib/request.py", line 215, in urlopen
+2383:     return opener.open(url, data, timeout)
+2384:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2385:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/urllib/request.py", line 515, in open
+2386:     response = self._open(req, data)
+2387:                ^^^^^^^^^^^^^^^^^^^^^
+2388:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/urllib/request.py", line 532, in _open
+2389:     result = self._call_chain(self.handle_open, protocol, protocol +
+2390:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2391:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/urllib/request.py", line 492, in _call_chain
+2392:     result = func(*args)
+2393:              ^^^^^^^^^^^
+2394:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/urllib/request.py", line 1373, in http_open
+2395:     return self.do_open(http.client.HTTPConnection, req)
+2396:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2397:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/urllib/request.py", line 1348, in do_open
+2398:     r = h.getresponse()
+2399:         ^^^^^^^^^^^^^^^
+2400:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/http/client.py", line 1450, in getresponse
+2401:     response.begin()
+2402:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/http/client.py", line 336, in begin
+2403:     version, status, reason = self._read_status()
+2404:                               ^^^^^^^^^^^^^^^^^^^
+2405:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/http/client.py", line 297, in _read_status
+2406:     line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+2407:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2408:   File "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/socket.py", line 720, in readinto
+2409:     return self._sock.recv_into(b)
+2410:            ^^^^^^^^^^^^^^^^^^^^^^^
+2411: TimeoutError: timed out
+2412: 
+2413: The above exception was the direct cause of the following exception:
+2414: 
+2415: Traceback (most recent call last):
+2416:   File "<frozen runpy>", line 198, in _run_module_as_main
+2417:   File "<frozen runpy>", line 88, in _run_code
+2418:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/launcher/__main__.py", line 772, in <module>
+2419:     raise SystemExit(main())
+2420:                      ^^^^^^
+2421:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/launcher/__main__.py", line 555, in main
+2422:     return dispatch(list(sys.argv[1:] if argv is None else argv), simulation=run_simulation)
+2423:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2424:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/launcher/cli.py", line 238, in dispatch
+2425:     return SUBCOMMANDS[name].run(rest)
+2426:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2427:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/launcher/cli.py", line 141, in _alignment
+2428:     return main(argv)
+2429:            ^^^^^^^^^^
+2430:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/launcher/alignment.py", line 620, in main
+2431:     return _run_profile(args)
+2432:            ^^^^^^^^^^^^^^^^^^
+2433:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/launcher/alignment.py", line 482, in _run_profile
+2434:     result = run_profile(config, resume=args.resume)
+2435:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2436:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/runner.py", line 634, in run_profile
+2437:     driver.set_cuda_profile(base_url, active=False)
+2438:   File "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm_server.py", line 333, in set_cuda_profile
+2439:     raise RuntimeError(f"vLLM /{action} failed: {exc}") from exc
+2440: RuntimeError: vLLM /stop_profile failed: timed out
+2441: [profile] workload done: {'source_trace': '/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_main.csv', 'frontend_type': 'independent', 'backend_type': 'openai', 'log_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/e1_main_v3/profile/load_generator/replay.jsonl', 'summary_path': '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/e1_main_v3/profile/load_generator/summary.json', 'warmup': True, 'routed_experts_dir': '/mnt/sh
+2442: [e1_main_v3] rc=1 end 2026-11-16T09:58:06Z
+2443: [e1_main_v3] shutdown trigger at server-log line 0; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+2444: INFO  own invocation pipeline (excluded from candidates): 462764[bash] 500652[grep] 500653[tee]
+2445: FOUND vllm server processes: pids 477312 477870  (candidate; ownership only via the registry)
+2446:        477312 dc       Mon Nov 16 08:53:43 2026 /mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /mnt/shared/weights/DeepSeek-V4.1-Flash
+2447:        477870 dc       Mon Nov 16 08:53:56 2026 VLLM::EngineCore
+2448: PASS  nsys profiler sessions: none
+2449: PASS  req-frontend session_runner: none
+2450: PASS  launcher (alignment profile): none

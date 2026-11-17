@@ -1,0 +1,12 @@
+ alignment/profiler/config.py            |  41 ++
+ alignment/profiler/lifecycle.py         | 809 ++++++++++++++++++++++++++++++++
+ alignment/profiler/nsys_capture.py      |  44 ++
+ alignment/profiler/procident.py         | 188 ++++++++
+ alignment/profiler/vllm_server.py       |  23 +-
+ alignment/runner.py                     | 101 +++-
+ launcher/alignment.py                   |  25 +-
+ tests/fixtures/e1_main_v3/launch.json   | 194 ++++++++
+ tests/fixtures/e1_main_v3/profile.json  |  89 ++++
+ tests/test_frontend_measurement_gate.py |  34 +-
+ tests/test_profiler_lifecycle.py        | 707 ++++++++++++++++++++++++++++
+ 11 files changed, 2222 insertions(+), 33 deletions(-)

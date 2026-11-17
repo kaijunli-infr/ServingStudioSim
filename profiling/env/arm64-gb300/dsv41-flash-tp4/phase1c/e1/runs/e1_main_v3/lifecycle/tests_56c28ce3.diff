@@ -1,0 +1,1062 @@
+diff --git a/tests/fixtures/e1_main_v3/launch.json b/tests/fixtures/e1_main_v3/launch.json
+new file mode 100644
+index 00000000..09093a2b
+--- /dev/null
++++ b/tests/fixtures/e1_main_v3/launch.json
+@@ -0,0 +1,194 @@
++{
++  "schema_version": 1,
++  "name": "dsv41_flash_1017_gb300_tp4_e1_main_v3",
++  "argv": [
++    "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
++    "profile",
++    "--trace-fork-before-exec=true",
++    "--trace=cuda,nvtx",
++    "--sample=none",
++    "--cpuctxsw=none",
++    "--cuda-graph-trace=node",
++    "--cuda-event-trace=false",
++    "--force-overwrite=true",
++    "-o",
++    "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/e1_main_v3/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_main_v3",
++    "--capture-range=cudaProfilerApi",
++    "--capture-range-end=stop",
++    "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++    "-m",
++    "vllm.entrypoints.cli.main",
++    "serve",
++    "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "--api-server-count",
++    "1",
++    "--host",
++    "127.0.0.1",
++    "--port",
++    "8000",
++    "--tensor-parallel-size",
++    "4",
++    "--data-parallel-size",
++    "1",
++    "--max-num-batched-tokens",
++    "16384",
++    "--enable-chunked-prefill",
++    "--enable-prompt-tokens-details",
++    "--gpu-memory-utilization",
++    "0.9",
++    "--enable-server-load-tracking",
++    "--enable-logging-iteration-details",
++    "--served-model-name",
++    "dsv41-flash-1017",
++    "--tokenizer-mode",
++    "deepseek_v41",
++    "--attention-config",
++    "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++    "--kv-cache-dtype",
++    "fp8",
++    "--max-num-seqs",
++    "128",
++    "--engram-config",
++    "{\"cpu_offload\":true}",
++    "--max-model-len",
++    "131072",
++    "--language-model-only",
++    "--enable-return-routed-experts",
++    "--profiler-config.profiler=cuda"
++  ],
++  "server_argv": [
++    "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++    "-m",
++    "vllm.entrypoints.cli.main",
++    "serve",
++    "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "--api-server-count",
++    "1",
++    "--host",
++    "127.0.0.1",
++    "--port",
++    "8000",
++    "--tensor-parallel-size",
++    "4",
++    "--data-parallel-size",
++    "1",
++    "--max-num-batched-tokens",
++    "16384",
++    "--enable-chunked-prefill",
++    "--enable-prompt-tokens-details",
++    "--gpu-memory-utilization",
++    "0.9",
++    "--enable-server-load-tracking",
++    "--enable-logging-iteration-details",
++    "--served-model-name",
++    "dsv41-flash-1017",
++    "--tokenizer-mode",
++    "deepseek_v41",
++    "--attention-config",
++    "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++    "--kv-cache-dtype",
++    "fp8",
++    "--max-num-seqs",
++    "128",
++    "--engram-config",
++    "{\"cpu_offload\":true}",
++    "--max-model-len",
++    "131072",
++    "--language-model-only",
++    "--enable-return-routed-experts",
++    "--profiler-config.profiler=cuda"
++  ],
++  "env": {
++    "CUDA_VISIBLE_DEVICES": "0,1,2,3",
++    "VLLM_NVTX_SCOPES_FOR_PROFILING": "1",
++    "VLLM_SERVER_DEV_MODE": "1",
++    "PYTHONPATH": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
++    "PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin:/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin:/usr/local/cuda-13.1/bin:/mnt/shared/home/dc/.local/bin:/mnt/shared/home/dc/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
++    "LD_LIBRARY_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/lib/python3.12/site-packages/torch/lib:",
++    "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
++    "VLLM_ENGINE_READY_TIMEOUT_S": "3600",
++    "VLLM_CACHE_ROOT": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm",
++    "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune",
++    "FLASHINFER_WORKSPACE_BASE": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer",
++    "TRITON_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton",
++    "TORCHINDUCTOR_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor",
++    "DG_JIT_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm",
++    "CUDA_CACHE_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute",
++    "HF_HOME": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface",
++    "HF_HUB_OFFLINE": "1",
++    "VLLM_LOGGING_LEVEL": "INFO"
++  },
++  "server_config": {
++    "model_path": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "host": "127.0.0.1",
++    "port": 8000,
++    "chunk_size": 16384,
++    "enable_iteration_metrics": true,
++    "gpu_memory_utilization": 0.9,
++    "tp_size": 4,
++    "dp_size": 1,
++    "expert_parallel_size": null,
++    "expert_count_reduction_group_size": null,
++    "served_model_name": "dsv41-flash-1017",
++    "startup_timeout": 7200.0,
++    "enforce_eager": false,
++    "max_cudagraph_capture_size": null,
++    "enable_server_load_tracking": true,
++    "api_server_count": 1,
++    "extra_args": [
++      "--tokenizer-mode",
++      "deepseek_v41",
++      "--attention-config",
++      "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++      "--kv-cache-dtype",
++      "fp8",
++      "--max-num-seqs",
++      "128",
++      "--engram-config",
++      "{\"cpu_offload\":true}",
++      "--max-model-len",
++      "131072",
++      "--language-model-only"
++    ]
++  },
++  "nsys_config": {
++    "executable": "/usr/local/bin/nsys",
++    "capture_mode": "cuda_profiler_api",
++    "nvtx_trigger": "gpu_model_runner: forward",
++    "analyze_iteration_start": null,
++    "analyze_iteration_end": null,
++    "capture_duration_seconds": null,
++    "capture_start_delay_seconds": null,
++    "sample": "none",
++    "cpuctxsw": "none",
++    "cuda_graph_trace": "node",
++    "cuda_flush_interval_ms": null,
++    "cuda_event_trace": false
++  },
++  "nsys_profiler": {
++    "executable": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
++    "version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0"
++  },
++  "python_runtime": {
++    "lock_path": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/.vibesim-python-runtime.lock",
++    "policy": "install-missing-only; reject-version-conflict; verify-wheel-files",
++    "packages": [
++      {
++        "name": "nvtx",
++        "requested_version": "0.2.15",
++        "required_version": "0.2.15",
++        "index_url": "https://pypi.org/simple",
++        "distribution_count": 1,
++        "installed_version": "0.2.15",
++        "required_files": {}
++      }
++    ]
++  },
++  "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++  "fork_git": {
++    "path": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
++    "head": "0ab18711335780e062d65994a3243da0281d2081",
++    "branch": "",
++    "status_short": ""
++  }
++}
+\ No newline at end of file
+diff --git a/tests/fixtures/e1_main_v3/profile.json b/tests/fixtures/e1_main_v3/profile.json
+new file mode 100644
+index 00000000..9dba3b22
+--- /dev/null
++++ b/tests/fixtures/e1_main_v3/profile.json
+@@ -0,0 +1,89 @@
++{
++  "schema_version": 1,
++  "name": "dsv41_flash_1017_gb300_tp4_e1_main_v3",
++  "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_main/e1_main_v3/profile",
++  "gpu": "NVIDIA GB300",
++  "cuda_visible_devices": "0,1,2,3",
++  "profile_kind": "nsys",
++  "engine": "vllm",
++  "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++  "python_runtime": {
++    "packages": [
++      {
++        "name": "nvtx",
++        "version": "0.2.15",
++        "index_url": "https://pypi.org/simple"
++      }
++    ],
++    "environment": {
++      "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
++      "VLLM_ENGINE_READY_TIMEOUT_S": "3600",
++      "VLLM_CACHE_ROOT": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm",
++      "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune",
++      "FLASHINFER_WORKSPACE_BASE": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer",
++      "TRITON_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton",
++      "TORCHINDUCTOR_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor",
++      "DG_JIT_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm",
++      "CUDA_CACHE_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute",
++      "HF_HOME": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface",
++      "HF_HUB_OFFLINE": "1",
++      "VLLM_LOGGING_LEVEL": "INFO"
++    },
++    "lock_timeout_seconds": 60,
++    "install_timeout_seconds": 600
++  },
++  "server": {
++    "model_path": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "tp_size": 4,
++    "dp_size": 1,
++    "chunk_size": 16384,
++    "gpu_memory_utilization": 0.9,
++    "enforce_eager": false,
++    "enable_server_load_tracking": true,
++    "api_server_count": 1,
++    "served_model_name": "dsv41-flash-1017",
++    "startup_timeout": 7200.0,
++    "extra_args": [
++      "--tokenizer-mode",
++      "deepseek_v41",
++      "--attention-config",
++      "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++      "--kv-cache-dtype",
++      "fp8",
++      "--max-num-seqs",
++      "128",
++      "--engram-config",
++      "{\"cpu_offload\":true}",
++      "--max-model-len",
++      "131072",
++      "--language-model-only"
++    ]
++  },
++  "idle": {
++    "enabled": true,
++    "timeout": 600.0,
++    "poll_interval": 0.5
++  },
++  "workload": {
++    "frontend": {
++      "type": "independent",
++      "path": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_main.csv"
++    },
++    "backend": {
++      "type": "openai"
++    },
++    "text_file": "/mnt/shared/home/dc/workspace/serving-studio/corpus/enwik9",
++    "tokenizer": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "warmup": true,
++    "max_model_len": 131072,
++    "arrival_mode": "trace-timed",
++    "capture_routed_experts": true,
++    "stream": false
++  },
++  "nsys": {
++    "executable": "/usr/local/bin/nsys",
++    "capture_mode": "cuda_profiler_api",
++    "cuda_graph_trace": "node",
++    "cuda_event_trace": false
++  }
++}
+diff --git a/tests/test_frontend_measurement_gate.py b/tests/test_frontend_measurement_gate.py
+index 906348ce..06d7de50 100644
+--- a/tests/test_frontend_measurement_gate.py
++++ b/tests/test_frontend_measurement_gate.py
+@@ -125,8 +125,38 @@ def test_profiler_and_counters_start_only_at_frontend_measurement_boundary(tmp_p
+     monkeypatch.setattr(driver, "verify_server_started", lambda *a: None)
+     monkeypatch.setattr(driver, "wait_for_idle", lambda *a: True)
+     monkeypatch.setattr(driver, "speculative_decode_enabled", lambda _: True)
+-    monkeypatch.setattr(driver, "set_cuda_profile", lambda *a, active: events.append(active))
++    monkeypatch.setattr(
++        driver, "set_cuda_profile", lambda *a, active, timeout=None: events.append(active)
++    )
+     monkeypatch.setattr(driver, "fetch_spec_decode_metrics", lambda _: list(events))
++
++    class StopController:
++        """The lifecycle controller reduced to its contract: one stop request, then done.
++
++        The stop itself must still go through the patched ``set_cuda_profile`` so the
++        start/stop order around the measurement boundary stays observable.
++        """
++
++        def __init__(self, *, stop_request, **_):
++            self._stop_request = stop_request
++
++        def discover_server_processes(self):
++            pass
++
++        def request_stop(self):
++            self._stop_request()
++
++        def wait_for_report(self):
++            return alignment_runner.lifecycle.Phase.REPORT_WRITTEN
++
++        def status_dict(self):
++            return {}
++
++        def shutdown(self, proc):
++            pass
++
++    monkeypatch.setattr(alignment_runner.lifecycle, "ProfilerStopController", StopController)
++    monkeypatch.setattr(alignment_runner.lifecycle, "ignore_sighup", lambda: None)
+     monkeypatch.setattr(
+         alignment_runner.runtime_artifacts, "prepare_python_runtime", lambda *a: None,
+     )
+@@ -138,7 +168,7 @@ def test_profiler_and_counters_start_only_at_frontend_measurement_boundary(tmp_p
+ 
+     def launch(*args, **kwargs):
+         assert kwargs["env"]["VLLM_SERVER_DEV_MODE"] == "1"
+-        return object()
++        return SimpleNamespace(pid=4242)
+ 
+     def replay(*args, measurement_ready, **kwargs):
+         assert events == []
+diff --git a/tests/test_profiler_lifecycle.py b/tests/test_profiler_lifecycle.py
+new file mode 100644
+index 00000000..9c19bb39
+--- /dev/null
++++ b/tests/test_profiler_lifecycle.py
+@@ -0,0 +1,707 @@
++"""CPU tests for the profiler-stop lifecycle (alignment/profiler/lifecycle.py).
++
++Every scenario is driven by fakes: a simulated clock, a scripted server log that
++receives the lines Nsight and vLLM print, fake process identities, a recording
++signaller, a fake `/stop_profile` whose return is scheduled on the simulated
++clock, and injected disk-usage. No GPU, no nsys, no server.
++
++The scenarios are the ones the e1_main_v3 incident review asked for: an import
++longer than 20 minutes, repeated stop calls, a timeout during the import, a
++launcher shutdown while the importer is active, an import failure with a
++recoverable raw stream, GPU-release deadline expiry, disk-space exhaustion,
++partial export and restart/recovery, and that the launch recipe is unchanged.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import signal
++import subprocess
++import sys
++from pathlib import Path
++
++import pytest
++
++from alignment.profiler import lifecycle, nsys_capture, procident, vllm_server
++from alignment.profiler.config import NsysConfig
++from alignment.profiler.lifecycle import FinalizePolicy, Phase, ProfilerStopController
++
++REPO = Path(__file__).resolve().parents[1]
++FIXTURES = REPO / "tests" / "fixtures" / "e1_main_v3"
++
++NSYS_PID = 4000
++API_PID = 4100
++ENGINE_PID = 4200
++WORKER_PIDS = (4301, 4302, 4303, 4304)
++
++
++# ---- fakes
++class Clock:
++    def __init__(self):
++        self.t = 1000.0
++
++    def mono(self):
++        return self.t
++
++    def wall(self):
++        return 1_800_000_000.0 + self.t
++
++    def sleep(self, s):
++        self.t += s
++        for hook in list(self.hooks):
++            hook(self)
++
++    hooks: list = []
++
++
++class FakeProcs:
++    """Identity table: pid → (starttime, alive). Descendants: everything hangs off the nsys pid."""
++
++    def __init__(self):
++        self.alive = {
++            NSYS_PID: True,
++            API_PID: True,
++            ENGINE_PID: True,
++            **{p: True for p in WORKER_PIDS},
++        }
++        self.start = {p: 100 + i for i, p in enumerate(self.alive)}
++        self.signals: list[tuple[int, int]] = []
++        self.kill_ends_server = True
++
++    def identity(self, pid):
++        if not self.alive.get(pid):
++            return None
++        return procident.ProcessIdentity(
++            pid,
++            self.start[pid],
++            "boot",
++            1000,
++            NSYS_PID if pid != NSYS_PID else 1,
++            "p",
++            f"cmd {pid}",
++        )
++
++    def signaller(self, recorded, sig, log):
++        live = self.identity(recorded.pid)
++        if live is None:
++            log.append({"pid": recorded.pid, "action": "skip", "reason": "gone"})
++            return "gone"
++        if live.starttime != recorded.starttime:
++            log.append({"pid": recorded.pid, "action": "skip", "reason": "identity changed"})
++            return "changed"
++        self.signals.append((recorded.pid, sig))
++        log.append({"pid": recorded.pid, "action": signal.Signals(sig).name})
++        if self.kill_ends_server and recorded.pid == API_PID:
++            for p in (API_PID, ENGINE_PID, *WORKER_PIDS):
++                self.alive[p] = False
++        return "signalled"
++
++    def compute_pids(self):
++        return [p for p in WORKER_PIDS if self.alive[p]]
++
++
++class StopRequest:
++    """`/stop_profile` that returns (or fails) once the simulated clock passes `return_at`."""
++
++    def __init__(self, clock: Clock, return_at: float | None, error: str | None = None):
++        self.clock, self.return_at, self.error = clock, return_at, error
++        self.calls = 0
++
++    def __call__(self):
++        self.calls += 1
++        import time
++
++        while self.return_at is None or self.clock.t < self.return_at:
++            time.sleep(0.001)  # real thread: wait for the simulated clock
++        if self.error:
++            raise RuntimeError(self.error)
++
++
++class Harness:
++    def __init__(
++        self,
++        tmp_path: Path,
++        *,
++        policy: FinalizePolicy,
++        stop_return_at: float | None,
++        stop_error=None,
++        free_bytes=10**13,
++        is_descendant=True,
++    ):
++        self.clock = Clock()
++        Clock.hooks = []
++        self.procs = FakeProcs()
++        self.log = tmp_path / "server.log"
++        self.log.write_text(
++            f"(APIServer pid={API_PID}) INFO ready\n(EngineCore pid={ENGINE_PID}) INFO ready\n"
++            + "".join(f"(Worker_TP{i} pid={p}) INFO ready\n" for i, p in enumerate(WORKER_PIDS))
++        )
++        self.nsys_dir = tmp_path / "nsys"
++        self.nsys_dir.mkdir()
++        self.stem = self.nsys_dir / "run"
++        self.tmp = tmp_path / "tmp"
++        self.tmp.mkdir()
++        self.stream = self.tmp / "nsys-report-abcd.qdstrm"
++        self.stop = StopRequest(self.clock, stop_return_at, stop_error)
++        self.scheduled: list[tuple[float, callable]] = []
++
++        class DU:
++            def __init__(self, free):
++                self.free = free
++
++        self.free_bytes = free_bytes
++        self.monkey_is_desc = is_descendant
++        self.ctl = ProfilerStopController(
++            name="run",
++            server_log=self.log,
++            report_stem=self.stem,
++            status_path=self.nsys_dir / "lifecycle.json",
++            policy=policy,
++            stop_request=self.stop,
++            nsys_pid=NSYS_PID,
++            clock=self.clock.mono,
++            wallclock=self.clock.wall,
++            sleep=self.clock.sleep,
++            disk_usage=lambda p: DU(self.free_bytes),
++            gpu_compute_pids=self.procs.compute_pids,
++            signaller=self.procs.signaller,
++            identity=self.procs.identity,
++            emit=lambda s: None,
++        )
++        Clock.hooks.append(self._fire)
++
++    def at(self, t_rel: float, fn):
++        self.scheduled.append((1000.0 + t_rel, fn))
++
++    def _fire(self, clock):
++        due = [x for x in self.scheduled if x[0] <= clock.t]
++        self.scheduled = [x for x in self.scheduled if x[0] > clock.t]
++        for _, fn in sorted(due, key=lambda x: x[0]):
++            fn()
++
++    def append(self, text: str):
++        with self.log.open("a") as fh:
++            fh.write(text)
++
++    # the lines vLLM / nsys print, in the observed order
++    def script_normal_stop(self, *, flush_s, import_s, with_report=True):
++        self.at(
++            1,
++            lambda: self.append(
++                f"(APIServer pid={API_PID}) INFO [api_router.py:31] Stopping profiler...\n"
++            ),
++        )
++        self.at(
++            flush_s - 2,
++            lambda: self.append(
++                "Capture range started in the application.\n"
++                "Capture range ended in the application.\n"
++            ),
++        )
++
++        def gen():
++            self.stream.write_bytes(b"x" * 4096)
++            self.append(f"Generating '{self.stream}'\n")
++
++        self.at(flush_s, gen)
++        self.at(
++            flush_s + 1,
++            lambda: self.append(
++                "[1/1] [0%                          ] run.nsys-repProcessing events...\n"
++            ),
++        )
++        for k in range(1, 10):
++            pct = k * 10
++            self.at(
++                flush_s + 1 + import_s * k / 10,
++                lambda pct=pct: self.append(
++                    f"[1/1] [====={pct}%                    ] run.nsys-rep"
++                ),
++            )
++
++        def done():
++            if with_report:
++                self.stem.with_suffix(".nsys-rep").write_bytes(b"r" * 1024)
++                self.append("[1/1] [========================100%] run.nsys-rep\n")
++                self.stream.unlink(missing_ok=True)
++                self.append(
++                    f"(APIServer pid={API_PID}) INFO [api_router.py:33] Profiler stopped.\n"
++                )
++
++        self.at(flush_s + 1 + import_s, done)
++
++
++def _policy(**kw) -> FinalizePolicy:
++    base = dict(
++        soft_deadline_s=600.0,
++        hard_deadline_s=1200.0,
++        stall_timeout_s=300.0,
++        poll_interval_s=5.0,
++        session_close_timeout_s=60.0,
++        server_term_grace_s=10.0,
++    )
++    base.update(kw)
++    return FinalizePolicy(**base)
++
++
++# ---- scenarios
++def test_import_longer_than_twenty_minutes_completes_without_any_signal(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    flush, imp = 14 * 60 + 30, 11 * 60  # 25.5 min total, as a 216 M-row trace needs
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=20 * 60, hard_deadline_s=45 * 60),
++        stop_return_at=1000.0 + flush + imp + 2,
++    )
++    h.script_normal_stop(flush_s=flush, import_s=imp)
++    h.ctl.request_stop()
++    phase = h.ctl.wait_for_report()
++    assert phase == Phase.REPORT_WRITTEN
++    assert h.procs.signals == []  # nobody was signalled; the importer ran to completion
++    status = json.loads((h.nsys_dir / "lifecycle.json").read_text())
++    names = [p["phase"] for p in status["phase_history"]]
++    assert names == [
++        "stop_requested",
++        "stop_accepted",
++        "capture_ended",
++        "stream_written",
++        "importing",
++        "report_written",
++    ]
++    assert status["import_progress_pct"] == 100
++    assert (
++        status["escalations"] and status["escalations"][0]["kind"] == "soft_deadline"
++    )  # soft passed at 20 min, nothing killed
++    assert status["report"]["size"] == 1024
++    assert status["stream"]["preserved_path"].endswith("run.qdstrm")
++    assert Path(
++        status["stream"]["preserved_path"]
++    ).exists()  # survives Nsight's own unlink of the stream
++
++
++def test_repeated_stop_calls_send_exactly_one_http_request(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(tmp_path, policy=_policy(), stop_return_at=1000.0 + 120)
++    h.script_normal_stop(flush_s=60, import_s=50)
++    for _ in range(5):
++        h.ctl.request_stop()  # workload-done, timer and `finally` paths all converge here
++    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
++    h.ctl.request_stop()
++    assert h.stop.calls == 1
++    assert h.ctl.status_dict()["http"]["duplicate_requests_suppressed"] == 5
++
++
++def test_hard_deadline_during_import_stops_the_server_not_the_importer(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    # import would need 30 min; the hard deadline is 20 min
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=600, hard_deadline_s=1200, session_close_timeout_s=30),
++        stop_return_at=None,
++    )
++    h.script_normal_stop(flush_s=300, import_s=1800, with_report=False)
++    h.ctl.request_stop()
++    phase = h.ctl.wait_for_report()
++    sig_pids = {pid for pid, _ in h.procs.signals}
++    assert NSYS_PID not in sig_pids  # the importer (nsys CLI) is never signalled
++    assert (
++        API_PID,
++        signal.SIGTERM,
++    ) in h.procs.signals  # the server was stopped by its own verified pid
++    status = h.ctl.status_dict()
++    assert status["gpu"]["release_reason"] == "hard deadline"
++    assert (
++        status["gpu"]["released_at"] is not None
++    )  # GPU release is observable separately from finalisation
++    assert phase == Phase.IMPORTING  # finalisation did not complete; the status says so
++    assert Path(
++        status["stream"]["preserved_path"]
++    ).exists()  # the raw stream survived for offline import
++    assert any(e["kind"] == "hard_deadline" for e in status["escalations"])
++
++
++def test_launcher_shutdown_while_importer_active_waits_then_leaves_importer(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=100, hard_deadline_s=200, session_close_timeout_s=30),
++        stop_return_at=None,
++    )
++    h.script_normal_stop(flush_s=30, import_s=10_000, with_report=False)
++    h.ctl.request_stop()
++
++    class Proc:
++        pid = NSYS_PID
++
++        def poll(self):
++            return None if h.procs.alive[NSYS_PID] else 0
++
++        def wait(self, timeout=None):
++            raise subprocess.TimeoutExpired("nsys", timeout)
++
++    killed = []
++    monkeypatch.setattr(os, "kill", lambda pid, sig: killed.append((pid, sig)))
++    monkeypatch.setattr(os, "killpg", lambda pgid, sig: killed.append(("pg", pgid, sig)))
++    h.ctl.shutdown(Proc())  # a launcher exception path reaches shutdown with the stop in flight
++    assert all(
++        pid != NSYS_PID for pid, *_ in killed if pid != "pg"
++    )  # nsys never interrupted while importing
++    assert not any(k[0] == "pg" for k in killed)  # no process-group SIGINT
++    status = h.ctl.status_dict()
++    assert any("left running" in w["message"] for w in status["warnings"])
++    assert (
++        API_PID,
++        signal.SIGTERM,
++    ) in h.procs.signals  # hard deadline released the GPUs on the way
++
++
++def test_import_failure_with_recoverable_raw_stream_then_offline_import(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(),
++        stop_return_at=1000.0 + 200,
++        stop_error="vLLM /stop_profile failed: connection reset",
++    )
++    h.script_normal_stop(flush_s=60, import_s=10_000, with_report=False)
++
++    def importer_dies():
++        h.append("QdstrmImporter: Import failed: out of memory\n")
++        h.stream.unlink()  # Nsight deletes its stream
++        for p in h.procs.alive:
++            h.procs.alive[p] = False  # everything exits
++
++    h.at(199, importer_dies)
++    h.ctl.request_stop()
++    phase = h.ctl.wait_for_report()
++    assert phase == Phase.STOP_FAILED
++    status = h.ctl.status_dict()
++    preserved = Path(status["stream"]["preserved_path"])
++    assert preserved.exists() and preserved.stat().st_size == 4096  # hard link kept the bytes
++    assert any("problem" in w["message"] for w in status["warnings"])
++    # recovery: a fake QdstrmImporter writes the report from the preserved stream
++    importer = tmp_path / "QdstrmImporter"
++    importer.write_text(
++        "#!/bin/sh\nwhile [ $# -gt 0 ]; do case $1 in -i) IN=$2; shift;; -o) OUT=$2; shift;; esac; "
++        "shift; done\n"
++        'cat "$IN" > "$OUT"\n'
++    )
++    importer.chmod(0o755)
++    report = nsys_capture.import_stream(importer, preserved, h.stem)
++    assert report == h.stem.with_suffix(".nsys-rep") and report.stat().st_size == 4096
++
++
++def test_gpu_release_deadline_expiry_is_recorded_and_not_extended_silently(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=60, hard_deadline_s=120, session_close_timeout_s=20),
++        stop_return_at=None,
++    )
++    h.script_normal_stop(flush_s=30, import_s=10_000, with_report=False)
++    h.ctl.request_stop()
++    t0 = h.clock.t
++    h.ctl.wait_for_report()
++    status = h.ctl.status_dict()
++    assert (
++        120
++        <= status["gpu"]["release_requested_at"] - h.clock.wall() + (h.clock.t - t0)
++        <= 120 + 2 * 5 + 20 + 1
++    )
++    assert status["deadlines"]["hard_extension_s"] == 0.0
++    assert status["deadlines"]["hard_at"] == status["stop_requested_at"] + 120
++
++
++def test_operator_extension_is_explicit_and_logged(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=60, hard_deadline_s=120),
++        stop_return_at=1000.0 + 300,
++    )
++    h.script_normal_stop(flush_s=30, import_s=250)
++    h.at(
++        50,
++        lambda: h.ctl.control_path.write_text(
++            "extend 600 operator: import at 40 %, GPUs budgeted until 13:00Z\n"
++        ),
++    )
++    h.ctl.request_stop()
++    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
++    status = h.ctl.status_dict()
++    assert status["deadlines"]["hard_extension_s"] == 600.0
++    assert status["control_commands"][0]["result"].startswith("hard deadline extended by 600")
++    assert h.procs.signals == []
++
++
++def test_disk_space_exhaustion_is_reported_before_the_stop(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(tmp_path, policy=_policy(), stop_return_at=1000.0 + 100, free_bytes=2**30)
++    h.script_normal_stop(flush_s=30, import_s=50)
++    h.ctl.request_stop()
++    status = h.ctl.status_dict()
++    low = [w for w in status["warnings"] if "low free space" in w["message"]]
++    assert len(low) == 2  # stream directory and report directory
++    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
++
++
++def test_disk_full_during_import_fails_with_preserved_stream(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(),
++        stop_return_at=1000.0 + 150,
++        stop_error="server closed connection",
++    )
++    h.script_normal_stop(flush_s=60, import_s=10_000, with_report=False)
++
++    def enospc():
++        h.append(
++            "[1/1] [=====40%                    ] run.nsys-rep"
++            "Import failed: No space left on device\n"
++        )
++        for p in h.procs.alive:
++            h.procs.alive[p] = False
++
++    h.at(149, enospc)
++    h.ctl.request_stop()
++    assert h.ctl.wait_for_report() == Phase.STOP_FAILED
++    status = h.ctl.status_dict()
++    assert Path(status["stream"]["preserved_path"]).exists()
++    assert any("No space left" in w.get("line", "") for w in status["warnings"])
++
++
++def test_stalled_import_is_warned_but_never_signalled(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=3000, hard_deadline_s=4000, stall_timeout_s=120),
++        stop_return_at=1000.0 + 1000,
++    )
++    h.script_normal_stop(
++        flush_s=30, import_s=100
++    )  # progress reaches 100 % at ~130 s but the HTTP answer comes at 1000 s
++    h.at(
++        131, lambda: h.stem.with_suffix(".nsys-rep").unlink()
++    )  # keep it "not yet written" to simulate a stall
++    h.ctl.request_stop()
++    Clock.hooks.append(
++        lambda c: (
++            h.stem.with_suffix(".nsys-rep").write_bytes(b"r" * 10) if c.t > 1000 + 999 else None
++        )
++    )
++    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
++    status = h.ctl.status_dict()
++    assert any("stalled" in w["message"] for w in status["warnings"])
++    assert h.procs.signals == []
++
++
++def test_restart_recovery_reads_status_and_import_stream_resumes(tmp_path, monkeypatch):
++    """A dead launcher leaves lifecycle.json; a second process can read it and finish offline."""
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(tmp_path, policy=_policy(), stop_return_at=None)
++    h.script_normal_stop(flush_s=30, import_s=10_000, with_report=False)
++    h.ctl.request_stop()
++    for _ in range(20):
++        h.clock.sleep(5)
++        h.ctl.poll()
++    status = lifecycle.read_status(h.nsys_dir / "lifecycle.json")
++    assert status["phase"] in ("stream_written", "importing")
++    assert (
++        status["server"]["api_server"]["pid"] == API_PID
++        and "starttime" in status["server"]["api_server"]
++    )
++    assert status["nsys"]["identity"]["pid"] == NSYS_PID
++    preserved = Path(status["stream"]["preserved_path"])
++    assert preserved.exists()
++    # runner-level: import_stream implies resume and routes through the importer, never the GPU
++    from alignment import runner as alignment_runner
++
++    calls = {}
++    monkeypatch.setattr(
++        alignment_runner, "require_gpu", lambda action: calls.setdefault("gpu", []).append(action)
++    )
++    monkeypatch.setattr(
++        alignment_runner.nsys_capture,
++        "resolve_nsys_executable",
++        lambda path: nsys_capture.ResolvedNsysExecutable(Path("/opt/nsys"), "v", False),
++    )
++    monkeypatch.setattr(
++        alignment_runner.nsys_capture,
++        "qdstrm_importer_path",
++        lambda exe, cfg: Path("/opt/QdstrmImporter"),
++    )
++
++    def fake_import(imp, stream, stem):
++        calls["import"] = (imp, stream, stem)
++        report = stem.with_suffix(".nsys-rep")
++        report.parent.mkdir(parents=True, exist_ok=True)
++        report.write_bytes(b"rep")
++        return report
++
++    monkeypatch.setattr(alignment_runner.nsys_capture, "import_stream", fake_import)
++    monkeypatch.setattr(
++        alignment_runner,
++        "_finalize_profile",
++        lambda cfg, **kw: {
++            "finalized": kw["nsys_executable"] is not None,
++            "ds": kw["drive_summary"],
++        },
++    )
++    monkeypatch.setattr(
++        alignment_runner.load_generator,
++        "prepare_replay",
++        lambda workload, log_dir: type(
++            "P",
++            (),
++            {
++                "trace_path": Path("t.csv"),
++                "log_path": Path("r.jsonl"),
++                "summary_path": Path("s.json"),
++            },
++        )(),
++    )
++    from launcher.alignment_config import load_profile_config
++
++    cfg = load_profile_config(FIXTURES / "profile.json", require_python_runtime=False)
++    cfg.log_dir = str(tmp_path / "profile")
++    (tmp_path / "profile" / "vllm").mkdir(parents=True)
++    (tmp_path / "profile" / "vllm" / f"{cfg.name}_server.log").write_text("log\n")
++    result = alignment_runner.run_profile(cfg, import_stream=preserved)
++    assert "gpu" not in calls  # never asked for a GPU
++    assert calls["import"][1] == preserved
++    assert result["finalized"] is True
++    assert result["ds"]["imported_from_stream"] == str(preserved.resolve())
++
++
++def test_launch_recipe_is_unchanged_against_the_frozen_e1_main_v3_launch(monkeypatch):
++    """The patch must not alter the server argv, the nsys prefix or the server env (model execution,
++    scheduling, routing collection and workload inputs are untouched)."""
++    from launcher.alignment_config import load_profile_config
++
++    cfg = load_profile_config(FIXTURES / "profile.json", require_python_runtime=False)
++    launch = json.loads((FIXTURES / "launch.json").read_text())
++    server_argv = vllm_server.build_server_argv(cfg.fork_python, cfg.server)
++    server_argv += [
++        "--enable-return-routed-experts"
++    ]  # appended by the runner for capture_routed_experts
++    server_argv += list(vllm_server.NSYS_CAPTURE_SERVER_ARGS) + list(
++        vllm_server.CUDA_PROFILER_SERVER_ARGS
++    )
++    assert server_argv == launch["server_argv"]
++    exe = nsys_capture.ResolvedNsysExecutable(
++        Path(launch["argv"][0]), launch["nsys_profiler"]["version"], True
++    )
++    prefix = nsys_capture.build_nsys_prefix(
++        exe, cfg.nsys, Path(launch["argv"][launch["argv"].index("-o") + 1])
++    )
++    assert prefix + server_argv == launch["argv"]
++    for key in (
++        "executable",
++        "capture_mode",
++        "cuda_graph_trace",
++        "cuda_flush_interval_ms",
++        "cuda_event_trace",
++        "capture_duration_seconds",
++        "capture_start_delay_seconds",
++        "sample",
++        "cpuctxsw",
++    ):
++        assert getattr(cfg.nsys, key) == launch["nsys_config"][key]
++    # the env builder adds nothing new by default (TMPDIR only when nsys.tmp_dir is configured)
++    monkeypatch.delenv("TMPDIR", raising=False)
++    env = vllm_server.build_server_env(cfg.fork_python, cfg.cuda_visible_devices)
++    assert "TMPDIR" not in env
++    assert cfg.nsys.tmp_dir is None
++    # the new fields exist with explicit defaults and validate
++    assert cfg.nsys.finalize_hard_deadline_s >= cfg.nsys.finalize_soft_deadline_s
++    cfg.nsys.validate()
++
++
++def test_finalize_policy_rejects_silent_extension_shapes():
++    with pytest.raises(ValueError, match="hard_deadline_s must be >="):
++        FinalizePolicy(soft_deadline_s=100, hard_deadline_s=50).validate()
++    with pytest.raises(ValueError, match="on_hard_deadline"):
++        FinalizePolicy(on_hard_deadline="extend").validate()
++    with pytest.raises(ValueError, match="positive"):
++        NsysConfig(finalize_stall_timeout_s=0).validate()
++
++
++def test_stop_profile_timeout_none_is_unbounded(monkeypatch):
++    seen = {}
++
++    class Resp:
++        status = 200
++
++        def __enter__(self):
++            return self
++
++        def __exit__(self, *a):
++            return False
++
++    def fake_urlopen(request, timeout=object()):
++        seen["timeout"] = timeout
++        return Resp()
++
++    monkeypatch.setattr(vllm_server.urllib.request, "urlopen", fake_urlopen)
++    vllm_server.set_cuda_profile("http://x", active=False, timeout=None)
++    assert seen["timeout"] is None
++    vllm_server.set_cuda_profile("http://x", active=False)
++    assert seen["timeout"] == 600.0  # untouched default for direct callers
++    vllm_server.set_cuda_profile("http://x", active=True)
++    assert seen["timeout"] == 120.0
++
++
++@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="/proc based")
++def test_procident_refuses_own_ancestry_and_pid_reuse():
++    me = procident.identity(os.getpid())
++    assert me is not None and procident.is_alive(me)
++    log: list = []
++    assert procident.signal_verified(me, signal.SIGTERM, log) == "refused"
++    parent = procident.identity(os.getppid())
++    if parent is not None:
++        assert procident.signal_verified(parent, signal.SIGTERM, log) == "refused"
++    stale = procident.ProcessIdentity(
++        me.pid, me.starttime + 1, me.boot_id, me.uid, me.ppid, me.name, me.cmd
++    )
++    assert procident.signal_verified(stale, signal.SIGTERM, log) == "changed"
++    child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
++    try:
++        ident = procident.identity(child.pid)
++        assert ident is not None and procident.is_descendant_of(child.pid, os.getpid())
++        assert child.pid in procident.descendants(os.getpid())
++        assert procident.signal_verified(ident, signal.SIGTERM, log) == "signalled"
++        child.wait(timeout=10)
++        assert procident.signal_verified(ident, signal.SIGTERM, log) in ("gone", "changed")
++    finally:
++        if child.poll() is None:
++            child.kill()
++
++
++def test_cli_import_stream_implies_resume(tmp_path, monkeypatch):
++    from launcher import alignment as alignment_launcher
++
++    seen = {}
++    monkeypatch.setattr(
++        alignment_launcher,
++        "load_profile_config",
++        lambda path, require_python_runtime=True: (
++            seen.setdefault("rpr", require_python_runtime)
++            or type("C", (), {"log_dir": str(tmp_path / "p"), "name": "n"})()
++        ),
++    )
++    monkeypatch.setattr(alignment_launcher, "write_artifact_kind", lambda *a, **k: None)
++    monkeypatch.setattr(alignment_launcher, "_snapshot_config", lambda *a, **k: None)
++    monkeypatch.setattr(
++        alignment_launcher,
++        "run_profile",
++        lambda config, *, resume=False, import_stream=None: (
++            seen.update(resume=resume, stream=import_stream) or {"parsed_nsys": "x"}
++        ),
++    )
++    cfg = tmp_path / "profile.json"
++    cfg.write_text("{}")
++    stream = tmp_path / "run.qdstrm"
++    assert alignment_launcher.main(["profile", str(cfg), "--import-stream", str(stream)]) == 0
++    assert seen["rpr"] is False and seen["resume"] is True and seen["stream"] == stream

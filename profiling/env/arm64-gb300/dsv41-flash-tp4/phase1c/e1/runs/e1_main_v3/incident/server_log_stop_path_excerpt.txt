@@ -1,0 +1,54 @@
+120595: (EngineCore pid=477870) INFO 11-16 09:37:36 [core.py:589] Iteration(39485): 0 context requests, 0 context tokens, 1 generation requests, 1 generation tokens, iteration elapsed time: 5.74 ms
+120596: (EngineCore pid=477870) INFO 11-16 09:37:36 [core.py:629] VibeSimAlignmentIteration {"schema_version":4,"input_adapter":"vllm_text","iteration_index":39485,"observed_start_monotonic_ns":2815850850788760,"observed_end_monotonic_ns":2815850856529486,"observed_elapsed_ms":5.740726,"prefill_tokens":0,"decode_requests":1,"decode_tokens_scheduled":1,"prefill_chunk_pairs":[],"decode_kv_lens":[99326],"dec
+120597: (APIServer pid=477312) INFO 11-16 09:37:36 [output_processor.py:990] VibeSimAlignmentRequestTiming {"schema_version":2,"engine_request_id":"cmpl-independent_e1_b48_kv96k_w0_r14-0","engine_core_ttft_ms":66348.20596175268,"engine_queue_wait_ms":64506.956588011235,"engine_first_schedule_to_first_token_ms":1841.249373741448,"engine_core_decode_ms":10126.428411342204,"num_output_tokens":1024,"engine_co
+120598: (APIServer pid=477312) INFO 11-16 09:37:36 [loggers.py:191] Engine 000: Iteration(39411): 0 context requests, 0 context tokens, 1 generation requests, 1 generation tokens, iteration elapsed time: 5.83 ms, GPU KV cache usage: 0.0%
+120599: INFO:     127.0.0.1:57918 - "POST /v1/completions HTTP/1.1" 200 OK
+120600: INFO:     127.0.0.1:57756 - "GET /load HTTP/1.1" 200 OK
+120601: (APIServer pid=477312) INFO 11-16 09:37:36 [api_router.py:31] Stopping profiler...
+120602: (APIServer pid=477312) INFO 11-16 09:37:39 [loggers.py:320] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2534.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+120603: (APIServer pid=477312) INFO 11-16 09:37:49 [loggers.py:320] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+120604: (EngineCore pid=477870) INFO 11-16 09:38:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120605: (EngineCore pid=477870) INFO 11-16 09:39:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120606: (EngineCore pid=477870) INFO 11-16 09:40:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120607: (EngineCore pid=477870) INFO 11-16 09:41:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120608: (EngineCore pid=477870) INFO 11-16 09:42:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120609: (EngineCore pid=477870) INFO 11-16 09:43:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120610: (EngineCore pid=477870) INFO 11-16 09:44:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120611: (EngineCore pid=477870) INFO 11-16 09:45:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120612: (EngineCore pid=477870) INFO 11-16 09:46:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120613: (APIServer pid=477312) INFO 11-16 09:47:36 [api_router.py:31] Stopping profiler...
+120614: (EngineCore pid=477870) INFO 11-16 09:47:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120615: (EngineCore pid=477870) INFO 11-16 09:48:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120616: (EngineCore pid=477870) INFO 11-16 09:49:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120617: (EngineCore pid=477870) INFO 11-16 09:50:37 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120618: (EngineCore pid=477870) INFO 11-16 09:51:38 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120619: Capture range started in the application.
+120620: Capture range ended in the application.
+120621: Generating '/tmp/nsys-report-4604.qdstrm'
+120622: [1/1] [0%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-repProcessing events...
+120623: [1/1] [0%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [5%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [6%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [7%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [8%                          ] dsv41_flash_1017_gb300_tp4
+120624: [1/1] [6%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [7%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [8%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [9%                          ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [10%                         ] dsv41_flash_1017_gb300_tp4
+120625: [1/1] [=====29%                    ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [=====30%                    ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [=====31%                    ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [=====32%                    ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep[1/1] [======33%                   ] dsv41_flash_1017_gb300_tp4
+120626: [1/1] [==========49%               ] dsv41_flash_1017_gb300_tp4_e1_main_v3.nsys-rep(EngineCore pid=477870) INFO 11-16 09:55:38 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120627: (EngineCore pid=477870) INFO 11-16 09:56:38 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120628: (EngineCore pid=477870) INFO 11-16 09:57:38 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120629: /dvs/p4/build/sw/devtools/Agora/Rel/CUDA13.2/QuadD/Common/AgentAPI/Src/SessionImpl.cpp(21): rpc Shutdown(.Agent.ShutdownRequest) returns (.Agent.EmptyMessage);
+120630:  is canceled because the timeout period is expired (30 sec).
+120631: (EngineCore pid=477870) INFO 11-16 09:58:38 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+120632: (EngineCore pid=477870) INFO 11-16 09:58:47 [core.py:1502] [shutdown] EngineCore: trigger received signal=SIGTERM
+120633: (APIServer pid=477312) INFO 11-16 09:58:47 [launcher.py:128] [shutdown] API server: shutdown triggered
+120634: (APIServer pid=477312) INFO 11-16 09:58:47 [launcher.py:144] [shutdown] API server: stopping engine client mode=abort timeout=0s
+120635: (APIServer pid=477312) INFO 11-16 09:58:47 [core_client.py:762] [shutdown] MPClient: start timeout=0s
+120636: (APIServer pid=477312) INFO 11-16 09:58:47 [core_client.py:764] [shutdown] MPClient: stopping engine manager
+120637: (APIServer pid=477312) INFO 11-16 09:58:47 [utils.py:638] [shutdown] Process manager: send sigterm to process EngineCore
+120638: (APIServer pid=477312) WARNING 11-16 09:58:47 [utils.py:658] [shutdown] Process manager: force killing remaining processes count=1
+120639: (APIServer pid=477312) WARNING 11-16 09:58:47 [utils.py:663] [shutdown] Process manager: force killing remaining process EngineCore pid 477870
+120640: (EngineCore pid=477870) INFO 11-16 09:58:47 [core.py:1502] [shutdown] EngineCore: trigger received signal=SIGTERM
+120641: (APIServer pid=477312) INFO 11-16 09:58:47 [core_client.py:766] [shutdown] MPClient: engine manager stopped
+120642: (APIServer pid=477312) INFO 11-16 09:58:47 [core_client.py:767] [shutdown] MPClient: cleaning up background resources
+120643: (APIServer pid=477312) INFO 11-16 09:58:47 [core_client.py:769] [shutdown] MPClient: complete
+120644: (APIServer pid=477312) INFO 11-16 09:58:47 [launcher.py:153] [shutdown] API server: engine client stopped
+120645: (APIServer pid=477312) INFO 11-16 09:58:47 [launcher.py:156] [shutdown] API server: signalling HTTP server shutdown
+120646: (APIServer pid=477312) INFO 11-16 09:58:47 [launcher.py:178] [shutdown] API server: shutting down FastAPI HTTP server
+120647: INFO:     Shutting down
+120648: INFO:     Waiting for background tasks to complete. (CTRL+C to force quit)

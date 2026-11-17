@@ -71,3 +71,15 @@ $S/gb300/venv/bin/python checks/e1_completeness.py --profile $S/artifacts/phase0
 | `runs/e1_main_v3/E1-MAIN-V3-INCIDENT-REPORT.md` | prerequisites, timeline, hard limits (GPU release exceeded by ≈ 71–93 s through the launcher's own failure path), surviving/lost artifacts, all gates FAIL, root cause (launcher `/stop_profile` bound 600 s × 2 vs Nsight stop ≈ 22–25 min; `_shutdown` SIGINT aborts the import and deletes the stream), monitor defect, cleanup verification, proposals |
 | `runs/e1_main_v3/` | evidence: driver-context preflight (21 PASS), negative control (STOP by design), driver preflight/run logs, launch records, closeout (CLEAN), post-run gates log, laptop monitor log, `cpu/` checker outputs |
 | raw | `$S/artifacts/phase1c-e1-main-dsv41-flash-gb300-tp4-20261116/run/e1_main_v3/` + `SHA256SUMS` (468 files, 379 MB: 450 routing npy, server log with 39 412 host iteration-metric lines, load generator results) |
+
+## e1_main_v3 incident analysis, surviving-artifact audit and profiler-lifecycle remediation (2026-11-17, CPU-only; GO of 2026-11-17)
+
+| file | purpose |
+|---|---|
+| `runs/e1_main_v3/E1-MAIN-V3-FAILURE-ANALYSIS.md` | parts A–B: evidence frozen (archive 468/468 OK, read-only; launcher snapshot `e4ce9108`; log excerpts; irrecoverability check), stop-path timeline with the owning process per stage, the overlap of the two stop requests, finalisation-time calibration, established-vs-hypothesis list |
+| `runs/e1_main_v3/incident/` | `launcher_snapshot_e4ce9108/` (+ `BLOBS.txt`), `server_log_stop_path_excerpt.txt`, `run_log_stop_path_excerpt.txt`, `irrecoverability_check_tray16.log` |
+| `runs/e1_main_v3/surviving/E1-MAIN-V3-SURVIVING-ARTIFACTS.md`, `surviving.json`; `analysis/e1_main_v3_surviving.py` | part E: completeness by cell/wave, request/token/iteration reconciliation, routing statistics with request-bootstrap CIs and permutation nulls, host-side timing distributions (profiler-perturbed), plan deviations, tactic agreement, not-reconstructable list; no fitting, no partition |
+| `E1-AUTHORIZATION-PACKET-v3.md` | part F: patched commit `56c28ce3` on `exp/profiler-lifecycle` (worktree `$S/wt-lifecycle`), CPU test results, lifecycle state diagram, GPU-release strategy and proof requirements, storage budgets, worst-case estimates, explicit limits (soft 30 / hard 50 min after the stop request), one-capture decision, procedures, bounded validation V1–V3 (proposals only) |
+| `runs/e1_main_v3/lifecycle/` | `patch_56c28ce3.diff`, `tests_56c28ce3.diff`, `diffstat_56c28ce3.txt`, `pytest_lifecycle_56c28ce3.log` (16 passed), `pytest_launcher_suites_56c28ce3.log` (213 passed), `fullsuite_compare_56c28ce3_vs_d366315c.log` (whole cpu tier: every failure also fails on the unpatched `d366315c`; `cargo` missing and one pre-existing numerical test) |
+
+No GPU was used. Nothing is authorized for GPU execution by these documents.

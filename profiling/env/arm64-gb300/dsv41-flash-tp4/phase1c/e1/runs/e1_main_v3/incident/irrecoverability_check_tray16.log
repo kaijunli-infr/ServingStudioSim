@@ -1,0 +1,19 @@
+# Nsight raw-stream / report irrecoverability check on pod4-gb300-10-tray16-f3 at 2026-11-17T11:44:38Z
+## nsys sessions list
+              ID         TIME                                      STATE LAUNCH NAME
+## /tmp nsys files (any age)
+(end)
+## root disk search for qdstrm/nsys-rep newer than 2026-11-16 08:00Z (excluding CephFS)
+(end)
+## CephFS run-root and artifacts search
+(end)
+## nsys dir listing of the run
+total 0
+drwxrwxr-x 2 dc dc 0 Nov 16 09:57 .
+drwxrwxr-x 6 dc dc 5 Nov 16 09:16 ..
+## QdstrmImporter available for offline import of a preserved stream
+-rwxr-xr-x 1 root root 335560 Apr  4  2026 /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
+NVIDIA Nsight Systems 2025.6.3.541-256337736014v0
+## memory/cpu
+Mem:             958          89         502           0         415         868
+144
