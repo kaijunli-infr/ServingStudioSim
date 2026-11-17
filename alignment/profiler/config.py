@@ -153,6 +153,11 @@ class NsysConfig:
     finalize_stall_timeout_s: float = 900.0
     finalize_on_hard_deadline: str = "release_gpus"  # or "report_only"
     finalize_session_close_timeout_s: float = 600.0
+    # Total operator extension allowed through the control file (0 forbids it).
+    finalize_max_extension_s: float = 1200.0
+    # Absolute GPU-held ceiling from the launch; the release action runs when it
+    # passes, in any phase, and no extension moves it. None disables it.
+    gpu_held_ceiling_s: float | None = None
     # Hard-link Nsight's raw `.qdstrm` as soon as it is announced so an abort
     # cannot destroy it; it can then be imported offline (`--import-stream`).
     preserve_raw_stream: bool = True
@@ -180,6 +185,9 @@ class NsysConfig:
             min_free_bytes_stream=self.min_free_bytes_stream,
             min_free_bytes_report=self.min_free_bytes_report,
             session_close_timeout_s=self.finalize_session_close_timeout_s,
+            max_extension_s=self.finalize_max_extension_s,
+            gpu_held_ceiling_s=self.gpu_held_ceiling_s,
+            stream_dir=None if self.tmp_dir is None else Path(self.tmp_dir),
         )
 
     def validate(self) -> None:

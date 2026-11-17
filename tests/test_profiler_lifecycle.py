@@ -128,6 +128,7 @@ class Harness:
         stop_error=None,
         free_bytes=10**13,
         is_descendant=True,
+        stream_scan=None,
     ):
         self.clock = Clock()
         Clock.hooks = []
@@ -168,6 +169,7 @@ class Harness:
             signaller=self.procs.signaller,
             identity=self.procs.identity,
             emit=lambda s: None,
+            stream_scan=stream_scan if stream_scan is not None else (lambda: []),
         )
         Clock.hooks.append(self._fire)
 
@@ -705,3 +707,178 @@ def test_cli_import_stream_implies_resume(tmp_path, monkeypatch):
     stream = tmp_path / "run.qdstrm"
     assert alignment_launcher.main(["profile", str(cfg), "--import-stream", str(stream)]) == 0
     assert seen["rpr"] is False and seen["resume"] is True and seen["stream"] == stream
+
+
+# ---- V1 packet additions: control-file commands, GPU-held ceiling, stream discovery
+def _control_batch_harness(tmp_path, monkeypatch, **policy_kw):
+    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
+    h = Harness(
+        tmp_path,
+        policy=_policy(soft_deadline_s=60, hard_deadline_s=600, max_extension_s=300, **policy_kw),
+        stop_return_at=1000.0 + 250,
+    )
+    h.script_normal_stop(flush_s=30, import_s=200)
+    return h
+
+
+def test_control_file_every_command_is_recorded_with_its_result(tmp_path, monkeypatch):
+    h = _control_batch_harness(tmp_path, monkeypatch)
+    batch = (
+        "note operator watching the import\n"
+        "extend 60 V1 control-file test\n"
+        "extend abc not a number\n"
+        "extend 60\n"
+        "extend 1000 would exceed the cap\n"
+        "release-gpus\n"
+        "frobnicate the importer\n"
+        "\n"
+    )
+    h.at(40, lambda: h.ctl.control_path.write_text(batch))
+    # a line still being written is not consumed until its newline arrives
+    h.at(45, lambda: h.ctl.control_path.open("a").write("note partial"))
+    h.at(55, lambda: h.ctl.control_path.open("a").write(" line completed\n"))
+    h.ctl.request_stop()
+    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
+    status = h.ctl.status_dict()
+    results = [(c["command"], c["result"]) for c in status["control_commands"]]
+    assert results == [
+        ("note operator watching the import", "noted"),
+        ("extend 60 V1 control-file test", "hard deadline extended by 60 s (operator)"),
+        ("extend abc not a number", "rejected: seconds not a number"),
+        ("extend 60", "rejected: usage is 'extend <seconds> <reason>'"),
+        (
+            "extend 1000 would exceed the cap",
+            "rejected: total extension 1060 s would exceed max_extension_s 300",
+        ),
+        ("release-gpus", "rejected: a reason is required"),
+        ("frobnicate the importer", "rejected: unknown command"),
+        ("note partial line completed", "noted"),
+    ]
+    assert all("at" in c and "phase" in c for c in status["control_commands"])
+    assert status["deadlines"]["hard_extension_s"] == 60.0
+    assert status["deadlines"]["max_extension_s"] == 300.0
+    assert h.procs.signals == []  # the reason-less release-gpus did nothing
+    assert status["actions"] == []
+
+
+def test_control_file_release_gpus_with_reason_is_an_identity_verified_server_stop(
+    tmp_path, monkeypatch
+):
+    h = _control_batch_harness(tmp_path, monkeypatch)
+    h.at(60, lambda: h.ctl.control_path.write_text("release-gpus operator: budget exhausted\n"))
+    h.ctl.request_stop()
+    phase = h.ctl.wait_for_report()
+    status = h.ctl.status_dict()
+    assert status["control_commands"][0]["result"] == "release requested"
+    assert h.procs.signals == [(API_PID, signal.SIGTERM)]
+    assert status["actions"][0]["reason"].startswith("operator: release-gpus")
+    assert status["actions"][0]["pid"] == API_PID
+    assert status["gpu"]["released_at"] is not None
+    assert phase in (Phase.IMPORTING, Phase.REPORT_WRITTEN)
+    # the importer (nsys pid) was never signalled
+    assert all(pid != NSYS_PID for pid, _ in h.procs.signals)
+
+
+def test_gpu_held_ceiling_binds_in_any_phase_and_no_extension_moves_it(tmp_path, monkeypatch):
+    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
+    # launched 1400 s before the stop; ceiling 1500 s from the launch → fires 100 s after the stop,
+    # long before the 1200 s hard deadline, and the operator extension does not touch it
+    h = Harness(
+        tmp_path,
+        policy=_policy(soft_deadline_s=600, hard_deadline_s=1200, gpu_held_ceiling_s=1500),
+        stop_return_at=1000.0 + 2000,
+    )
+    h.ctl._launch_mono = 1000.0 - 1400
+    h.ctl.s.launch_started_at = h.clock.wall() - 1400
+    h.script_normal_stop(flush_s=30, import_s=1900)
+    h.at(20, lambda: h.ctl.control_path.write_text("extend 600 trying to buy time\n"))
+    h.ctl.request_stop()
+    phase = h.ctl.wait_for_report()
+    status = h.ctl.status_dict()
+    assert status["deadlines"]["hard_extension_s"] == 600.0
+    assert "GPU-held ceiling unchanged" in status["control_commands"][0]["result"]
+    kinds = [e["kind"] for e in status["escalations"]]
+    assert kinds == ["gpu_held_ceiling"]
+    fired = status["escalations"][0]
+    assert 1500 < fired["elapsed_s"] <= 1500 + 2 * 5.0 + 1
+    assert h.procs.signals == [(API_PID, signal.SIGTERM)]
+    assert status["gpu"]["release_reason"] == "GPU-held ceiling"
+    assert phase == Phase.IMPORTING
+    assert status["deadlines"]["gpu_held_ceiling_at"] == pytest.approx(
+        status["launch_started_at"] + 1500
+    )
+
+
+def test_finalize_policy_validates_ceiling_and_extension_cap():
+    with pytest.raises(ValueError, match="gpu_held_ceiling_s must be >= hard_deadline_s"):
+        FinalizePolicy(soft_deadline_s=600, hard_deadline_s=1200, gpu_held_ceiling_s=600).validate()
+    with pytest.raises(ValueError, match="max_extension_s"):
+        FinalizePolicy(max_extension_s=-1).validate()
+    FinalizePolicy(max_extension_s=0, gpu_held_ceiling_s=3600).validate()
+    cfg = NsysConfig(
+        executable="/usr/local/bin/nsys",
+        finalize_max_extension_s=0,
+        gpu_held_ceiling_s=2700,
+        finalize_hard_deadline_s=600,
+        finalize_soft_deadline_s=300,
+        tmp_dir="/tmp/e1-nsys",
+    )
+    policy = cfg.finalize_policy()
+    assert policy.max_extension_s == 0
+    assert policy.gpu_held_ceiling_s == 2700
+    assert policy.stream_directory() == "/tmp/e1-nsys"
+
+
+def test_raw_stream_found_by_descriptor_scan_is_preserved_before_nsight_announces_it(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
+    holder: dict = {}
+    h = Harness(
+        tmp_path,
+        policy=_policy(),
+        stop_return_at=1000.0 + 120,
+        stream_scan=lambda: [holder["stream"]] if holder.get("stream", Path("/x")).exists() else [],
+    )
+    holder["stream"] = h.stream
+    # the stream file exists (open in the nsys tree) from early in the flush; Nsight prints
+    # "Generating" only at the end of the flush
+    h.at(5, lambda: h.stream.write_bytes(b"s" * 2048))
+    h.script_normal_stop(flush_s=60, import_s=50)
+    h.ctl.request_stop()
+    # poll until the scan has found it
+    for _ in range(4):
+        h.clock.sleep(5.0)
+        h.ctl.poll()
+    st = h.ctl.status_dict()
+    assert st["stream"]["discovered_by"] == "fd-scan"
+    assert st["stream"]["preserved_path"] and Path(st["stream"]["preserved_path"]).exists()
+    assert st["phase"] == Phase.STOP_ACCEPTED.value  # discovery does not advance the phase
+    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
+    st = h.ctl.status_dict()
+    assert [p["phase"] for p in st["phase_history"]].index("stream_written") > 0
+    assert not h.stream.exists()  # Nsight unlinked its path
+    preserved = Path(st["stream"]["preserved_path"])
+    assert preserved.read_bytes() == b"x" * 4096  # the bytes written later by "gen" survive
+    assert h.procs.signals == []
+
+
+def test_scan_stream_dir_returns_only_descriptor_confirmed_files(tmp_path):
+    (tmp_path / "nsys-report-aaaa.qdstrm").write_bytes(b"a")
+    held = tmp_path / "nsys-report-bbbb.qdstrm"
+    held.write_bytes(b"b")
+    (tmp_path / "other.qdstrm").write_bytes(b"c")
+    ctl = ProfilerStopController(
+        name="scan",
+        server_log=tmp_path / "server.log",
+        report_stem=tmp_path / "scan",
+        status_path=tmp_path / "lifecycle.json",
+        policy=FinalizePolicy(stream_dir=tmp_path),
+        stop_request=lambda: None,
+        nsys_pid=os.getpid(),  # this process stands in for the nsys tree
+        emit=lambda s: None,
+    )
+    assert ctl._scan_stream_dir() == []
+    with held.open("rb"):
+        assert ctl._scan_stream_dir() == [held.resolve()]
+    assert ctl._scan_stream_dir() == []

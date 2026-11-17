@@ -94,6 +94,16 @@ class FinalizePolicy:
     min_free_bytes_report: int = 20 * 2**30
     session_close_timeout_s: float = 600.0
     server_term_grace_s: float = 60.0
+    # Operator extensions (control file `extend <s> <reason>`) may move the hard
+    # deadline by at most this much in total; 0 forbids extensions.
+    max_extension_s: float = 1200.0
+    # Absolute GPU-held ceiling measured from the launch (server spawn), not from
+    # the stop request. When it passes, the GPU-release action runs whatever the
+    # phase, and no operator extension moves it. None disables it.
+    gpu_held_ceiling_s: float | None = None
+    # Directory Nsight writes the raw `.qdstrm` into (TMPDIR of the nsys process).
+    # None: the launcher's TMPDIR, else /tmp.
+    stream_dir: Path | None = None
 
     def validate(self) -> None:
         for name in (
@@ -111,12 +121,27 @@ class FinalizePolicy:
             raise ValueError("finalize.hard_deadline_s must be >= soft_deadline_s")
         if self.on_hard_deadline not in ("release_gpus", "report_only"):
             raise ValueError("finalize.on_hard_deadline must be 'release_gpus' or 'report_only'")
+        if not isinstance(self.max_extension_s, (int, float)) or self.max_extension_s < 0:
+            raise ValueError("finalize.max_extension_s must be a number >= 0")
+        if self.gpu_held_ceiling_s is not None and (
+            not isinstance(self.gpu_held_ceiling_s, (int, float)) or not self.gpu_held_ceiling_s > 0
+        ):
+            raise ValueError("finalize.gpu_held_ceiling_s must be a positive number or None")
+        if self.gpu_held_ceiling_s is not None and self.gpu_held_ceiling_s < self.hard_deadline_s:
+            raise ValueError(
+                "finalize.gpu_held_ceiling_s must be >= hard_deadline_s (the ceiling counts "
+                "from the launch, the hard deadline from the stop request)"
+            )
+
+    def stream_directory(self) -> str:
+        return str(self.stream_dir) if self.stream_dir else (os.environ.get("TMPDIR") or "/tmp")
 
 
 @dataclass
 class _Status:
     phase: Phase = Phase.CAPTURING
     phase_history: list[dict] = field(default_factory=list)
+    launch_started_at: float | None = None
     stop_requested_at: float | None = None
     http: dict = field(
         default_factory=lambda: {"status": None, "returned_at": None, "requests_sent": 0}
@@ -173,6 +198,9 @@ class ProfilerStopController:
         ] = procident.signal_verified,
         identity: Callable[[int], procident.ProcessIdentity | None] = procident.identity,
         emit: Callable[[str], None] = print,
+        launch_started_mono: float | None = None,
+        launch_started_at: float | None = None,
+        stream_scan: Callable[[], list[Path]] | None = None,
     ):
         self.name = name
         self.server_log = Path(server_log)
@@ -200,7 +228,12 @@ class ProfilerStopController:
         self._stall_warned_at: float | None = None
         self._hard_extension_s = 0.0
         self._gpus_released_action_done = False
+        self._launch_mono = launch_started_mono if launch_started_mono is not None else clock()
+        self._stream_scan = stream_scan if stream_scan is not None else self._scan_stream_dir
         self.s = _Status()
+        self.s.launch_started_at = (
+            launch_started_at if launch_started_at is not None else wallclock()
+        )
         self.nsys: procident.ProcessIdentity | None = None
         self.api_server: procident.ProcessIdentity | None = None
         self.engine_procs: list[procident.ProcessIdentity] = []
@@ -294,6 +327,12 @@ class ProfilerStopController:
                 "soft_at": self.s.stop_requested_at + self.policy.soft_deadline_s,
                 "hard_at": self.s.stop_requested_at + self.policy.hard_deadline_s,
                 "hard_extension_s": 0.0,
+                "max_extension_s": self.policy.max_extension_s,
+                "gpu_held_ceiling_at": (
+                    None
+                    if self.policy.gpu_held_ceiling_s is None
+                    else self.s.launch_started_at + self.policy.gpu_held_ceiling_s
+                ),
             }
             self._stop_mono = self._clock()
             try:
@@ -318,7 +357,7 @@ class ProfilerStopController:
         self.s.http["returned_at"] = self._wall()
 
     def _check_disk_before_stop(self) -> None:
-        stream_dir = os.environ.get("TMPDIR") or "/tmp"
+        stream_dir = self.policy.stream_directory()
         for label, path, minimum in (
             ("stream", stream_dir, self.policy.min_free_bytes_stream),
             ("report", str(self.report_stem.parent), self.policy.min_free_bytes_report),
@@ -393,8 +432,25 @@ class ProfilerStopController:
 
     def _track_stream(self) -> None:
         path = self.s.stream.get("path")
+        if not path and self.s.stop_requested_at is not None:
+            # Nsight announces the stream ("Generating '<x>.qdstrm'") only for large
+            # captures; for the others the file still exists in the stream directory
+            # while the stop runs. Find it by its open descriptor in the nsys tree.
+            found = self._stream_scan()
+            if found:
+                path = str(found[0])
+                self.s.stream["path"] = path
+                self.s.stream["discovered_by"] = "fd-scan"
+                if len(found) > 1:
+                    self.warn(
+                        "several raw streams open in the nsys process tree; tracking the first",
+                        candidates=[str(p) for p in found],
+                    )
+                self._emit(f"[lifecycle] raw stream found by descriptor scan: {path}")
         if not path:
             return
+        if self.s.stream.get("discovered_by") is None:
+            self.s.stream["discovered_by"] = "log"
         try:
             size = os.stat(path).st_size
         except OSError:
@@ -429,6 +485,36 @@ class ProfilerStopController:
         self.s.stream["preserved_path"] = str(target)
         self.s.stream["preserved_size"] = target.stat().st_size
         self._emit(f"[lifecycle] raw stream preserved by hard link: {target}")
+
+    def _scan_stream_dir(self) -> list[Path]:
+        """`nsys-report-*.qdstrm` files in the stream directory held open by nsys or a descendant.
+
+        Only descriptor-confirmed files are returned: a stream that merely sits in
+        the directory could belong to another user's session on a shared tray.
+        """
+        if self.nsys is None:
+            return []
+        directory = Path(self.policy.stream_directory())
+        try:
+            candidates = {p.resolve() for p in directory.glob("nsys-report-*.qdstrm")}
+        except OSError:
+            return []
+        if not candidates:
+            return []
+        found: list[Path] = []
+        for pid in [self.nsys.pid, *procident.descendants(self.nsys.pid)]:
+            try:
+                fds = os.listdir(f"/proc/{pid}/fd")
+            except OSError:
+                continue
+            for fd in fds:
+                try:
+                    target = Path(os.readlink(f"/proc/{pid}/fd/{fd}"))
+                except OSError:
+                    continue
+                if target in candidates and target not in found:
+                    found.append(target)
+        return sorted(found)
 
     def _report_path(self) -> Path | None:
         for cand in (self.report_stem.with_suffix(".nsys-rep"), self.report_stem):
@@ -553,25 +639,33 @@ class ProfilerStopController:
                     progress_pct=self.s.import_progress_pct,
                     since_s=self._clock() - self.s.last_progress_at,
                 )
-            if elapsed > self.policy.hard_deadline_s + self._hard_extension_s:
-                self.s.escalations.append(
-                    {
-                        "at": self._wall(),
-                        "kind": "hard_deadline",
-                        "elapsed_s": elapsed,
-                        "phase": phase.value,
-                    }
-                )
-                self._emit(
-                    f"[lifecycle] HARD DEADLINE passed ({elapsed:.0f} s) in phase {phase.value}; "
-                    f"action={self.policy.on_hard_deadline}"
-                )
-                if self.policy.on_hard_deadline == "release_gpus":
-                    self.release_gpus(reason="hard deadline")
-                    return self._wait_session_close()
-                self._write_status()
-                return self.poll()
-            self._sleep(self.policy.poll_interval_s)
+            held = self._clock() - self._launch_mono
+            ceiling = self.policy.gpu_held_ceiling_s
+            if ceiling is not None and held > ceiling:
+                kind, reason, shown = "gpu_held_ceiling", "GPU-held ceiling", held
+            elif elapsed > self.policy.hard_deadline_s + self._hard_extension_s:
+                kind, reason, shown = "hard_deadline", "hard deadline", elapsed
+            else:
+                self._sleep(self.policy.poll_interval_s)
+                continue
+            self.s.escalations.append(
+                {
+                    "at": self._wall(),
+                    "kind": kind,
+                    "elapsed_s": shown,
+                    "phase": phase.value,
+                    "import_progress_pct": self.s.import_progress_pct,
+                }
+            )
+            self._emit(
+                f"[lifecycle] {reason.upper()} passed ({shown:.0f} s) in phase {phase.value}; "
+                f"action={self.policy.on_hard_deadline}"
+            )
+            if self.policy.on_hard_deadline == "release_gpus":
+                self.release_gpus(reason=reason)
+                return self._wait_session_close()
+            self._write_status()
+            return self.poll()
 
     def _wait_session_close(self) -> Phase:
         deadline = self._clock() + self.policy.session_close_timeout_s
@@ -590,9 +684,12 @@ class ProfilerStopController:
         return self.poll()
 
     def _apply_control(self) -> None:
-        """Operator commands, one per line.
+        """Operator commands, one per line; every line is recorded with its result.
 
-        ``extend <seconds> <reason>``, ``release-gpus <reason>``, ``note <text>``.
+        ``extend <seconds> <reason>`` moves the hard deadline (never the GPU-held
+        ceiling) by at most ``max_extension_s`` in total; ``release-gpus <reason>``
+        runs the release action; ``note <text>`` is recorded. A reason is mandatory
+        for the first two. Only complete lines (ending in a newline) are consumed.
         """
         try:
             with self.control_path.open("rb") as fh:
@@ -602,29 +699,24 @@ class ProfilerStopController:
             return
         if not data:
             return
-        self._control_offset += len(data)
-        for line in data.decode(errors="replace").splitlines():
-            words = line.strip().split(None, 2)
-            if not words:
+        complete = data.rfind(b"\n") + 1
+        if complete == 0:
+            return  # a line still being written
+        self._control_offset += complete
+        for line in data[:complete].decode(errors="replace").splitlines():
+            text = line.strip()
+            if not text:
                 continue
-            record = {"at": self._wall(), "command": line.strip()}
-            if words[0] == "extend" and len(words) >= 2:
-                try:
-                    seconds = float(words[1])
-                except ValueError:
-                    record["result"] = "rejected: seconds not a number"
-                else:
-                    self._hard_extension_s += seconds
-                    self.s.deadlines["hard_extension_s"] = self._hard_extension_s
-                    self.s.deadlines["hard_at"] = (
-                        self.s.stop_requested_at
-                        + self.policy.hard_deadline_s
-                        + self._hard_extension_s
-                    )
-                    record["result"] = f"hard deadline extended by {seconds:.0f} s (operator)"
+            words = text.split(None, 2)
+            record = {"at": self._wall(), "command": text, "phase": self.s.phase.value}
+            if words[0] == "extend":
+                record["result"] = self._control_extend(words)
             elif words[0] == "release-gpus":
-                self.release_gpus(reason=f"operator: {line.strip()}")
-                record["result"] = "release requested"
+                if len(words) < 2:
+                    record["result"] = "rejected: a reason is required"
+                else:
+                    self.release_gpus(reason=f"operator: {text}")
+                    record["result"] = "release requested"
             elif words[0] == "note":
                 record["result"] = "noted"
             else:
@@ -632,6 +724,31 @@ class ProfilerStopController:
             self.s.control_commands.append(record)
             self._emit(f"[lifecycle] CONTROL {record}")
         self._write_status()
+
+    def _control_extend(self, words: list[str]) -> str:
+        if len(words) < 3:
+            return "rejected: usage is 'extend <seconds> <reason>'"
+        try:
+            seconds = float(words[1])
+        except ValueError:
+            return "rejected: seconds not a number"
+        if not seconds > 0:
+            return "rejected: seconds must be positive"
+        if self._hard_extension_s + seconds > self.policy.max_extension_s:
+            return (
+                f"rejected: total extension {self._hard_extension_s + seconds:.0f} s would exceed "
+                f"max_extension_s {self.policy.max_extension_s:.0f}"
+            )
+        if self.s.stop_requested_at is None:
+            return "rejected: no stop requested yet"
+        self._hard_extension_s += seconds
+        self.s.deadlines["hard_extension_s"] = self._hard_extension_s
+        self.s.deadlines["hard_at"] = (
+            self.s.stop_requested_at + self.policy.hard_deadline_s + self._hard_extension_s
+        )
+        ceiling = self.s.deadlines.get("gpu_held_ceiling_at")
+        note = "" if ceiling is None else f"; GPU-held ceiling unchanged at {ceiling:.0f}"
+        return f"hard deadline extended by {seconds:.0f} s (operator){note}"
 
     # ------------------------------------------------------------ GPU release
     def release_gpus(self, *, reason: str) -> None:
@@ -746,6 +863,7 @@ class ProfilerStopController:
             "name": self.name,
             "phase": s.phase.value,
             "phase_history": s.phase_history,
+            "launch_started_at": s.launch_started_at,
             "stop_requested_at": s.stop_requested_at,
             "http": s.http,
             "stream": s.stream,
