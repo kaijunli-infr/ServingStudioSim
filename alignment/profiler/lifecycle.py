@@ -1,0 +1,809 @@
+"""Profiler-stop lifecycle for Nsight ``cuda_profiler_api`` captures.
+
+Observed on GB300 (six earlier captures and the e1_main_v3 incident): vLLM's
+``/stop_profile`` returns only after Nsight has flushed the CUDA trace buffers
+*and* imported the stream into the ``.nsys-rep``; the CUDA-owning workers are
+blocked inside ``cudaProfilerStop`` for that whole time, so GPU memory stays
+held until the report exists. For a 216 M-row trace that takes 20–30 minutes.
+A fixed HTTP timeout therefore cannot be the stop contract, and interrupting
+the ``nsys`` CLI while it imports destroys the stream.
+
+This module owns the stop as a small state machine with observable phases
+(see ``Phase``), one idempotent stop request, a status file that monitors can
+read, an operator control file, raw-stream preservation by hard link, explicit
+deadlines (soft: escalate; hard: release the GPUs by stopping the *server*,
+never the importer), and identity-verified process handling. It changes
+nothing about how the server is launched, scheduled or instrumented.
+"""
+
+from __future__ import annotations
+
+import enum
+import json
+import os
+import re
+import shutil
+import signal
+import subprocess
+import threading
+import time
+from collections.abc import Callable
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from . import procident
+
+STOP_ACCEPTED_RE = re.compile(r"api_router\.py:\d+\] Stopping profiler")
+STOP_RETURNED_RE = re.compile(r"api_router\.py:\d+\] Profiler stopped")
+CAPTURE_ENDED_RE = re.compile(r"Capture range ended in the application")
+STREAM_RE = re.compile(r"Generating '([^']+\.qdstrm)'")
+IMPORT_PROGRESS_RE = re.compile(r"\[\d+/\d+\] \[=*\s*(\d+)%")
+IMPORT_START_RE = re.compile(r"Processing events\.\.\.")
+NSYS_ERROR_RE = re.compile(
+    r"rpc Shutdown|canceled because the timeout|QdstrmImporter.*(fail|error)"
+    r"|Import failed|No space left",
+    re.I,
+)
+API_SERVER_PID_RE = re.compile(r"\(APIServer pid=(\d+)\)")
+ENGINE_PID_RE = re.compile(r"\((EngineCore|Worker[^ )]*) pid=(\d+)\)")
+
+
+class Phase(enum.StrEnum):
+    CAPTURING = "capturing"
+    STOP_REQUESTED = "stop_requested"  # POST sent; no answer yet
+    STOP_ACCEPTED = "stop_accepted"  # API server logged the request
+    CAPTURE_ENDED = "capture_ended"  # nsys: capture range ended (flush running)
+    STREAM_WRITTEN = "stream_written"  # nsys: raw .qdstrm generated
+    IMPORTING = "importing"  # nsys: QdstrmImporter progress visible
+    REPORT_WRITTEN = "report_written"  # .nsys-rep exists and stop returned
+    STOP_FAILED = "stop_failed"  # stop ended without a report
+
+
+_ORDER = [
+    Phase.CAPTURING,
+    Phase.STOP_REQUESTED,
+    Phase.STOP_ACCEPTED,
+    Phase.CAPTURE_ENDED,
+    Phase.STREAM_WRITTEN,
+    Phase.IMPORTING,
+    Phase.REPORT_WRITTEN,
+]
+TERMINAL = {Phase.REPORT_WRITTEN, Phase.STOP_FAILED}
+
+
+class FinalizationError(RuntimeError):
+    """The profiler stop did not produce a report (see ``status``)."""
+
+    def __init__(self, message: str, status: dict):
+        super().__init__(message)
+        self.status = status
+
+
+@dataclass(frozen=True)
+class FinalizePolicy:
+    """Explicit bounds for the stop. Nothing here is extended silently."""
+
+    soft_deadline_s: float = 1800.0  # escalate (log + status) after this
+    hard_deadline_s: float = 3600.0  # GPU-release action after this
+    stall_timeout_s: float = 900.0  # import progress unchanged → warn
+    poll_interval_s: float = 1.0
+    on_hard_deadline: str = "release_gpus"  # or "report_only"
+    preserve_raw_stream: bool = True
+    raw_preserve_dir: Path | None = None  # default: beside the stream (same filesystem)
+    min_free_bytes_stream: int = 50 * 2**30
+    min_free_bytes_report: int = 20 * 2**30
+    session_close_timeout_s: float = 600.0
+    server_term_grace_s: float = 60.0
+
+    def validate(self) -> None:
+        for name in (
+            "soft_deadline_s",
+            "hard_deadline_s",
+            "stall_timeout_s",
+            "poll_interval_s",
+            "session_close_timeout_s",
+            "server_term_grace_s",
+        ):
+            value = getattr(self, name)
+            if not isinstance(value, (int, float)) or not value > 0:
+                raise ValueError(f"finalize.{name} must be a positive number, got {value!r}")
+        if self.hard_deadline_s < self.soft_deadline_s:
+            raise ValueError("finalize.hard_deadline_s must be >= soft_deadline_s")
+        if self.on_hard_deadline not in ("release_gpus", "report_only"):
+            raise ValueError("finalize.on_hard_deadline must be 'release_gpus' or 'report_only'")
+
+
+@dataclass
+class _Status:
+    phase: Phase = Phase.CAPTURING
+    phase_history: list[dict] = field(default_factory=list)
+    stop_requested_at: float | None = None
+    http: dict = field(
+        default_factory=lambda: {"status": None, "returned_at": None, "requests_sent": 0}
+    )
+    stream: dict = field(
+        default_factory=lambda: {
+            "path": None,
+            "size": None,
+            "preserved_path": None,
+            "preserved_size": None,
+        }
+    )
+    import_progress_pct: int | None = None
+    last_progress_at: float | None = None
+    report: dict = field(default_factory=lambda: {"path": None, "size": None, "written_at": None})
+    deadlines: dict = field(default_factory=dict)
+    escalations: list[dict] = field(default_factory=list)
+    control_commands: list[dict] = field(default_factory=list)
+    warnings: list[dict] = field(default_factory=list)
+    nsys: dict = field(default_factory=dict)
+    server: dict = field(default_factory=dict)
+    gpu: dict = field(
+        default_factory=lambda: {
+            "release_requested_at": None,
+            "released_at": None,
+            "compute_pids": None,
+        }
+    )
+    session_closed_at: float | None = None
+    actions: list[dict] = field(default_factory=list)
+
+
+class ProfilerStopController:
+    """One capture, one stop. Every method is safe to call repeatedly."""
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        server_log: Path,
+        report_stem: Path,
+        status_path: Path,
+        control_path: Path | None = None,
+        policy: FinalizePolicy | None = None,
+        stop_request: Callable[[], None],
+        nsys_pid: int | None = None,
+        clock: Callable[[], float] = time.monotonic,
+        wallclock: Callable[[], float] = time.time,
+        sleep: Callable[[float], None] = time.sleep,
+        disk_usage: Callable[[str], object] = shutil.disk_usage,
+        gpu_compute_pids: Callable[[], list[int] | None] | None = None,
+        signaller: Callable[
+            [procident.ProcessIdentity, int, list], str
+        ] = procident.signal_verified,
+        identity: Callable[[int], procident.ProcessIdentity | None] = procident.identity,
+        emit: Callable[[str], None] = print,
+    ):
+        self.name = name
+        self.server_log = Path(server_log)
+        self.report_stem = Path(report_stem)
+        self.status_path = Path(status_path)
+        self.control_path = (
+            Path(control_path) if control_path else self.status_path.with_suffix(".control")
+        )
+        self.policy = policy or FinalizePolicy()
+        self.policy.validate()
+        self._stop_request = stop_request
+        self._clock, self._wall, self._sleep = clock, wallclock, sleep
+        self._disk_usage = disk_usage
+        self._gpu_compute_pids = (
+            gpu_compute_pids if gpu_compute_pids is not None else _nvidia_smi_compute_pids
+        )
+        self._signal, self._identity = signaller, identity
+        self._emit = emit
+        self._lock = threading.Lock()
+        self._thread: threading.Thread | None = None
+        self._log_offset = 0
+        self._log_tail = b""
+        self._control_offset = 0
+        self._soft_fired = False
+        self._stall_warned_at: float | None = None
+        self._hard_extension_s = 0.0
+        self._gpus_released_action_done = False
+        self.s = _Status()
+        self.nsys: procident.ProcessIdentity | None = None
+        self.api_server: procident.ProcessIdentity | None = None
+        self.engine_procs: list[procident.ProcessIdentity] = []
+        if nsys_pid is not None:
+            self.nsys = self._identity(nsys_pid)
+            self.s.nsys = {"pid": nsys_pid, "identity": self.nsys.to_dict() if self.nsys else None}
+        self._write_status()
+
+    # ------------------------------------------------------------------ phases
+    def _set_phase(self, phase: Phase, **extra) -> None:
+        if phase == self.s.phase:
+            return
+        # never move backwards except into STOP_FAILED
+        if phase != Phase.STOP_FAILED and self.s.phase in TERMINAL:
+            return
+        if phase != Phase.STOP_FAILED and _ORDER.index(phase) < _ORDER.index(self.s.phase):
+            return
+        self.s.phase = phase
+        self.s.phase_history.append(
+            {"phase": phase.value, "at": self._wall(), "mono": self._clock(), **extra}
+        )
+        self._emit(f"[lifecycle] {self.name}: {phase.value}" + (f" {extra}" if extra else ""))
+        self._write_status()
+
+    def warn(self, message: str, **extra) -> None:
+        self.s.warnings.append({"at": self._wall(), "message": message, **extra})
+        self._emit(f"[lifecycle] WARNING {message} {extra if extra else ''}")
+        self._write_status()
+
+    # ----------------------------------------------------------------- servers
+    def discover_server_processes(self) -> None:
+        """Record the vLLM processes from their own log lines, verified as nsys descendants."""
+        if self.api_server is not None:
+            return
+        try:
+            text = self.server_log.read_text(errors="replace")
+        except OSError:
+            return
+        m = API_SERVER_PID_RE.search(text)
+        if not m:
+            return
+        pid = int(m.group(1))
+        ident = self._identity(pid)
+        if ident is None:
+            return
+        if self.nsys is not None and not procident.is_descendant_of(pid, self.nsys.pid):
+            self.warn(
+                "API server pid from the log is not a descendant of the nsys process; not recorded",
+                pid=pid,
+            )
+            return
+        self.api_server = ident
+        seen = {pid}
+        for role, p in ENGINE_PID_RE.findall(text):
+            p = int(p)
+            if p in seen:
+                continue
+            seen.add(p)
+            e = self._identity(p)
+            if e is not None and (
+                self.nsys is None or procident.is_descendant_of(p, self.nsys.pid)
+            ):
+                self.engine_procs.append(e)
+        self.s.server = {
+            "api_server": ident.to_dict(),
+            "engine_processes": [e.to_dict() for e in self.engine_procs],
+        }
+        self._write_status()
+
+    def _server_alive(self) -> bool:
+        procs = [p for p in [self.api_server, *self.engine_procs] if p is not None]
+        return any(procident.same_identity(p, self._identity(p.pid)) for p in procs)
+
+    def _nsys_alive(self) -> bool:
+        return self.nsys is not None and procident.same_identity(
+            self.nsys, self._identity(self.nsys.pid)
+        )
+
+    # ------------------------------------------------------------- stop request
+    def request_stop(self) -> None:
+        """Send exactly one ``/stop_profile``; later calls are no-ops."""
+        with self._lock:
+            if self._thread is not None:
+                self.s.http["duplicate_requests_suppressed"] = (
+                    self.s.http.get("duplicate_requests_suppressed", 0) + 1
+                )
+                self._write_status()
+                return
+            self.s.stop_requested_at = self._wall()
+            self.s.deadlines = {
+                "soft_at": self.s.stop_requested_at + self.policy.soft_deadline_s,
+                "hard_at": self.s.stop_requested_at + self.policy.hard_deadline_s,
+                "hard_extension_s": 0.0,
+            }
+            self._stop_mono = self._clock()
+            try:
+                self._log_offset = self.server_log.stat().st_size
+            except OSError:
+                self._log_offset = 0
+            self._check_disk_before_stop()
+            self.discover_server_processes()
+            self.s.http["requests_sent"] = 1
+            self._thread = threading.Thread(
+                target=self._post, name="profiler-stop-request", daemon=True
+            )
+            self._thread.start()
+            self._set_phase(Phase.STOP_REQUESTED)
+
+    def _post(self) -> None:
+        try:
+            self._stop_request()
+            self.s.http["status"] = "ok"
+        except Exception as error:  # noqa: BLE001 - recorded, decided in poll()
+            self.s.http["status"] = f"error: {error}"
+        self.s.http["returned_at"] = self._wall()
+
+    def _check_disk_before_stop(self) -> None:
+        stream_dir = os.environ.get("TMPDIR") or "/tmp"
+        for label, path, minimum in (
+            ("stream", stream_dir, self.policy.min_free_bytes_stream),
+            ("report", str(self.report_stem.parent), self.policy.min_free_bytes_report),
+        ):
+            try:
+                free = self._disk_usage(path).free
+            except OSError as error:
+                self.warn(f"cannot stat free space for {label}", path=path, error=str(error))
+                continue
+            if free < minimum:
+                self.warn(
+                    f"low free space for the {label} directory",
+                    path=path,
+                    free_bytes=free,
+                    minimum_bytes=minimum,
+                )
+
+    # -------------------------------------------------------------------- poll
+    def poll(self) -> Phase:
+        """Advance the state from the server log, files and processes. Non-blocking."""
+        self._scan_log()
+        self._track_stream()
+        self._check_report()
+        self._check_processes()
+        self._write_status()
+        return self.s.phase
+
+    def _scan_log(self) -> None:
+        try:
+            with self.server_log.open("rb") as fh:
+                fh.seek(self._log_offset)
+                chunk = fh.read()
+        except OSError:
+            return
+        if not chunk:
+            return
+        self._log_offset += len(chunk)
+        data = self._log_tail + chunk
+        parts = re.split(rb"[\r\n]", data)
+        self._log_tail = parts.pop()  # unfinished line (progress bars end without a newline)
+        for raw in parts:
+            line = raw.decode(errors="replace")
+            if not line:
+                continue
+            if STOP_ACCEPTED_RE.search(line):
+                self._set_phase(Phase.STOP_ACCEPTED)
+            if CAPTURE_ENDED_RE.search(line):
+                self._set_phase(Phase.CAPTURE_ENDED)
+            m = STREAM_RE.search(line)
+            if m:
+                self.s.stream["path"] = m.group(1)
+                self._set_phase(Phase.STREAM_WRITTEN, path=m.group(1))
+            if IMPORT_START_RE.search(line):
+                self._set_phase(Phase.IMPORTING)
+            for pm in IMPORT_PROGRESS_RE.finditer(line):
+                pct = int(pm.group(1))
+                if self.s.import_progress_pct is None or pct > self.s.import_progress_pct:
+                    self.s.import_progress_pct = pct
+                    self.s.last_progress_at = self._clock()
+                self._set_phase(Phase.IMPORTING)
+            if STOP_RETURNED_RE.search(line):
+                self.s.http.setdefault("returned_logged_at", self._wall())
+            if NSYS_ERROR_RE.search(line):
+                self.warn("nsys reported a problem", line=line[:200])
+        # a progress bar with no trailing newline: parse the pending tail too
+        for pm in IMPORT_PROGRESS_RE.finditer(self._log_tail.decode(errors="replace")):
+            pct = int(pm.group(1))
+            if self.s.import_progress_pct is None or pct > self.s.import_progress_pct:
+                self.s.import_progress_pct = pct
+                self.s.last_progress_at = self._clock()
+            self._set_phase(Phase.IMPORTING)
+
+    def _track_stream(self) -> None:
+        path = self.s.stream.get("path")
+        if not path:
+            return
+        try:
+            size = os.stat(path).st_size
+        except OSError:
+            size = None
+        if size is not None:
+            self.s.stream["size"] = size
+        if self.policy.preserve_raw_stream and self.s.stream.get("preserved_path") is None and size:
+            self._preserve_stream(Path(path))
+        elif self.s.stream.get("preserved_path"):
+            try:
+                self.s.stream["preserved_size"] = os.stat(self.s.stream["preserved_path"]).st_size
+            except OSError:
+                pass
+
+    def _preserve_stream(self, path: Path) -> None:
+        """Hard-link the raw stream so Nsight's own unlink cannot destroy it."""
+        target_dir = self.policy.raw_preserve_dir or (path.parent / f"{self.name}.raw-preserve")
+        try:
+            target_dir.mkdir(parents=True, exist_ok=True)
+            target = target_dir / f"{self.name}.qdstrm"
+            if target.exists():
+                target.unlink()
+            os.link(path, target)
+        except OSError as error:
+            self.warn(
+                "could not hard-link the raw stream; it is unprotected",
+                path=str(path),
+                error=str(error),
+            )
+            self.s.stream["preserved_path"] = False
+            return
+        self.s.stream["preserved_path"] = str(target)
+        self.s.stream["preserved_size"] = target.stat().st_size
+        self._emit(f"[lifecycle] raw stream preserved by hard link: {target}")
+
+    def _report_path(self) -> Path | None:
+        for cand in (self.report_stem.with_suffix(".nsys-rep"), self.report_stem):
+            if cand.is_file() and cand.stat().st_size > 0:
+                return cand
+        return None
+
+    def _check_report(self) -> None:
+        if self.s.phase in TERMINAL:
+            return
+        rep = self._report_path()
+        returned = (
+            self.s.http.get("status") == "ok" or self.s.http.get("returned_logged_at") is not None
+        )
+        if rep is not None and returned:
+            self.s.report = {
+                "path": str(rep),
+                "size": rep.stat().st_size,
+                "written_at": self._wall(),
+            }
+            self._set_phase(Phase.REPORT_WRITTEN, path=str(rep))
+            return
+        status = self.s.http.get("status")
+        if status and status != "ok":
+            # The request failed (server gone, connection reset). Give a late report a short grace.
+            returned_at = self.s.http.get("returned_at") or self._wall()
+            if rep is not None:
+                self.s.report = {
+                    "path": str(rep),
+                    "size": rep.stat().st_size,
+                    "written_at": self._wall(),
+                }
+                self._set_phase(
+                    Phase.REPORT_WRITTEN, path=str(rep), note="report present despite HTTP error"
+                )
+            elif self._wall() - returned_at > 30.0 and not self._nsys_alive():
+                self._set_phase(Phase.STOP_FAILED, reason=status)
+
+    def _check_processes(self) -> None:
+        if self.nsys is not None:
+            alive = self._nsys_alive()
+            self.s.nsys["alive"] = alive
+            if not alive and self.s.session_closed_at is None:
+                self.s.session_closed_at = self._wall()
+                self._emit(f"[lifecycle] nsys session closed (pid {self.nsys.pid} exited)")
+                if self.s.phase not in TERMINAL:
+                    rep = self._report_path()
+                    if rep is not None:
+                        self.s.report = {
+                            "path": str(rep),
+                            "size": rep.stat().st_size,
+                            "written_at": self._wall(),
+                        }
+                        self._set_phase(Phase.REPORT_WRITTEN, path=str(rep))
+                    else:
+                        self._set_phase(
+                            Phase.STOP_FAILED, reason="nsys exited before a report was written"
+                        )
+        if self.api_server is not None:
+            alive = self._server_alive()
+            self.s.server["alive"] = alive
+            if not alive and self.s.gpu.get("released_at") is None:
+                self._record_gpu_release("server processes exited")
+        if self.s.gpu.get("released_at") is None:
+            pids = self._gpu_compute_pids()
+            self.s.gpu["compute_pids"] = pids
+            if pids is not None and self.api_server is not None:
+                ours = {p.pid for p in [self.api_server, *self.engine_procs]}
+                if not (set(pids) & ours) and not self._server_alive():
+                    self._record_gpu_release("no compute process of this server remains")
+
+    def _record_gpu_release(self, reason: str) -> None:
+        self.s.gpu["released_at"] = self._wall()
+        self._emit(f"[lifecycle] GPUs released ({reason}) at {self.s.gpu['released_at']:.0f}")
+        self._write_status()
+
+    # ------------------------------------------------------------------- waits
+    def wait_for_report(self) -> Phase:
+        """Block until the stop reaches a terminal phase or the hard deadline acted.
+
+        Soft deadline: escalation record. Stalled import: warning. Hard deadline:
+        the configured GPU-release action (stop the *server*; the importer is
+        never signalled). After the hard deadline this returns the current
+        phase; the caller decides what to do with a non-terminal result.
+        """
+        if self._thread is None:
+            self.request_stop()
+        while True:
+            phase = self.poll()
+            self._apply_control()
+            if phase in TERMINAL:
+                return phase
+            elapsed = self._clock() - self._stop_mono
+            if not self._soft_fired and elapsed > self.policy.soft_deadline_s:
+                self._soft_fired = True
+                self.s.escalations.append(
+                    {
+                        "at": self._wall(),
+                        "kind": "soft_deadline",
+                        "elapsed_s": elapsed,
+                        "phase": phase.value,
+                        "import_progress_pct": self.s.import_progress_pct,
+                    }
+                )
+                self._emit(
+                    f"[lifecycle] ESCALATION soft deadline passed ({elapsed:.0f} s) "
+                    f"in phase {phase.value}; still waiting"
+                )
+                self._write_status()
+            if (
+                phase == Phase.IMPORTING
+                and self.s.last_progress_at is not None
+                and self._clock() - self.s.last_progress_at > self.policy.stall_timeout_s
+                and (
+                    self._stall_warned_at is None
+                    or self._clock() - self._stall_warned_at > self.policy.stall_timeout_s
+                )
+            ):
+                self._stall_warned_at = self._clock()
+                self.warn(
+                    "import progress stalled",
+                    progress_pct=self.s.import_progress_pct,
+                    since_s=self._clock() - self.s.last_progress_at,
+                )
+            if elapsed > self.policy.hard_deadline_s + self._hard_extension_s:
+                self.s.escalations.append(
+                    {
+                        "at": self._wall(),
+                        "kind": "hard_deadline",
+                        "elapsed_s": elapsed,
+                        "phase": phase.value,
+                    }
+                )
+                self._emit(
+                    f"[lifecycle] HARD DEADLINE passed ({elapsed:.0f} s) in phase {phase.value}; "
+                    f"action={self.policy.on_hard_deadline}"
+                )
+                if self.policy.on_hard_deadline == "release_gpus":
+                    self.release_gpus(reason="hard deadline")
+                    return self._wait_session_close()
+                self._write_status()
+                return self.poll()
+            self._sleep(self.policy.poll_interval_s)
+
+    def _wait_session_close(self) -> Phase:
+        deadline = self._clock() + self.policy.session_close_timeout_s
+        while self._clock() < deadline:
+            phase = self.poll()
+            if phase in TERMINAL and not self._nsys_alive():
+                return phase
+            self._sleep(self.policy.poll_interval_s)
+        if self._nsys_alive():
+            self.warn(
+                "nsys still running after the session-close timeout; left untouched "
+                "(importer may be active)",
+                pid=self.nsys.pid,
+                phase=self.s.phase.value,
+            )
+        return self.poll()
+
+    def _apply_control(self) -> None:
+        """Operator commands, one per line.
+
+        ``extend <seconds> <reason>``, ``release-gpus <reason>``, ``note <text>``.
+        """
+        try:
+            with self.control_path.open("rb") as fh:
+                fh.seek(self._control_offset)
+                data = fh.read()
+        except OSError:
+            return
+        if not data:
+            return
+        self._control_offset += len(data)
+        for line in data.decode(errors="replace").splitlines():
+            words = line.strip().split(None, 2)
+            if not words:
+                continue
+            record = {"at": self._wall(), "command": line.strip()}
+            if words[0] == "extend" and len(words) >= 2:
+                try:
+                    seconds = float(words[1])
+                except ValueError:
+                    record["result"] = "rejected: seconds not a number"
+                else:
+                    self._hard_extension_s += seconds
+                    self.s.deadlines["hard_extension_s"] = self._hard_extension_s
+                    self.s.deadlines["hard_at"] = (
+                        self.s.stop_requested_at
+                        + self.policy.hard_deadline_s
+                        + self._hard_extension_s
+                    )
+                    record["result"] = f"hard deadline extended by {seconds:.0f} s (operator)"
+            elif words[0] == "release-gpus":
+                self.release_gpus(reason=f"operator: {line.strip()}")
+                record["result"] = "release requested"
+            elif words[0] == "note":
+                record["result"] = "noted"
+            else:
+                record["result"] = "rejected: unknown command"
+            self.s.control_commands.append(record)
+            self._emit(f"[lifecycle] CONTROL {record}")
+        self._write_status()
+
+    # ------------------------------------------------------------ GPU release
+    def release_gpus(self, *, reason: str) -> None:
+        """Stop the vLLM server (verified SIGTERM, then SIGKILL survivors). Never touches nsys."""
+        if self._gpus_released_action_done:
+            return
+        self._gpus_released_action_done = True
+        self.s.gpu["release_requested_at"] = self._wall()
+        self.s.gpu["release_reason"] = reason
+        self.discover_server_processes()
+        if self.api_server is None:
+            self.warn(
+                "GPU release requested but no server process is recorded; nothing signalled",
+                reason=reason,
+            )
+            return
+        if self.s.stream.get("path") and not self.s.stream.get("preserved_path"):
+            self._track_stream()
+        log: list[dict] = []
+        self._signal(self.api_server, signal.SIGTERM, log)
+        deadline = self._clock() + self.policy.server_term_grace_s
+        while self._clock() < deadline and self._server_alive():
+            self._sleep(min(0.5, self.policy.poll_interval_s))
+        for p in [self.api_server, *self.engine_procs]:
+            if procident.same_identity(p, self._identity(p.pid)):
+                self._signal(p, signal.SIGKILL, log)
+        self.s.actions.extend([{"at": self._wall(), "reason": reason, **entry} for entry in log])
+        self._emit(f"[lifecycle] GPU release ({reason}): {log}")
+        self._write_status()
+
+    # --------------------------------------------------------------- shutdown
+    def shutdown(self, proc: subprocess.Popen) -> None:
+        """End the launch after the stop reached a terminal phase (or never started).
+
+        Order: stop the server by its own pid (verified), wait for the nsys CLI to
+        exit on its own, and only then — with the report written — interrupt a
+        lingering CLI. An active importer is never signalled as timeout handling.
+        """
+        if proc.poll() is not None:
+            self.poll()
+            return
+        if self._thread is not None and self.s.phase not in TERMINAL:
+            # A stop is in flight: finish it under the explicit deadlines first.
+            self.wait_for_report()
+        if self.api_server is None:
+            self.discover_server_processes()
+        if self.api_server is not None and self._server_alive():
+            log: list[dict] = []
+            self._signal(self.api_server, signal.SIGTERM, log)
+            self.s.actions.extend(
+                [{"at": self._wall(), "reason": "shutdown", **entry} for entry in log]
+            )
+        elif self._thread is None:
+            # Capture never armed (startup failure): nsys handles SIGINT itself here.
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGINT)
+                self.s.actions.append(
+                    {
+                        "at": self._wall(),
+                        "reason": "shutdown before capture",
+                        "action": "SIGINT pgid",
+                    }
+                )
+            except ProcessLookupError:
+                pass
+        deadline = self._clock() + self.policy.session_close_timeout_s
+        while self._clock() < deadline and proc.poll() is None:
+            self.poll()
+            self._sleep(self.policy.poll_interval_s)
+        if proc.poll() is None:
+            importing = self.s.phase == Phase.IMPORTING or (
+                self.s.last_progress_at is not None
+                and self._clock() - self.s.last_progress_at < self.policy.stall_timeout_s
+                and self.s.phase not in TERMINAL
+            )
+            if self.s.phase == Phase.REPORT_WRITTEN or not importing:
+                try:
+                    os.kill(proc.pid, signal.SIGINT)
+                    self.s.actions.append(
+                        {
+                            "at": self._wall(),
+                            "reason": "nsys lingering after report",
+                            "action": "SIGINT nsys",
+                        }
+                    )
+                except ProcessLookupError:
+                    pass
+                try:
+                    proc.wait(timeout=120)
+                except subprocess.TimeoutExpired:
+                    os.kill(proc.pid, signal.SIGKILL)
+                    self.s.actions.append(
+                        {
+                            "at": self._wall(),
+                            "reason": "nsys ignored SIGINT",
+                            "action": "SIGKILL nsys",
+                        }
+                    )
+            else:
+                self.warn(
+                    "nsys still importing at shutdown; left running for the operator "
+                    "(status file has the pids)",
+                    pid=proc.pid,
+                )
+        self.poll()
+
+    # ----------------------------------------------------------------- status
+    def status_dict(self) -> dict:
+        s = self.s
+        return {
+            "schema_version": 1,
+            "name": self.name,
+            "phase": s.phase.value,
+            "phase_history": s.phase_history,
+            "stop_requested_at": s.stop_requested_at,
+            "http": s.http,
+            "stream": s.stream,
+            "import_progress_pct": s.import_progress_pct,
+            "report": s.report,
+            "deadlines": s.deadlines,
+            "policy": {
+                k: (str(v) if isinstance(v, Path) else v) for k, v in self.policy.__dict__.items()
+            },
+            "escalations": s.escalations,
+            "control_commands": s.control_commands,
+            "warnings": s.warnings,
+            "nsys": s.nsys,
+            "server": s.server,
+            "gpu": s.gpu,
+            "session_closed_at": s.session_closed_at,
+            "actions": s.actions,
+            "server_log": str(self.server_log),
+            "control_path": str(self.control_path),
+            "updated_at": self._wall(),
+        }
+
+    def _write_status(self) -> None:
+        try:
+            self.status_path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = self.status_path.with_suffix(".tmp")
+            tmp.write_text(json.dumps(self.status_dict(), indent=1, default=str))
+            os.replace(tmp, self.status_path)
+        except OSError:
+            pass
+
+
+def _nvidia_smi_compute_pids() -> list[int] | None:
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-compute-apps=pid", "--format=csv,noheader"],
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if out.returncode != 0:
+        return None
+    return [int(x) for x in out.stdout.split() if x.strip().isdigit()]
+
+
+def ignore_sighup() -> None:
+    """Keep finalisation alive if the tmux/ssh session that started the launcher goes away.
+
+    Called after the server is spawned so the children do not inherit it.
+    """
+    try:
+        signal.signal(signal.SIGHUP, signal.SIG_IGN)
+    except (ValueError, OSError):  # not the main thread, or unsupported
+        pass
+
+
+def read_status(status_path: Path) -> dict:
+    return json.loads(Path(status_path).read_text())

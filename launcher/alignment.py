@@ -17,9 +17,10 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from alignment.runner import run_profile
 from alignment.timing_predict_input import BuildRequest, build_inputs
 from alignment.timing_predict_input.builder import INPUT_MANIFEST_NAME
+
+from alignment.runner import run_profile
 
 from .alignment_config import (
     AnalyzePhaseConfig,
@@ -81,6 +82,17 @@ def _build_parser() -> argparse.ArgumentParser:
             "Reuse the existing capture and redo only record extraction, NSYS "
             "normalization, and the result manifest. Use after a post-capture "
             "failure so the GPU capture is never repeated."
+        ),
+    )
+    profile.add_argument(
+        "--import-stream",
+        type=Path,
+        default=None,
+        metavar="QDSTRM",
+        help=(
+            "Recovery: import a preserved raw Nsight stream offline with "
+            "QdstrmImporter into this profile's report, then finalize as --resume. "
+            "CPU only; never launches the server."
         ),
     )
 
@@ -469,17 +481,22 @@ def _run_sim(args: argparse.Namespace) -> int:
 
 
 def _run_profile(args: argparse.Namespace) -> int:
+    import_stream = getattr(args, "import_stream", None)
+    resume = bool(args.resume or import_stream is not None)
     config = load_profile_config(
         args.config,
-        require_python_runtime=not args.resume,
+        require_python_runtime=not resume,
     )
     if args.dry_run:
         print(f"[alignment] profile validated: {args.config} (log_dir={config.log_dir})")
         return 0
     write_artifact_kind(Path(config.log_dir).parent, ArtifactKind.ALIGNMENT_BUNDLE)
     _snapshot_config(args.config, Path(config.log_dir), "profile")
-    print(f"[alignment] {'resuming' if args.resume else 'profiling'}: {args.config}")
-    result = run_profile(config, resume=args.resume)
+    print(f"[alignment] {'resuming' if resume else 'profiling'}: {args.config}")
+    if import_stream is not None:
+        result = run_profile(config, resume=True, import_stream=import_stream)
+    else:
+        result = run_profile(config, resume=resume)
     if result.get("profile_kind", "nsys") == "nsys":
         print(
             f"[alignment] profiling complete: {result['parsed_nsys']}\n"

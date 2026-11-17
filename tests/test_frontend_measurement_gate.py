@@ -125,8 +125,38 @@ def test_profiler_and_counters_start_only_at_frontend_measurement_boundary(tmp_p
     monkeypatch.setattr(driver, "verify_server_started", lambda *a: None)
     monkeypatch.setattr(driver, "wait_for_idle", lambda *a: True)
     monkeypatch.setattr(driver, "speculative_decode_enabled", lambda _: True)
-    monkeypatch.setattr(driver, "set_cuda_profile", lambda *a, active: events.append(active))
+    monkeypatch.setattr(
+        driver, "set_cuda_profile", lambda *a, active, timeout=None: events.append(active)
+    )
     monkeypatch.setattr(driver, "fetch_spec_decode_metrics", lambda _: list(events))
+
+    class StopController:
+        """The lifecycle controller reduced to its contract: one stop request, then done.
+
+        The stop itself must still go through the patched ``set_cuda_profile`` so the
+        start/stop order around the measurement boundary stays observable.
+        """
+
+        def __init__(self, *, stop_request, **_):
+            self._stop_request = stop_request
+
+        def discover_server_processes(self):
+            pass
+
+        def request_stop(self):
+            self._stop_request()
+
+        def wait_for_report(self):
+            return alignment_runner.lifecycle.Phase.REPORT_WRITTEN
+
+        def status_dict(self):
+            return {}
+
+        def shutdown(self, proc):
+            pass
+
+    monkeypatch.setattr(alignment_runner.lifecycle, "ProfilerStopController", StopController)
+    monkeypatch.setattr(alignment_runner.lifecycle, "ignore_sighup", lambda: None)
     monkeypatch.setattr(
         alignment_runner.runtime_artifacts, "prepare_python_runtime", lambda *a: None,
     )
@@ -138,7 +168,7 @@ def test_profiler_and_counters_start_only_at_frontend_measurement_boundary(tmp_p
 
     def launch(*args, **kwargs):
         assert kwargs["env"]["VLLM_SERVER_DEV_MODE"] == "1"
-        return object()
+        return SimpleNamespace(pid=4242)
 
     def replay(*args, measurement_ready, **kwargs):
         assert events == []

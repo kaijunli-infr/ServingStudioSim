@@ -143,8 +143,49 @@ class NsysConfig:
     # Nsight 2025.1 device-side event tracing caused Xid 32 with FlashInfer's
     # multi-GPU NVLink all-to-all. Keep the safe default explicit and configurable.
     cuda_event_trace: bool = False
+    # --- stop / finalisation lifecycle (see `lifecycle.py`). None of these change
+    # the capture itself; they bound how long the launcher waits for Nsight to
+    # flush and import the stream after `/stop_profile`, and what it does when
+    # a bound passes. The incident e1_main_v3 (2026-11-16) lost a 216 M-row
+    # trace to a fixed 600 s HTTP bound and a SIGINT into the running importer.
+    finalize_soft_deadline_s: float = 1800.0  # escalation only
+    finalize_hard_deadline_s: float = 3600.0  # GPU-release action (server stop; importer untouched)
+    finalize_stall_timeout_s: float = 900.0
+    finalize_on_hard_deadline: str = "release_gpus"  # or "report_only"
+    finalize_session_close_timeout_s: float = 600.0
+    # Hard-link Nsight's raw `.qdstrm` as soon as it is announced so an abort
+    # cannot destroy it; it can then be imported offline (`--import-stream`).
+    preserve_raw_stream: bool = True
+    raw_preserve_dir: str | None = None  # default: beside the stream (same filesystem)
+    min_free_bytes_stream: int = 50 * 2**30
+    min_free_bytes_report: int = 20 * 2**30
+    # TMPDIR for the nsys process (where the .qdstrm is written). None inherits.
+    tmp_dir: str | None = None
+    # Explicit QdstrmImporter path; None derives it from the nsys executable.
+    qdstrm_importer: str | None = None
+
+    def finalize_policy(self):
+        from pathlib import Path
+
+        from .lifecycle import FinalizePolicy  # local import: keep config import-light
+
+        raw_dir = None if self.raw_preserve_dir is None else Path(self.raw_preserve_dir)
+        return FinalizePolicy(
+            soft_deadline_s=self.finalize_soft_deadline_s,
+            hard_deadline_s=self.finalize_hard_deadline_s,
+            stall_timeout_s=self.finalize_stall_timeout_s,
+            on_hard_deadline=self.finalize_on_hard_deadline,
+            preserve_raw_stream=self.preserve_raw_stream,
+            raw_preserve_dir=raw_dir,
+            min_free_bytes_stream=self.min_free_bytes_stream,
+            min_free_bytes_report=self.min_free_bytes_report,
+            session_close_timeout_s=self.finalize_session_close_timeout_s,
+        )
 
     def validate(self) -> None:
+        self.finalize_policy().validate()
+        if self.tmp_dir is not None and not str(self.tmp_dir).startswith("/"):
+            raise ValueError("nsys.tmp_dir must be an absolute path")
         allowed = {"cuda_profiler_api", "nvtx", "full"}
         if self.capture_mode not in allowed:
             raise ValueError(

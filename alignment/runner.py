@@ -11,8 +11,11 @@ idle polling, worker ranks), and both forks emit the identical alignment records
 so everything after the capture is shared: this module names no engine below the
 point where the driver and its `EngineRecords` descriptor are chosen.
 
-The server is spawned in its own session so a SIGINT to the group lets nsys
-finalize the `.nsys-rep` cleanly on shutdown.
+The server is spawned in its own session. For an nsys capture the stop and the
+shutdown are owned by `profiler/lifecycle.py`: one unbounded `/stop_profile`,
+observable finalisation phases, explicit deadlines, and a shutdown that stops
+the server by its own verified pid and never interrupts a running importer
+(the e1_main_v3 incident lost a trace to the old SIGINT-the-group shutdown).
 """
 
 from __future__ import annotations
@@ -32,6 +35,7 @@ from .load_generator import runner as load_generator
 from .nsys.parse import parse_host_timeline, parse_trace, parsed_window_ns, write_kernel_sequences
 from .nsys.parsed_io import kernel_rows_path, write_parsed
 from .profiler import (
+    lifecycle,
     nsys_capture,
     record_extraction,
     runtime_artifacts,
@@ -357,14 +361,22 @@ def _preflight_capture_environment(
     driver.validate_nsys_capture_environment(fork_python, env=env, cwd=REPO_ROOT)
 
 
-def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
+def run_profile(
+    cfg: ProfileConfig, *, resume: bool = False, import_stream: Path | None = None
+) -> dict:
     """Run one explicit measured pass: NSYS, workload timing, or popularity.
 
     `resume=True` reuses an existing capture and redoes only the cheap
     post-capture work (record extraction, NSYS normalization, artifact
     manifest). The GPU capture is the expensive, non-reproducible part of this
     pipeline; a failure in extraction or parsing must never cost a re-capture.
+
+    `import_stream` (implies resume) first imports a preserved raw `.qdstrm`
+    offline with the matching `QdstrmImporter` into this profile's report and
+    then exports and finalizes it. CPU only.
     """
+    if import_stream is not None:
+        resume = True
     if not resume:
         require_gpu(f"an alignment {cfg.profile_kind} capture (starts {cfg.engine})")
     driver, _, _ = _engine(cfg)
@@ -438,6 +450,12 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
     )
     if not resume and cfg.python_runtime is not None:
         env.update(cfg.python_runtime.environment)
+    if not resume and is_nsys and cfg.nsys.tmp_dir:
+        # Where nsys writes its intermediate `.qdstrm` (documented TMPDIR
+        # behaviour). A dedicated directory on a large local disk keeps the
+        # stream and its preservation hard link on one filesystem.
+        Path(cfg.nsys.tmp_dir).mkdir(parents=True, exist_ok=True)
+        env["TMPDIR"] = cfg.nsys.tmp_dir
     if not resume and cfg.workload.warmup:
         # vLLM exposes reset_prefix_cache through its development router.
         env["VLLM_SERVER_DEV_MODE"] = "1"
@@ -485,6 +503,17 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
                 **json.loads(drive_summary_path.read_text()),
                 "resumed_from_existing_capture": True,
             }
+        resume_executable = None
+        if import_stream is not None:
+            # Recovery from a preserved raw stream: the importer must match the
+            # CLI version, so both are resolved from the configured executable.
+            resume_executable = nsys_capture.resolve_nsys_executable(cfg.nsys.executable)
+            importer = nsys_capture.qdstrm_importer_path(
+                resume_executable, cfg.nsys.qdstrm_importer
+            )
+            report = nsys_capture.import_stream(importer, Path(import_stream), out_rep)
+            drive_summary["imported_from_stream"] = str(Path(import_stream).resolve())
+            print(f"[profile] imported preserved stream → {report} ({report.stat().st_size} bytes)")
         print(f"[profile] resuming from existing capture (log: {server_log})")
         return _finalize_profile(
             cfg,
@@ -494,7 +523,7 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
             out_rep=out_rep,
             prepared_replay=prepared_replay,
             drive_summary=drive_summary,
-            nsys_executable=None,
+            nsys_executable=resume_executable,
         )
 
     full_argv = (
@@ -538,9 +567,29 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
         capture_timer_cancelled = threading.Event()
         capture_timer: threading.Thread | None = None
         capture_timer_errors: list[BaseException] = []
+        # One stop controller per launch (nsys captures only). It owns the single
+        # `/stop_profile` request, the observable finalisation phases, the status
+        # and control files, raw-stream preservation and the shutdown order.
+        controller: lifecycle.ProfilerStopController | None = None
+        if is_nsys:
+            controller = lifecycle.ProfilerStopController(
+                name=cfg.name,
+                server_log=server_log,
+                report_stem=out_rep,
+                status_path=nsys_dir / "lifecycle.json",
+                control_path=nsys_dir / "lifecycle.control",
+                policy=cfg.nsys.finalize_policy(),
+                stop_request=lambda: driver.set_cuda_profile(base_url, active=False, timeout=None),
+                nsys_pid=proc.pid,
+            )
+            # The children are spawned already (own session); only the launcher
+            # survives a dropped tmux/ssh session from here on.
+            lifecycle.ignore_sighup()
         try:
             driver.wait_for_ready(base_url, proc, cfg.server.startup_timeout)
             driver.verify_server_started(server_log, cfg.server)
+            if controller is not None:
+                controller.discover_server_processes()
             speculative = driver.speculative_decode_enabled(cfg.server)
             counters_before = None
             replay_start_monotonic_ns = None
@@ -579,12 +628,9 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
                             return
                         if capture_timer_cancelled.wait(cfg.nsys.capture_duration_seconds):
                             return
-                        try:
-                            driver.set_cuda_profile(base_url, active=False)
-                        except BaseException as error:
-                            capture_timer_errors.append(error)
-                        else:
-                            cuda_profile_active = False
+                        # Idempotent: the stop is finished (and bounded) by the
+                        # main thread after the replay, through the same controller.
+                        controller.request_stop()
 
                     capture_timer = threading.Thread(
                         target=bounded_capture,
@@ -617,7 +663,9 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
             if capture_timer is not None:
                 capture_timer.join()
             if capture_timer_errors:
-                raise RuntimeError("bounded NSYS capture start/stop failed") from capture_timer_errors[0]
+                raise RuntimeError(
+                    "bounded NSYS capture start/stop failed"
+                ) from capture_timer_errors[0]
             drive_summary["reached_idle"] = driver.wait_for_idle(base_url, cfg.idle, cfg.server)
             if speculative:
                 if not drive_summary["reached_idle"]:
@@ -629,23 +677,38 @@ def run_profile(cfg: ProfileConfig, *, resume: bool = False) -> dict:
                     base_url
                 )
             drive_summary_path.write_text(json.dumps(drive_summary, indent=2))
-            print(f"[profile] workload done: {drive_summary}")
+            print(f"[profile] workload done: {drive_summary}", flush=True)
             if cuda_profile_active:
-                driver.set_cuda_profile(base_url, active=False)
+                # The stop is not bounded by an HTTP timeout: Nsight flushes and
+                # imports inside this call (20–30 min for ~200 M rows). The
+                # controller waits with explicit soft/hard deadlines; the hard
+                # deadline stops the *server* (GPU release), never the importer.
+                controller.request_stop()
+                phase = controller.wait_for_report()
                 cuda_profile_active = False
+                if phase != lifecycle.Phase.REPORT_WRITTEN:
+                    status_file = nsys_dir / "lifecycle.json"
+                    raise lifecycle.FinalizationError(
+                        f"profiler stop ended in phase {phase.value}; see {status_file}",
+                        controller.status_dict(),
+                    )
             time.sleep(2)  # let the last iterations' kernels flush into the trace
         finally:
             capture_timer_cancelled.set()
             if capture_timer is not None:
                 capture_timer.join()
-            if cuda_profile_active:
-                # Preserve the original workload error if the emergency stop
-                # also fails; `_shutdown` still lets nsys finalize its report.
+            if cuda_profile_active and controller is not None:
+                # Emergency stop on a workload error: the same single request and
+                # the same bounded wait; the original error is preserved.
                 try:
-                    driver.set_cuda_profile(base_url, active=False)
-                except RuntimeError:
+                    controller.request_stop()
+                    controller.wait_for_report()
+                except Exception:  # noqa: BLE001 - recorded in the status file
                     pass
-            _shutdown(proc)
+            if controller is not None:
+                controller.shutdown(proc)
+            else:
+                _shutdown(proc)
 
     return _finalize_profile(
         cfg,

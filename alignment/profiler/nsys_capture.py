@@ -157,6 +157,50 @@ def export_sqlite(executable: ResolvedNsysExecutable, report_path: Path) -> Path
     return sqlite_path
 
 
+def qdstrm_importer_path(
+    executable: ResolvedNsysExecutable, configured: str | None = None
+) -> Path:
+    """The `QdstrmImporter` matching the nsys CLI (documented: versions must match).
+
+    The CLI lives in `<install>/target-linux-<arch>/nsys`; the importer in
+    `<install>/host-linux-<arch>/QdstrmImporter`.
+    """
+    if configured:
+        path = Path(configured)
+        if not path.is_file() or not os.access(path, os.X_OK):
+            raise FileNotFoundError(f"QdstrmImporter not executable: {configured}")
+        return path
+    install = executable.path.parent.parent
+    candidates = sorted(install.glob("host-linux-*/QdstrmImporter"))
+    for cand in candidates:
+        if os.access(cand, os.X_OK):
+            return cand
+    raise FileNotFoundError(
+        f"no QdstrmImporter beside {executable.path} (looked in {install}/host-linux-*/); "
+        "set nsys.qdstrm_importer"
+    )
+
+
+def import_stream(importer: Path, stream: Path, report_stem: Path) -> Path:
+    """Offline `QdstrmImporter -i <qdstrm> -o <stem>.nsys-rep`; returns the report path.
+
+    Recovery path for a capture whose in-session import was interrupted but whose
+    raw stream was preserved (`lifecycle.py`). CPU only.
+    """
+    stream = Path(stream)
+    if not stream.is_file() or stream.stat().st_size == 0:
+        raise FileNotFoundError(f"raw stream missing or empty: {stream}")
+    report = Path(report_stem).with_suffix(".nsys-rep")
+    report.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        [str(importer), "-i", str(stream), "-o", str(report)],
+        check=True,
+    )
+    if not report.is_file() or report.stat().st_size == 0:
+        raise RuntimeError(f"QdstrmImporter produced no report at {report}")
+    return report
+
+
 def _table_exists(con: sqlite3.Connection, name: str) -> bool:
     row = con.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (name,)

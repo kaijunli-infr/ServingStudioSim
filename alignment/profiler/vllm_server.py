@@ -311,18 +311,25 @@ def _get(url: str, timeout: float = 5.0):
         return None, None
 
 
-def set_cuda_profile(base_url: str, *, active: bool, timeout: float | None = None) -> None:
+_DEFAULT_TIMEOUT = object()
+
+
+def set_cuda_profile(
+    base_url: str, *, active: bool, timeout: float | None | object = _DEFAULT_TIMEOUT
+) -> None:
     """Start or stop vLLM's worker-owned CUDA profiler through its HTTP API.
 
-    Stopping can block while Nsight finalizes a large report inside the worker;
-    the HTTP response is therefore allowed to outlive the ordinary health-check
-    timeout. The launcher still owns process shutdown if this bound is exceeded.
+    Stopping does not return until Nsight has flushed *and imported* the trace
+    inside the worker's `cudaProfilerStop` (20–30 min for ~200 M kernel rows on
+    GB300, measured 2026-11-16). `timeout=None` therefore means **unbounded**;
+    the lifecycle controller (`lifecycle.py`) owns the deadlines and calls this
+    unbounded from its own thread. The bounded default remains only for direct
+    callers that start the profiler.
     """
     action = "start_profile" if active else "stop_profile"
-    # Starting only arms CUPTI and should return promptly. Stopping also makes
-    # NSYS finalize the report in the worker, which can take several minutes
-    # for CUDA-graph-node traces with tens of millions of events.
-    if timeout is None:
+    # Starting only arms CUPTI and should return promptly. The stop default is
+    # kept for compatibility, but the launcher never relies on it any more.
+    if timeout is _DEFAULT_TIMEOUT:
         timeout = 120.0 if active else 600.0
     request = urllib.request.Request(f"{base_url}/{action}", data=b"", method="POST")
     try:
