@@ -1,0 +1,24 @@
+ alignment/profiler/config.py                       |   8 +
+ alignment/profiler/lifecycle.py                    | 204 ++++++--
+ alignment/profiler/preflight.py                    | 566 +++++++++++++++++++++
+ .../dsv41-flash-tp4/phase1c/e1/E1-V1-INPUTS.json   | 127 +++++
+ .../dsv41-flash-tp4/phase1c/e1/INPUTS_v1.sha256    |   3 +
+ .../dsv41-flash-tp4/phase1c/e1/SCRIPTS_v1.sha256   |  26 +
+ .../phase1c/e1/checks/e1_lifecycle_gates.py        | 360 +++++++++++++
+ .../dsv41-flash-tp4/phase1c/e1/closeout_e1_v1.sh   |  31 ++
+ .../e1/configs_v1/e1_v1_lifecycle/profile.json     |  97 ++++
+ .../dsv41-flash-tp4/phase1c/e1/hash_scripts_v1.sh  |  13 +
+ .../phase1c/e1/make_e1_inputs_v1.py                | 174 +++++++
+ .../dsv41-flash-tp4/phase1c/e1/monitor_e1_v1.sh    |  43 ++
+ .../dsv41-flash-tp4/phase1c/e1/pin_v1.sh           |  34 ++
+ .../dsv41-flash-tp4/phase1c/e1/postrun_e1_v1.sh    |  62 +++
+ .../dsv41-flash-tp4/phase1c/e1/preflight_e1_v1.sh  |  90 ++++
+ .../dsv41-flash-tp4/phase1c/e1/run_e1_v1.sh        |  48 ++
+ .../dsv41-flash-tp4/phase1c/e1/v1_control_probe.sh |  28 +
+ tests/fixtures/e1_nsys_val/launch.json             | 194 +++++++
+ tests/fixtures/e1_nsys_val/profile.json            |  90 ++++
+ tests/fixtures/e1_nsys_val/server_log_excerpt.log  |  27 +
+ tests/test_e1_lifecycle_gates.py                   | 188 +++++++
+ tests/test_profiler_lifecycle.py                   | 177 +++++++
+ tests/test_profiler_preflight.py                   | 253 +++++++++
+ 23 files changed, 2800 insertions(+), 43 deletions(-)

@@ -1,0 +1,41 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.2.0, pluggy-1.7.0 -- /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3
+rootdir: /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle
+configfile: pyproject.toml
+plugins: xdist-3.8.0, anyio-4.16.0
+collecting ... collected 32 items
+
+tests/test_profiler_lifecycle.py::test_import_longer_than_twenty_minutes_completes_without_any_signal PASSED [  3%]
+tests/test_profiler_lifecycle.py::test_repeated_stop_calls_send_exactly_one_http_request PASSED [  6%]
+tests/test_profiler_lifecycle.py::test_hard_deadline_during_import_stops_the_server_not_the_importer PASSED [  9%]
+tests/test_profiler_lifecycle.py::test_launcher_shutdown_while_importer_active_waits_then_leaves_importer PASSED [ 12%]
+tests/test_profiler_lifecycle.py::test_import_failure_with_recoverable_raw_stream_then_offline_import PASSED [ 15%]
+tests/test_profiler_lifecycle.py::test_gpu_release_deadline_expiry_is_recorded_and_not_extended_silently PASSED [ 18%]
+tests/test_profiler_lifecycle.py::test_operator_extension_is_explicit_and_logged PASSED [ 21%]
+tests/test_profiler_lifecycle.py::test_disk_space_exhaustion_is_reported_before_the_stop PASSED [ 25%]
+tests/test_profiler_lifecycle.py::test_disk_full_during_import_fails_with_preserved_stream PASSED [ 28%]
+tests/test_profiler_lifecycle.py::test_stalled_import_is_warned_but_never_signalled PASSED [ 31%]
+tests/test_profiler_lifecycle.py::test_restart_recovery_reads_status_and_import_stream_resumes PASSED [ 34%]
+tests/test_profiler_lifecycle.py::test_launch_recipe_is_unchanged_against_the_frozen_e1_main_v3_launch PASSED [ 37%]
+tests/test_profiler_lifecycle.py::test_finalize_policy_rejects_silent_extension_shapes PASSED [ 40%]
+tests/test_profiler_lifecycle.py::test_stop_profile_timeout_none_is_unbounded PASSED [ 43%]
+tests/test_profiler_lifecycle.py::test_procident_refuses_own_ancestry_and_pid_reuse PASSED [ 46%]
+tests/test_profiler_lifecycle.py::test_cli_import_stream_implies_resume PASSED [ 50%]
+tests/test_profiler_lifecycle.py::test_control_file_every_command_is_recorded_with_its_result PASSED [ 53%]
+tests/test_profiler_lifecycle.py::test_control_file_release_gpus_with_reason_is_an_identity_verified_server_stop PASSED [ 56%]
+tests/test_profiler_lifecycle.py::test_gpu_held_ceiling_binds_in_any_phase_and_no_extension_moves_it PASSED [ 59%]
+tests/test_profiler_lifecycle.py::test_finalize_policy_validates_ceiling_and_extension_cap PASSED [ 62%]
+tests/test_profiler_lifecycle.py::test_raw_stream_found_by_descriptor_scan_is_preserved_before_nsight_announces_it PASSED [ 65%]
+tests/test_profiler_lifecycle.py::test_scan_stream_dir_returns_only_descriptor_confirmed_files PASSED [ 68%]
+tests/test_profiler_preflight.py::test_preflight_passes_on_a_clean_pinned_environment PASSED [ 71%]
+tests/test_profiler_preflight.py::test_preflight_fails_on_pin_mismatch_leftovers_and_missing_ceiling PASSED [ 75%]
+tests/test_profiler_preflight.py::test_preflight_cli_writes_pins_and_exits_nonzero_on_fail PASSED [ 78%]
+tests/test_profiler_preflight.py::test_preflight_touches_no_gpu_and_creates_nothing PASSED [ 81%]
+tests/test_profiler_preflight.py::test_v1_config_expands_to_the_accepted_nsys_val_recipe PASSED [ 84%]
+tests/test_e1_lifecycle_gates.py::test_clean_record_passes_every_gate PASSED [ 87%]
+tests/test_e1_lifecycle_gates.py::test_signal_to_the_importer_before_the_report_is_a_stop PASSED [ 90%]
+tests/test_e1_lifecycle_gates.py::test_missing_probe_overrun_and_duplicate_post_fail PASSED [ 93%]
+tests/test_e1_lifecycle_gates.py::test_recovery_proof_runs_the_importer_offline PASSED [ 96%]
+tests/test_e1_lifecycle_gates.py::test_cli_verdict_is_stop_on_any_fail PASSED [100%]
+
+============================= 32 passed in 10.05s ==============================

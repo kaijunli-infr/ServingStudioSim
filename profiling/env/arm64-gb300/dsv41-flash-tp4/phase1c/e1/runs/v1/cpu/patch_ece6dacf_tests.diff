@@ -1,0 +1,982 @@
+diff --git a/tests/fixtures/e1_nsys_val/launch.json b/tests/fixtures/e1_nsys_val/launch.json
+new file mode 100644
+index 00000000..c542af03
+--- /dev/null
++++ b/tests/fixtures/e1_nsys_val/launch.json
+@@ -0,0 +1,194 @@
++{
++  "schema_version": 1,
++  "name": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
++  "argv": [
++    "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
++    "profile",
++    "--trace-fork-before-exec=true",
++    "--trace=cuda,nvtx",
++    "--sample=none",
++    "--cpuctxsw=none",
++    "--cuda-graph-trace=node",
++    "--cuda-event-trace=false",
++    "--force-overwrite=true",
++    "-o",
++    "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val",
++    "--capture-range=cudaProfilerApi",
++    "--capture-range-end=stop",
++    "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++    "-m",
++    "vllm.entrypoints.cli.main",
++    "serve",
++    "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "--api-server-count",
++    "1",
++    "--host",
++    "127.0.0.1",
++    "--port",
++    "8000",
++    "--tensor-parallel-size",
++    "4",
++    "--data-parallel-size",
++    "1",
++    "--max-num-batched-tokens",
++    "16384",
++    "--enable-chunked-prefill",
++    "--enable-prompt-tokens-details",
++    "--gpu-memory-utilization",
++    "0.9",
++    "--enable-server-load-tracking",
++    "--enable-logging-iteration-details",
++    "--served-model-name",
++    "dsv41-flash-1017",
++    "--tokenizer-mode",
++    "deepseek_v41",
++    "--attention-config",
++    "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++    "--kv-cache-dtype",
++    "fp8",
++    "--max-num-seqs",
++    "128",
++    "--engram-config",
++    "{\"cpu_offload\":true}",
++    "--max-model-len",
++    "131072",
++    "--language-model-only",
++    "--enable-return-routed-experts",
++    "--profiler-config.profiler=cuda"
++  ],
++  "server_argv": [
++    "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++    "-m",
++    "vllm.entrypoints.cli.main",
++    "serve",
++    "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "--api-server-count",
++    "1",
++    "--host",
++    "127.0.0.1",
++    "--port",
++    "8000",
++    "--tensor-parallel-size",
++    "4",
++    "--data-parallel-size",
++    "1",
++    "--max-num-batched-tokens",
++    "16384",
++    "--enable-chunked-prefill",
++    "--enable-prompt-tokens-details",
++    "--gpu-memory-utilization",
++    "0.9",
++    "--enable-server-load-tracking",
++    "--enable-logging-iteration-details",
++    "--served-model-name",
++    "dsv41-flash-1017",
++    "--tokenizer-mode",
++    "deepseek_v41",
++    "--attention-config",
++    "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++    "--kv-cache-dtype",
++    "fp8",
++    "--max-num-seqs",
++    "128",
++    "--engram-config",
++    "{\"cpu_offload\":true}",
++    "--max-model-len",
++    "131072",
++    "--language-model-only",
++    "--enable-return-routed-experts",
++    "--profiler-config.profiler=cuda"
++  ],
++  "env": {
++    "CUDA_VISIBLE_DEVICES": "0,1,2,3",
++    "VLLM_NVTX_SCOPES_FOR_PROFILING": "1",
++    "VLLM_SERVER_DEV_MODE": "1",
++    "PYTHONPATH": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
++    "PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin:/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin:/usr/local/cuda-13.1/bin:/mnt/shared/home/dc/.local/bin:/mnt/shared/home/dc/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
++    "LD_LIBRARY_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/lib/python3.12/site-packages/torch/lib:",
++    "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
++    "VLLM_ENGINE_READY_TIMEOUT_S": "3600",
++    "VLLM_CACHE_ROOT": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm",
++    "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune",
++    "FLASHINFER_WORKSPACE_BASE": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer",
++    "TRITON_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton",
++    "TORCHINDUCTOR_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor",
++    "DG_JIT_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm",
++    "CUDA_CACHE_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute",
++    "HF_HOME": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface",
++    "HF_HUB_OFFLINE": "1",
++    "VLLM_LOGGING_LEVEL": "INFO"
++  },
++  "server_config": {
++    "model_path": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++    "host": "127.0.0.1",
++    "port": 8000,
++    "chunk_size": 16384,
++    "enable_iteration_metrics": true,
++    "gpu_memory_utilization": 0.9,
++    "tp_size": 4,
++    "dp_size": 1,
++    "expert_parallel_size": null,
++    "expert_count_reduction_group_size": null,
++    "served_model_name": "dsv41-flash-1017",
++    "startup_timeout": 7200.0,
++    "enforce_eager": false,
++    "max_cudagraph_capture_size": null,
++    "enable_server_load_tracking": true,
++    "api_server_count": 1,
++    "extra_args": [
++      "--tokenizer-mode",
++      "deepseek_v41",
++      "--attention-config",
++      "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++      "--kv-cache-dtype",
++      "fp8",
++      "--max-num-seqs",
++      "128",
++      "--engram-config",
++      "{\"cpu_offload\":true}",
++      "--max-model-len",
++      "131072",
++      "--language-model-only"
++    ]
++  },
++  "nsys_config": {
++    "executable": "/usr/local/bin/nsys",
++    "capture_mode": "cuda_profiler_api",
++    "nvtx_trigger": "gpu_model_runner: forward",
++    "analyze_iteration_start": null,
++    "analyze_iteration_end": null,
++    "capture_duration_seconds": null,
++    "capture_start_delay_seconds": 10.0,
++    "sample": "none",
++    "cpuctxsw": "none",
++    "cuda_graph_trace": "node",
++    "cuda_flush_interval_ms": null,
++    "cuda_event_trace": false
++  },
++  "nsys_profiler": {
++    "executable": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
++    "version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0"
++  },
++  "python_runtime": {
++    "lock_path": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/.vibesim-python-runtime.lock",
++    "policy": "install-missing-only; reject-version-conflict; verify-wheel-files",
++    "packages": [
++      {
++        "name": "nvtx",
++        "requested_version": "0.2.15",
++        "required_version": "0.2.15",
++        "index_url": "https://pypi.org/simple",
++        "distribution_count": 1,
++        "installed_version": "0.2.15",
++        "required_files": {}
++      }
++    ]
++  },
++  "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++  "fork_git": {
++    "path": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
++    "head": "0ab18711335780e062d65994a3243da0281d2081",
++    "branch": "",
++    "status_short": ""
++  }
++}
+\ No newline at end of file
+diff --git a/tests/fixtures/e1_nsys_val/profile.json b/tests/fixtures/e1_nsys_val/profile.json
+new file mode 100644
+index 00000000..934d29bd
+--- /dev/null
++++ b/tests/fixtures/e1_nsys_val/profile.json
+@@ -0,0 +1,90 @@
++{
++ "schema_version": 1,
++ "name": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
++ "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile",
++ "gpu": "NVIDIA GB300",
++ "cuda_visible_devices": "0,1,2,3",
++ "profile_kind": "nsys",
++ "engine": "vllm",
++ "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
++ "python_runtime": {
++  "packages": [
++   {
++    "name": "nvtx",
++    "version": "0.2.15",
++    "index_url": "https://pypi.org/simple"
++   }
++  ],
++  "environment": {
++   "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
++   "VLLM_ENGINE_READY_TIMEOUT_S": "3600",
++   "VLLM_CACHE_ROOT": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm",
++   "VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune",
++   "FLASHINFER_WORKSPACE_BASE": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer",
++   "TRITON_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton",
++   "TORCHINDUCTOR_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor",
++   "DG_JIT_CACHE_DIR": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm",
++   "CUDA_CACHE_PATH": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute",
++   "HF_HOME": "/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface",
++   "HF_HUB_OFFLINE": "1",
++   "VLLM_LOGGING_LEVEL": "INFO"
++  },
++  "lock_timeout_seconds": 60,
++  "install_timeout_seconds": 600
++ },
++ "server": {
++  "model_path": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++  "tp_size": 4,
++  "dp_size": 1,
++  "chunk_size": 16384,
++  "gpu_memory_utilization": 0.9,
++  "enforce_eager": false,
++  "enable_server_load_tracking": true,
++  "api_server_count": 1,
++  "served_model_name": "dsv41-flash-1017",
++  "startup_timeout": 7200.0,
++  "extra_args": [
++   "--tokenizer-mode",
++   "deepseek_v41",
++   "--attention-config",
++   "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
++   "--kv-cache-dtype",
++   "fp8",
++   "--max-num-seqs",
++   "128",
++   "--engram-config",
++   "{\"cpu_offload\":true}",
++   "--max-model-len",
++   "131072",
++   "--language-model-only"
++  ]
++ },
++ "idle": {
++  "enabled": true,
++  "timeout": 600.0,
++  "poll_interval": 0.5
++ },
++ "workload": {
++  "frontend": {
++   "type": "independent",
++   "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv"
++  },
++  "backend": {
++   "type": "openai"
++  },
++  "text_file": "/mnt/shared/home/dc/workspace/serving-studio/corpus/enwik9",
++  "tokenizer": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
++  "warmup": true,
++  "max_model_len": 131072,
++  "arrival_mode": "trace-timed",
++  "capture_routed_experts": true,
++  "stream": false
++ },
++ "nsys": {
++  "executable": "/usr/local/bin/nsys",
++  "capture_mode": "cuda_profiler_api",
++  "cuda_graph_trace": "node",
++  "cuda_event_trace": false,
++  "capture_start_delay_seconds": 10.0
++ }
++}
+diff --git a/tests/fixtures/e1_nsys_val/server_log_excerpt.log b/tests/fixtures/e1_nsys_val/server_log_excerpt.log
+new file mode 100644
+index 00000000..70b4282a
+--- /dev/null
++++ b/tests/fixtures/e1_nsys_val/server_log_excerpt.log
+@@ -0,0 +1,27 @@
++(EngineCore pid=32740) INFO 11-15 12:47:04 [core.py:131] Initializing a V1 LLM engine (v0.31.1.dev17+g0ab187113) with config: model='/mnt/shared/weights/DeepSeek-V4.1-Flash-1017', speculative_config=None, tokenizer='/mnt/shared/weights/DeepSeek-V4.1-Flash-1017', skip_tokenizer_init=False, tokenizer_mode=deepseek_v41, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=131072, download_dir=None, load_format=auto, tensor_parallel_size=4, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=deepseek_v4_fp8, quantization_config=None, enforce_eager=False, aux_output_config=AuxOutputConfig(enable_return_routed_experts=True, max_bytes=None), kv_cache_dtype=fp8, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=True, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=dsv41-flash-1017, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['+quant_fp8', 'all', '+quant_fp8'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [6553, 16384], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': True, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 256, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
++(Worker pid=33007) INFO 11-15 12:47:18 [parallel_state.py:1825] world_size=4 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_344028b3e9494eea8a20d186c9a2e5d1 backend=nccl
++(Worker pid=33010) INFO 11-15 12:47:19 [parallel_state.py:1825] world_size=4 rank=3 local_rank=3 distributed_init_method=file:///tmp/vllm_dist_344028b3e9494eea8a20d186c9a2e5d1 backend=nccl
++(Worker pid=33008) INFO 11-15 12:47:20 [parallel_state.py:1825] world_size=4 rank=1 local_rank=1 distributed_init_method=file:///tmp/vllm_dist_344028b3e9494eea8a20d186c9a2e5d1 backend=nccl
++(Worker pid=33009) INFO 11-15 12:47:20 [parallel_state.py:1825] world_size=4 rank=2 local_rank=2 distributed_init_method=file:///tmp/vllm_dist_344028b3e9494eea8a20d186c9a2e5d1 backend=nccl
++(Worker pid=33007) INFO 11-15 12:47:23 [pynccl.py:148] vLLM is using nccl==2.29.7
++(Worker pid=33007) INFO 11-15 12:47:27 [cuda_communicator.py:326] Using ['FLASHINFER', 'CUSTOM', 'SYMM_MEM', 'PYNCCL'] all-reduce backends (in dispatch order) for group 'tp:0' out of potential backends: ['FLASHINFER_PCIE_IPC', 'FLASHINFER', 'NCCL_SYMM_MEM', 'QUICK_REDUCE', 'AITER_CUSTOM', 'CUSTOM', 'SYMM_MEM', 'PYNCCL'].
++(Worker pid=33007) INFO 11-15 12:47:28 [cuda_communicator.py:326] Using ['PYNCCL'] all-reduce backends (in dispatch order) for group 'ep:0' out of potential backends: ['FLASHINFER_PCIE_IPC', 'FLASHINFER', 'NCCL_SYMM_MEM', 'QUICK_REDUCE', 'AITER_CUSTOM', 'CUSTOM', 'SYMM_MEM', 'PYNCCL'].
++(Worker pid=33007) INFO 11-15 12:47:28 [parallel_state.py:2269] rank 0 in world size 4 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank 0, EPLB rank N/A
++(Worker pid=33007) INFO 11-15 12:47:28 [gpu_worker.py:480] Using V2 Model Runner
++(EngineCore pid=32740) INFO 11-15 13:08:59 [core.py:382] init engine (profile, create kv cache, warmup model) took 1222.90 s
++INFO:     Started server process [32200]
++INFO:     127.0.0.1:34504 - "POST /v1/completions HTTP/1.1" 200 OK
++INFO:     127.0.0.1:39886 - "GET /load HTTP/1.1" 200 OK
++(APIServer pid=32200) INFO 11-15 13:11:54 [api_router.py:31] Stopping profiler...
++(Worker_TP0 pid=33007) INFO 11-15 13:11:55 [wrapper.py:86] Profiler stopped successfully.
++(APIServer pid=32200) INFO 11-15 13:12:03 [loggers.py:320] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 144.4 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
++(APIServer pid=32200) INFO 11-15 13:12:13 [loggers.py:320] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
++Capture range started in the application.
++Capture range ended in the application.
++Generating '/tmp/nsys-report-bdf5.qdstrm'
++[1/1] [0%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-repProcessing events...
++[1/1] [0%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [8%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [7%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [6%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [5%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [5%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [5%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [0%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [5%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [6%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [7%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [8%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [9%                          ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [10%                         ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [11%                         ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [12%                         ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [13%                         ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [14%                         ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=15%                        ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=16%                        ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=17%                        ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==18%                       ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==19%                       ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==20%                       ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==21%                       ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [===22%                      ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [===23%                      ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [===24%                      ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [====25%                     ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [====26%                     ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [====27%                     ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [====28%                     ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=====29%                    ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=====30%                    ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=====31%                    ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=====32%                    ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [======33%                   ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [======34%                   ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [======35%                   ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=======36%                  ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=======37%                  ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=======38%                  ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=======39%                  ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [========40%                 ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [========41%                 ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [========42%                 ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=========43%                ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=========44%                ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=========45%                ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [=========46%                ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==========47%               ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==========48%               ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [==========49%               ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [===========50%              ] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep[1/1] [========================100%] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep(EngineCore pid=32740) INFO 11-15 13:12:55 [shm_broadcast.py:812] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
++[1/1] [========================100%] dsv41_flash_1017_gb300_tp4_e1_nsys_val.nsys-rep
++(APIServer pid=32200) INFO 11-15 13:12:57 [api_router.py:33] Profiler stopped.
++INFO:     127.0.0.1:39892 - "POST /stop_profile HTTP/1.1" 200 OK
++(EngineCore pid=32740) INFO 11-15 13:12:59 [core.py:1502] [shutdown] EngineCore: trigger received signal=SIGINT
+diff --git a/tests/test_e1_lifecycle_gates.py b/tests/test_e1_lifecycle_gates.py
+new file mode 100644
+index 00000000..bd9fab6b
+--- /dev/null
++++ b/tests/test_e1_lifecycle_gates.py
+@@ -0,0 +1,188 @@
++"""CPU tests for the V1 lifecycle acceptance gates (phase1c/e1/checks/e1_lifecycle_gates.py).
++
++A synthetic run directory with the controller's record, a profile result and a launch record
++stands in for a real capture; a PASS record, a record with a signal to the importer, a missing
++probe and a GPU-held overrun must each produce the right verdict. Any FAIL is a STOP.
++"""
++
++from __future__ import annotations
++
++import importlib.util
++import json
++from pathlib import Path
++
++REPO = Path(__file__).resolve().parents[1]
++E1 = REPO / "profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1"
++SCRIPT = E1 / "checks" / "e1_lifecycle_gates.py"
++
++
++def _load():
++    spec = importlib.util.spec_from_file_location("e1_lifecycle_gates", SCRIPT)
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod
++
++
++INPUTS = {
++    "expected": {
++        "iterations_band": [2100, 2250],
++        "nvtx_per_iteration": 4,
++        "kernel_rows_band": [11_638_290, 12_863_373],
++    },
++    "control_probe": {
++        "lines": [
++            "note V1 operator probe: control file read",
++            "extend 60 V1 operator probe: extension logged",
++        ],
++        "extension_s": 60,
++    },
++}
++
++
++def _run_dir(tmp_path: Path, **over) -> Path:
++    run = tmp_path / "e1_v1_lifecycle"
++    nsys = run / "profile" / "nsys"
++    vllm = run / "profile" / "vllm"
++    nsys.mkdir(parents=True)
++    vllm.mkdir(parents=True)
++    rep = nsys / "x.nsys-rep"
++    rep.write_bytes(b"r" * 4096)
++    preserved = tmp_path / "x.raw-preserve" / "x.qdstrm"
++    preserved.parent.mkdir()
++    preserved.write_bytes(b"q" * 2048)
++    t0 = 1_800_000_000.0
++    record = {
++        "schema_version": 1,
++        "phase": "report_written",
++        "launch_started_at": t0,
++        "stop_requested_at": t0 + 1500,
++        "phase_history": [
++            {"phase": p, "at": t0 + 1500 + i * 10}
++            for i, p in enumerate(
++                [
++                    "stop_requested",
++                    "stop_accepted",
++                    "capture_ended",
++                    "stream_written",
++                    "importing",
++                    "report_written",
++                ]
++            )
++        ],
++        "http": {"status": "ok", "requests_sent": 1, "duplicate_requests_suppressed": 1},
++        "stream": {
++            "path": "/tmp/nsys-report-1234.qdstrm",
++            "size": 2048,
++            "preserved_path": str(preserved),
++            "preserved_size": 2048,
++            "discovered_by": "log",
++        },
++        "report": {"path": str(rep), "size": 4096, "written_at": t0 + 1560},
++        "deadlines": {"hard_extension_s": 60.0},
++        "policy": {
++            "soft_deadline_s": 300,
++            "hard_deadline_s": 600,
++            "gpu_held_ceiling_s": 2700,
++        },
++        "escalations": [],
++        "control_commands": [
++            {"command": INPUTS["control_probe"]["lines"][0], "result": "noted"},
++            {
++                "command": INPUTS["control_probe"]["lines"][1],
++                "result": "hard deadline extended by 60 s (operator)",
++            },
++        ],
++        "warnings": [],
++        "nsys": {"pid": 4000, "alive": False},
++        "server": {"api_server": {"pid": 4100}, "alive": False},
++        "gpu": {"released_at": t0 + 1600},
++        "session_closed_at": t0 + 1620,
++        "actions": [{"at": t0 + 1565, "reason": "shutdown", "pid": 4100, "action": "SIGTERM"}],
++    }
++    for key, value in over.items():
++        record[key] = value
++    (nsys / "lifecycle.json").write_text(json.dumps(record))
++    (run / "profile" / "profile_result.json").write_text(
++        json.dumps(
++            {"validation": {"ok": True, "kernel_rows": 12_250_000, "nvtx_forward_ranges": 8640}}
++        )
++    )
++    (vllm / "x_launch.json").write_text(
++        json.dumps({"argv": ["/opt/nsys"], "nsys_profiler": {"version": "2025.6.3"}})
++    )
++    return run
++
++
++def _statuses(res):
++    return {r["gate"]: r["status"] for r in res}
++
++
++def test_clean_record_passes_every_gate(tmp_path, capsys):
++    mod = _load()
++    run = _run_dir(tmp_path)
++    res = mod.evaluate(run, INPUTS, importer=None, scratch=None, extras={"completeness_v2": 0})
++    st = _statuses(res)
++    fails = [g for g, s in st.items() if s == "FAIL"]
++    assert fails == [], fails
++    assert st["L10.recovery_proof"] == "INFO"  # not run without an importer
++    assert st["S.completeness_v2"] == "PASS"
++
++
++def test_signal_to_the_importer_before_the_report_is_a_stop(tmp_path):
++    mod = _load()
++    run = _run_dir(
++        tmp_path,
++        actions=[
++            {"at": 1_800_001_540.0, "reason": "hard deadline", "pid": 4000, "action": "SIGINT"},
++            {"at": 1_800_001_565.0, "reason": "shutdown", "pid": 4100, "action": "SIGTERM"},
++        ],
++    )
++    st = _statuses(mod.evaluate(run, INPUTS, importer=None, scratch=None, extras={}))
++    assert st["L5.no_signal_to_importer"] == "FAIL"
++
++
++def test_missing_probe_overrun_and_duplicate_post_fail(tmp_path):
++    mod = _load()
++    run = _run_dir(
++        tmp_path,
++        control_commands=[],
++        gpu={"released_at": 1_800_000_000.0 + 2800},
++        http={"status": "ok", "requests_sent": 2, "duplicate_requests_suppressed": 0},
++        escalations=[{"kind": "soft_deadline", "elapsed_s": 301}],
++    )
++    st = _statuses(
++        mod.evaluate(run, INPUTS, importer=None, scratch=None, extras={"nsys_validation": 1})
++    )
++    assert st["L7.control_probe"] == "FAIL"
++    assert st["L6.gpu_held_within_ceiling"] == "FAIL"
++    assert st["L1.idempotent_stop"] == "FAIL"
++    assert st["L8.no_escalation"] == "FAIL"
++    assert st["L8c.extension_accounting"] == "FAIL"
++    assert st["S.nsys_validation"] == "FAIL"
++
++
++def test_recovery_proof_runs_the_importer_offline(tmp_path):
++    mod = _load()
++    run = _run_dir(tmp_path)
++    fake = tmp_path / "QdstrmImporter"
++    fake.write_text(
++        "#!/bin/sh\n# -i <stream> -o <report>: write a report the size of the in-session one\n"
++        'head -c 4096 /dev/zero > "$4"\n'
++    )
++    fake.chmod(0o755)
++    res = mod.evaluate(run, INPUTS, importer=str(fake), scratch=tmp_path / "scratch", extras={})
++    st = _statuses(res)
++    assert st["L10.recovery_proof"] == "PASS"
++    assert (tmp_path / "scratch" / "recovery.nsys-rep").stat().st_size == 4096
++
++
++def test_cli_verdict_is_stop_on_any_fail(tmp_path, capsys):
++    mod = _load()
++    run = _run_dir(tmp_path, phase_history=[{"phase": "stop_requested", "at": 1_800_001_500.0}])
++    inputs = tmp_path / "inputs.json"
++    inputs.write_text(json.dumps(INPUTS))
++    out = tmp_path / "gates.json"
++    rc = mod.main(["--run", str(run), "--inputs", str(inputs), "--out", str(out)])
++    assert rc == 1
++    assert json.loads(out.read_text())["verdict"] == "STOP"
++    assert "STOP" in capsys.readouterr().out
+diff --git a/tests/test_profiler_lifecycle.py b/tests/test_profiler_lifecycle.py
+index 9c19bb39..14dcbfd9 100644
+--- a/tests/test_profiler_lifecycle.py
++++ b/tests/test_profiler_lifecycle.py
+@@ -128,6 +128,7 @@ class Harness:
+         stop_error=None,
+         free_bytes=10**13,
+         is_descendant=True,
++        stream_scan=None,
+     ):
+         self.clock = Clock()
+         Clock.hooks = []
+@@ -168,6 +169,7 @@ class Harness:
+             signaller=self.procs.signaller,
+             identity=self.procs.identity,
+             emit=lambda s: None,
++            stream_scan=stream_scan if stream_scan is not None else (lambda: []),
+         )
+         Clock.hooks.append(self._fire)
+ 
+@@ -705,3 +707,178 @@ def test_cli_import_stream_implies_resume(tmp_path, monkeypatch):
+     stream = tmp_path / "run.qdstrm"
+     assert alignment_launcher.main(["profile", str(cfg), "--import-stream", str(stream)]) == 0
+     assert seen["rpr"] is False and seen["resume"] is True and seen["stream"] == stream
++
++
++# ---- V1 packet additions: control-file commands, GPU-held ceiling, stream discovery
++def _control_batch_harness(tmp_path, monkeypatch, **policy_kw):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=60, hard_deadline_s=600, max_extension_s=300, **policy_kw),
++        stop_return_at=1000.0 + 250,
++    )
++    h.script_normal_stop(flush_s=30, import_s=200)
++    return h
++
++
++def test_control_file_every_command_is_recorded_with_its_result(tmp_path, monkeypatch):
++    h = _control_batch_harness(tmp_path, monkeypatch)
++    batch = (
++        "note operator watching the import\n"
++        "extend 60 V1 control-file test\n"
++        "extend abc not a number\n"
++        "extend 60\n"
++        "extend 1000 would exceed the cap\n"
++        "release-gpus\n"
++        "frobnicate the importer\n"
++        "\n"
++    )
++    h.at(40, lambda: h.ctl.control_path.write_text(batch))
++    # a line still being written is not consumed until its newline arrives
++    h.at(45, lambda: h.ctl.control_path.open("a").write("note partial"))
++    h.at(55, lambda: h.ctl.control_path.open("a").write(" line completed\n"))
++    h.ctl.request_stop()
++    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
++    status = h.ctl.status_dict()
++    results = [(c["command"], c["result"]) for c in status["control_commands"]]
++    assert results == [
++        ("note operator watching the import", "noted"),
++        ("extend 60 V1 control-file test", "hard deadline extended by 60 s (operator)"),
++        ("extend abc not a number", "rejected: seconds not a number"),
++        ("extend 60", "rejected: usage is 'extend <seconds> <reason>'"),
++        (
++            "extend 1000 would exceed the cap",
++            "rejected: total extension 1060 s would exceed max_extension_s 300",
++        ),
++        ("release-gpus", "rejected: a reason is required"),
++        ("frobnicate the importer", "rejected: unknown command"),
++        ("note partial line completed", "noted"),
++    ]
++    assert all("at" in c and "phase" in c for c in status["control_commands"])
++    assert status["deadlines"]["hard_extension_s"] == 60.0
++    assert status["deadlines"]["max_extension_s"] == 300.0
++    assert h.procs.signals == []  # the reason-less release-gpus did nothing
++    assert status["actions"] == []
++
++
++def test_control_file_release_gpus_with_reason_is_an_identity_verified_server_stop(
++    tmp_path, monkeypatch
++):
++    h = _control_batch_harness(tmp_path, monkeypatch)
++    h.at(60, lambda: h.ctl.control_path.write_text("release-gpus operator: budget exhausted\n"))
++    h.ctl.request_stop()
++    phase = h.ctl.wait_for_report()
++    status = h.ctl.status_dict()
++    assert status["control_commands"][0]["result"] == "release requested"
++    assert h.procs.signals == [(API_PID, signal.SIGTERM)]
++    assert status["actions"][0]["reason"].startswith("operator: release-gpus")
++    assert status["actions"][0]["pid"] == API_PID
++    assert status["gpu"]["released_at"] is not None
++    assert phase in (Phase.IMPORTING, Phase.REPORT_WRITTEN)
++    # the importer (nsys pid) was never signalled
++    assert all(pid != NSYS_PID for pid, _ in h.procs.signals)
++
++
++def test_gpu_held_ceiling_binds_in_any_phase_and_no_extension_moves_it(tmp_path, monkeypatch):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    # launched 1400 s before the stop; ceiling 1500 s from the launch → fires 100 s after the stop,
++    # long before the 1200 s hard deadline, and the operator extension does not touch it
++    h = Harness(
++        tmp_path,
++        policy=_policy(soft_deadline_s=600, hard_deadline_s=1200, gpu_held_ceiling_s=1500),
++        stop_return_at=1000.0 + 2000,
++    )
++    h.ctl._launch_mono = 1000.0 - 1400
++    h.ctl.s.launch_started_at = h.clock.wall() - 1400
++    h.script_normal_stop(flush_s=30, import_s=1900)
++    h.at(20, lambda: h.ctl.control_path.write_text("extend 600 trying to buy time\n"))
++    h.ctl.request_stop()
++    phase = h.ctl.wait_for_report()
++    status = h.ctl.status_dict()
++    assert status["deadlines"]["hard_extension_s"] == 600.0
++    assert "GPU-held ceiling unchanged" in status["control_commands"][0]["result"]
++    kinds = [e["kind"] for e in status["escalations"]]
++    assert kinds == ["gpu_held_ceiling"]
++    fired = status["escalations"][0]
++    assert 1500 < fired["elapsed_s"] <= 1500 + 2 * 5.0 + 1
++    assert h.procs.signals == [(API_PID, signal.SIGTERM)]
++    assert status["gpu"]["release_reason"] == "GPU-held ceiling"
++    assert phase == Phase.IMPORTING
++    assert status["deadlines"]["gpu_held_ceiling_at"] == pytest.approx(
++        status["launch_started_at"] + 1500
++    )
++
++
++def test_finalize_policy_validates_ceiling_and_extension_cap():
++    with pytest.raises(ValueError, match="gpu_held_ceiling_s must be >= hard_deadline_s"):
++        FinalizePolicy(soft_deadline_s=600, hard_deadline_s=1200, gpu_held_ceiling_s=600).validate()
++    with pytest.raises(ValueError, match="max_extension_s"):
++        FinalizePolicy(max_extension_s=-1).validate()
++    FinalizePolicy(max_extension_s=0, gpu_held_ceiling_s=3600).validate()
++    cfg = NsysConfig(
++        executable="/usr/local/bin/nsys",
++        finalize_max_extension_s=0,
++        gpu_held_ceiling_s=2700,
++        finalize_hard_deadline_s=600,
++        finalize_soft_deadline_s=300,
++        tmp_dir="/tmp/e1-nsys",
++    )
++    policy = cfg.finalize_policy()
++    assert policy.max_extension_s == 0
++    assert policy.gpu_held_ceiling_s == 2700
++    assert policy.stream_directory() == "/tmp/e1-nsys"
++
++
++def test_raw_stream_found_by_descriptor_scan_is_preserved_before_nsight_announces_it(
++    tmp_path, monkeypatch
++):
++    monkeypatch.setattr(procident, "is_descendant_of", lambda pid, root: True)
++    holder: dict = {}
++    h = Harness(
++        tmp_path,
++        policy=_policy(),
++        stop_return_at=1000.0 + 120,
++        stream_scan=lambda: [holder["stream"]] if holder.get("stream", Path("/x")).exists() else [],
++    )
++    holder["stream"] = h.stream
++    # the stream file exists (open in the nsys tree) from early in the flush; Nsight prints
++    # "Generating" only at the end of the flush
++    h.at(5, lambda: h.stream.write_bytes(b"s" * 2048))
++    h.script_normal_stop(flush_s=60, import_s=50)
++    h.ctl.request_stop()
++    # poll until the scan has found it
++    for _ in range(4):
++        h.clock.sleep(5.0)
++        h.ctl.poll()
++    st = h.ctl.status_dict()
++    assert st["stream"]["discovered_by"] == "fd-scan"
++    assert st["stream"]["preserved_path"] and Path(st["stream"]["preserved_path"]).exists()
++    assert st["phase"] == Phase.STOP_ACCEPTED.value  # discovery does not advance the phase
++    assert h.ctl.wait_for_report() == Phase.REPORT_WRITTEN
++    st = h.ctl.status_dict()
++    assert [p["phase"] for p in st["phase_history"]].index("stream_written") > 0
++    assert not h.stream.exists()  # Nsight unlinked its path
++    preserved = Path(st["stream"]["preserved_path"])
++    assert preserved.read_bytes() == b"x" * 4096  # the bytes written later by "gen" survive
++    assert h.procs.signals == []
++
++
++def test_scan_stream_dir_returns_only_descriptor_confirmed_files(tmp_path):
++    (tmp_path / "nsys-report-aaaa.qdstrm").write_bytes(b"a")
++    held = tmp_path / "nsys-report-bbbb.qdstrm"
++    held.write_bytes(b"b")
++    (tmp_path / "other.qdstrm").write_bytes(b"c")
++    ctl = ProfilerStopController(
++        name="scan",
++        server_log=tmp_path / "server.log",
++        report_stem=tmp_path / "scan",
++        status_path=tmp_path / "lifecycle.json",
++        policy=FinalizePolicy(stream_dir=tmp_path),
++        stop_request=lambda: None,
++        nsys_pid=os.getpid(),  # this process stands in for the nsys tree
++        emit=lambda s: None,
++    )
++    assert ctl._scan_stream_dir() == []
++    with held.open("rb"):
++        assert ctl._scan_stream_dir() == [held.resolve()]
++    assert ctl._scan_stream_dir() == []
+diff --git a/tests/test_profiler_preflight.py b/tests/test_profiler_preflight.py
+new file mode 100644
+index 00000000..c5defd53
+--- /dev/null
++++ b/tests/test_profiler_preflight.py
+@@ -0,0 +1,253 @@
++"""CPU tests for the read-only identity preflight (alignment/profiler/preflight.py).
++
++A fake Nsight install (CLI + QdstrmImporter) stands in for the real one; the vLLM
++import probe is replaced; everything else (own-process identity, parsers against a
++real server-log excerpt, recipe against a real launch record) runs for real.
++"""
++
++from __future__ import annotations
++
++import json
++import stat
++import sys
++from pathlib import Path
++
++from alignment.profiler import preflight, vllm_server
++
++REPO = Path(__file__).resolve().parents[1]
++FIX = REPO / "tests" / "fixtures" / "e1_nsys_val"
++
++
++def _fake_install(root: Path) -> Path:
++    target = root / "nsight" / "target-linux-fake"
++    host = root / "nsight" / "host-linux-fake"
++    target.mkdir(parents=True)
++    host.mkdir(parents=True)
++    nsys = target / "nsys"
++    nsys.write_text(
++        "#!/bin/sh\n"
++        'case "$1" in\n'
++        '  --version) echo "NVIDIA Nsight Systems version 9.9.9-test";;\n'
++        '  profile) echo "  --cuda-event-trace";;\n'
++        "esac\n"
++    )
++    nsys.chmod(nsys.stat().st_mode | stat.S_IXUSR)
++    imp = host / "QdstrmImporter"
++    imp.write_text("#!/bin/sh\nexit 0\n")
++    imp.chmod(imp.stat().st_mode | stat.S_IXUSR)
++    return nsys
++
++
++def _config(tmp_path: Path, nsys: Path):
++    from launcher.alignment_config import load_profile_config
++
++    cfg = load_profile_config(FIX / "profile.json", require_python_runtime=False)
++    cfg.nsys.executable = str(nsys)
++    cfg.fork_python = sys.executable
++    cfg.log_dir = str(tmp_path / "run" / "profile")
++    stream = tmp_path / "stream"
++    stream.mkdir()
++    cfg.nsys.tmp_dir = str(stream)
++    cfg.nsys.finalize_soft_deadline_s = 300
++    cfg.nsys.finalize_hard_deadline_s = 600
++    cfg.nsys.gpu_held_ceiling_s = 2700
++    cfg.nsys.min_free_bytes_stream = 1
++    cfg.nsys.min_free_bytes_report = 1
++    return cfg
++
++
++def _probe_ok(python, env):
++    assert env["CUDA_VISIBLE_DEVICES"] == ""  # the probe must not touch a GPU
++    return {
++        "version": "0.31.1.dev17+g0ab187113",
++        "file": str(vllm_server.VLLM_SOURCE_ROOT / "vllm" / "__init__.py"),
++        "python": python,
++    }
++
++
++def _by_name(checks):
++    return {c.name: c for c in checks}
++
++
++def _reference_launch_for(tmp_path: Path, python: str) -> Path:
++    """The accepted launch record with the server interpreter swapped for this one."""
++    launch = json.loads((FIX / "launch.json").read_text())
++    orig = launch["server_argv"][0]
++    launch["server_argv"][0] = python
++    launch["argv"] = [python if a == orig else a for a in launch["argv"]]
++    out = tmp_path / "launch.json"
++    out.write_text(json.dumps(launch))
++    return out
++
++
++def test_preflight_passes_on_a_clean_pinned_environment(tmp_path):
++    nsys = _fake_install(tmp_path)
++    cfg = _config(tmp_path, nsys)
++    checks, facts = preflight.run_preflight(
++        cfg,
++        reference_launch=_reference_launch_for(tmp_path, sys.executable),
++        reference_server_log=FIX / "server_log_excerpt.log",
++        probe=_probe_ok,
++        nvidia_pids=lambda: [],
++    )
++    by = _by_name(checks)
++    assert by["profiler.nsys"].status == "INFO"  # no pins yet
++    assert facts["nsys"]["sha256"] == preflight.sha256_file(nsys)
++    assert facts["importer"]["path"].endswith("host-linux-fake/QdstrmImporter")
++    assert by["profiler.importer_matches_cli"].status == "PASS"
++    assert by["server.vllm_import"].status == "PASS"
++    assert by["server.model_path"].status == (
++        "PASS" if Path(cfg.server.model_path).exists() else "FAIL"
++    )
++    assert by["recipe.server_argv"].status == "PASS"
++    assert by["recipe.nsys_prefix"].status == "PASS"
++    assert by["recipe.nsys_executable"].status == "FAIL"  # the fake is not /opt/nvidia/.../nsys
++    assert by["recipe.env"].status == "FAIL"  # tmp_dir adds TMPDIR relative to the accepted launch
++    for name in (
++        "cleanup.identity",
++        "cleanup.ancestry",
++        "cleanup.refuses_self",
++        "cleanup.detects_identity_change",
++        "cleanup.gpu_query",
++        "parsers.pids",
++        "parsers.phases",
++        "policy.valid",
++        "policy.ceiling_set",
++        "locations.lifecycle.json",
++        "locations.lifecycle.control",
++        "locations.log_dir",
++        "locations.stream_dir",
++        "locations.stream_leftovers",
++        "locations.report_dir",
++    ):
++        assert by[name].status == "PASS", (name, by[name].detail)
++    assert "EngineCore" in by["parsers.pids"].detail and "Worker" in by["parsers.pids"].detail
++    # pins round trip
++    pins = {k: facts[k] for k in ("nsys", "importer", "server")}
++    checks2, _ = preflight.run_preflight(cfg, pins=pins, probe=_probe_ok, nvidia_pids=lambda: [])
++    by2 = _by_name(checks2)
++    assert by2["profiler.nsys"].status == "PASS"
++    assert by2["profiler.importer"].status == "PASS"
++    assert by2["server.identity"].status == "PASS"
++
++
++def test_preflight_fails_on_pin_mismatch_leftovers_and_missing_ceiling(tmp_path):
++    nsys = _fake_install(tmp_path)
++    cfg = _config(tmp_path, nsys)
++    cfg.nsys.tmp_dir = None  # no TMPDIR added
++    cfg.nsys.gpu_held_ceiling_s = None
++    _, facts = preflight.run_preflight(cfg, probe=_probe_ok, nvidia_pids=lambda: [])
++    pins = {k: dict(facts[k]) for k in ("nsys", "importer", "server")}
++    pins["nsys"]["sha256"] = "0" * 64
++    pins["server"]["vllm_version"] = "0.0.0"
++    nsys_dir = Path(cfg.log_dir) / "nsys"
++    nsys_dir.mkdir(parents=True)
++    (nsys_dir / "lifecycle.json").write_text("{}")
++    checks, _ = preflight.run_preflight(cfg, pins=pins, probe=_probe_ok, nvidia_pids=lambda: None)
++    by = _by_name(checks)
++    assert by["profiler.nsys"].status == "FAIL" and "sha256" in by["profiler.nsys"].detail
++    assert by["server.identity"].status == "FAIL" and "vllm_version" in by["server.identity"].detail
++    assert by["policy.ceiling_set"].status == "FAIL"
++    assert by["locations.lifecycle.json"].status == "FAIL"
++    assert by["locations.log_dir"].status == "FAIL"
++    assert by["cleanup.gpu_query"].status == "FAIL"
++    assert by["recipe.reference"].status == "INFO"
++    assert by["parsers.reference_log"].status == "INFO"
++
++
++def test_preflight_cli_writes_pins_and_exits_nonzero_on_fail(tmp_path, monkeypatch):
++    nsys = _fake_install(tmp_path)
++    cfg_path = tmp_path / "profile.json"
++    raw = json.loads((FIX / "profile.json").read_text())
++    raw["nsys"]["executable"] = str(nsys)
++    raw["nsys"]["gpu_held_ceiling_s"] = 2700
++    raw["nsys"]["finalize_soft_deadline_s"] = 300
++    raw["nsys"]["finalize_hard_deadline_s"] = 600
++    raw["nsys"]["min_free_bytes_stream"] = 1
++    raw["nsys"]["min_free_bytes_report"] = 1
++    raw["fork_python"] = sys.executable
++    raw["log_dir"] = str(tmp_path / "run" / "profile")
++    cfg_path.write_text(json.dumps(raw))
++    monkeypatch.setattr(preflight, "_python_probe", _probe_ok)
++    monkeypatch.setattr(preflight.lifecycle, "_nvidia_smi_compute_pids", lambda: [])
++    out = tmp_path / "preflight.json"
++    pins = tmp_path / "pins.json"
++    rc = preflight.main(
++        [
++            "--config",
++            str(cfg_path),
++            "--reference-server-log",
++            str(FIX / "server_log_excerpt.log"),
++            "--json",
++            str(out),
++            "--write-pins",
++            str(pins),
++        ]
++    )
++    assert rc == 0
++    data = json.loads(out.read_text())
++    assert {c["name"] for c in data["checks"]} >= {
++        "profiler.nsys",
++        "cleanup.refuses_self",
++        "parsers.phases",
++    }
++    pinned = json.loads(pins.read_text())
++    assert pinned["nsys"]["version"] == "NVIDIA Nsight Systems version 9.9.9-test"
++    assert pinned["recipe"]["server_argv"][-1] == "--profiler-config.profiler=cuda"
++    # second run against mutated pins fails
++    pinned["importer"]["sha256"] = "f" * 64
++    pins.write_text(json.dumps(pinned))
++    rc = preflight.main(["--config", str(cfg_path), "--pins", str(pins)])
++    assert rc == 1
++
++
++def test_preflight_touches_no_gpu_and_creates_nothing(tmp_path):
++    nsys = _fake_install(tmp_path)
++    cfg = _config(tmp_path, nsys)
++    before = sorted(str(p) for p in tmp_path.rglob("*"))
++    preflight.run_preflight(cfg, probe=_probe_ok, nvidia_pids=lambda: [])
++    after = sorted(str(p) for p in tmp_path.rglob("*"))
++    assert before == after
++    assert not Path(cfg.log_dir).exists()
++
++
++def test_v1_config_expands_to_the_accepted_nsys_val_recipe():
++    """Item 5 of the V1 GO: the lifecycle fields in configs_v1 change neither the server argv nor the nsys flags
++    nor the environment of the accepted `e1_nsys_val` launch (only the output stem and the removed start delay)."""
++    from launcher.alignment_config import load_profile_config
++
++    e1 = REPO / "profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1"
++    cfg = load_profile_config(
++        e1 / "configs_v1" / "e1_v1_lifecycle" / "profile.json", require_python_runtime=False
++    )
++    launch = json.loads((FIX / "launch.json").read_text())
++    recipe = preflight.expand_recipe(cfg)
++    assert recipe["server_argv"] == launch["server_argv"]
++    i = launch["argv"].index("-o")
++    ref_prefix = (
++        launch["argv"][:i]
++        + launch["argv"][i + 2 : len(launch["argv"]) - len(launch["server_argv"])]
++    )
++    assert recipe["nsys_prefix_without_output"][1:] == ref_prefix[1:]
++    exe = Path(cfg.nsys.executable)
++    if exe.exists():  # on the rack: /usr/local/bin/nsys → the pinned 2025.6.3 install
++        assert exe.resolve() == Path(ref_prefix[0]).resolve()
++    assert cfg.nsys.tmp_dir is None  # no TMPDIR added: server env identical to the accepted launch
++    assert cfg.nsys.capture_start_delay_seconds is None
++    policy = cfg.nsys.finalize_policy()
++    policy.validate()
++    assert (policy.soft_deadline_s, policy.hard_deadline_s, policy.gpu_held_ceiling_s) == (
++        300,
++        600,
++        2700,
++    )
++    assert policy.max_extension_s == 120 and policy.preserve_raw_stream is True
++    for key in (
++        "capture_mode",
++        "cuda_graph_trace",
++        "cuda_event_trace",
++        "sample",
++        "cpuctxsw",
++        "cuda_flush_interval_ms",
++    ):
++        assert getattr(cfg.nsys, key) == launch["nsys_config"][key]
