@@ -1,0 +1,7 @@
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T20:48:10Z: registry /mnt/shared/home/dc/workspace/serving-studio/scratch/pids/negctl_v3scale_20261118T204647Z.tsv (1 records); cleanup pid 2869086, excluded ancestry [1, 9360, 2833552, 2833616, 2833618, 2833619, 2833756, 2869086], own pipeline [2833618, 2833619, 2833620, 2833756, 2869087, 2869088, 2869089]
+OWNED    pid 2833768 depth 1 [descendant] start 302880199 sleep: sleep 900
+OWNED    pid 2833767 depth 0 [negctl:lookalike] start 302880199 bash: bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t
+summary: owned 2, stale 0, gone 0, refused 0, lookalikes 0
+ACTION   {"pid": 2833768, "action": "SIGTERM", "cmd": "sleep 900", "starttime": 302880199}
+ACTION   {"pid": 2833767, "action": "SIGTERM", "cmd": "bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t", "starttime": 302880199}
+RESULT CLEAN: signalled 2, skipped 0, survivors 0, lookalikes 0 (never signalled)
