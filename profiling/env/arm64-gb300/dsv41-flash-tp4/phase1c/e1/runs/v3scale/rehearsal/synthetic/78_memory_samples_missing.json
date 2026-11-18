@@ -1,0 +1,335 @@
+{
+ "verdict": "INCONCLUSIVE",
+ "counts": {
+  "PASS": 12,
+  "FAIL": 0,
+  "INCONCLUSIVE": 2
+ },
+ "gates": [
+  {
+   "gate": "G0.source_and_executable",
+   "status": "PASS",
+   "detail": "launch commit cccccccccccc, trees alignment 7b4df784a5b6 launcher 5acab28980ef, tracked changes 0; executable dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454: 16 of 16 binary checks pass",
+   "data": {
+    "binary_checks": [
+     {
+      "check": "pin.present",
+      "ok": true,
+      "detail": "pinned sha256 dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454"
+     },
+     {
+      "check": "driver.record_present",
+      "ok": true,
+      "detail": "driver record (binary_check.json) readable"
+     },
+     {
+      "check": "driver.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "before the launcher: dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454"
+     },
+     {
+      "check": "driver.sha256_after_is_pinned",
+      "ok": true,
+      "detail": "after the launcher: dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454"
+     },
+     {
+      "check": "driver.unchanged",
+      "ok": true,
+      "detail": "unchanged=True"
+     },
+     {
+      "check": "driver.file_identity_unchanged",
+      "ok": true,
+      "detail": "inode/mtime/size before '1 2 3', after '1 2 3'"
+     },
+     {
+      "check": "driver.no_compiling_lines",
+      "ok": true,
+      "detail": "cargo 'Compiling' lines in the run log: 0"
+     },
+     {
+      "check": "launcher.record_present",
+      "ok": true,
+      "detail": "launcher record (frontend_binary.json) readable"
+     },
+     {
+      "check": "launcher.prebuilt_mode",
+      "ok": true,
+      "detail": "mode 'prebuilt (no compilation in this launch path)'"
+     },
+     {
+      "check": "launcher.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "verified before the launch: dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454 (record's pin dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454)"
+     },
+     {
+      "check": "launcher.sha256_after_is_pinned",
+      "ok": true,
+      "detail": "verified after the launch: dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454"
+     },
+     {
+      "check": "launcher.unchanged",
+      "ok": true,
+      "detail": "unchanged=True"
+     },
+     {
+      "check": "launcher.cargo_not_consulted",
+      "ok": true,
+      "detail": "cargo_consulted=False"
+     },
+     {
+      "check": "launcher.build_tool_guard_installed",
+      "ok": true,
+      "detail": "guard installed=True active=True"
+     },
+     {
+      "check": "launcher.no_build_tool_requested",
+      "ok": true,
+      "detail": "blocked build-tool requests: []"
+     },
+     {
+      "check": "binary.now_is_pinned",
+      "ok": true,
+      "detail": "executable at post-run time: dd89c96204bc1dee0980e78f42206bee05c5c34129426b58a5f132cde6da3454"
+     }
+    ]
+   }
+  },
+  {
+   "gate": "G1.host_identity",
+   "status": "INCONCLUSIVE",
+   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 841 GPU observation(s); no host recorded by: ['memory sampler']",
+   "data": {
+    "sources": {
+     "lifecycle.host": "pod4-gb300-10-tray16-f3",
+     "lifecycle.host_identity.hostname": "pod4-gb300-10-tray16-f3",
+     "run_log": "pod4-gb300-10-tray16-f3",
+     "reservation.node": "pod4-gb300-10-tray16-f3",
+     "gpu_observations": [
+      "pod4-gb300-10-tray16-f3"
+     ],
+     "import probe": "pod4-gb300-10-tray16-f3",
+     "memory sampler": null,
+     "storage sampler": "pod4-gb300-10-tray16-f3"
+    }
+   }
+  },
+  {
+   "gate": "G2.one_stop_request_returned_ok",
+   "status": "PASS",
+   "detail": "requests_sent=1, stop_requested phases=1, http='ok' returned 08:29:41.00Z, server SIGTERM 08:29:43.00Z, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=1"
+  },
+  {
+   "gate": "G3.phases_in_order",
+   "status": "PASS",
+   "detail": "phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']); times non-decreasing=True; final phase 'report_written'; escalations [] (soft_deadline is a recorded warning, any other kind fails); control lines []; forced release requested=False"
+  },
+  {
+   "gate": "G4.phase_deadlines",
+   "status": "PASS",
+   "detail": "stop_accepted 0.01 s (deadline 30); flush_stop_to_importing 100.0 s (deadline 300); import_importer_first_seen_to_gone 57.0 s (deadline 300); stop_to_report_written 160.0 s (deadline 600); session_close_after_server_sigterm 2.5 s (deadline 300)",
+   "data": {
+    "phases": {
+     "stop_accepted": {
+      "from": "t_stop",
+      "to": "t_accepted",
+      "seconds": 0.01,
+      "deadline_s": 30
+     },
+     "flush_stop_to_importing": {
+      "from": "t_stop",
+      "to": "t_importing",
+      "seconds": 100.0,
+      "deadline_s": 300
+     },
+     "import_importer_first_seen_to_gone": {
+      "from": "t_imp_first",
+      "to": "t_imp_gone",
+      "seconds": 57.0,
+      "deadline_s": 300
+     },
+     "stop_to_report_written": {
+      "from": "t_stop",
+      "to": "t_report",
+      "seconds": 160.0,
+      "deadline_s": 600
+     },
+     "session_close_after_server_sigterm": {
+      "from": "t_sigterm",
+      "to": "t_closed",
+      "seconds": 2.5,
+      "deadline_s": 300
+     }
+    },
+    "clocks": {
+     "t_stop": 1800001620.0,
+     "t_accepted": 1800001620.01,
+     "t_importing": 1800001720.0,
+     "t_report": 1800001780.0,
+     "t_imp_first": 1800001721.0,
+     "t_imp_gone": 1800001778.0,
+     "t_sigterm": 1800001783.0,
+     "t_closed": 1800001785.5
+    }
+   }
+  },
+  {
+   "gate": "G5.importer_observed",
+   "status": "PASS",
+   "detail": "importer 5000 (--input-file is the session stream; holds the session stream open), parent 4990 agent=True linked to the recorded CLI=True; states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; final COMPLETED; signals outside the server processes []",
+   "data": {
+    "summary": {
+     "identified": true,
+     "verified_activity": true,
+     "temporarily_inactive_intervals": 1,
+     "ambiguous": false,
+     "completed": true,
+     "terminated": false,
+     "final_state": "COMPLETED"
+    }
+   }
+  },
+  {
+   "gate": "G6.gpu_release_interval",
+   "status": "PASS",
+   "detail": "839 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM 08:29:43.00Z: last 'held' reading within [-1.4, -1.2] s, first 'released' reading within [0.8, 1.0] s \u2192 released no later than 1.0 s after it (deadline 90 s; no tighter bound is claimed); held again afterwards=False; census files {'gpu_release_census_t0.json': True, 'gpu_release_census_t20.json': True}",
+   "data": {
+    "interval": {
+     "observations": 839,
+     "problem": null,
+     "held_again": false,
+     "last_held_window": [
+      -1.4,
+      -1.2
+     ],
+     "first_released_window": [
+      0.8,
+      1.0
+     ],
+     "stamp_gap_s": 2.2,
+     "unavailable_between": 0,
+     "upper_edge_s": 1.0
+    },
+    "census": {
+     "gpu_release_census_t0.json": true,
+     "gpu_release_census_t20.json": true
+    }
+   }
+  },
+  {
+   "gate": "G7.stream_durable",
+   "status": "PASS",
+   "detail": "controller's final record (taken 08:29:45Z, after session close): 4096 B sha256 a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24; durable copy /tmp/v3scale-rehearsal-cud5m795/78_memory_samples_missing/e1_v3_scale/preserved/x.qdstrm: 4096 B sha256 a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24; two full reads identical=True; equals the final record=True; tray original present and equal=True; 0 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
+   "data": {
+    "sha256": "a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24",
+    "size": 4096,
+    "observations": []
+   }
+  },
+  {
+   "gate": "G8.offline_import",
+   "status": "PASS",
+   "detail": "offline import of the durable stream rc 0 in 0 s \u2192 4096 B"
+  },
+  {
+   "gate": "G8b.recovered_trace_complete",
+   "status": "PASS",
+   "detail": "recovered trace: 4320 iterations (band [4200, 4500]), NVTX forward ranges 17280, kernel rows 2450 (band [2327, 2572]), kernels per process [612, 612, 613, 613], kernel boundaries [1000000, 1002450] ns; absolute checks {'iterations_in_band': True, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': True, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; in-session export exists \u2192 equality checks {'kernel_rows': True, 'nvtx_forward_ranges': True, 'distinct_iterations': True, 'iteration_index_range': True, 'kernel_boundaries_ns': True, 'nvtx_forward_boundaries_ns': True, 'kernels_per_process': True, 'every_table_row_count': True, 'capture_metadata': True, 'export_product_and_schema': True}, differing table row counts {}",
+   "data": {
+    "absolute": {
+     "iterations_in_band": true,
+     "nvtx_is_per_iteration_multiple": true,
+     "kernel_rows_in_band": true,
+     "four_processes_with_kernels": true,
+     "capture_boundaries_present": true
+    },
+    "relative": {
+     "kernel_rows": true,
+     "nvtx_forward_ranges": true,
+     "distinct_iterations": true,
+     "iteration_index_range": true,
+     "kernel_boundaries_ns": true,
+     "nvtx_forward_boundaries_ns": true,
+     "kernels_per_process": true,
+     "every_table_row_count": true,
+     "capture_metadata": true,
+     "export_product_and_schema": true
+    },
+    "table_row_differences": {},
+    "recovered": {
+     "nvtx_forward_ranges": 17280,
+     "kernel_rows": 2450,
+     "kernel_span_ms": 0.00245,
+     "ok": true,
+     "distinct_iterations": 4320,
+     "iteration_index_range": [
+      0,
+      4319
+     ],
+     "nvtx_forward_boundaries_ns": [
+      0,
+      172795
+     ],
+     "kernel_boundaries_ns": [
+      1000000,
+      1002450
+     ],
+     "kernels_per_process": [
+      612,
+      612,
+      613,
+      613
+     ],
+     "metadata": {
+      "ANALYSIS_DETAILS": [
+       "[1, 500, 0, 500]"
+      ],
+      "META_DATA_CAPTURE": [
+       "[\"START_TRIGGER\", \"Immediate\"]"
+      ],
+      "TARGET_INFO_SESSION_START_TIME": [
+       "[1, \"a\", \"a\", 2]"
+      ],
+      "META_DATA_EXPORT": [
+       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/v3scale-rehearsal-cud5m795/78_memory_samples_missing/scratch/recovery.sqlite\"]",
+       "[\"EXPORT_PRODUCT_VERSION\", \"2025.6.3.541\"]",
+       "[\"EXPORT_TIME_UTC\", \"/tmp/v3scale-rehearsal-cud5m795/78_memory_samples_missing/scratch/recovery.sqlite now\"]"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "gate": "G9.scientific_completeness",
+   "status": "PASS",
+   "detail": "exit codes {'completeness_v2': 0, 'extract': 0, 'nsys_validation': 0} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity PASS"
+  },
+  {
+   "gate": "G10.bounds",
+   "status": "PASS",
+   "detail": "GPU-held 1784 s by the controller, at most 1784 s by the sampler (ceiling 2700.0); server SIGTERM \u2192 session closed 2.5 s (limit 300.0); reservation 50.0 min (limit 90)"
+  },
+  {
+   "gate": "G11.storage_and_memory",
+   "status": "INCONCLUSIVE",
+   "detail": "measured peaks {'temporary_peak_gb': 6.07, 'persistent_peak_gb': 6.0, 'min_mem_available_gb': 900.0, 'importer_peak_rss_gb_in_session': None, 'importer_peak_rss_gb_offline': 17.0}; ceilings temporary 10 GB, persistent 8 GB, importer 256 GB, MemAvailable floor 64 GB; NOT MEASURED: {'run memory': 'no samples'}",
+   "data": {
+    "measured": {
+     "temporary_peak_gb": 6.07,
+     "persistent_peak_gb": 6.0,
+     "min_mem_available_gb": 900.0,
+     "importer_peak_rss_gb_in_session": null,
+     "importer_peak_rss_gb_offline": 17.0
+    },
+    "unmeasured": {
+     "run memory": "no samples"
+    }
+   }
+  },
+  {
+   "gate": "G12.closeout",
+   "status": "PASS",
+   "detail": "closeout exit code 0; reservation deleted record present (GPU pods left on the node: 0)"
+  }
+ ]
+}

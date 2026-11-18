@@ -1,0 +1,37 @@
+{
+ "sampler": "e1_storage_watch.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "samples": 57,
+ "first_at": 1795026708.357213,
+ "last_at": 1795026820.8604352,
+ "interval_s": 2.0,
+ "max_gap_s": 2.2928097248077393,
+ "size_basis": "apparent size of regular files, each inode once per group",
+ "groups": {
+  "temporary": {
+   "patterns": [
+    "/tmp/nsys-report-*.qdstrm",
+    "/tmp/*.raw-preserve",
+    "/tmp/v3scale-recovery-*"
+   ],
+   "ceiling_gb": 10.0,
+   "peak_bytes": 2617144933,
+   "peak_at": 1795026812.557316,
+   "last_bytes": 695921573,
+   "min_free_bytes": 1247174541312
+  },
+  "persistent": {
+   "patterns": [
+    "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_rehearsal",
+    "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_rehearsal/tables"
+   ],
+   "ceiling_gb": 8.0,
+   "peak_bytes": 3158810914,
+   "peak_at": 1795026820.8604352,
+   "last_bytes": 3158810914,
+   "min_free_bytes": 22302112612352
+  }
+ },
+ "breaches": [],
+ "complete": true
+}
