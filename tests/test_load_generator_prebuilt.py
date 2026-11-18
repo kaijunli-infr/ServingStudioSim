@@ -34,6 +34,28 @@ class CargoInvoked(AssertionError):
     pass
 
 
+@pytest.fixture(autouse=True)
+def _guard_disarmed():
+    """The build-tool guard is process-wide once installed; every test starts and ends with it disarmed."""
+    frontend._NO_BUILD.update(active=False, blocked=[])
+    yield
+    frontend._NO_BUILD.update(active=False, blocked=[])
+
+
+@pytest.fixture
+def tripwire(tmp_path, monkeypatch):
+    """Fake cargo/rustc/rustup first on PATH: had anything really started one, the marker file would exist."""
+    bin_dir = tmp_path / "tripwire-bin"
+    bin_dir.mkdir()
+    marker = tmp_path / "build-tool-was-started"
+    for tool in frontend.BUILD_TOOLS:
+        exe = bin_dir / tool
+        exe.write_text(f'#!/bin/sh\necho "$0 $@" >> "{marker}"\nexit 97\n')
+        exe.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    return marker
+
+
 @pytest.fixture
 def no_cargo(monkeypatch):
     """Any attempt to start cargo, anywhere, fails the test and is recorded."""
@@ -396,3 +418,208 @@ def test_cli_verify_and_record(tmp_path, monkeypatch, capsys):
     )
     assert frontend._main(["verify-prebuilt", "--provenance", str(prov)]) == 0
     assert "cargo not consulted" in capsys.readouterr().out
+
+
+# --- no build tool can be started in a prebuilt launch, also not through a helper (final rehearsal, item 5) ---
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cargo",
+        ["cargo", "build"],
+        "/home/x/.cargo/bin/cargo",
+        ["uv", "run", "cargo", "build", "--release"],
+        "cd /x && cargo build --release",
+        ["bash", "-lc", "rustc --version"],
+        b"cargo",
+        Path("/usr/bin/rustup"),
+        ["env", "A=1", "/opt/rust/bin/rustc", "x.rs"],
+        "(cargo build)",
+        [None, ["nice", "cargo", "build"]],
+    ],
+)
+def test_build_tool_commands_are_recognised(command):
+    assert frontend._names_build_tool(command)
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        None,
+        ["git", "-C", "/x/.cargo/registry", "status", "--short"],
+        "/home/x/.cargo/bin/uv run --no-sync python -m launcher",
+        ["/x/req-frontend/target/release/session_runner", "--trace", "t.csv", "--stream", "false"],
+        ["git", "ls-files", "--", "*.rs", "Cargo.toml", "Cargo.lock"],
+        "/data/cargo/model.bin",
+        ["/opt/nvidia/nsight-systems/2025.6.3/bin/nsys", "stop", "--session=x"],
+    ],
+)
+def test_other_commands_are_not_mistaken_for_build_tools(command):
+    assert frontend._names_build_tool(command) is None
+
+
+def test_the_guard_is_inert_until_a_prebuilt_launch_arms_it(tripwire):
+    assert frontend.build_tool_guard_state()["active"] is False
+    # disarmed: the development path may start cargo (here: the tripwire stand-in, exit code 97)
+    assert subprocess.run(["cargo", "build"], check=False).returncode == 97
+    assert tripwire.read_text().count("cargo build") == 1
+
+
+def test_armed_guard_refuses_build_tools_through_every_spawn_route(tmp_path, tripwire):
+    from launcher import exec as launcher_exec
+
+    state = frontend.forbid_build_tools()
+    assert state["installed"] is True and state["active"] is True and state["blocked"] == []
+    gone = "/nonexistent-rehearsal-dir/cargo"  # never executable, even if the guard did not hold
+    routes = {
+        "subprocess.run argv": lambda: subprocess.run(["cargo", "build"], check=False),
+        "subprocess.Popen absolute path": lambda: subprocess.Popen([gone, "build"]),
+        "wrapped in another program": lambda: subprocess.run(["uv", "run", "cargo", "build"]),
+        "shell string": lambda: subprocess.run("cd / && cargo build --release", shell=True),
+        "check_output rustc": lambda: subprocess.check_output(["rustc", "--version"]),
+        "os.system": lambda: os.system("cargo --version"),
+        "os.popen": lambda: os.popen("rustup show"),
+        "os.execv": lambda: os.execv(gone, ["cargo", "build"]),
+        "os.posix_spawn": lambda: os.posix_spawn(gone, ["cargo", "build"], dict(os.environ)),
+        "development build helper": frontend.build_session_runner,
+    }
+    for name, call in routes.items():
+        with pytest.raises(frontend.FrontendBinaryError, match="forbidden"):
+            call()
+        assert len(frontend.build_tool_guard_state()["blocked"]) >= 1, name
+    assert len(frontend.build_tool_guard_state()["blocked"]) >= len(routes)
+    # the launcher's own process supervisor (what launcher.exec.cargo_build spawns through)
+    before = len(frontend.build_tool_guard_state()["blocked"])
+    try:
+        result = launcher_exec._PROCESS_SUPERVISOR.run_sync(
+            launcher_exec.ProcessSpec(
+                argv=["cargo", "build"], cwd=tmp_path, env=dict(os.environ), name="build-simulator"
+            )
+        )
+        assert not result.succeeded
+    except frontend.FrontendBinaryError:
+        pass
+    assert len(frontend.build_tool_guard_state()["blocked"]) > before
+    assert not tripwire.exists()  # nothing was started, by any route
+    # other programs still run
+    assert subprocess.run(["git", "--version"], capture_output=True, check=False).returncode == 0
+
+
+def test_the_real_launch_path_arms_the_guard_before_the_engine_start(
+    tmp_path, monkeypatch, tripwire
+):
+    root, exe, prov = _checkout(tmp_path)
+    _mock_until_engine_start(monkeypatch, root)
+    cfg = _cfg(tmp_path)
+    with pytest.raises(EngineStartReached):
+        profile_runner.run_profile(cfg, frontend_provenance=prov)
+    assert frontend.build_tool_guard_state() == {"installed": True, "active": True, "blocked": []}
+    # from here on the development build is unreachable in this process, directly or through the launch code
+    with pytest.raises(frontend.FrontendBinaryError, match="forbidden"):
+        frontend.build_session_runner()
+    with pytest.raises(frontend.FrontendBinaryError, match="forbidden"):
+        profile_runner.run_profile(cfg)  # the development branch, in an armed process
+    assert not tripwire.exists() and exe.read_bytes() == BINARY
+
+
+def test_a_helper_asking_for_a_build_during_the_launch_is_refused_and_fails_the_launch(
+    tmp_path, monkeypatch, tripwire
+):
+    root, exe, prov = _checkout(tmp_path)
+
+    def helper(path):  # an indirect helper that swallows its own failure, as a build wrapper might
+        try:
+            subprocess.run(["cargo", "build", "--release"], check=True)
+        except Exception:  # noqa: BLE001
+            pass
+
+    cfg = _launcher_mocks(monkeypatch, tmp_path, root, during_launch=helper)
+    with pytest.raises(ValueError, match="build tool was requested"):
+        launcher_alignment._run_profile(_args(tmp_path / "profile.json", prov))
+    rec = json.loads(
+        (Path(cfg.log_dir) / "load_generator" / frontend.FRONTEND_RECORD_NAME).read_text()
+    )
+    guard = rec["build_tool_guard"]
+    assert guard["installed"] is True and len(guard["blocked"]) == 1
+    assert guard["blocked"][0]["event"] == "subprocess.Popen"
+    assert "cargo" in guard["blocked"][0]["command"]
+    assert rec["unchanged"] is True and exe.read_bytes() == BINARY and not tripwire.exists()
+
+
+def test_a_clean_mocked_launch_records_an_armed_guard_with_nothing_blocked(
+    tmp_path, monkeypatch, tripwire
+):
+    root, exe, prov = _checkout(tmp_path)
+    cfg = _launcher_mocks(monkeypatch, tmp_path, root, during_launch=lambda p: None)
+    assert launcher_alignment._run_profile(_args(tmp_path / "profile.json", prov)) == 0
+    rec = json.loads(
+        (Path(cfg.log_dir) / "load_generator" / frontend.FRONTEND_RECORD_NAME).read_text()
+    )
+    assert rec["build_tool_guard"] == {"installed": True, "active": True, "blocked": []}
+    assert rec["unchanged"] is True and not tripwire.exists()
+
+
+def _functions(files):
+    found: dict[str, list] = {}
+    for file in files:
+        for node in ast.walk(ast.parse(file.read_text())):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                found.setdefault(node.name, []).append(node)
+    return found
+
+
+def _starts_build_tool(node) -> bool:
+    body = list(node.body)
+    if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant):
+        body = body[1:]  # the docstring is text, not a command
+    return any(
+        isinstance(n, ast.Constant)
+        and isinstance(n.value, str)
+        and frontend._names_build_tool(n.value)
+        for stmt in body
+        for n in ast.walk(stmt)
+    )
+
+
+def _called_names(node) -> set[str]:
+    names = set()
+    for n in ast.walk(node):
+        if isinstance(n, ast.Call):
+            if isinstance(n.func, ast.Name):
+                names.add(n.func.id)
+            elif isinstance(n.func, ast.Attribute):
+                names.add(n.func.attr)
+    return names
+
+
+def test_no_function_that_starts_a_build_tool_is_reachable_from_the_profile_launch():
+    """Static check over the launch code (by called name, an over-approximation): from the launcher's profile
+    entry point the only reachable function that starts a build tool is the development build, which refuses
+    when the guard is armed (tested above)."""
+    files = [
+        REPO / "launcher" / "alignment.py",
+        REPO / "launcher" / "exec.py",
+        *sorted((REPO / "launcher").glob("process*.py")),
+        *sorted((REPO / "launcher").glob("process*/*.py")),
+        REPO / "alignment" / "runner.py",
+        *sorted((REPO / "alignment" / "load_generator").glob("*.py")),
+        *sorted((REPO / "alignment" / "profiler").glob("*.py")),
+    ]
+    functions = _functions(files)
+    starters = {name for name, nodes in functions.items() if any(map(_starts_build_tool, nodes))}
+    assert {"build_session_runner", "cargo_build", "_analyzer_build_command"} <= starters
+    reached, todo = set(), ["_run_profile"]
+    while todo:
+        name = todo.pop()
+        if name in reached or name not in functions:
+            continue
+        reached.add(name)
+        for node in functions[name]:
+            todo.extend(_called_names(node))
+    assert {"run_profile", "verify_prebuilt_session_runner", "forbid_build_tools"} <= reached
+    assert reached & starters == {"build_session_runner"}, sorted(reached & starters)
+    # and that one function refuses first when the guard is armed
+    first = functions["build_session_runner"][0].body[1]
+    assert isinstance(first, ast.If) and ast.unparse(first.test) == "_NO_BUILD['active']"
+    assert isinstance(first.body[-1], ast.Raise)

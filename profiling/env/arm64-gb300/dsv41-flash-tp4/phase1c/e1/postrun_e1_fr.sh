@@ -52,8 +52,9 @@ grep -E "^FAIL|^RESULT|pure" $CPU/v2_$PASS.txt | head -8; echo "completeness_v2 
 tail -2 $CPU/extract_$PASS.log | cut -c1-200; echo "extract rc=$ex"
 uv run --no-sync python $E1/checks/e1_nsys_validation.py --profile $PROF --tables $TAB --inputs $E1/E1-STAGE15-INPUTS.json --out $CPU/nsys_validation_$PASS.json > $CPU/nsys_validation_$PASS.txt 2>&1; nv=$?
 grep -E "^(FAIL|WARN|RESULT)" $CPU/nsys_validation_$PASS.txt | head -12; echo "nsys_validation rc=$nv"
-bc=$(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); f=json.load(open(sys.argv[2])); pin=json.load(open(sys.argv[3]))['sha256']; ok=d.get('unchanged') is True and d.get('cargo_compiling_lines_in_run_log') == 0 and d.get('sha256_before_launcher') == d.get('sha256_after_launcher') == pin and f.get('unchanged') is True and f.get('sha256') == f.get('sha256_after_launch') == pin and str(f.get('mode','')).startswith('prebuilt') and f.get('cargo_consulted') is False; print(0 if ok else 1)" $RUN/$PASS/binary_check.json $PROF/load_generator/frontend_binary.json $E1/BINARY-PROVENANCE.json 2>/dev/null || echo 1)
-echo "load-generator executable = pinned bytes before and after the launch, prebuilt path, nothing compiled (driver record + launcher record): rc=$bc $(cat $RUN/$PASS/binary_check.json 2>/dev/null | cut -c1-260)"
+python3 -I $E1/checks/e1_frontend_binary_gate.py --driver-record $RUN/$PASS/binary_check.json --launcher-record $PROF/load_generator/frontend_binary.json --provenance $E1/BINARY-PROVENANCE.json \
+  --binary $REPO/alignment/load_generator/req-frontend/target/release/session_runner --out $CPU/binary_gate_$PASS.json > $CPU/binary_gate_$PASS.txt 2>&1; bc=$?
+grep -E "^FAIL|^#" $CPU/binary_gate_$PASS.txt | cut -c1-260; echo "load-generator executable = pinned bytes before and after the launch, prebuilt path, nothing compiled, no build tool requested (driver record + launcher record): rc=$bc"
 echo "## E. frozen V2 gates"
 python3 -I $E1/checks/e1_forced_release_gates.py --run $RUN/$PASS --inputs $E1/E1-V2-FR-INPUTS.json --importer $IMPORTER --nsys $NSYS --scratch /tmp/v2-recovery-$PASS \
   --durable-stream $DST --identity $CPU/identity_v2_$PASS.json --extra binary_unchanged=$bc --extra launcher_recovery=$rr --extra completeness_v2=$v2 --extra extract=$ex --extra nsys_validation=$nv \

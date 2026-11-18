@@ -7,6 +7,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -49,6 +50,67 @@ _COMMIT = re.compile(r"^[0-9a-f]{40}$")
 
 class FrontendBinaryError(RuntimeError):
     """The prebuilt load-generator contract does not hold; nothing may be launched."""
+
+
+#: Build tools a prebuilt (authorized) launch may never start, directly or through a helper.
+BUILD_TOOLS = ("cargo", "rustc", "rustup")
+_BUILD_TOOL_WORD = re.compile(r"(?:^|[\s;&|(`/])(?:cargo|rustc|rustup)(?=$|[\s;&|)`])")
+_NO_BUILD: dict = {"installed": False, "active": False, "blocked": []}
+#: audit event -> positions of the arguments that name what is executed
+_SPAWN_EVENTS = {
+    "subprocess.Popen": (0, 1),
+    "os.system": (0,),
+    "os.exec": (0, 1),
+    "os.posix_spawn": (0, 1),
+    "os.spawn": (1, 2),
+    "pty.spawn": (0,),
+}
+
+
+def _names_build_tool(value) -> str | None:
+    """The command text if `value` (a path, a shell string or an argv) starts a build tool."""
+    if isinstance(value, (list, tuple)):
+        return next((hit for hit in map(_names_build_tool, value) if hit), None)
+    if isinstance(value, (bytes, os.PathLike)):
+        value = os.fsdecode(value)
+    if isinstance(value, str) and _BUILD_TOOL_WORD.search(value):
+        return value
+    return None
+
+
+def _build_tool_audit(event: str, args: tuple) -> None:
+    positions = _SPAWN_EVENTS.get(event)
+    if positions is None or not _NO_BUILD["active"]:
+        return
+    requested = [args[i] for i in positions if i < len(args)]
+    if _names_build_tool(requested):
+        shown = repr(requested)[:300]
+        _NO_BUILD["blocked"].append({"at": time.time(), "event": event, "command": shown})
+        raise FrontendBinaryError(
+            f"prebuilt launch: starting a build tool is forbidden ({event}: {shown})"
+        )
+
+
+def forbid_build_tools() -> dict:
+    """Arm the build-tool guard for the rest of this process (a prebuilt launch).
+
+    Every process this interpreter starts, from any module or helper, passes through the
+    interpreter's audit events; one that names cargo, rustc or rustup is refused before it
+    is spawned and recorded. The guard cannot be removed once installed.
+    """
+    if not _NO_BUILD["installed"]:
+        sys.addaudithook(_build_tool_audit)
+        _NO_BUILD["installed"] = True
+    _NO_BUILD["active"] = True
+    return build_tool_guard_state()
+
+
+def build_tool_guard_state() -> dict:
+    return {
+        "installed": _NO_BUILD["installed"],
+        "active": _NO_BUILD["active"],
+        "blocked": list(_NO_BUILD["blocked"]),
+    }
 
 
 def sha256_file(path: Path) -> str:
@@ -219,6 +281,7 @@ def verify_after_launch(log_dir: Path) -> dict | None:
     record["sha256_after_launch"] = after
     record["verified_after_launch_at"] = time.time()
     record["unchanged"] = after == record.get("sha256") == record.get("pinned_sha256")
+    record["build_tool_guard"] = build_tool_guard_state()
     target.write_text(json.dumps(record, indent=1) + "\n")
     return record
 
@@ -227,8 +290,14 @@ def build_session_runner() -> Path:
     """Build req-frontend before starting vLLM so compilation is outside nsys.
 
     Development path only. A launch that names a provenance file goes through
-    `verify_prebuilt_session_runner` instead and never reaches this function.
+    `verify_prebuilt_session_runner` instead and never reaches this function; if it
+    is reached anyway while the build-tool guard is armed, it refuses.
     """
+    if _NO_BUILD["active"]:
+        _NO_BUILD["blocked"].append(
+            {"at": time.time(), "event": "build_session_runner", "command": "cargo build"}
+        )
+        raise FrontendBinaryError("prebuilt launch: compiling session_runner is forbidden")
     subprocess.run(
         [
             "cargo",

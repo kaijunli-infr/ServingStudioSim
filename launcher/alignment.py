@@ -504,6 +504,7 @@ def _run_profile(args: argparse.Namespace) -> int:
     if frontend_provenance is not None and not resume:
         from alignment.load_generator import runner as frontend
 
+        frontend.forbid_build_tools()
         try:
             checked = frontend.verify_prebuilt_session_runner(frontend_provenance)
         except frontend.FrontendBinaryError as exc:
@@ -542,6 +543,11 @@ def _run_profile(args: argparse.Namespace) -> int:
                     )
         if after is not None and not after["unchanged"]:
             raise ValueError("session_runner changed during the launch (see frontend_binary.json)")
+        if after is not None and after["build_tool_guard"]["blocked"]:
+            raise ValueError(
+                "a build tool was requested during the prebuilt launch and refused "
+                "(see frontend_binary.json)"
+            )
     if result.get("profile_kind", "nsys") == "nsys":
         print(
             f"[alignment] profiling complete: {result['parsed_nsys']}\n"

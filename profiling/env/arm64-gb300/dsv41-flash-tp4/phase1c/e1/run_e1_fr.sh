@@ -34,15 +34,16 @@ cd $REPO
 source profiling/env/arm64-gb300/gb300.env
 unset CUDA_VISIBLE_DEVICES
 echo "[$PASS] start $(date -u +%FT%TZ) on $(hostname) launcher_tree=$REPO repo=$(git rev-parse HEAD) tree_alignment=$(git rev-parse HEAD:alignment | cut -c1-12) cfg_sha=$(sha256sum $CFG | cut -c1-16) trace_sha=$(sha256sum $TRACE | cut -c1-16) session_runner=$(sha256sum alignment/load_generator/req-frontend/target/release/session_runner | cut -c1-16)" | tee -a $RUN/$PASS/run.log
-BIN=alignment/load_generator/req-frontend/target/release/session_runner; BS0=$(sha256sum $BIN | cut -d' ' -f1)
+BIN=alignment/load_generator/req-frontend/target/release/session_runner; BS0=$(sha256sum $BIN | cut -d' ' -f1); ST0=$(stat -c '%i %Y %s' $BIN)
 # prebuilt load-generator contract: exact pinned bytes, pinned source, recorded build state; the launcher refuses before any engine
-# start on a mismatch, never runs cargo, and hashes the executable again when it ends
+# start on a mismatch, never runs cargo, refuses any build tool any helper asks for (audit-hook guard), and hashes the executable
+# again when it ends
 uv run --no-sync python -m launcher alignment profile "$RUN/$PASS/profile.json" --frontend-provenance $E1/BINARY-PROVENANCE.json 2>&1 | tee -a $RUN/$PASS/run.log
 rc=${PIPESTATUS[0]}
 # independent of the launcher's own record (load_generator/frontend_binary.json): the driver's before/after hash and the count of cargo
 # "Compiling" lines in the run log (V1's launcher rebuilt the binary at launch). Both feed the post-run gate S.binary_unchanged.
-BS1=$(sha256sum $BIN | cut -d' ' -f1); nb=$(grep -ac "^ *Compiling " $RUN/$PASS/run.log)
-printf '{"binary": "%s", "sha256_before_launcher": "%s", "sha256_after_launcher": "%s", "unchanged": %s, "cargo_compiling_lines_in_run_log": %s}\n' "$BIN" "$BS0" "$BS1" "$([ "$BS0" = "$BS1" ] && echo true || echo false)" "$nb" > $RUN/$PASS/binary_check.json
+BS1=$(sha256sum $BIN | cut -d' ' -f1); ST1=$(stat -c '%i %Y %s' $BIN); nb=$(grep -ac "^ *Compiling " $RUN/$PASS/run.log)
+printf '{"binary": "%s", "sha256_before_launcher": "%s", "sha256_after_launcher": "%s", "unchanged": %s, "cargo_compiling_lines_in_run_log": %s, "stat_before": "%s", "stat_after": "%s"}\n' "$BIN" "$BS0" "$BS1" "$([ "$BS0" = "$BS1" ] && echo true || echo false)" "$nb" "$ST0" "$ST1" > $RUN/$PASS/binary_check.json
 echo "[$PASS] session_runner before/after the launcher: ${BS0:0:16} / ${BS1:0:16} $([ "$BS0" = "$BS1" ] && [ "$nb" = 0 ] && echo "(unchanged, no rebuild)" || echo "(REBUILT OR CHANGED DURING THE RUN: gate S.binary_unchanged will FAIL)")" | tee -a $RUN/$PASS/run.log
 echo "[$PASS] rc=$rc end $(date -u +%FT%TZ)" | tee -a $RUN/$PASS/run.log
 # independent GPU-release verification (gate L6c): nvidia-smi compute-process census + memory state, outside the controller

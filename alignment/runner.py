@@ -421,7 +421,9 @@ def run_profile(
         # memory.
         if frontend_provenance is not None:
             # Fail closed, before any engine or GPU start: exact executable hash, pinned
-            # source, recorded build state. This path never invokes cargo.
+            # source, recorded build state. This path never invokes cargo, and from here
+            # on no helper in this process can start a build tool either.
+            load_generator.forbid_build_tools()
             load_generator.write_frontend_record(
                 log_dir, load_generator.verify_prebuilt_session_runner(frontend_provenance)
             )
