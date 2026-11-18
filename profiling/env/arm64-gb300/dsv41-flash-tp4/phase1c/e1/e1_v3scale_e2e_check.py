@@ -59,8 +59,8 @@ def registry(path: Path) -> list[dict]:
         lines = path.read_text().splitlines()
     except OSError:
         return []
-    head = lines[0].split("\t") if lines else []
-    return [dict(zip(head, ln.split("\t"))) for ln in lines[1:] if ln.strip()]
+    head = ["pid", "starttime", "boot_id", "uid", "label", "registered_at", "host", "registered_by", "cmd"]
+    return [dict(zip(head, ln.split("\t"))) for ln in lines if ln.strip() and not ln.startswith("#")]
 
 
 def main(argv=None) -> int:

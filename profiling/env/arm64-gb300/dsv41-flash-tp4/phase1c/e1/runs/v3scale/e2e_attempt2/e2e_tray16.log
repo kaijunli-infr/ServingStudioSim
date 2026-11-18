@@ -1,0 +1,76 @@
+# V3 end-to-end rehearsal 2026-11-18T19:35:34Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at dd8503fee9afc92d87de0c968ee72e8e692c523b (0 modified tracked file(s)); scenarios: success
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+PASS  project interpreter /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12 (no virtual environment created in the worktree)
+PASS  stand-in importer / exporter and rehearsal inputs written (kernel-row band scaled to the stand-in exporter; every other limit is the registered one)
+## scenario success (19:35:35)
+driver exit code 0; 66 PASS / 0 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v3scale.sh: line 50: [: /proc/#: binary operator expected
+closeout exit code 1: FAIL  supervisor registry plan rc 2 (the supervisor is still alive, or a refusal / lookalike; see above);# closeout result: NOT CLEAN;
+post-run exit code 1: # V3 gates e1_v3_scale: 14 results, 3 FAIL, 2 INCONCLUSIVE → FAIL;V3 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/cpu/V3S-GATES.txt). STOP: no retry, no advance; everything stays preserved.;
+archive exit code 0: # archive result: VERIFIED;
+second post-run with a failing importer: exit code 1: # V3 gates e1_v3_scale: 14 results, 5 FAIL, 2 INCONCLUSIVE → FAIL
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v3_scale']
+Traceback (most recent call last):
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 180, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 91, in main
+    left = [r["pid"] for r in owned + supreg if alive(r["pid"])]
+                                                      ~^^^^^^^
+KeyError: 'pid'
+FAIL  scenario success: expectations not met (see /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt2/success/E2E-CHECK.txt)
+## state after the rehearsal
+PASS  load-generator executable after the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2, same inode/mtime/size
+PASS  no file under the load generator's build directory was written during the rehearsal (no build tool ran)
+gpu after (MiB / compute processes): 0 0 0 0 / 0
+PASS  no GPU compute process after the rehearsal
+PASS  no mock process left
+PASS  rehearsal run root, mock preserve directory and scratch removed
+# result: E2E REHEARSAL EXPECTATIONS NOT MET
+e2e exit 1 at dd8503fe
+E2EDONE

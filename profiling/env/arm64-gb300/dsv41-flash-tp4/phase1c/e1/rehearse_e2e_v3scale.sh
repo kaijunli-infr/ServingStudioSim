@@ -46,7 +46,7 @@ for sc in $SCENARIOS; do
   esac
   env $envs E1_V3S_MODE=rehearsal E1_V3S_MOCK_NSYS=$T/nsys E1_REPO=$REPO bash $E1/run_e1_v3scale.sh > $O/driver.log 2>&1; drc=$?
   echo "driver exit code $drc; $(grep -c '^PASS' $R/$PASS/preflight.log 2>/dev/null) PASS / $(grep -c '^FAIL' $R/$PASS/preflight.log 2>/dev/null) FAIL in the driver's preflight; $(grep -a 'REHEARSAL MODE\|\[mock\] stop ended\|rc=' $O/driver.log | tr '\n' ';' | cut -c1-300)"
-  for i in $(seq 1 45); do [ -z "$(awk -F'\t' 'NR>1{print $1}' $R/pids/owned.tsv $R/pids/supervisor.tsv 2>/dev/null | while read p; do [ -d /proc/$p ] && echo $p; done)" ] && break; sleep 2; done
+  for i in $(seq 1 45); do [ -z "$(awk -F'\t' '$1 ~ /^[0-9]+$/ {print $1}' $R/pids/owned.tsv $R/pids/supervisor.tsv 2>/dev/null | while read p; do [ -d /proc/$p ] && echo $p; done)" ] && break; sleep 2; done
   E1_V3S_RUN=$R bash $E1/closeout_e1_v3scale.sh > $O/closeout.log 2>&1; crc=$?
   echo "closeout exit code $crc: $(grep '^FAIL\|# closeout result' $O/closeout.log | tr '\n' ';' | cut -c1-400)"
   prc=""; arc=""

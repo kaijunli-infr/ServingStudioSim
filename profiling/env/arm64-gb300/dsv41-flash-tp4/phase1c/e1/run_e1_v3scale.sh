@@ -60,8 +60,9 @@ PY
 REP=$RUN/$PASS/profile/nsys/$NAME.nsys-rep; STOPF=$RUN/$PASS/samplers.stop; rm -f $STOPF
 spawn() { python3 -I $E1/checks/e1_pids.py spawn --registry $REG --label "$1" -- "${@:2}" | tee -a $RUN/$PASS/run.log; }
 lastpid() { grep -ao '"pid": [0-9]*' $RUN/$PASS/run.log | tail -1 | tr -dc 0-9; }
-# independent GPU-state sampler (gate G6): every 2 s, exits by itself 60 s after it has seen the release
-spawn gpuwatch:$PASS python3 -I $E1/checks/e1_gpu_watch.py --out $RUN/$PASS/gpu_observations.jsonl --interval 2 --max-s 3300 --stop-after-released 30; WPID=$(lastpid)
+# independent GPU-state sampler (gate G6): every 2 s, exits by itself 60 s after it has seen the release, or, if the GPUs were never
+# held, 10 samples after the stop file appears (same observation and record as the V2 sampler)
+spawn gpuwatch:$PASS python3 -I $E1/checks/e1_gpu_watch_v3.py --out $RUN/$PASS/gpu_observations.jsonl --interval 2 --max-s 3300 --stop-after-released 30 --stop-file $STOPF --after-stop-samples 10; WPID=$(lastpid)
 # importer-specific observer (gates G4, G5): observer mode, no control file, no trigger; exits when the importer is gone and the report has settled
 spawn importprobe:$PASS python3 -I $E1/checks/e1_import_probe.py --importer-exe $IMPORTER --nsys-dir $RUN/$PASS/profile/nsys --report $REP --out $RUN/$PASS/import_probe.json --samples $RUN/$PASS/import_probe.jsonl --log $RUN/$PASS/import_probe.log --interval 0.5 --min-progress 2 --max-s 3300 --stop-file $STOPF; PPID_=$(lastpid)
 # host-memory sampler with the bounded policy (gate G11): records and writes MEMORY-BREACH; signals nothing
