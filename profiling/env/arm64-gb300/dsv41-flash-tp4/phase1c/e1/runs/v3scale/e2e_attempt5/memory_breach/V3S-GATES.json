@@ -1,0 +1,262 @@
+{
+ "verdict": "FAIL",
+ "counts": {
+  "PASS": 1,
+  "FAIL": 9,
+  "INCONCLUSIVE": 4
+ },
+ "gates": [
+  {
+   "gate": "G0.source_and_executable",
+   "status": "FAIL",
+   "detail": "binary record missing (driver); source problems [\"launch mode is 'rehearsal', not 'real' (a rehearsal launch is never V3 evidence)\"]",
+   "data": {
+    "binary_checks": [
+     {
+      "check": "pin.present",
+      "ok": true,
+      "detail": "pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.record_present",
+      "ok": false,
+      "detail": "driver record missing or unreadable"
+     },
+     {
+      "check": "driver.sha256_before_is_pinned",
+      "ok": false,
+      "detail": "before the launcher: None"
+     },
+     {
+      "check": "driver.sha256_after_is_pinned",
+      "ok": false,
+      "detail": "after the launcher: None"
+     },
+     {
+      "check": "driver.unchanged",
+      "ok": false,
+      "detail": "unchanged=None"
+     },
+     {
+      "check": "driver.file_identity_unchanged",
+      "ok": false,
+      "detail": "inode/mtime/size before None, after None"
+     },
+     {
+      "check": "driver.no_compiling_lines",
+      "ok": false,
+      "detail": "cargo 'Compiling' lines in the run log: None"
+     },
+     {
+      "check": "launcher.record_present",
+      "ok": true,
+      "detail": "launcher record (frontend_binary.json) readable"
+     },
+     {
+      "check": "launcher.prebuilt_mode",
+      "ok": true,
+      "detail": "mode 'prebuilt (no compilation in this launch path)'"
+     },
+     {
+      "check": "launcher.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "verified before the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (record's pin 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2)"
+     },
+     {
+      "check": "launcher.sha256_after_is_pinned",
+      "ok": false,
+      "detail": "verified after the launch: None"
+     },
+     {
+      "check": "launcher.unchanged",
+      "ok": false,
+      "detail": "unchanged=None"
+     },
+     {
+      "check": "launcher.cargo_not_consulted",
+      "ok": true,
+      "detail": "cargo_consulted=False"
+     },
+     {
+      "check": "launcher.build_tool_guard_installed",
+      "ok": false,
+      "detail": "guard installed=None active=None"
+     },
+     {
+      "check": "launcher.no_build_tool_requested",
+      "ok": false,
+      "detail": "blocked build-tool requests: None"
+     },
+     {
+      "check": "binary.now_is_pinned",
+      "ok": true,
+      "detail": "executable at post-run time: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     }
+    ]
+   }
+  },
+  {
+   "gate": "G1.host_identity",
+   "status": "PASS",
+   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 13 GPU observation(s); import probe, memory and storage samplers on pod4-gb300-10-tray16-f3",
+   "data": {
+    "sources": {
+     "lifecycle.host": "pod4-gb300-10-tray16-f3",
+     "lifecycle.host_identity.hostname": "pod4-gb300-10-tray16-f3",
+     "run_log": "pod4-gb300-10-tray16-f3",
+     "reservation.node": "pod4-gb300-10-tray16-f3",
+     "gpu_observations": [
+      "pod4-gb300-10-tray16-f3"
+     ],
+     "import probe": "pod4-gb300-10-tray16-f3",
+     "supervisor": "pod4-gb300-10-tray16-f3",
+     "memory sampler": "pod4-gb300-10-tray16-f3",
+     "storage sampler": "pod4-gb300-10-tray16-f3"
+    }
+   }
+  },
+  {
+   "gate": "G2.one_stop_request_returned_ok",
+   "status": "FAIL",
+   "detail": "requests_sent=1, stop_requested phases=1, http=None returned -, server SIGTERM -, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=0"
+  },
+  {
+   "gate": "G3.phases_in_order",
+   "status": "FAIL",
+   "detail": "phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']); times non-decreasing=True; final phase 'importing'; escalations [] (soft_deadline is a recorded warning, any other kind fails); control lines []; forced release requested=True"
+  },
+  {
+   "gate": "G4.phase_deadlines",
+   "status": "INCONCLUSIVE",
+   "detail": "stop_accepted 1.158 s (deadline 30); flush_stop_to_importing 6.756 s (deadline 300); import_importer_first_seen_to_gone None s (deadline 300); stop_to_report_written None s (deadline 600); session_close_after_server_sigterm None s (deadline 300); controller hard deadline 600.0 s after the stop request, extension 0.0 s, soft warnings recorded 0 (informational); boundary not observed or deadline not registered: ['import_importer_first_seen_to_gone', 'stop_to_report_written', 'session_close_after_server_sigterm']",
+   "data": {
+    "phases": {
+     "stop_accepted": {
+      "from": "t_stop",
+      "to": "t_accepted",
+      "seconds": 1.158,
+      "deadline_s": 30
+     },
+     "flush_stop_to_importing": {
+      "from": "t_stop",
+      "to": "t_importing",
+      "seconds": 6.756,
+      "deadline_s": 300
+     },
+     "import_importer_first_seen_to_gone": {
+      "from": "t_imp_first",
+      "to": "t_imp_gone",
+      "seconds": null,
+      "deadline_s": 300
+     },
+     "stop_to_report_written": {
+      "from": "t_stop",
+      "to": "t_report",
+      "seconds": null,
+      "deadline_s": 600
+     },
+     "session_close_after_server_sigterm": {
+      "from": "t_sigterm",
+      "to": "t_closed",
+      "seconds": null,
+      "deadline_s": 300
+     }
+    },
+    "clocks": {
+     "t_stop": 1795033306.6493971,
+     "t_accepted": 1795033307.8074188,
+     "t_importing": 1795033313.4050312,
+     "t_report": null,
+     "t_imp_first": 1795033313.3554306,
+     "t_imp_gone": null,
+     "t_sigterm": null,
+     "t_closed": null
+    },
+    "hard_deadline": {
+     "hard_at_minus_stop_s": 600.0,
+     "hard_extension_s": 0.0,
+     "policy_hard_deadline_s": 600.0,
+     "soft_warnings": 0
+    }
+   }
+  },
+  {
+   "gate": "G5.importer_observed",
+   "status": "INCONCLUSIVE",
+   "detail": "importer 2491380 (--output-file is the session report), parent 2491379 agent=False linked to the recorded CLI=False; states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE']; final None; signals outside the server processes []; completion not observed",
+   "data": {
+    "summary": {
+     "identified": true,
+     "verified_activity": true,
+     "temporarily_inactive_intervals": 1,
+     "ambiguous": false,
+     "completed": false,
+     "terminated": false,
+     "final_state": null
+    }
+   }
+  },
+  {
+   "gate": "G6.gpu_release_interval",
+   "status": "INCONCLUSIVE",
+   "detail": "13 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM -: last 'held' reading within None s, first 'released' reading within None s \u2192 released no later than None s after it (deadline 90 s; no tighter bound is claimed); held again afterwards=None; census files {}; the server SIGTERM time is not recorded",
+   "data": {
+    "interval": {
+     "observations": 13,
+     "problem": "the server SIGTERM time is not recorded"
+    },
+    "census": {}
+   }
+  },
+  {
+   "gate": "G7.stream_durable",
+   "status": "FAIL",
+   "detail": "controller has no final stream record: None"
+  },
+  {
+   "gate": "G8.offline_import",
+   "status": "FAIL",
+   "detail": "not attempted: FR7 did not establish a final, stable, durable stream"
+  },
+  {
+   "gate": "G8b.recovered_trace_complete",
+   "status": "FAIL",
+   "detail": "not attempted (FR8)"
+  },
+  {
+   "gate": "G9.scientific_completeness",
+   "status": "FAIL",
+   "detail": "exit codes {'completeness_v2': 1, 'extract': 1, 'nsys_validation': 1} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity INCONCLUSIVE"
+  },
+  {
+   "gate": "G10.bounds",
+   "status": "INCONCLUSIVE",
+   "detail": "GPU-held None s by the controller, at most None s by the sampler (ceiling 2700.0); server SIGTERM \u2192 session closed None s (limit 300.0); reservation 2.5 min (limit 90); not measured: ['GPU-held (controller)', 'GPU-held (sampler upper edge)', 'session close']"
+  },
+  {
+   "gate": "G11.storage_and_memory",
+   "status": "FAIL",
+   "detail": "measured peaks {'temporary_peak_gb': 0.698, 'persistent_peak_gb': 0.001, 'min_mem_available_gb': 859.6, 'importer_peak_rss_gb_in_session': 0.16, 'importer_peak_rss_gb_offline': None}; ceilings temporary 10 GB, persistent 8 GB, importer 128 GB, MemAvailable floor 64 GB; exceeded: [\"breach file(s) written during the run: ['MEMORY-BREACH']\", \"the supervisor gave an abort response: registry cleanup rc 2 for [('breach', 'MEMORY-BREACH', 'importer_rss_above_ceiling')]\"]; NOT MEASURED: {'run storage': 'the interval to cover is not known', 'run memory': 'the interval to cover is not known', 'post-run storage': 'the interval to cover is not known', 'post-run memory': 'the interval to cover is not known'}",
+   "data": {
+    "measured": {
+     "temporary_peak_gb": 0.698,
+     "persistent_peak_gb": 0.001,
+     "min_mem_available_gb": 859.6,
+     "importer_peak_rss_gb_in_session": 0.16,
+     "importer_peak_rss_gb_offline": null
+    },
+    "unmeasured": {
+     "run storage": "the interval to cover is not known",
+     "run memory": "the interval to cover is not known",
+     "post-run storage": "the interval to cover is not known",
+     "post-run memory": "the interval to cover is not known"
+    }
+   }
+  },
+  {
+   "gate": "G12.closeout",
+   "status": "FAIL",
+   "detail": "closeout exit code 1; reservation deleted record present (GPU pods left on the node: 0)"
+  }
+ ]
+}

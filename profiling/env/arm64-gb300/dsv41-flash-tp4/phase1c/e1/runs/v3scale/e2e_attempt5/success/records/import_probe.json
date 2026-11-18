@@ -1,0 +1,82 @@
+{
+ "probe": "e1_import_probe.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "provenance": {
+  "importer.state/ticks/starttime/ppid": "/proc/<importer pid>/stat, read by this probe",
+  "importer.io": "/proc/<importer pid>/io, read by this probe",
+  "importer.exe": "readlink /proc/<importer pid>/exe",
+  "importer.argv": "/proc/<importer pid>/cmdline",
+  "importer.fds": "readlink /proc/<importer pid>/fd/*",
+  "agent": "/proc/<importer ppid>/{stat,cmdline,exe}",
+  "report_size": "stat() of the report path (file-level, NOT counted as importer progress)",
+  "reported_progress_pct": "lifecycle.json: the controller's reading of the Nsight log (NOT counted as importer progress)",
+  "phase": "lifecycle.json"
+ },
+ "importer_exe": "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12",
+ "stream": "/tmp/nsys-report-e2e23e781.qdstrm",
+ "report": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.nsys-rep",
+ "recorded_nsys_cli_pid": 2353025,
+ "min_progress": 2,
+ "interval_s": 0.5,
+ "started_at": 1795032904.7157924,
+ "transitions": [
+  {
+   "at": 1795032904.7162204,
+   "state": "NOT_FOUND",
+   "reason": "no process matches the importer criteria and there is no complete report"
+  },
+  {
+   "at": 1795032922.390481,
+   "state": "NO_PROGRESS",
+   "reason": "importer pid 2353155 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2)"
+  },
+  {
+   "at": 1795032923.6195364,
+   "state": "ACTIVE",
+   "reason": "importer pid 2353155 alive; 2 consecutive interval(s) of its own CPU/I-O advance"
+  },
+  {
+   "at": 1795032936.4830174,
+   "state": "SETTLING",
+   "reason": "importer pid 2353155 no longer present; waiting 3 samples for the report to settle"
+  },
+  {
+   "at": 1795032937.711753,
+   "state": "COMPLETED",
+   "reason": "importer pid 2353155 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc"
+  }
+ ],
+ "trigger": {
+  "requested": false,
+  "written": false
+ },
+ "importer": {
+  "pid": 2353155,
+  "starttime": 302691657,
+  "exe": "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12",
+  "matched_by": [
+   "--output-file is the session report"
+  ],
+  "first_seen_at": 1795032922.390481,
+  "agent": {
+   "pid": 2353154,
+   "found": true,
+   "is_agent": false,
+   "session_name": "profile-2353025",
+   "ppid": 1,
+   "sid": 2353154,
+   "starttime": 302691657,
+   "linked_to_recorded_cli": false
+  }
+ },
+ "result": "COMPLETED: importer pid 2353155 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc",
+ "ended_at": 1795032937.8250766,
+ "samples_file": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/import_probe.jsonl",
+ "samples": 55,
+ "final": {
+  "state": "COMPLETED",
+  "reason": "importer pid 2353155 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc",
+  "importer_seen": true,
+  "nsight_generated_marker": null
+ }
+}

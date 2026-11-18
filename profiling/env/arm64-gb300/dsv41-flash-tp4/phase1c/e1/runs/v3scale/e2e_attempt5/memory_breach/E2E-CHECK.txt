@@ -1,0 +1,16 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v3_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [2491299, 2491300, 2491301, 2491302, 2491303]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V3 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+PASS  no_gpu_use: 13 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids [2491300, 2491301, 2491302, 2491303]; importer pid 2491380 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  breach.marker_and_cause: MEMORY-BREACH present True; supervisor causes [('MEMORY-BREACH', 'importer_rss_above_ceiling', 0.16, 0.0625)]
+FAIL  breach.delivered_through_controller: supervisor step R1 control line, acknowledged False after None s (bound 10 s)
+FAIL  breach.controller_record: control commands []
+FAIL  breach.bounded_response: breach sample → identity-verified SIGTERM to the API server None s (bound 15 s); SIGTERM → SIGKILL None s (grace 60 s)
+FAIL  breach.importer_isolated: importer 2491380 was not signalled and finished: probe final None, lifecycle phase importing
+PASS  breach.run_fails: verdict FAIL; not PASS {'G0.source_and_executable': 'FAIL', 'G2.one_stop_request_returned_ok': 'FAIL', 'G3.phases_in_order': 'FAIL', 'G4.phase_deadlines': 'INCONCLUSIVE', 'G5.importer_observed': 'INCONCLUSIVE', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G7.stream_durable': 'FAIL', 'G8.offline_import': 'FAIL', 'G8b.recovered_trace_complete': 'FAIL', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G11.storage_and_memory': 'FAIL', 'G12.closeout': 'FAIL'}
+# scenario memory_breach: 10 of 15 checks pass → NOT MET

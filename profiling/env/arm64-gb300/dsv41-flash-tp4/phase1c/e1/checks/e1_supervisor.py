@@ -115,7 +115,14 @@ def finalisation_active(lc: dict | None, now: float, fresh_s: float) -> bool:
 
 
 def acknowledged(lc: dict | None, line: str) -> dict | None:
-    return next((c for c in (lc or {}).get("control_commands", []) if c.get("command") == line and c.get("result") == "release requested"), None)
+    """The controller took the line. It records the command only after its release action has finished (up to the 60 s server
+    grace), but it writes the release request, with this line as its reason, as soon as it has sent the SIGTERM: that is the
+    acknowledgement."""
+    gpu = (lc or {}).get("gpu") or {}
+    if gpu.get("release_requested_at") is not None and gpu.get("release_reason") == f"operator: {line}":
+        return {"at": gpu["release_requested_at"], "phase": (gpu.get("release_context") or {}).get("phase"), "evidence": "gpu.release_requested_at with this line as the reason", "api_server_sigterm": gpu.get("api_server_sigterm")}
+    done = next((c for c in (lc or {}).get("control_commands", []) if c.get("command") == line and c.get("result") == "release requested"), None)
+    return None if done is None else {"at": done.get("at"), "phase": done.get("phase"), "evidence": "control_commands record"}
 
 
 def run_cleanup(registry: Path, grace: float, log: Path, runner=subprocess.run) -> dict:
@@ -162,7 +169,7 @@ def supervise(run: Path, registry: Path, out: Path, control_line: str, *, gpu_he
                 while now() - step["written_at"] <= ack_s:
                     ack = acknowledged(load(lc_path), control_line)
                     if ack:
-                        step.update({"acknowledged": True, "acknowledged_at": ack.get("at"), "latency_s": round(ack["at"] - step["written_at"], 3) if ack.get("at") else None, "controller_phase": ack.get("phase")})
+                        step.update({"acknowledged": True, "acknowledged_at": ack.get("at"), "latency_s": round(ack["at"] - step["written_at"], 3) if ack.get("at") else None, "controller_phase": ack.get("phase"), "evidence": ack.get("evidence"), "api_server_sigterm": ack.get("api_server_sigterm")})
                         break
                     sleep(min(0.5, interval))
             if not resp["steps"] or not resp["steps"][-1].get("acknowledged"):

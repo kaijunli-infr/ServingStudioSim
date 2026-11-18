@@ -1,0 +1,42 @@
+{
+ "supervisor": "e1_supervisor.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 2422141,
+ "started_at": 1795033104.440108,
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale",
+ "registry": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv",
+ "control_line": "release-gpus V3 resource-limit abort (registered supervisor response)",
+ "limits": {
+  "ack_s": 10.0,
+  "stale_s": 60.0,
+  "cleanup_grace_s": 30.0,
+  "interval_s": 1.0,
+  "gpu_held_ceiling_s": 2700.0
+ },
+ "samples": 55,
+ "causes": [],
+ "response": null,
+ "monitors_effective": true,
+ "signals_sent_by_supervisor": 0,
+ "complete": true,
+ "last_check_at": 1795033158.5237796,
+ "heartbeats": {
+  "memory sampler": {
+   "file": "mem_observations.jsonl",
+   "age_s": 0.74,
+   "required": true
+  },
+  "storage sampler": {
+   "file": "storage_observations.jsonl",
+   "age_s": 0.03,
+   "required": true
+  },
+  "GPU sampler": {
+   "file": "gpu_observations.jsonl",
+   "age_s": 0.81,
+   "required": false
+  }
+ },
+ "phase_seen": "report_written",
+ "ended_at": 1795033158.5254788
+}

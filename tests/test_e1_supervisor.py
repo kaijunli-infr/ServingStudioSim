@@ -37,7 +37,7 @@ class World:
         self.nsys.mkdir(parents=True)
         (tmp / "root" / "pids").mkdir()
         self.registry, self.out = tmp / "root" / "pids" / "owned.tsv", self.run / "supervisor.json"
-        self.t, self.steps, self.ack_after, self.cleanups = 1000.0, list(steps), ack_after, []
+        self.t, self.steps, self.ack_after, self.cleanups, self.record_after = 1000.0, list(steps), ack_after, [], 61.0
         self.lc = {"phase": phase, "stop_requested_at": 990.0 if stop_requested else None, "gpu": {}, "control_commands": [], "updated_at": self.t}
         self.beat()
         self.write_lc()
@@ -60,9 +60,13 @@ class World:
             if written is None:
                 self._seen_line_at = self.t
             elif self.t - self._seen_line_at >= self.ack_after:
-                for line in control.read_text().splitlines():
+                # like the controller: the release request (with the line as its reason) is written at once, the command record only
+                # after the release action has finished, `record_after` seconds later
+                line = control.read_text().splitlines()[0]
+                if self.lc["gpu"].get("release_requested_at") is None:
+                    self.lc["gpu"].update({"release_requested_at": self.t, "release_reason": f"operator: {line}", "release_context": {"phase": self.lc["phase"]}, "api_server_sigterm": {"at": self.t, "pid": 4100, "outcome": "signalled"}})
+                if self.t - self.lc["gpu"]["release_requested_at"] >= self.record_after:
                     self.lc["control_commands"].append({"at": self.t, "command": line, "phase": self.lc["phase"], "result": "release requested"})
-                self.lc["gpu"]["release_requested_at"] = self.t
         self.write_lc()
         if self.steps:
             self.steps.pop(0)(self)
@@ -263,3 +267,16 @@ def test_gpu_held_ceiling_before_any_stop_request_is_a_cause(tmp_path):
     w2.lc["launch_started_at"] = w2.t - 5000.0
     w2.write_lc()
     assert w2.go(mod, gpu_held_ceiling_s=2700.0, max_s=5.0) == 0
+
+
+def test_acknowledgement_is_the_release_request_not_the_later_command_record(tmp_path):
+    """The controller blocks in its release action for up to the 60 s grace and records the command only afterwards. Waiting for
+    that record would time out and run the registry cleanup against a controller that is doing exactly what was asked."""
+    mod, w = _load(), World(tmp_path, steps=[marker()])
+    assert w.record_after > 10.0
+    assert w.go(mod) == 5
+    step = w.record()["response"]["steps"]
+    assert [s["kind"] for s in step] == ["R1 control line"] and step[0]["acknowledged"] is True and step[0]["evidence"] == "gpu.release_requested_at with this line as the reason"
+    assert step[0]["api_server_sigterm"]["outcome"] == "signalled" and w.cleanups == [] and w.lc["control_commands"] == []
+    lc = {"gpu": {"release_requested_at": 5.0, "release_reason": "hard deadline"}, "control_commands": []}
+    assert mod.acknowledged(lc, LINE) is None  # a release for another reason is not an acknowledgement of this line

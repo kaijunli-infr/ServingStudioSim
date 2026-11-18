@@ -1,0 +1,190 @@
+{
+ "schema_version": 2,
+ "name": "dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e",
+ "host": "pod4-gb300-10-tray16-f3",
+ "host_identity": {
+  "hostname": "pod4-gb300-10-tray16-f3",
+  "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+  "launcher_pid": 2422172,
+  "source": "launcher process: socket.gethostname() and /proc/sys/kernel/random/boot_id",
+  "recorded_at": 1795033104.5615435
+ },
+ "phase": "report_written",
+ "phase_history": [
+  {
+   "phase": "stop_requested",
+   "at": 1795033115.3502753,
+   "mono": 3027109.920596506
+  },
+  {
+   "phase": "stop_accepted",
+   "at": 1795033116.4581914,
+   "mono": 3027111.02851332
+  },
+  {
+   "phase": "capture_ended",
+   "at": 1795033116.4594529,
+   "mono": 3027111.029774381
+  },
+  {
+   "phase": "stream_written",
+   "at": 1795033121.9800074,
+   "mono": 3027116.550329239,
+   "path": "/tmp/nsys-report-e2e24f5cf.qdstrm"
+  },
+  {
+   "phase": "importing",
+   "at": 1795033121.9815214,
+   "mono": 3027116.551842365
+  },
+  {
+   "phase": "report_written",
+   "at": 1795033136.5544295,
+   "mono": 3027131.124750382,
+   "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.nsys-rep"
+  }
+ ],
+ "launch_started_at": 1795033104.561488,
+ "stop_requested_at": 1795033115.3496296,
+ "http": {
+  "status": "ok",
+  "returned_at": 1795033135.9656355,
+  "requests_sent": 1,
+  "returned_logged_at": 1795033136.5543244
+ },
+ "stream": {
+  "path": "/tmp/nsys-report-e2e24f5cf.qdstrm",
+  "size": 2097152,
+  "preserved_path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.qdstrm",
+  "preserved_size": 2097152,
+  "observations": [
+   {
+    "at": 1795033121.983629,
+    "phase": "importing",
+    "path": "/tmp/nsys-report-e2e24f5cf.qdstrm",
+    "size": 2097152,
+    "mtime_ns": 1795033121392065963
+   }
+  ],
+  "final": {
+   "taken_at": 1795033137.8247404,
+   "basis": "after the nsys session closed (no writer left)",
+   "session_closed_at": 1795033137.8235962,
+   "phase": "report_written",
+   "completeness": "NOT established by a stable size or a matching checksum; requires an offline import and a semantic comparison (kernel rows, NVTX ranges, iterations, capture boundaries)",
+   "available": true,
+   "path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.qdstrm",
+   "size": 2097152,
+   "mtime_ns": 1795033121392065963,
+   "sha256": "d286acb96507ae6ef2cb577425e73151403c63e71836c01cfbd935acadda37a2",
+   "stable_during_read": true,
+   "changed_after_last_observation": false
+  },
+  "discovered_by": "log"
+ },
+ "import_progress_pct": 100,
+ "report": {
+  "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.nsys-rep",
+  "size": 1048576,
+  "written_at": 1795033136.5544202
+ },
+ "deadlines": {
+  "soft_at": 1795033415.3496296,
+  "hard_at": 1795033715.3496296,
+  "hard_extension_s": 0.0,
+  "max_extension_s": 120.0,
+  "gpu_held_ceiling_at": 1795035804.561488
+ },
+ "policy": {
+  "soft_deadline_s": 300.0,
+  "hard_deadline_s": 600.0,
+  "stall_timeout_s": 300.0,
+  "poll_interval_s": 1.0,
+  "on_hard_deadline": "release_gpus",
+  "preserve_raw_stream": true,
+  "raw_preserve_dir": null,
+  "min_free_bytes_stream": 53687091200,
+  "min_free_bytes_report": 21474836480,
+  "session_close_timeout_s": 300.0,
+  "server_term_grace_s": 60.0,
+  "max_extension_s": 120.0,
+  "gpu_held_ceiling_s": 2700.0,
+  "stream_dir": null
+ },
+ "escalations": [],
+ "control_commands": [],
+ "warnings": [],
+ "nsys": {
+  "pid": 2422223,
+  "identity": {
+   "pid": 2422223,
+   "starttime": 302709913,
+   "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+   "uid": 1000,
+   "ppid": 2422172,
+   "name": "python3",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_mock_launcher.py nsys /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/mock /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.nsys-rep"
+  },
+  "alive": false
+ },
+ "server": {
+  "api_server": {
+   "pid": 2422224,
+   "starttime": 302709915,
+   "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+   "uid": 1000,
+   "ppid": 2422223,
+   "name": "python3",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_mock_launcher.py apiserver /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/mock"
+  },
+  "engine_processes": [
+   {
+    "pid": 2422225,
+    "starttime": 302709917,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 2422224,
+    "name": "python3",
+    "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_mock_launcher.py engine"
+   },
+   {
+    "pid": 2422227,
+    "starttime": 302709919,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 2422225,
+    "name": "python3",
+    "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_mock_launcher.py worker 0"
+   },
+   {
+    "pid": 2422228,
+    "starttime": 302709919,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 2422225,
+    "name": "python3",
+    "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_mock_launcher.py worker 1"
+   }
+  ],
+  "alive": false
+ },
+ "gpu": {
+  "release_requested_at": null,
+  "released_at": 1795033137.8236384,
+  "compute_pids": []
+ },
+ "session_closed_at": 1795033137.8235962,
+ "actions": [
+  {
+   "at": 1795033136.7194304,
+   "reason": "shutdown",
+   "pid": 2422224,
+   "action": "SIGTERM",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-life",
+   "starttime": 302709915
+  }
+ ],
+ "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e_server.log",
+ "control_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/nsys/lifecycle.control",
+ "updated_at": 1795033137.8279018
+}

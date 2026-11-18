@@ -1,0 +1,5 @@
+[import-probe] start pid 2491239 importer /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12 report /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.nsys-rep 2026-11-18T20:21:35Z
+[import-probe] state NOT_FOUND: no process matches the importer criteria and there is no complete report 2026-11-18T20:21:35Z
+[import-probe] importer identified: pid 2491380 (--output-file is the session report) 2026-11-18T20:21:53Z
+[import-probe] state NO_PROGRESS: importer pid 2491380 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2) 2026-11-18T20:21:53Z
+[import-probe] state ACTIVE: importer pid 2491380 alive; 2 consecutive interval(s) of its own CPU/I-O advance 2026-11-18T20:21:54Z
