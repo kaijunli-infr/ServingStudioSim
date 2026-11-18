@@ -14,7 +14,7 @@
   {
    "gate": "G1.host_identity",
    "status": "INCONCLUSIVE",
-   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 756 GPU observation(s); no host recorded by: ['import probe', 'memory sampler', 'storage sampler']",
+   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 756 GPU observation(s); no host recorded by: ['import probe', 'supervisor', 'memory sampler', 'storage sampler']",
    "data": {
     "sources": {
      "lifecycle.host": "pod4-gb300-10-tray16-f3",
@@ -25,6 +25,7 @@
       "pod4-gb300-10-tray16-f3"
      ],
      "import probe": null,
+     "supervisor": null,
      "memory sampler": null,
      "storage sampler": null
     }
@@ -43,7 +44,7 @@
   {
    "gate": "G4.phase_deadlines",
    "status": "INCONCLUSIVE",
-   "detail": "stop_accepted 0.003 s (deadline 30); flush_stop_to_importing 61.856 s (deadline 300); import_importer_first_seen_to_gone None s (deadline 300); stop_to_report_written 124.075 s (deadline 600); session_close_after_server_sigterm 61.05 s (deadline 300); boundary not observed or deadline not registered: ['import_importer_first_seen_to_gone']",
+   "detail": "stop_accepted 0.003 s (deadline 30); flush_stop_to_importing 61.856 s (deadline 300); import_importer_first_seen_to_gone None s (deadline 300); stop_to_report_written 124.075 s (deadline 600); session_close_after_server_sigterm 61.05 s (deadline 300); controller hard deadline 600.0 s after the stop request, extension 0.0 s, soft warnings recorded 0 (informational); boundary not observed or deadline not registered: ['import_importer_first_seen_to_gone']",
    "data": {
     "phases": {
      "stop_accepted": {
@@ -86,6 +87,12 @@
      "t_imp_gone": null,
      "t_sigterm": 1795017363.074009,
      "t_closed": 1795017424.123788
+    },
+    "hard_deadline": {
+     "hard_at_minus_stop_s": 600.0,
+     "hard_extension_s": 0.0,
+     "policy_hard_deadline_s": 600.0,
+     "soft_warnings": 0
     }
    }
   },
@@ -149,7 +156,7 @@
   {
    "gate": "G8.offline_import",
    "status": "PASS",
-   "detail": "offline import of the durable stream rc 0 in 26 s \u2192 391797440 B"
+   "detail": "offline import of the durable stream rc 0 in 27 s \u2192 391797440 B"
   },
   {
    "gate": "G8b.recovered_trace_complete",
@@ -410,9 +417,9 @@
        "[\"EXPORT_SCHEMA_VERSION_MAJOR\", \"3\"]",
        "[\"EXPORT_SCHEMA_VERSION_MICRO\", \"8\"]",
        "[\"EXPORT_SCHEMA_VERSION_MINOR\", \"24\"]",
-       "[\"EXPORT_TIME\", \"60.29 sec\"]",
-       "[\"EXPORT_TIME_LOCAL\", \"2026-11-18T18:32:30 +0000 UTC\"]",
-       "[\"EXPORT_TIME_UTC\", \"2026-11-18T18:32:30\"]",
+       "[\"EXPORT_TIME\", \"60.78 sec\"]",
+       "[\"EXPORT_TIME_LOCAL\", \"2026-11-18T20:41:18 +0000 UTC\"]",
+       "[\"EXPORT_TIME_UTC\", \"2026-11-18T20:41:18\"]",
        "[\"EXPORT_USER\", \"dc\"]"
       ]
      }
@@ -432,18 +439,19 @@
   {
    "gate": "G11.storage_and_memory",
    "status": "INCONCLUSIVE",
-   "detail": "measured peaks {'temporary_peak_gb': 2.617, 'persistent_peak_gb': 3.159, 'min_mem_available_gb': 851.7, 'importer_peak_rss_gb_in_session': None, 'importer_peak_rss_gb_offline': 8.28}; ceilings temporary 10 GB, persistent 8 GB, importer 256 GB, MemAvailable floor 64 GB; NOT MEASURED: {'run storage': 'no samples', 'run memory': 'no samples'}",
+   "detail": "measured peaks {'temporary_peak_gb': 2.617, 'persistent_peak_gb': 3.159, 'min_mem_available_gb': 836.2, 'importer_peak_rss_gb_in_session': None, 'importer_peak_rss_gb_offline': 8.28}; ceilings temporary 10 GB, persistent 8 GB, importer 128 GB, MemAvailable floor 64 GB; NOT MEASURED: {'run storage': 'no samples', 'run memory': 'no samples', 'supervisor': 'no supervisor record: the breach markers had no registered consumer on record'}",
    "data": {
     "measured": {
      "temporary_peak_gb": 2.617,
      "persistent_peak_gb": 3.159,
-     "min_mem_available_gb": 851.7,
+     "min_mem_available_gb": 836.2,
      "importer_peak_rss_gb_in_session": null,
      "importer_peak_rss_gb_offline": 8.28
     },
     "unmeasured": {
      "run storage": "no samples",
-     "run memory": "no samples"
+     "run memory": "no samples",
+     "supervisor": "no supervisor record: the breach markers had no registered consumer on record"
     }
    }
   },

@@ -1,4 +1,4 @@
-# four-wave completeness and routing-record check through e1_completeness_v2.py (synthetic structure from the V2 capture; CPU-only) 2026-11-18T18:35:11Z
+# four-wave completeness and routing-record check through e1_completeness_v2.py (synthetic structure from the V2 capture; CPU-only) 2026-11-18T20:44:02Z
 # 8 fixtures; expectations met 8 of 8
 MET     four_waves                   exit 0 (expected 0); cells passing 4: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40', 'b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40']; FAIL lines 0: []
 MET     v2_two_waves_only            exit 1 (expected 1); cells passing 2: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40']; FAIL lines 2: ['FAIL         cell b=8 kv=32768 wave=1: pure-decode iterations 0 (need >= 400), ramp 0', 'FAIL         cell b=48 kv=32768 wave=1: pure-decode iterations 0 (need >= 400), ramp 0']

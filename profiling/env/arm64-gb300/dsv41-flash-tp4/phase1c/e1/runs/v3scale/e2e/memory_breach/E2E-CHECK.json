@@ -1,0 +1,82 @@
+{
+ "scenario": "memory_breach",
+ "ok": true,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": true,
+   "detail": "owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v3_scale']"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": true,
+   "detail": "mock Nsight CLI / server pids [2741502, 2741503, 2741504, 2741506, 2741507]; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": true,
+   "detail": "launch_source.json mode 'rehearsal' (gate G0 fails on it: never V3 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": true,
+   "detail": "lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": true,
+   "detail": "build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": true,
+   "detail": "57 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals [(2741503, 'SIGTERM', 'operator: release-gpus V3 resource-limit abort (registered supervisor response)'), (2741503, 'SIGKILL', 'operator: release-gpus V3 resource-limit abort (registered supervisor response)')]; recorded server pids [2741503, 2741504, 2741506, 2741507]; importer pid 2741640 never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": true,
+   "detail": "signals sent by the supervisor itself: 0"
+  },
+  {
+   "check": "breach.marker_and_cause",
+   "ok": true,
+   "detail": "MEMORY-BREACH present True; supervisor causes [('MEMORY-BREACH', 'importer_rss_above_ceiling', 0.16, 0.0625)]"
+  },
+  {
+   "check": "breach.delivered_through_controller",
+   "ok": true,
+   "detail": "supervisor step R1 control line, acknowledged True after 0.775 s (bound 10 s)"
+  },
+  {
+   "check": "breach.controller_record",
+   "ok": true,
+   "detail": "control commands [('release-gpus V3 resource-limit abort (re', 'release requested', 'importing')]"
+  },
+  {
+   "check": "breach.bounded_response",
+   "ok": true,
+   "detail": "breach sample \u2192 identity-verified SIGTERM to the API server 1.2 s (bound 15 s); SIGTERM \u2192 SIGKILL 60.0 s (grace 60 s)"
+  },
+  {
+   "check": "breach.importer_isolated",
+   "ok": true,
+   "detail": "importer 2741640 was not signalled and finished: probe final COMPLETED, lifecycle phase report_written"
+  },
+  {
+   "check": "breach.run_fails",
+   "ok": true,
+   "detail": "verdict FAIL; not PASS {'G0.source_and_executable': 'FAIL', 'G2.one_stop_request_returned_ok': 'FAIL', 'G3.phases_in_order': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G11.storage_and_memory': 'FAIL', 'G12.closeout': 'FAIL'}"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

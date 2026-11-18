@@ -1,0 +1,336 @@
+{
+ "verdict": "FAIL",
+ "counts": {
+  "PASS": 6,
+  "FAIL": 6,
+  "INCONCLUSIVE": 2
+ },
+ "gates": [
+  {
+   "gate": "G0.source_and_executable",
+   "status": "FAIL",
+   "detail": "launch commit 43cd66d80fce, trees alignment 7b4df784a5b6 launcher 5acab28980ef, tracked changes 0; executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2: 16 of 16 binary checks pass; problems [\"launch mode is 'rehearsal', not 'real' (a rehearsal launch is never V3 evidence)\"]",
+   "data": {
+    "binary_checks": [
+     {
+      "check": "pin.present",
+      "ok": true,
+      "detail": "pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.record_present",
+      "ok": true,
+      "detail": "driver record (binary_check.json) readable"
+     },
+     {
+      "check": "driver.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "before the launcher: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.sha256_after_is_pinned",
+      "ok": true,
+      "detail": "after the launcher: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.unchanged",
+      "ok": true,
+      "detail": "unchanged=True"
+     },
+     {
+      "check": "driver.file_identity_unchanged",
+      "ok": true,
+      "detail": "inode/mtime/size before '1100019664799 1794730282 28759968', after '1100019664799 1794730282 28759968'"
+     },
+     {
+      "check": "driver.no_compiling_lines",
+      "ok": true,
+      "detail": "cargo 'Compiling' lines in the run log: 0"
+     },
+     {
+      "check": "launcher.record_present",
+      "ok": true,
+      "detail": "launcher record (frontend_binary.json) readable"
+     },
+     {
+      "check": "launcher.prebuilt_mode",
+      "ok": true,
+      "detail": "mode 'prebuilt (no compilation in this launch path)'"
+     },
+     {
+      "check": "launcher.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "verified before the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (record's pin 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2)"
+     },
+     {
+      "check": "launcher.sha256_after_is_pinned",
+      "ok": true,
+      "detail": "verified after the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "launcher.unchanged",
+      "ok": true,
+      "detail": "unchanged=True"
+     },
+     {
+      "check": "launcher.cargo_not_consulted",
+      "ok": true,
+      "detail": "cargo_consulted=False"
+     },
+     {
+      "check": "launcher.build_tool_guard_installed",
+      "ok": true,
+      "detail": "guard installed=True active=True"
+     },
+     {
+      "check": "launcher.no_build_tool_requested",
+      "ok": true,
+      "detail": "blocked build-tool requests: []"
+     },
+     {
+      "check": "binary.now_is_pinned",
+      "ok": true,
+      "detail": "executable at post-run time: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     }
+    ]
+   }
+  },
+  {
+   "gate": "G1.host_identity",
+   "status": "PASS",
+   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 59 GPU observation(s); import probe, memory and storage samplers on pod4-gb300-10-tray16-f3",
+   "data": {
+    "sources": {
+     "lifecycle.host": "pod4-gb300-10-tray16-f3",
+     "lifecycle.host_identity.hostname": "pod4-gb300-10-tray16-f3",
+     "run_log": "pod4-gb300-10-tray16-f3",
+     "reservation.node": "pod4-gb300-10-tray16-f3",
+     "gpu_observations": [
+      "pod4-gb300-10-tray16-f3"
+     ],
+     "import probe": "pod4-gb300-10-tray16-f3",
+     "supervisor": "pod4-gb300-10-tray16-f3",
+     "memory sampler": "pod4-gb300-10-tray16-f3",
+     "storage sampler": "pod4-gb300-10-tray16-f3"
+    }
+   }
+  },
+  {
+   "gate": "G2.one_stop_request_returned_ok",
+   "status": "FAIL",
+   "detail": "requests_sent=1, stop_requested phases=1, http='error: mock /stop_profile failed: Remote end closed connection without response' returned 20:36:16.47Z, server SIGTERM 20:35:16.32Z, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=0"
+  },
+  {
+   "gate": "G3.phases_in_order",
+   "status": "FAIL",
+   "detail": "phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']); times non-decreasing=True; final phase 'report_written'; escalations [] (soft_deadline is a recorded warning, any other kind fails); control lines ['release-gpus V3 resource-limit abort (registered supervisor response)']; forced release requested=True"
+  },
+  {
+   "gate": "G4.phase_deadlines",
+   "status": "PASS",
+   "detail": "stop_accepted 1.167 s (deadline 30); flush_stop_to_importing 6.721 s (deadline 300); import_importer_first_seen_to_gone 20.095 s (deadline 300); stop_to_report_written 68.936 s (deadline 600); session_close_after_server_sigterm 61.031 s (deadline 300); controller hard deadline 600.0 s after the stop request, extension 0.0 s, soft warnings recorded 0 (informational)",
+   "data": {
+    "phases": {
+     "stop_accepted": {
+      "from": "t_stop",
+      "to": "t_accepted",
+      "seconds": 1.167,
+      "deadline_s": 30
+     },
+     "flush_stop_to_importing": {
+      "from": "t_stop",
+      "to": "t_importing",
+      "seconds": 6.721,
+      "deadline_s": 300
+     },
+     "import_importer_first_seen_to_gone": {
+      "from": "t_imp_first",
+      "to": "t_imp_gone",
+      "seconds": 20.095,
+      "deadline_s": 300
+     },
+     "stop_to_report_written": {
+      "from": "t_stop",
+      "to": "t_report",
+      "seconds": 68.936,
+      "deadline_s": 600
+     },
+     "session_close_after_server_sigterm": {
+      "from": "t_sigterm",
+      "to": "t_closed",
+      "seconds": 61.031,
+      "deadline_s": 300
+     }
+    },
+    "clocks": {
+     "t_stop": 1795034108.4162881,
+     "t_accepted": 1795034109.583785,
+     "t_importing": 1795034115.137162,
+     "t_report": 1795034177.3523617,
+     "t_imp_first": 1795034114.505058,
+     "t_imp_gone": 1795034134.6003578,
+     "t_sigterm": 1795034116.3231075,
+     "t_closed": 1795034177.3539784
+    },
+    "hard_deadline": {
+     "hard_at_minus_stop_s": 600.0,
+     "hard_extension_s": 0.0,
+     "policy_hard_deadline_s": 600.0,
+     "soft_warnings": 0
+    }
+   }
+  },
+  {
+   "gate": "G5.importer_observed",
+   "status": "PASS",
+   "detail": "importer 2741640 (--output-file is the session report), parent 2741639 agent=False linked to the recorded CLI=False; states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; final COMPLETED; signals outside the server processes []",
+   "data": {
+    "summary": {
+     "identified": true,
+     "verified_activity": true,
+     "temporarily_inactive_intervals": 1,
+     "ambiguous": false,
+     "completed": true,
+     "terminated": false,
+     "final_state": "COMPLETED"
+    }
+   }
+  },
+  {
+   "gate": "G6.gpu_release_interval",
+   "status": "INCONCLUSIVE",
+   "detail": "57 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM 20:35:16.32Z: last 'held' reading within None s, first 'released' reading within None s \u2192 released no later than None s after it (deadline 90 s; no tighter bound is claimed); held again afterwards=None; census files {'gpu_release_census_t0.json': True, 'gpu_release_census_t20.json': True}; no 'held' observation",
+   "data": {
+    "interval": {
+     "observations": 57,
+     "problem": "no 'held' observation"
+    },
+    "census": {
+     "gpu_release_census_t0.json": true,
+     "gpu_release_census_t20.json": true
+    }
+   }
+  },
+  {
+   "gate": "G7.stream_durable",
+   "status": "PASS",
+   "detail": "controller's final record (taken 20:36:17Z, after session close): 2097152 B sha256 c0f36f0c7df7f2140730c4b8af74fc87a71d1ffcbc5211ddaeeee891e59d1198; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.qdstrm: 2097152 B sha256 c0f36f0c7df7f2140730c4b8af74fc87a71d1ffcbc5211ddaeeee891e59d1198; two full reads identical=True; equals the final record=True; tray original present and equal=True; 1 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
+   "data": {
+    "sha256": "c0f36f0c7df7f2140730c4b8af74fc87a71d1ffcbc5211ddaeeee891e59d1198",
+    "size": 2097152,
+    "observations": [
+     {
+      "at": 1795034115.1416137,
+      "phase": "importing",
+      "path": "/tmp/nsys-report-e2e29d4fe.qdstrm",
+      "size": 2097152,
+      "mtime_ns": 1795034114472394176
+     }
+    ]
+   }
+  },
+  {
+   "gate": "G8.offline_import",
+   "status": "PASS",
+   "detail": "offline import of the durable stream rc 0 in 4 s \u2192 4096 B"
+  },
+  {
+   "gate": "G8b.recovered_trace_complete",
+   "status": "PASS",
+   "detail": "recovered trace: 4320 iterations (band [4200, 4500]), NVTX forward ranges 17280, kernel rows 2450 (band [2327, 2572]), kernels per process [612, 612, 613, 613], kernel boundaries [1000000, 1002450] ns; absolute checks {'iterations_in_band': True, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': True, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; in-session export exists \u2192 equality checks {'kernel_rows': True, 'nvtx_forward_ranges': True, 'distinct_iterations': True, 'iteration_index_range': True, 'kernel_boundaries_ns': True, 'nvtx_forward_boundaries_ns': True, 'kernels_per_process': True, 'every_table_row_count': True, 'capture_metadata': True, 'export_product_and_schema': True}, differing table row counts {}",
+   "data": {
+    "absolute": {
+     "iterations_in_band": true,
+     "nvtx_is_per_iteration_multiple": true,
+     "kernel_rows_in_band": true,
+     "four_processes_with_kernels": true,
+     "capture_boundaries_present": true
+    },
+    "relative": {
+     "kernel_rows": true,
+     "nvtx_forward_ranges": true,
+     "distinct_iterations": true,
+     "iteration_index_range": true,
+     "kernel_boundaries_ns": true,
+     "nvtx_forward_boundaries_ns": true,
+     "kernels_per_process": true,
+     "every_table_row_count": true,
+     "capture_metadata": true,
+     "export_product_and_schema": true
+    },
+    "table_row_differences": {},
+    "recovered": {
+     "nvtx_forward_ranges": 17280,
+     "kernel_rows": 2450,
+     "kernel_span_ms": 0.00245,
+     "ok": true,
+     "distinct_iterations": 4320,
+     "iteration_index_range": [
+      0,
+      4319
+     ],
+     "nvtx_forward_boundaries_ns": [
+      0,
+      172795
+     ],
+     "kernel_boundaries_ns": [
+      1000000,
+      1002450
+     ],
+     "kernels_per_process": [
+      612,
+      612,
+      613,
+      613
+     ],
+     "metadata": {
+      "ANALYSIS_DETAILS": [
+       "[1, 500, 0, 500]"
+      ],
+      "META_DATA_CAPTURE": [
+       "[\"START_TRIGGER\", \"Immediate\"]"
+      ],
+      "TARGET_INFO_SESSION_START_TIME": [
+       "[1, \"a\", \"a\", 2]"
+      ],
+      "META_DATA_EXPORT": [
+       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/v3scale-recovery-e1_v3_scale/recovery.sqlite\"]",
+       "[\"EXPORT_PRODUCT_VERSION\", \"2025.6.3.541\"]",
+       "[\"EXPORT_TIME_UTC\", \"/tmp/v3scale-recovery-e1_v3_scale/recovery.sqlite now\"]"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "gate": "G9.scientific_completeness",
+   "status": "FAIL",
+   "detail": "exit codes {'completeness_v2': 1, 'extract': 1, 'nsys_validation': 1} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity INCONCLUSIVE"
+  },
+  {
+   "gate": "G10.bounds",
+   "status": "INCONCLUSIVE",
+   "detail": "GPU-held 80 s by the controller, at most None s by the sampler (ceiling 2700.0); server SIGTERM \u2192 session closed 61.0 s (limit 300.0); reservation 3.8 min (limit 90); not measured: ['GPU-held (sampler upper edge)']"
+  },
+  {
+   "gate": "G11.storage_and_memory",
+   "status": "FAIL",
+   "detail": "measured peaks {'temporary_peak_gb': 0.698, 'persistent_peak_gb': 0.004, 'min_mem_available_gb': 858.5, 'importer_peak_rss_gb_in_session': 0.16, 'importer_peak_rss_gb_offline': 0.0}; ceilings temporary 10 GB, persistent 8 GB, importer 128 GB, MemAvailable floor 64 GB; exceeded: [\"breach file(s) written during the run: ['MEMORY-BREACH']\", \"the supervisor gave an abort response: release requested through the controller for [('breach', 'MEMORY-BREACH', 'importer_rss_above_ceiling')]\"]",
+   "data": {
+    "measured": {
+     "temporary_peak_gb": 0.698,
+     "persistent_peak_gb": 0.004,
+     "min_mem_available_gb": 858.5,
+     "importer_peak_rss_gb_in_session": 0.16,
+     "importer_peak_rss_gb_offline": 0.0
+    },
+    "unmeasured": {}
+   }
+  },
+  {
+   "gate": "G12.closeout",
+   "status": "FAIL",
+   "detail": "closeout exit code 1; reservation deleted record present (GPU pods left on the node: 0)"
+  }
+ ]
+}

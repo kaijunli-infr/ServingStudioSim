@@ -229,9 +229,78 @@ hard-linked the stream leave it preserved. Either response makes the run a FAIL 
 6. `E1_CLOSEOUT_RC=<closeout exit> postrun_e1_v3scale.sh` on tray16 → PASS, FAIL or INCONCLUSIVE.
 7. `archive_e1_v3scale.sh <operator logs>` → VERIFIED; report; stop.
 
-## 12. Tools, tests and CPU-only rehearsal
+## 12. Tools, tests and CPU-only rehearsals (no GPU used)
 
-(Completed by the next commit, after the end-to-end rehearsal of this revision.)
+| tool | file | tests |
+|---|---|---|
+| driver, exact preflight | `run_e1_v3scale.sh`, `preflight_e1_v3scale.sh` | preflight on tray16 (recorded by the following commit); the driver end to end in rehearsal mode (below) |
+| independent GPU sampler | `checks/e1_gpu_watch_v3.py` (the V2 sampler's observation and record, plus an end through the stop file when the GPUs were never held) | `tests/test_e1_gpu_watch_v3.py`, 3 |
+| importer-specific observer | `checks/e1_import_probe.py` (ambiguity latches for the session) | `tests/test_e1_import_probe.py`, 27 |
+| host-memory sampler | `checks/e1_mem_watch.py` | `tests/test_e1_mem_watch.py`, 10 |
+| storage sampler | `checks/e1_storage_watch.py` | `tests/test_e1_storage_watch.py`, 7 |
+| run supervisor | `checks/e1_supervisor.py` | `tests/test_e1_supervisor.py`, 21: delivery, delayed acknowledgement inside the bound, late and missing acknowledgement (falls back to the cleanup), simultaneous breaches (one response), breach recorded without a marker file, each sampler lost, GPU-held ceiling before a stop request, no signalling call in its source, and the real pinned cleanup ending a registered tree while a detached process and the supervisor's own registry are untouched |
+| controller under the V3 policy (unchanged code) | `alignment/profiler/lifecycle.py` | `tests/test_profiler_lifecycle_v3_deadlines.py`, 5: soft warning at 300 s and action at 600 s, both from the original stop request; repeated stop calls restart nothing; completion between the two deadlines with only the warning; the registered release line is a server-only stop; the control file is read only in the finalisation loop |
+| closeout, archive verification | `closeout_e1_v3scale.sh`, `archive_e1_v3scale.sh` | both end to end in rehearsal mode (below) |
+| post-run validator, 13 gates | `postrun_e1_v3scale.sh`, `checks/e1_v3scale_gates.py` | `tests/test_e1_v3scale_gates.py`, 110 (the 99-fixture matrix in process, interval and coverage rules, command line) |
+| manifests | `INPUTS_v3scale.sha256`, `SCRIPTS_v3scale.sha256`, `V3S-PIN.json`, `V3S-PIN-identities.json`, `FREEZE_v3scale.sha256` | verified by the preflight |
+
+**Gate rehearsal** (`rehearse_e1_v3scale.sh`, tray16, at 43cd66d8, `runs/v3scale/rehearsal/`; earlier attempts kept as `rehearsal_attempt1` … `3`):
+
+| part | result |
+|---|---|
+| complete V3 post-run on a copy of the preserved V2 run (real importer, exporter, checkers, samplers) | verdict FAIL with exactly the gates registered beforehand: G2, G3, G8b, G9 FAIL; G0, G1, G4, G5, G10, G11, G12 INCONCLUSIVE; G6, G7, G8 PASS. G6 on the real V2 samples: last "held" within [−1.159, −0.982] s, first "released" within [1.018, 2.119] s. Post-run scratch measured at V2 size: temporary peak 2.617 GB (58 samples, largest gap 2.4 s); offline importer 8.28 GiB |
+| synthetic fixtures through the command-line validator | 99 of 99 as registered: 7 PASS, 63 FAIL, 29 INCONCLUSIVE. Deadline fixtures: every phase exactly at its deadline; flush 300 s + import 300 s = 600.0 s with the soft warning recorded (PASS); soft warning then total 600.5 s; each phase inside its deadline but total 601 s; flush 300.5 s with the total inside; each phase 0.5 s over; hard deadline extended by an operator line; hard deadline not the registered total; deadline record missing. Supervisor fixtures: record missing, incomplete, abort response, lost monitor. Plus one defect each for phase order, escalations, forced release, stop request, importer states and forbidden signals, GPU release (90.0 s PASS, 90.5 s FAIL, held again, missing samples), stream and recovery, scientific checkers, source and executable (including a rehearsal-mode launch), host conflicts, storage and memory ceilings (128 GiB PASS, 128.5 FAIL), bounds, closeout |
+| four-wave completeness and routing records | `e1_completeness_v2.py`, unchanged, on a synthetic four-wave structure built from the V2 capture: positive fixture passes with four cells (1008, 928, 1008, 928 pure-decode iterations); seven defects each exit 1. This verifies the checker on the structure, not a four-wave measurement |
+
+**End-to-end rehearsal of the execution path** (`rehearse_e2e_v3scale.sh`, tray16, at 43cd66d8, `runs/v3scale/e2e/`). The actual driver
+(`E1_V3S_MODE=rehearsal`), closeout, post-run and archive scripts ran on mock processes around the **real** stop controller, with
+the real observers, supervisor, registry and prebuilt-executable contract. Expectations were written in `e1_v3scale_e2e_check.py`
+before each run. A rehearsal launch records `mode=rehearsal` and fails G0 by design.
+
+| scenario | what ran | result |
+|---|---|---|
+| success | driver preflight 67 PASS / 0 FAIL → launch → real controller through all six phases → observers → closeout CLEAN → post-run → archive VERIFIED | 19 of 19 checks: registry lifecycle (six registered processes, all gone), stream hash = controller's final record = preserved original = durable copy, importer uniquely identified, active and completed, memory and storage measured, supervisor without response; gates exactly as registered (G0 FAIL rehearsal mode, G6 and G10 INCONCLUSIVE because no GPU was ever held, G9 FAIL because a mock run has no scientific profile; all others PASS) |
+| recovery failure | the same run's post-run repeated with an importer that fails | G8 and G8b FAIL added, nothing else changed |
+| importer ambiguity | two processes match the importer criteria; one exits first | 18 of 18: probe ends AMBIGUOUS and singles nothing out even after one exited; memory sampler attributes no importer memory; no process signalled; the run continued under the other monitors to a normal end; G4, G5, G11 INCONCLUSIVE |
+| resource-limit abort during the import (memory) | mock importer above a rehearsal ceiling | 15 of 15: marker → supervisor → registered line → controller's SIGTERM to the identity-verified API server 1.2 s after the breach sample (acknowledged 0.8 s after the line); SIGKILL to the server after exactly the 60 s grace; importer not signalled, finished its report; run FAIL (G2, G3, G11, G12) |
+| resource-limit abort during the capture (storage) | run root above a rehearsal ceiling before any stop request | 15 of 15: supervisor → pinned registry cleanup: 13 processes of the verified owned tree signalled, none refused, no survivor, finished 0.4 s after the cause was seen; no control line written; closeout NOT CLEAN as required after an abort |
+| build tools, GPU | whole rehearsal | executable 7f6eb81d… with the same inode, mtime and size before and after; no file written under the load generator's build directory; guard armed with nothing blocked in every launch; GPU sampler: no compute process and no memory above the idle bound in any observation; no GPU compute process before or after |
+
+Six end-to-end attempts were needed; all are kept (`runs/v3scale/e2e_attempt1` … `5`, and `e2e`). What they found before any run:
+
+1. The preflight's "no control file to an observer" check matched the supervisor's own argument, so the driver refused.
+2. The rehearsal resolved the interpreter outside the project environment, which made `uv` create an empty `.venv` in the worktree
+   (removed; both scripts now refuse if one appears).
+3. The V2 GPU sampler ends only after held-then-released; a launch that never holds the GPUs (a startup failure as much as a
+   rehearsal) left it running, and the closeout was not clean. V3 uses `e1_gpu_watch_v3.py`.
+4. That sampler, left from attempt 2, made attempt 3's preflight refuse (correctly). It was ended through the pinned verified
+   cleanup of its preserved registry record; the rehearsal now never removes a run root while a registered process is alive.
+5. Importer ambiguity did not latch: when one of two matching processes exited, the probe and the memory sampler adopted the other.
+6. The supervisor's cleanup log directory did not exist, so the pinned cleanup exited 1 after signalling, without its log.
+7. The supervisor waited for the controller's command record, which the controller writes only after its release action (up to the
+   60 s grace); it would have run the registry cleanup against a controller that was already doing the release. It now takes the
+   controller's release request, written at the SIGTERM, as the acknowledgement.
+
+**Regression** (tray14, CPU-only guard, at 43cd66d8): targeted suites 572 passed, 1 skipped; whole tier 5487 passed, 78 skipped,
+6 failed (the same failing tests as at 565206ee). One early run of the new supervisor test file was made outside the guard script,
+with CUDA hidden, on a scratch copy; every recorded result is from the guard.
+
+## 13. Known limits of this preparation
+
+- The importer's arguments and its agent parent were observed in one CPU-only Nsight session in plain profile mode. If they differ
+  inside the real session, the probe and the memory sampler report nothing: G4 (import phase), G5 and G11 end INCONCLUSIVE, so V3
+  can end INCONCLUSIVE for this reason alone. The host-memory floor and the other monitors do not depend on it.
+- The end-to-end rehearsal uses mock processes: Python sleepers that print the log lines the controller reads. The controller,
+  observers, supervisor, registry, scripts and gates are the real ones; the server, Nsight, the importer's behaviour and all
+  timings are not. The supervisor has not been exercised against a real server.
+- The controller enforces its hard deadline and GPU-held ceiling only after the stop request. Before it, the bounds are the
+  supervisor's ceiling check and the operator's monitor; if both the supervisor and the operator were absent, a hung capture would
+  not be stopped.
+- The memory sampler reads the importer once per second, so its figure is a lower bound of the true peak (samplings of one import
+  gave 4.9, 8.3 and 8.7 GiB). The server's host memory under load has never been measured.
+- The four-wave checker result rests on a synthetic structure; the idle time between the pairs and their iteration timing are
+  untested.
+- R2 before the stream exists gives up the trace. That is accepted: it is an abort.
 
 ## 14. Freeze record (proposed)
 

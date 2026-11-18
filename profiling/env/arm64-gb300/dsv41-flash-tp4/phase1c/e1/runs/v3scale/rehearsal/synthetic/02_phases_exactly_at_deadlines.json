@@ -109,6 +109,7 @@
       "pod4-gb300-10-tray16-f3"
      ],
      "import probe": "pod4-gb300-10-tray16-f3",
+     "supervisor": "pod4-gb300-10-tray16-f3",
      "memory sampler": "pod4-gb300-10-tray16-f3",
      "storage sampler": "pod4-gb300-10-tray16-f3"
     }
@@ -127,7 +128,7 @@
   {
    "gate": "G4.phase_deadlines",
    "status": "PASS",
-   "detail": "stop_accepted 30.0 s (deadline 30); flush_stop_to_importing 300.0 s (deadline 300); import_importer_first_seen_to_gone 300.0 s (deadline 300); stop_to_report_written 600.0 s (deadline 600); session_close_after_server_sigterm 300.0 s (deadline 300)",
+   "detail": "stop_accepted 30.0 s (deadline 30); flush_stop_to_importing 300.0 s (deadline 300); import_importer_first_seen_to_gone 300.0 s (deadline 300); stop_to_report_written 600.0 s (deadline 600); session_close_after_server_sigterm 300.0 s (deadline 300); controller hard deadline 600.0 s after the stop request, extension 0.0 s, soft warnings recorded 0 (informational)",
    "data": {
     "phases": {
      "stop_accepted": {
@@ -170,6 +171,12 @@
      "t_imp_gone": 1800001600.0,
      "t_sigterm": 1800001603.0,
      "t_closed": 1800001903.0
+    },
+    "hard_deadline": {
+     "hard_at_minus_stop_s": 600.0,
+     "hard_extension_s": 0.0,
+     "policy_hard_deadline_s": 600.0,
+     "soft_warnings": 0
     }
    }
   },
@@ -219,7 +226,7 @@
   {
    "gate": "G7.stream_durable",
    "status": "PASS",
-   "detail": "controller's final record (taken 08:31:43Z, after session close): 4096 B sha256 a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24; durable copy /tmp/v3scale-rehearsal-cud5m795/02_phases_exactly_at_deadlines/e1_v3_scale/preserved/x.qdstrm: 4096 B sha256 a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24; two full reads identical=True; equals the final record=True; tray original present and equal=True; 0 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
+   "detail": "controller's final record (taken 08:31:43Z, after session close): 4096 B sha256 a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24; durable copy /tmp/v3scale-rehearsal-11olb4tf/02_phases_exactly_at_deadlines/e1_v3_scale/preserved/x.qdstrm: 4096 B sha256 a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24; two full reads identical=True; equals the final record=True; tray original present and equal=True; 0 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
    "data": {
     "sha256": "a49d5b7c3e0fc8f80c7c17e79110c88485a0dc2b99375aab0a6b3562c7907f24",
     "size": 4096,
@@ -291,9 +298,9 @@
        "[1, \"a\", \"a\", 2]"
       ],
       "META_DATA_EXPORT": [
-       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/v3scale-rehearsal-cud5m795/02_phases_exactly_at_deadlines/scratch/recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/v3scale-rehearsal-11olb4tf/02_phases_exactly_at_deadlines/scratch/recovery.sqlite\"]",
        "[\"EXPORT_PRODUCT_VERSION\", \"2025.6.3.541\"]",
-       "[\"EXPORT_TIME_UTC\", \"/tmp/v3scale-rehearsal-cud5m795/02_phases_exactly_at_deadlines/scratch/recovery.sqlite now\"]"
+       "[\"EXPORT_TIME_UTC\", \"/tmp/v3scale-rehearsal-11olb4tf/02_phases_exactly_at_deadlines/scratch/recovery.sqlite now\"]"
       ]
      }
     }
@@ -312,7 +319,7 @@
   {
    "gate": "G11.storage_and_memory",
    "status": "PASS",
-   "detail": "measured peaks {'temporary_peak_gb': 6.07, 'persistent_peak_gb': 6.0, 'min_mem_available_gb': 900.0, 'importer_peak_rss_gb_in_session': 17.0, 'importer_peak_rss_gb_offline': 17.0}; ceilings temporary 10 GB, persistent 8 GB, importer 256 GB, MemAvailable floor 64 GB",
+   "detail": "measured peaks {'temporary_peak_gb': 6.07, 'persistent_peak_gb': 6.0, 'min_mem_available_gb': 900.0, 'importer_peak_rss_gb_in_session': 17.0, 'importer_peak_rss_gb_offline': 17.0}; ceilings temporary 10 GB, persistent 8 GB, importer 128 GB, MemAvailable floor 64 GB",
    "data": {
     "measured": {
      "temporary_peak_gb": 6.07,
