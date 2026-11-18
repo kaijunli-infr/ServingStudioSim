@@ -1,9 +1,9 @@
 {
  "pass": "e1_v3_scale",
- "pinned_at": "2026-11-18T18:21:06Z",
+ "pinned_at": "2026-11-18T18:31:30Z",
  "host": "pod4-gb300-10-tray16-f3",
  "code": {
-  "commit": "884d0d5a657177e1d656a2b47c3cfb9c7b31e2ca",
+  "commit": "a0bbddf7f29948e8d18c3cb764b6eb75891f6461",
   "branch": "exp/profiler-lifecycle",
   "tree": {
    "alignment": "7b4df784a5b6daff7c792e81cbc6503ba2c806ec",
@@ -29,7 +29,7 @@
    "tests/test_e1_import_probe.py": "be9b1975ffd20cc9150ef7d4493af4a926365516",
    "tests/test_e1_mem_watch.py": "7fd3a3fde9bfc7e19be6b2ce33555993de838c53",
    "tests/test_e1_storage_watch.py": "8068616b8a9d1ccb22f02765186591257aa451a7",
-   "tests/test_e1_v3scale_gates.py": "927019212f2b6337e5f47e90cbb78e7255cd2318"
+   "tests/test_e1_v3scale_gates.py": "8c44daf3aa6c77a79fcdb769b234da345fcde9a7"
   },
   "gitlinks": {
    "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
