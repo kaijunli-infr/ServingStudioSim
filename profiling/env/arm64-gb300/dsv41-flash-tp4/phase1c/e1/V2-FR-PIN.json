@@ -1,13 +1,13 @@
 {
  "pass": "e1_v2_forced_release",
- "pinned_at": "2026-11-18T06:00:54Z",
+ "pinned_at": "2026-11-18T08:29:58Z",
  "host": "pod4-gb300-10-tray16-f3",
  "code": {
-  "commit": "362e06093d98a1e50746fd583da9b5b997548590",
+  "commit": "8570b050358668756857f529aa20da75bab0199e",
   "branch": "exp/profiler-lifecycle",
   "tree": {
-   "alignment": "8124376add276be3393ed57a1ebf91f75f4daa12",
-   "launcher": "5a1b662f12e878798eb5c8be04ca445d4c6977b5",
+   "alignment": "0317eb4c37d1ebc43e2d06541fde0d84f8b2f7dc",
+   "launcher": "cbf35d62368c94b2c07087342d6516dce064db9b",
    "tests/fixtures": "9bd59ef93228c8a77ca1c3ac248f75892a8b30a1",
    "tests/cpu_only_guard.py": "5d2637224343ec4260f6d712235afc68f311e51b",
    "tests/cpu_only.sh": "9296518632ee5037c91c7482b51c723dc7d9ea55",
@@ -22,7 +22,10 @@
    "tests/test_profiler_lifecycle_host_stream.py": "83f60e6b1010d0c25f8d80ee12ef6b1ae1cc5508",
    "tests/test_profiler_preflight_retained.py": "3a60ddaf8dd7549d8599a5cfefa41344c5561ccf",
    "tests/test_e1_host_identity.py": "ad9f83ef39360fa528592778055c049a0a12b8aa",
-   "tests/test_e1_forced_release_gates.py": "c569647c7f5c01de6457cee55d51db2665cb073d"
+   "tests/test_e1_forced_release_gates.py": "0d094f70b1cbb17efe6566db5b55998e6aa96d50",
+   "tests/test_load_generator_prebuilt.py": "5af63668ac81d4453aa6c883e46f41fbe5f81407",
+   "tests/test_e1_release_probe.py": "35dd4df40c79ab159d0e5f3b9cfe22f955a30978",
+   "tests/test_profiler_lifecycle_release_evidence.py": "f4b1ed8831bfe0181d991283c549183f6b9fbc0c"
   },
   "gitlinks": {
    "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
@@ -30,6 +33,6 @@
   },
   "note": "tree ids are what preflight_e1_fr.sh compares (a later documentation-only commit keeps them); the launching commit must be a descendant of `commit` with these trees"
  },
- "session_runner_sha256": "95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549",
+ "session_runner_sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
  "identities_file": "V2-FR-PIN-identities.json"
 }
