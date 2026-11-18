@@ -1,0 +1,35 @@
+{
+ "pass": "e1_v2_forced_release",
+ "pinned_at": "2026-11-18T06:00:54Z",
+ "host": "pod4-gb300-10-tray16-f3",
+ "code": {
+  "commit": "362e06093d98a1e50746fd583da9b5b997548590",
+  "branch": "exp/profiler-lifecycle",
+  "tree": {
+   "alignment": "8124376add276be3393ed57a1ebf91f75f4daa12",
+   "launcher": "5a1b662f12e878798eb5c8be04ca445d4c6977b5",
+   "tests/fixtures": "9bd59ef93228c8a77ca1c3ac248f75892a8b30a1",
+   "tests/cpu_only_guard.py": "5d2637224343ec4260f6d712235afc68f311e51b",
+   "tests/cpu_only.sh": "9296518632ee5037c91c7482b51c723dc7d9ea55",
+   "tests/test_profiler_lifecycle.py": "14dcbfd92b3feeb1459cd58dfb7a1ab5206fb1dd",
+   "tests/test_profiler_preflight.py": "c5defd53c97b2c435864402d2123af51a3594c8c",
+   "tests/test_e1_lifecycle_gates.py": "24321e142afbbf6604e4a8cfb46fb4dd44fb1805",
+   "tests/test_e1_pids_cleanup.py": "92afc8b8f92806a422df27001e48594c3c9f6bbd",
+   "tests/test_cpu_only_guard.py": "f46ce406349b31b5c395c81f39d4bc92bc204ac9",
+   "tests/test_e1_lifecycle_gates_v2.py": "251a64d37073d0ae559a56ca0c90335ff567d580",
+   "tests/test_e1_launch_identity_v2.py": "56294e0fe8e30b4d24426fbb4888154899aeb16f",
+   "tests/test_profiler_lifecycle_stop_concurrency.py": "393ffd049930bd3f129d9f30c2dab484147db6db",
+   "tests/test_profiler_lifecycle_host_stream.py": "83f60e6b1010d0c25f8d80ee12ef6b1ae1cc5508",
+   "tests/test_profiler_preflight_retained.py": "3a60ddaf8dd7549d8599a5cfefa41344c5561ccf",
+   "tests/test_e1_host_identity.py": "ad9f83ef39360fa528592778055c049a0a12b8aa",
+   "tests/test_e1_forced_release_gates.py": "c569647c7f5c01de6457cee55d51db2665cb073d"
+  },
+  "gitlinks": {
+   "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
+   "alignment/profiler/vllm": "0ab18711335780e062d65994a3243da0281d2081"
+  },
+  "note": "tree ids are what preflight_e1_fr.sh compares (a later documentation-only commit keeps them); the launching commit must be a descendant of `commit` with these trees"
+ },
+ "session_runner_sha256": "95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549",
+ "identities_file": "V2-FR-PIN-identities.json"
+}
