@@ -1,0 +1,87 @@
+# V3 gate rehearsal, synthetic fixtures through e1_v3scale_gates.py (CPU-only; not V3 evidence) 2026-11-18T18:16:45Z
+# 85 fixtures ({'positive': 2, 'boundary': 3, 'negative': 80}); verdicts {'PASS': 5, 'FAIL': 54, 'INCONCLUSIVE': 26}; expectations met 85 of 85
+MET     01 nominal                                [positive] PASS         not PASS: - | normal stop, importer observed active and completed, all peaks measured
+MET     02 phases_exactly_at_deadlines            [boundary] PASS         not PASS: - | stop accepted 30 s, flush 300 s, import 300 s, stop→report 600 s, session close 300 s
+MET     03 release_upper_edge_exactly_90s         [boundary] PASS         not PASS: - | first 'released' reading window ends 90.0 s after the SIGTERM
+MET     04 peaks_exactly_at_ceilings              [boundary] PASS         not PASS: - | temporary 10.0 GB, persistent 8.0 GB, importer 256 GB, MemAvailable exactly at the floor
+MET     05 importer_temporarily_inactive          [positive] PASS         not PASS: - | ACTIVE, then NO_PROGRESS, then ACTIVE again, then completed
+MET     06 stop_accepted_late                     [negative] FAIL         not PASS: [('G4.phase_deadlines', 'FAIL')] | stop accepted after 30.5 s
+MET     07 flush_over_deadline                    [negative] FAIL         not PASS: [('G4.phase_deadlines', 'FAIL')] | flush 300.5 s
+MET     08 import_over_deadline                   [negative] FAIL         not PASS: [('G4.phase_deadlines', 'FAIL')] | importer first seen → gone 300.5 s
+MET     09 stop_to_report_over_deadline           [negative] FAIL         not PASS: [('G4.phase_deadlines', 'FAIL')] | stop → report 600.5 s with each phase inside its own deadline
+MET     10 session_close_over_deadline            [negative] FAIL         not PASS: [('G10.bounds', 'FAIL'), ('G4.phase_deadlines', 'FAIL')] | session closed 300.5 s after the SIGTERM
+MET     11 phase_boundary_unobserved              [negative] INCONCLUSIVE not PASS: [('G4.phase_deadlines', 'INCONCLUSIVE'), ('G5.importer_observed', 'INCONCLUSIVE')] | the probe never recorded the importer leaving
+MET     12 phase_missing                          [negative] FAIL         not PASS: [('G3.phases_in_order', 'FAIL')] | capture_ended missing from the phase history
+MET     13 stop_failed                            [negative] FAIL         not PASS: [('G3.phases_in_order', 'FAIL'), ('G4.phase_deadlines', 'INCONCLUSIVE')] | final phase stop_failed
+MET     14 escalation_recorded                    [negative] FAIL         not PASS: [('G3.phases_in_order', 'FAIL')] | a soft-deadline escalation is recorded
+MET     15 operator_control_line                  [negative] FAIL         not PASS: [('G3.phases_in_order', 'FAIL')] | an `extend` control line was accepted
+MET     16 forced_release                         [negative] FAIL         not PASS: [('G3.phases_in_order', 'FAIL')] | a GPU release was requested (hard deadline)
+MET     17 stop_request_error                     [negative] FAIL         not PASS: [('G2.one_stop_request_returned_ok', 'FAIL')] | the stop request returned an error
+MET     18 two_stop_requests                      [negative] FAIL         not PASS: [('G2.one_stop_request_returned_ok', 'FAIL')] | two stop requests left the launcher
+MET     19 stop_returned_after_sigterm            [negative] FAIL         not PASS: [('G2.one_stop_request_returned_ok', 'FAIL')] | the stop request returned after the server was signalled
+MET     20 server_log_missing                     [negative] INCONCLUSIVE not PASS: [('G2.one_stop_request_returned_ok', 'INCONCLUSIVE')] | no server log to count the API-server lines
+MET     21 profiler_stopped_line_missing          [negative] FAIL         not PASS: [('G2.one_stop_request_returned_ok', 'FAIL')] | the API server never logged 'Profiler stopped.'
+MET     22 probe_record_missing                   [negative] INCONCLUSIVE not PASS: [('G1.host_identity', 'INCONCLUSIVE'), ('G4.phase_deadlines', 'INCONCLUSIVE'), ('G5.importer_observed', 'INCONCLUSIVE')] | no import-probe record
+MET     23 importer_not_found                     [negative] INCONCLUSIVE not PASS: [('G4.phase_deadlines', 'INCONCLUSIVE'), ('G5.importer_observed', 'INCONCLUSIVE')] | the probe never identified an importer
+MET     24 importer_ambiguous                     [negative] INCONCLUSIVE not PASS: [('G4.phase_deadlines', 'INCONCLUSIVE'), ('G5.importer_observed', 'INCONCLUSIVE')] | two processes matched the importer criteria
+MET     25 importer_present_never_active          [negative] INCONCLUSIVE not PASS: [('G5.importer_observed', 'INCONCLUSIVE')] | importer identified, activity never established from its own counters
+MET     26 import_finished_before_observation     [negative] INCONCLUSIVE not PASS: [('G4.phase_deadlines', 'INCONCLUSIVE'), ('G5.importer_observed', 'INCONCLUSIVE')] | report complete but the importer was never seen
+MET     27 importer_terminated                    [negative] FAIL         not PASS: [('G5.importer_observed', 'FAIL')] | importer gone without a report
+MET     28 signal_to_importer                     [negative] FAIL         not PASS: [('G5.importer_observed', 'FAIL')] | a SIGTERM to the importer pid is recorded
+MET     29 signal_to_agent                        [negative] FAIL         not PASS: [('G5.importer_observed', 'FAIL')] | a SIGKILL to the Nsight agent is recorded
+MET     30 signal_to_cli_before_report            [negative] FAIL         not PASS: [('G5.importer_observed', 'FAIL')] | the Nsight CLI was signalled before the report
+MET     31 signal_to_unrecorded_pid               [negative] FAIL         not PASS: [('G5.importer_observed', 'FAIL')] | a signal to a pid that is not a recorded server process
+MET     32 release_upper_edge_over_90s            [negative] FAIL         not PASS: [('G6.gpu_release_interval', 'FAIL')] | first 'released' reading window ends 90.5 s after the SIGTERM
+MET     33 gpu_held_again                         [negative] FAIL         not PASS: [('G6.gpu_release_interval', 'FAIL')] | a 'held' observation after the first 'released' one
+MET     34 gpu_never_released                     [negative] FAIL         not PASS: [('G10.bounds', 'INCONCLUSIVE'), ('G12.closeout', 'FAIL'), ('G6.gpu_release_interval', 'INCONCLUSIVE')] | no 'released' observation after the last 'held' one
+MET     35 gpu_samples_missing_across_release     [negative] INCONCLUSIVE not PASS: [('G6.gpu_release_interval', 'INCONCLUSIVE')] | no sampler observation for 12 s around the release
+MET     36 gpu_sampler_unavailable_at_release     [negative] INCONCLUSIVE not PASS: [('G6.gpu_release_interval', 'INCONCLUSIVE')] | nvidia-smi unavailable in the observation between held and released
+MET     37 gpu_sampler_file_missing               [negative] INCONCLUSIVE not PASS: [('G10.bounds', 'INCONCLUSIVE'), ('G6.gpu_release_interval', 'INCONCLUSIVE')] | no sampler file
+MET     38 census_shows_held                      [negative] FAIL         not PASS: [('G6.gpu_release_interval', 'FAIL')] | the t20 census still shows memory held
+MET     39 census_missing                         [negative] INCONCLUSIVE not PASS: [('G6.gpu_release_interval', 'INCONCLUSIVE')] | no census file
+MET     40 sigterm_not_recorded                   [negative] INCONCLUSIVE not PASS: [('G10.bounds', 'INCONCLUSIVE'), ('G2.one_stop_request_returned_ok', 'INCONCLUSIVE'), ('G4.phase_deadlines', 'INCONCLUSIVE'), ('G6.gpu_release_interval', 'INCONCLUSIVE')] | the controller recorded no SIGTERM to the API server
+MET     41 released_before_sigterm                [negative] FAIL         not PASS: [('G6.gpu_release_interval', 'FAIL')] | the GPUs read free before the server was signalled
+MET     42 durable_copy_differs                   [negative] FAIL         not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE'), ('G7.stream_durable', 'FAIL'), ('G8.offline_import', 'FAIL'), ('G8b.recovered_trace_complete', 'FAIL')] | the durable copy is not the recorded stream
+MET     43 final_stream_record_missing            [negative] FAIL         not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE'), ('G7.stream_durable', 'FAIL'), ('G8.offline_import', 'FAIL'), ('G8b.recovered_trace_complete', 'FAIL')] | the controller wrote no final stream record
+MET     44 offline_import_fails                   [negative] FAIL         not PASS: [('G8.offline_import', 'FAIL'), ('G8b.recovered_trace_complete', 'FAIL')] | the importer exits non-zero on the durable stream
+MET     45 recovered_iterations_below_band        [negative] FAIL         not PASS: [('G8b.recovered_trace_complete', 'FAIL')] | 4000 iterations recovered (band 4200–4500)
+MET     46 recovered_rows_below_band              [negative] FAIL         not PASS: [('G8b.recovered_trace_complete', 'FAIL')] | kernel rows 5 % below the band
+MET     47 recovered_differs_from_in_session      [negative] FAIL         not PASS: [('G8b.recovered_trace_complete', 'FAIL')] | offline trace has fewer kernel rows than the in-session export
+MET     48 half_trace_two_waves_only              [negative] FAIL         not PASS: [('G8b.recovered_trace_complete', 'FAIL'), ('G9.scientific_completeness', 'FAIL')] | only two of the four waves in the trace (2160 iterations)
+MET     49 recovery_tools_not_supplied            [negative] INCONCLUSIVE not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE'), ('G8.offline_import', 'INCONCLUSIVE'), ('G8b.recovered_trace_complete', 'INCONCLUSIVE')] | importer / exporter not given to the validator
+MET     50 completeness_fails                     [negative] FAIL         not PASS: [('G9.scientific_completeness', 'FAIL')] | four-wave completeness checker exit 1
+MET     51 nsys_validation_fails                  [negative] FAIL         not PASS: [('G9.scientific_completeness', 'FAIL')] | Nsight validation exit 1
+MET     52 extract_not_run                        [negative] INCONCLUSIVE not PASS: [('G9.scientific_completeness', 'INCONCLUSIVE')] | extract exit code not supplied
+MET     53 config_identity_fails                  [negative] FAIL         not PASS: [('G9.scientific_completeness', 'FAIL')] | configuration identity report FAIL
+MET     54 config_identity_missing                [negative] INCONCLUSIVE not PASS: [('G9.scientific_completeness', 'INCONCLUSIVE')] | no configuration identity report
+MET     55 executable_changed_during_run          [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | driver hashed another executable after the launcher
+MET     56 executable_rebuilt_in_place            [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | same bytes recorded but inode/mtime changed and a compile line logged
+MET     57 build_tool_requested                   [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | the guard blocked a cargo request
+MET     58 guard_not_armed                        [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | launcher record without an armed guard
+MET     59 launcher_binary_record_missing         [negative] INCONCLUSIVE not PASS: [('G0.source_and_executable', 'INCONCLUSIVE')] | no launcher record of the executable
+MET     60 executable_differs_at_postrun          [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | the executable on disk at post-run time is not the pinned one
+MET     61 launch_tree_not_pinned                 [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | launch tree `alignment` differs from the pin
+MET     62 launch_tree_dirty                      [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | tracked changes in the launch tree
+MET     63 submodule_not_pinned                   [negative] FAIL         not PASS: [('G0.source_and_executable', 'FAIL')] | vLLM gitlink differs from the pin
+MET     64 launch_source_record_missing           [negative] INCONCLUSIVE not PASS: [('G0.source_and_executable', 'INCONCLUSIVE')] | no launch source record
+MET     65 reservation_other_node                 [negative] FAIL         not PASS: [('G1.host_identity', 'FAIL')] | reservation record names another node
+MET     66 memory_sampler_other_host              [negative] FAIL         not PASS: [('G1.host_identity', 'FAIL')] | memory samples carry another host
+MET     67 temporary_storage_over_ceiling         [negative] FAIL         not PASS: [('G11.storage_and_memory', 'FAIL')] | post-run scratch peak makes temporary storage 10.05 GB
+MET     68 persistent_storage_over_ceiling        [negative] FAIL         not PASS: [('G11.storage_and_memory', 'FAIL')] | run directory peak 8.05 GB
+MET     69 importer_memory_over_ceiling           [negative] FAIL         not PASS: [('G11.storage_and_memory', 'FAIL')] | in-session importer 257 GB
+MET     70 offline_importer_memory_over_ceiling   [negative] FAIL         not PASS: [('G11.storage_and_memory', 'FAIL')] | offline importer 257 GB
+MET     71 host_memory_below_floor                [negative] FAIL         not PASS: [('G11.storage_and_memory', 'FAIL')] | MemAvailable 63.5 GB in one sample
+MET     72 breach_file_present                    [negative] FAIL         not PASS: [('G11.storage_and_memory', 'FAIL')] | the memory sampler wrote its breach file
+MET     73 run_storage_unmeasured                 [negative] INCONCLUSIVE not PASS: [('G1.host_identity', 'INCONCLUSIVE'), ('G11.storage_and_memory', 'INCONCLUSIVE')] | no storage samples during the run
+MET     74 postrun_storage_unmeasured             [negative] INCONCLUSIVE not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE')] | no storage samples during the post-run (scratch peak unmeasured, as in V2)
+MET     75 storage_samples_gap                    [negative] INCONCLUSIVE not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE')] | 60 s without a storage sample during the run
+MET     76 memory_samples_missing                 [negative] INCONCLUSIVE not PASS: [('G1.host_identity', 'INCONCLUSIVE'), ('G11.storage_and_memory', 'INCONCLUSIVE')] | no memory samples during the run
+MET     77 memory_samples_gap                     [negative] INCONCLUSIVE not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE')] | 60 s without a memory sample during the run
+MET     78 importer_memory_unmeasured             [negative] INCONCLUSIVE not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE')] | the memory sampler never identified the importer
+MET     79 offline_importer_memory_unmeasured     [negative] INCONCLUSIVE not PASS: [('G11.storage_and_memory', 'INCONCLUSIVE')] | the post-run memory sampler never identified the importer
+MET     80 gpu_held_over_ceiling                  [negative] FAIL         not PASS: [('G10.bounds', 'FAIL')] | GPUs held 2 704 s from the launch
+MET     81 reservation_over_90_min                [negative] FAIL         not PASS: [('G10.bounds', 'FAIL')] | reservation held 91 min
+MET     82 reservation_deleted_record_missing     [negative] INCONCLUSIVE not PASS: [('G10.bounds', 'INCONCLUSIVE'), ('G12.closeout', 'INCONCLUSIVE')] | no record of the reservation's deletion
+MET     83 gpu_pod_left_on_node                   [negative] FAIL         not PASS: [('G12.closeout', 'FAIL')] | a GPU pod is still on the node after the deletion
+MET     84 closeout_not_clean                     [negative] FAIL         not PASS: [('G12.closeout', 'FAIL')] | closeout exit 1
+MET     85 closeout_not_run                       [negative] INCONCLUSIVE not PASS: [('G12.closeout', 'INCONCLUSIVE')] | closeout exit code not supplied

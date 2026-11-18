@@ -45,8 +45,10 @@ from __future__ import annotations
 
 import argparse
 import calendar
+import contextlib
 import glob
 import importlib.util
+import io
 import json
 import re
 import sys
@@ -413,12 +415,13 @@ def evaluate(run: Path, inputs: dict, *, pin=None, provenance=None, binary_now=N
     # G7 / G8: the V2 implementations, unchanged, under the V3 gate names
     tmp: list = []
     t_post0 = time.time()
-    stream = fr.gate_stream(tmp, lc, durable_stream, g2)
-    fr.gate_recovery(tmp, run, inputs, stream, importer, nsys, scratch, keep_scratch, g2, pinned)
+    with contextlib.redirect_stdout(io.StringIO()):  # their own lines carry the V2 gate names; re-printed below under the V3 names
+        stream = fr.gate_stream(tmp, lc, durable_stream, g2)
+        fr.gate_recovery(tmp, run, inputs, stream, importer, nsys, scratch, keep_scratch, g2, pinned)
     t_post1 = time.time()
     names = {"FR7.stream_final_stable_durable": "G7.stream_durable", "FR8.offline_import": "G8.offline_import", "FR8.offline_export": "G8.offline_export", "FR8b.recovered_trace_complete": "G8b.recovered_trace_complete"}
     for r in tmp:
-        res.append({**r, "gate": names.get(r["gate"], r["gate"])})
+        add(res, names.get(r["gate"], r["gate"]), r["status"], r["detail"], **r.get("data", {}))
     # G9
     missing = [n for n in SCI if n not in extras]
     failed = [n for n in SCI if extras.get(n) not in (None, 0)]

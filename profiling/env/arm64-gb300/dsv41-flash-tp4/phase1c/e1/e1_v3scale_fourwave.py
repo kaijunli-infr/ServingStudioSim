@@ -47,6 +47,7 @@ SHIFT = 10_000  # iteration-index offset of the second copy
 def _checker():
     spec = importlib.util.spec_from_file_location("e1_completeness_v2", CHECKER)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = mod  # the checker defines dataclasses, which look their module up by name
     spec.loader.exec_module(mod)
     return mod
 
