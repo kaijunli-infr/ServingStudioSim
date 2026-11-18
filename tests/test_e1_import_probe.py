@@ -367,3 +367,30 @@ def test_recorded_cli_pid_defaults_to_the_lifecycle_record(tmp_path):
     w.write_status()
     assert w.run(mod, trigger=False, nsys_pid=None) == 0
     assert w.record()["recorded_nsys_cli_pid"] == CLI and w.record()["importer"]["agent"]["linked_to_recorded_cli"] is True
+
+
+def test_short_importer_flags_identify_the_offline_importer(tmp_path):
+    """The post-run starts the importer as `QdstrmImporter -i <stream> -o <report>`."""
+    mod, w = _load(), World(tmp_path)
+    w.put(IMP, "QdstrmImporter", EXE, [EXE, "-i", STREAM, "-o", str(w.report)], fds=[STREAM])
+    found = mod.find_importers(EXE, STREAM, str(w.report), proc=w.proc, uid=os.getuid())
+    assert found[0]["matched_by"] == ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]
+    assert mod.find_importers(EXE, "/tmp/other.qdstrm", "/tmp/other.nsys-rep", proc=w.proc, uid=os.getuid()) == []
+
+
+def test_stop_file_ends_the_observation_and_keeps_the_state(tmp_path):
+    stop = tmp_path / "stop"
+    mod, w = _load(), World(tmp_path, steps=[advance(), advance(), lambda w: (advance()(w), stop.write_text(""))] + [advance()] * 5)
+    w.importer()
+    rc = w.run(mod, trigger=False, stop_file=stop)
+    rec = w.record()
+    assert rc == 2 and rec["stopped_by"].startswith("stop file") and rec["final"]["state"] == mod.ACTIVE and rec["samples"] == 4 and rec["result"].startswith("STOPPED (ACTIVE)")
+
+
+def test_record_names_the_host(tmp_path):
+    import socket
+
+    mod, w = _load(), World(tmp_path, steps=[advance(), advance(), finish()])
+    w.importer()
+    w.run(mod, trigger=False)
+    assert w.record()["host"] == socket.gethostname()

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""V3 (intermediate trace size) DRAFT inputs: the accepted V1/V2 recipe with the accepted dry-run trace played twice.
+"""V3 (intermediate trace size) inputs: the accepted V1/V2 recipe with the accepted dry-run trace played twice.
 
     python3 -I make_e1_inputs_v3scale.py       (from the e1 directory; stdlib only)
 
-Writes traces/e1_v3_scale.csv, configs_v3scale/e1_v3_scale/profile.json and E1-V3-SCALE-INPUTS.draft.json. Nothing here is
-pinned or authorized; the draft packet E1-V3-SCALE-PACKET-DRAFT.md explains every number. (`configs_v3/` and
-`make_e1_inputs_v3.py` belong to the lost e1_main_v3 capture and are not touched.)
+Writes traces/e1_v3_scale.csv, configs_v3scale/e1_v3_scale/profile.json, E1-V3-SCALE-INPUTS.json and INPUTS_v3scale.sha256.
+The packet E1-V3-SCALE-PACKET.md explains every number; nothing here authorizes a launch. (`configs_v3/` and
+`make_e1_inputs_v3.py` belong to the lost e1_main_v3 capture and are not touched; E1-V3-SCALE-INPUTS.draft.json is the
+earlier draft, kept as committed.)
 
 Derivation (mechanical):
   * config = configs_fr/e1_v2_forced_release/profile.json (the V2 config, itself the accepted e1_nsys_val recipe with the
@@ -76,7 +77,7 @@ def main() -> None:
 
     rows_expected = 2 * V2["kernel_rows"]
     inputs = {
-        "status": "DRAFT - not pinned, not frozen, authorizes nothing",
+        "status": "inputs of the proposed V3 packet; authorizes nothing",
         "pass": PASS,
         "derived_from": {"config": "configs_fr/e1_v2_forced_release/profile.json", "sha256": sha256(SRC), "trace": "traces/e1_dry.csv", "trace_sha256": sha256(SRC_TRACE)},
         "changes": ["name", "log_dir", "workload.frontend.path -> traces/e1_v3_scale.csv (the accepted 56 rows twice; second pair +80 s, wave index 1)"],
@@ -111,13 +112,23 @@ def main() -> None:
             "flush_s_range_considered": [60, 140],
             "import_s_range_considered": [27, 110],
         },
-        "phase_deadlines_s": {"flush_stop_to_importing": 300, "import_importing_to_importer_exit": 300, "stop_to_report_written": 600, "session_close_after_report": 300},
-        "ceilings": {"reservation_hard_min": 90, "gpu_held_ceiling_s": cfg["nsys"]["gpu_held_ceiling_s"], "gpu_held_nominal_s": 1800, "gpu_release_deadline_s": 90, "temporary_storage_gb": 10, "persistent_storage_gb": 8, "persistent_storage_with_archive_gb": 16, "host_mem_available_min_gb": 128, "startup_limit_min": 30, "capture_limit_min": 10},
+        # clocks: checks/e1_v3scale_gates.py docstring. A phase passes at or below its deadline.
+        "phase_deadlines_s": {"stop_accepted": 30, "flush_stop_to_importing": 300, "import_importer_first_seen_to_gone": 300, "stop_to_report_written": 600, "session_close_after_server_sigterm": 300},
+        "limits": {"gpu_release_deadline_s": 90, "gpu_watch_interval_s": 2, "gpu_watch_max_gap_s": 10, "sampler_max_gap_s": 30, "import_probe_interval_s": 0.5, "import_probe_min_progress": 2, "mem_watch_interval_s": 1, "storage_watch_interval_s": 2},
+        "ceilings": {"reservation_hard_min": 90, "gpu_held_ceiling_s": cfg["nsys"]["gpu_held_ceiling_s"], "gpu_held_nominal_s": 1800, "temporary_storage_gb": 10, "persistent_storage_gb": 8, "persistent_storage_with_archive_gb": 16,
+                     "host_mem_available_preflight_min_gb": 128, "host_mem_available_floor_gb": 64, "importer_rss_ceiling_gb": 256, "startup_limit_min": 30, "capture_limit_min": 10},
+        # read by checks/e1_completeness_v2.py (--plan dry) and checks/e1_nsys_validation.py: the four cells of this trace
+        "design": {"OUT_LEN": 1024, "MIN_PURE_DECODE": 400},
+        "dry": {"requests": len(out_rows), "trace_span_s": round(SECOND_PAIR_OFFSET_MS / 1000.0 + 72.7, 1),
+                "plan": [{"b": 8, "kv": 32768, "wave": 0, "arrival_s": 0.0, "pure_decode_iters_min": 1008}, {"b": 48, "kv": 32768, "wave": 0, "arrival_s": 18.6, "pure_decode_iters_min": 928},
+                         {"b": 8, "kv": 32768, "wave": 1, "arrival_s": 80.0, "pure_decode_iters_min": 1008}, {"b": 48, "kv": 32768, "wave": 1, "arrival_s": 98.6, "pure_decode_iters_min": 928}]},
         "calibration_stop_to_report": CALIBRATION,
         "config_sha256": sha256(OUT),
     }
-    (E1 / "E1-V3-SCALE-INPUTS.draft.json").write_text(json.dumps(inputs, indent=1) + "\n")
-    print(f"wrote {TRACE.relative_to(E1)} ({sha256(TRACE)[:16]}, {len(out_rows)} requests), {OUT.relative_to(E1)} ({sha256(OUT)[:16]}), E1-V3-SCALE-INPUTS.draft.json; waves {json.dumps(waves)}")
+    (E1 / "E1-V3-SCALE-INPUTS.json").write_text(json.dumps(inputs, indent=1) + "\n")
+    lines = [f"{sha256(TRACE)}  traces/e1_v3_scale.csv", f"{sha256(OUT)}  configs_v3scale/{PASS}/profile.json", f"{sha256(SRC)}  configs_fr/e1_v2_forced_release/profile.json", f"{sha256(SRC_TRACE)}  traces/e1_dry.csv"]
+    (E1 / "INPUTS_v3scale.sha256").write_text("\n".join(lines) + "\n")
+    print(f"wrote {TRACE.relative_to(E1)} ({sha256(TRACE)[:16]}, {len(out_rows)} requests), {OUT.relative_to(E1)} ({sha256(OUT)[:16]}), E1-V3-SCALE-INPUTS.json, INPUTS_v3scale.sha256; waves {json.dumps(waves)}")
 
 
 if __name__ == "__main__":

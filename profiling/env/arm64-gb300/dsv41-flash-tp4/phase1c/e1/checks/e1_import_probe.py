@@ -4,7 +4,7 @@
     python3 -I checks/e1_import_probe.py --importer-exe <QdstrmImporter> --report <out.nsys-rep>
         (--stream <in.qdstrm> | --nsys-dir <run>/profile/nsys) --out probe.json --samples probe.jsonl --log probe.log
         [--nsys-pid PID (default: lifecycle.json nsys.pid)] [--nsys-log server.log] [--interval 0.5] [--min-progress 2] [--confirm-s 30] [--max-s 3600]
-        [--control lifecycle.control --trigger-line "<registered line>"]
+        [--control lifecycle.control --trigger-line "<registered line>"] [--stop-file FILE]
 
 Why: the V2 probe confirmed "import in progress" from the CPU time of the recorded Nsight CLI's process tree. That tree
 contains the server's workers and does NOT contain the importer: Nsight's importer (`QdstrmImporter --input-file <stream>
@@ -34,6 +34,7 @@ import argparse
 import json
 import os
 import re
+import socket
 import sys
 import time
 from pathlib import Path
@@ -82,12 +83,14 @@ def read_proc(pid: int, proc: Path = Path("/proc")) -> dict | None:
     return rec
 
 
-def _arg(argv: list[str], flag: str) -> str | None:
-    for i, a in enumerate(argv):
-        if a == flag and i + 1 < len(argv):
-            return argv[i + 1]
-        if a.startswith(flag + "="):
-            return a[len(flag) + 1 :]
+def _arg(argv: list[str], *flags: str) -> str | None:
+    """Value of the first of `flags` present (`--input-file X`, `--input-file=X`, or the short form `-i X`)."""
+    for flag in flags:
+        for i, a in enumerate(argv):
+            if a == flag and i + 1 < len(argv):
+                return argv[i + 1]
+            if flag.startswith("--") and a.startswith(flag + "="):
+                return a[len(flag) + 1 :]
     return None
 
 
@@ -103,9 +106,9 @@ def find_importers(importer_exe: str, stream: str | None, report: str | None, *,
         if not p or p["uid"] != uid or p["exe"] != importer_exe:
             continue
         why = []
-        if stream and _arg(p["argv"], "--input-file") == stream:
+        if stream and _arg(p["argv"], "--input-file", "-i") == stream:
             why.append("--input-file is the session stream")
-        if report and _arg(p["argv"], "--output-file") == report:
+        if report and _arg(p["argv"], "--output-file", "-o") == report:
             why.append("--output-file is the session report")
         for path, name in ((stream, "stream"), (report, "report")):
             if path and p["fds"] and path in p["fds"]:
@@ -208,12 +211,12 @@ def classify(samples: list[dict], *, min_progress: int = 2, generated: bool | No
 
 
 def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, stream: str | None = None, nsys_dir: Path | None = None, nsys_pid: int | None = None, nsys_log: Path | None = None,
-        interval: float = 0.5, min_progress: int = 2, confirm_s: float = 30.0, max_s: float = 3600.0, settle: int = 3, control: Path | None = None, trigger_line: str | None = None,
+        interval: float = 0.5, min_progress: int = 2, confirm_s: float = 30.0, max_s: float = 3600.0, settle: int = 3, control: Path | None = None, trigger_line: str | None = None, stop_file: Path | None = None,
         proc: Path = Path("/proc"), uid: int | None = None, sleep=time.sleep, now=time.time) -> int:
     """Observe until a terminal state (COMPLETED / TERMINATED) or --max-s. In trigger mode, write the line once ACTIVE is
     established within --confirm-s of the first sighting; otherwise withhold it. Exit 0 terminal COMPLETED, 1 TERMINATED,
     2 not established (NOT_FOUND / AMBIGUOUS / timeout), 3 trigger withheld."""
-    record: dict = {"probe": "e1_import_probe.py", "provenance": PROVENANCE, "importer_exe": importer_exe, "stream": stream, "report": report, "recorded_nsys_cli_pid": nsys_pid,
+    record: dict = {"probe": "e1_import_probe.py", "host": socket.gethostname(), "provenance": PROVENANCE, "importer_exe": importer_exe, "stream": stream, "report": report, "recorded_nsys_cli_pid": nsys_pid,
                     "min_progress": min_progress, "interval_s": interval, "started_at": now(), "transitions": [], "trigger": {"requested": bool(control and trigger_line), "written": False}}
     samples: list[dict] = []
     known = None
@@ -273,6 +276,9 @@ def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, s
                     record["trigger"]["withheld"] = f"state {state}: {c['reason']}"
                 elif first_seen_at is not None and s["at"] - first_seen_at > confirm_s:
                     record["trigger"]["withheld"] = f"importer activity not established within {confirm_s} s of the first sighting (state {state})"
+            if stop_file is not None and stop_file.exists():
+                record["stopped_by"] = f"stop file {stop_file}"
+                break
             if known is not None and gone_streak >= settle:
                 break
             elif known is None and state == COMPLETED:
@@ -287,6 +293,9 @@ def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, s
     if final["state"] == COMPLETED:
         save(f"COMPLETED: {final['reason']}")
         return 0
+    if "stopped_by" in record:
+        save(f"STOPPED ({final['state']}) by the {record['stopped_by']}: {final['reason']}")
+        return 2
     if final["state"] == TERMINATED:
         save(f"TERMINATED: {final['reason']}")
         return 1
@@ -311,6 +320,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-s", type=float, default=3600.0)
     ap.add_argument("--control", type=Path)
     ap.add_argument("--trigger-line")
+    ap.add_argument("--stop-file", type=Path, help="end the observation when this file exists (the record keeps the state reached)")
     args = ap.parse_args(argv)
     if not args.stream and not args.nsys_dir:
         ap.error("one of --stream or --nsys-dir is required")
@@ -325,7 +335,7 @@ def main(argv: list[str] | None = None) -> int:
 
     log(f"[import-probe] start pid {os.getpid()} importer {args.importer_exe} report {args.report}")
     return run(args.importer_exe, args.report, args.out, args.samples, log, stream=args.stream, nsys_dir=args.nsys_dir, nsys_pid=args.nsys_pid, nsys_log=args.nsys_log, interval=args.interval,
-               min_progress=args.min_progress, confirm_s=args.confirm_s, max_s=args.max_s, control=args.control, trigger_line=args.trigger_line)
+               min_progress=args.min_progress, confirm_s=args.confirm_s, max_s=args.max_s, control=args.control, trigger_line=args.trigger_line, stop_file=args.stop_file)
 
 
 if __name__ == "__main__":
