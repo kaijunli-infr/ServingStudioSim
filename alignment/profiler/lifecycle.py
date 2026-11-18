@@ -926,16 +926,52 @@ class ProfilerStopController:
         if self.s.stream.get("path") and not self.s.stream.get("preserved_path"):
             self._track_stream()
         log: list[dict] = []
-        self._signal(self.api_server, signal.SIGTERM, log)
+        outcome = self._signal(self.api_server, signal.SIGTERM, log)
+        sigterm_at = self._wall()
+        for entry in log:
+            entry.setdefault("at", sigterm_at)
+        # exact time of the API-server SIGTERM and what the importer looked like right after it
+        self.s.gpu["api_server_sigterm"] = {
+            "at": sigterm_at,
+            "pid": self.api_server.pid,
+            "outcome": outcome,
+        }
+        self.s.gpu["importer_after_signal"] = [self._importer_state("after the API-server SIGTERM")]
+        self._write_status()
         deadline = self._clock() + self.policy.server_term_grace_s
         while self._clock() < deadline and self._server_alive():
             self._sleep(min(0.5, self.policy.poll_interval_s))
         for p in [self.api_server, *self.engine_procs]:
             if procident.same_identity(p, self._identity(p.pid)):
+                before = len(log)
                 self._signal(p, signal.SIGKILL, log)
+                for entry in log[before:]:
+                    entry.setdefault("at", self._wall())
+        self.s.gpu["importer_after_signal"].append(
+            self._importer_state("after the server termination pass")
+        )
         self.s.actions.extend([{"at": self._wall(), "reason": reason, **entry} for entry in log])
         self._emit(f"[lifecycle] GPU release ({reason}): {log}")
         self._write_status()
+
+    def _importer_state(self, label: str) -> dict:
+        """Identity and state of the Nsight process (the importer's process), for the record."""
+        state: dict = {
+            "at": self._wall(),
+            "label": label,
+            "phase": self.s.phase.value,
+            "import_progress_pct": self.s.import_progress_pct,
+            "nsys_pid": self.nsys.pid if self.nsys is not None else None,
+            "identity_matches": self._nsys_alive() if self.nsys is not None else None,
+        }
+        if self.nsys is not None:
+            try:
+                with open(f"/proc/{self.nsys.pid}/stat") as fh:
+                    stat = fh.read()
+                state["proc_state"] = stat[stat.rindex(")") + 2 :].split()[0]
+            except (OSError, ValueError, IndexError):
+                state["proc_state"] = None
+        return state
 
     # --------------------------------------------------------------- shutdown
     def shutdown(self, proc: subprocess.Popen) -> None:

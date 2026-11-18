@@ -96,6 +96,19 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    profile.add_argument(
+        "--frontend-provenance",
+        type=Path,
+        default=None,
+        metavar="JSON",
+        help=(
+            "Prebuilt load-generator contract (sha256 + req_frontend_commit). With it "
+            "the launch verifies the exact session_runner bytes, its source commit and "
+            "its build-state record, refuses to start on any mismatch, never runs "
+            "cargo, and verifies the bytes again when the launch ends."
+        ),
+    )
+
     predict = commands.add_parser(
         "timing-predict",
         help="Build measured iteration cases and run offline timing prediction.",
@@ -487,6 +500,18 @@ def _run_profile(args: argparse.Namespace) -> int:
         args.config,
         require_python_runtime=not resume,
     )
+    frontend_provenance = getattr(args, "frontend_provenance", None)
+    if frontend_provenance is not None and not resume:
+        from alignment.load_generator import runner as frontend
+
+        try:
+            checked = frontend.verify_prebuilt_session_runner(frontend_provenance)
+        except frontend.FrontendBinaryError as exc:
+            raise ValueError(f"prebuilt load generator refused: {exc}") from exc
+        print(
+            f"[alignment] prebuilt session_runner verified: sha256 {checked['sha256']} "
+            f"source {checked['source_commit'][:12]} (no compilation in this launch)"
+        )
     if args.dry_run:
         print(f"[alignment] profile validated: {args.config} (log_dir={config.log_dir})")
         return 0
@@ -496,7 +521,27 @@ def _run_profile(args: argparse.Namespace) -> int:
     if import_stream is not None:
         result = run_profile(config, resume=True, import_stream=import_stream)
     else:
-        result = run_profile(config, resume=resume)
+        after = None
+        try:
+            # the keyword is passed only when the prebuilt contract was asked for
+            prebuilt = (
+                {} if frontend_provenance is None else {"frontend_provenance": frontend_provenance}
+            )
+            result = run_profile(config, resume=resume, **prebuilt)
+        finally:
+            if frontend_provenance is not None and not resume:
+                run_log_dir = Path(config.log_dir)
+                if not run_log_dir.is_absolute():
+                    run_log_dir = REPO_ROOT / run_log_dir
+                after = frontend.verify_after_launch(run_log_dir)
+                if after is not None:
+                    print(
+                        "[alignment] session_runner after the launch: sha256 "
+                        f"{after['sha256_after_launch']} "
+                        + ("(unchanged)" if after["unchanged"] else "(CHANGED DURING THE LAUNCH)")
+                    )
+        if after is not None and not after["unchanged"]:
+            raise ValueError("session_runner changed during the launch (see frontend_binary.json)")
     if result.get("profile_kind", "nsys") == "nsys":
         print(
             f"[alignment] profiling complete: {result['parsed_nsys']}\n"

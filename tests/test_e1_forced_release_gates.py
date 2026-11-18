@@ -99,7 +99,7 @@ def _run(tmp: Path, outcome: str = "A", mutate=None, obs=None) -> tuple[Path, Pa
         "control_commands": [
             {"at": T0 + 1568, "command": LINE, "phase": "importing", "result": "release requested"}
         ],
-        "nsys": {"pid": 4000, "alive": False},
+        "nsys": {"pid": 4000, "alive": False, "identity": {"pid": 4000, "starttime": 777}},
         "server": {
             "api_server": {"pid": 4100},
             "engine_processes": [{"pid": 4101}, {"pid": 4102}],
@@ -115,6 +115,17 @@ def _run(tmp: Path, outcome: str = "A", mutate=None, obs=None) -> tuple[Path, Pa
                 "nsys_alive": True,
                 "report_written": False,
             },
+            "api_server_sigterm": {"at": T0 + 1568.2, "pid": 4100, "outcome": "signalled"},
+            "importer_after_signal": [
+                {
+                    "at": T0 + 1568.2,
+                    "label": "after the API-server SIGTERM",
+                    "nsys_pid": 4000,
+                    "identity_matches": True,
+                    "proc_state": "S",
+                    "phase": "importing",
+                }
+            ],
         },
         "session_closed_at": T0 + 1600,
         "actions": [
@@ -122,11 +133,22 @@ def _run(tmp: Path, outcome: str = "A", mutate=None, obs=None) -> tuple[Path, Pa
             {"at": T0 + 1571, "reason": f"operator: {LINE}", "pid": 4101, "action": "SIGKILL"},
         ],
     }
-    probe = {
-        "saw_phase": "importing",
+    smp = {
+        "phase": "importing",
+        "identity_verified": True,
         "nsys_pid": 4000,
-        "nsys_alive": True,
+        "nsys_starttime_proc": 777,
+        "nsys_state": "S",
+    }
+    probe = {
+        "result": "trigger written",
+        "samples": [
+            {**smp, "at": T0 + 1566.0, "tree_cpu_ticks": 10},
+            {**smp, "at": T0 + 1566.4, "tree_cpu_ticks": 20},
+        ],
+        "import_in_progress_confirmed": True,
         "wrote_trigger_at": T0 + 1567.5,
+        "after_signal": [{**smp, "at": T0 + 1568.6}],
     }
     observations = (
         obs
@@ -204,39 +226,111 @@ def _set(path, value):
     return mutate
 
 
+def _completed_first(lc, probe):
+    """The import finished at 1567 s, before the API server was signalled at 1568.2 s."""
+    lc["phase_history"] = [
+        h for h in lc["phase_history"] if h["phase"] not in ("report_written", "stop_failed")
+    ] + [{"phase": "report_written", "at": T0 + 1567}]
+    lc["phase"] = "report_written"
+
+
+def _never_released(lc, probe):
+    """The import completed before the probe could write anything: no command, no release, a normal shutdown."""
+    lc["control_commands"] = []
+    lc["gpu"] = {"release_requested_at": None, "released_at": T0 + 1596}
+    lc["actions"] = [{"at": T0 + 1595, "reason": "shutdown", "pid": 4100, "action": "SIGTERM"}]
+    lc["http"] = {"status": "ok", "returned_at": T0 + 1592, "requests_sent": 1}
+    probe.clear()
+    probe.update(
+        result="NO TRIGGER: the stop was already terminal before phase importing was observed",
+        samples=[],
+    )
+
+
+FAIL, INC = "FAIL", "INCONCLUSIVE"
 CASES = {
     "trigger_in_wrong_phase": (
         _set(["control_commands", 0, "phase"], "stop_accepted"),
         "FR2.registered_trigger",
+        FAIL,
     ),
     "unregistered_extra_command": (
         lambda lc, p: lc["control_commands"].append(
             {"command": "extend 60 x", "result": "ok", "phase": "importing"}
         ),
         "FR2.registered_trigger",
+        FAIL,
     ),
-    "release_after_the_report": (
+    "controller_saw_an_earlier_phase_at_release": (
+        _set(
+            ["gpu", "release_context"],
+            {"phase": "capture_ended", "nsys_alive": True, "report_written": False},
+        ),
+        "FR3.import_active_at_release",
+        FAIL,
+    ),
+    "importer_identity_not_verified_by_the_probe": (
+        lambda lc, p: p["samples"][0].__setitem__("identity_verified", False),
+        "FR3.import_active_at_release",
+        FAIL,
+    ),
+    "probe_watched_another_pid": (
+        lambda lc, p: [x.__setitem__("nsys_pid", 9) for x in p["samples"]],
+        "FR3.import_active_at_release",
+        FAIL,
+    ),
+    "import_completed_before_the_signal": (_completed_first, "FR3.import_active_at_release", INC),
+    "release_context_says_report_written": (
         _set(
             ["gpu", "release_context"],
             {"phase": "report_written", "nsys_alive": True, "report_written": True},
         ),
         "FR3.import_active_at_release",
+        INC,
     ),
-    "probe_saw_no_live_importer": (
-        lambda lc, p: p.__setitem__("nsys_alive", False),
+    "import_not_confirmed_in_progress": (
+        lambda lc, p: p.__setitem__("import_in_progress_confirmed", False),
         "FR3.import_active_at_release",
+        INC,
+    ),
+    "probe_saw_importing_only_once": (
+        lambda lc, p: p.__setitem__("samples", p["samples"][:1]),
+        "FR3.import_active_at_release",
+        INC,
+    ),
+    "no_importer_check_after_the_signal_by_the_probe": (
+        lambda lc, p: p.__setitem__("after_signal", []),
+        "FR3b.importer_checked_after_signal",
+        INC,
+    ),
+    "no_importer_check_after_the_signal_by_the_controller": (
+        _set(["gpu", "importer_after_signal"], []),
+        "FR3b.importer_checked_after_signal",
+        INC,
+    ),
+    "sigterm_time_not_recorded": (
+        lambda lc, p: lc["gpu"].pop("api_server_sigterm"),
+        "FR4.no_signal_to_importer",
+        FAIL,
+    ),
+    "sigterm_time_does_not_match_the_action": (
+        _set(["gpu", "api_server_sigterm", "at"], T0 + 1569.9),
+        "FR4.no_signal_to_importer",
+        FAIL,
     ),
     "signal_to_the_importer": (
         lambda lc, p: lc["actions"].append(
             {"at": T0 + 1569, "reason": "hard deadline", "pid": 4000, "action": "SIGINT"}
         ),
         "FR4.no_signal_to_importer",
+        FAIL,
     ),
     "signal_to_an_unrecorded_pid": (
         lambda lc, p: lc["actions"].append(
             {"at": T0 + 1569, "reason": "x", "pid": 777, "action": "SIGKILL"}
         ),
         "FR4.no_signal_to_importer",
+        FAIL,
     ),
     "importer_hung": (
         lambda lc, p: (
@@ -245,33 +339,62 @@ CASES = {
             lc.__setitem__("phase", "importing"),
         ),
         "FR6.session_ended",
+        FAIL,
     ),
-    "no_final_stream_record": (_set(["stream", "final"], None), "FR7.stream_final_stable_durable"),
+    "no_final_stream_record": (
+        _set(["stream", "final"], None),
+        "FR7.stream_final_stable_durable",
+        FAIL,
+    ),
     "final_record_differs_from_the_durable_copy": (
         _set(["stream", "final", "sha256"], "0" * 64),
         "FR7.stream_final_stable_durable",
+        FAIL,
     ),
-    "second_stop_request": (_set(["http", "requests_sent"], 2), "FR1.one_stop_request"),
+    "second_stop_request": (_set(["http", "requests_sent"], 2), "FR1.one_stop_request", FAIL),
     "stop_error_before_the_release": (
         _set(["http", "returned_at"], T0 + 1510),
         "FR1.one_stop_request",
+        FAIL,
     ),
     "escalation": (
         lambda lc, p: lc["escalations"].append({"kind": "hard_deadline", "phase": "importing"}),
         "FR9.bounds",
+        FAIL,
     ),
-    "lifecycle_host_conflict": (_set(["host"], "pod4-gb300-10-tray14-f3"), "H.host_identity"),
+    "lifecycle_host_conflict": (_set(["host"], "pod4-gb300-10-tray14-f3"), "H.host_identity", FAIL),
 }
 
 
 @pytest.mark.parametrize("case", sorted(CASES))
 def test_each_violation_stops_the_validation(tmp_path, case):
     mod = _load()
-    mutate, gate = CASES[case]
+    mutate, gate, expect = CASES[case]
     run, durable = _run(tmp_path, "A", mutate=mutate)
     res = _eval(mod, run, durable, tmp_path)
-    assert _st(res)[gate] == "FAIL", (case, [r for r in res if r["gate"] == gate])
-    assert mod.verdict_of(res) == "FAIL"
+    assert _st(res)[gate] == expect, (case, [r for r in res if r["gate"] == gate])
+    assert mod.verdict_of(res) != "PASS"
+    if expect == INC:
+        assert mod.verdict_of(res) == INC, (case, [r for r in res if r["status"] == FAIL])
+
+
+def test_import_finishing_before_any_release_is_inconclusive_not_a_failure_and_not_a_pass(tmp_path):
+    mod = _load()
+    obs = [(1560, HOST, 260_000, [1]), (1590, HOST, 260_000, [1]), (1600, HOST, 0, [])]
+    run, durable = _run(tmp_path, "A", mutate=_never_released, obs=obs)
+    res = _eval(mod, run, durable, tmp_path)
+    st = _st(res)
+    assert [g for g, v in st.items() if v == FAIL] == []
+    for gate in (
+        "FR2.registered_trigger",
+        "FR3.import_active_at_release",
+        "FR3b.importer_checked_after_signal",
+        "FR4.no_signal_to_importer",
+        "FR5.gpu_release_within_deadline",
+        "FR9.bounds",
+    ):
+        assert st[gate] == INC, gate
+    assert mod.verdict_of(res) == INC
 
 
 @pytest.mark.parametrize(

@@ -150,9 +150,9 @@ def main() -> None:
         },
         "trigger": {
             "control_line": "release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)",
-            "condition": "first observation of phase `importing` in lifecycle.json by v2_release_probe.sh (registered in the pid registry; polls every 0.5 s)",
+            "condition": "first observation of phase `importing` in lifecycle.json by checks/e1_release_probe.py (registered in the pid registry; polls every 0.5 s; verifies the importer from /proc and confirms the import in progress, at most 3 s, before writing)",
             "deterministic_in": "phase, not wall time: the line is written once, on the first poll that sees `importing`",
-            "v1_reference": "V1: importing lasted 27 s (03:22:16 → 03:22:43Z) for the same workload; the trigger needs ≤ 2 s (probe poll 0.5 s + controller poll 1 s)",
+            "v1_reference": "V1: importing lasted 27 s (03:22:16 → 03:22:43Z) for the same workload; the trigger needs about 2 s, at most about 5 s (probe poll 0.5 s + confirmation 0.4–3 s + controller poll 1 s)",
         },
         "limits": {
             "gpu_release_deadline_s": 90,
@@ -163,6 +163,7 @@ def main() -> None:
             "A": "the importer finishes after the server is gone: phase report_written; recovered trace must equal the in-session export",
             "B": "the importer ends without a report: phase stop_failed; recovery from the preserved stream must give a complete trace",
             "neither": "importer still running after the session-close timeout, or GPUs not released: FAIL; registry cleanup procedure",
+            "inconclusive": "the import completed before the API server was signalled, or it could not be confirmed in progress: INCONCLUSIVE, not a pass",
         },
         "calibration_stop_to_report": CALIBRATION,
         "config_sha256": sha256(OUT),

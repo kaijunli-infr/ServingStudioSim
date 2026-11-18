@@ -18,6 +18,7 @@ mkdir -p $RUN/$PASS
 E1_REPO=$REPO E1_FR_OUT=$RUN/preflight bash $E1/preflight_e1_fr.sh 2>&1 | tee $RUN/$PASS/preflight.log
 [ "${PIPESTATUS[0]}" = "0" ] || { echo "preflight failed; not starting"; exit 3; }
 # defence in depth, immediately before launch: frozen 56-row trace, no delayed start, explicit GPU-held ceiling
+[ "$(sha256sum $REPO/alignment/load_generator/req-frontend/target/release/session_runner 2>/dev/null | cut -d' ' -f1)" = "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['sha256'])" $E1/BINARY-PROVENANCE.json)" ] || { echo "session_runner is not the pinned executable; not starting"; exit 6; }
 [ "$(tail -n +2 $TRACE | grep -c .)" = 56 ] && [ "$(sha256sum $TRACE | cut -c1-16)" = c6d8e13b7229ffd4 ] && grep -q "\"path\": \"$TRACE\"" $CFG && ! grep -q capture_start_delay_seconds $CFG && grep -q '"gpu_held_ceiling_s": 2700.0' $CFG || { echo "trace/config guard failed; not starting"; exit 4; }
 cp $CFG $RUN/$PASS/profile.json; cp $TRACE $RUN/$PASS/trace.csv
 REG=$RUN/pids/owned.tsv; python3 -I $E1/checks/e1_pids.py register --registry $REG --label driver:$PASS $$ | tee -a $RUN/$PASS/run.log
@@ -26,17 +27,20 @@ python3 -I -c "import json,sys,socket; r=json.load(open(sys.argv[1])); sys.exit(
 # independent GPU-state sampler (gate FR5): registered, every 2 s, exits by itself 60 s after it has seen the release
 python3 -I $E1/checks/e1_pids.py spawn --registry $REG --label gpuwatch:$PASS -- python3 -I $E1/checks/e1_gpu_watch.py --out $RUN/$PASS/gpu_observations.jsonl --interval 2 --max-s 3300 --stop-after-released 30 | tee -a $RUN/$PASS/run.log
 WPID=$(grep -ao '"pid": [0-9]*' $RUN/$PASS/run.log | tail -1 | tr -dc 0-9)
-# forced-release trigger: registered probe, writes the one pre-registered control line on the first observation of phase `importing`
-python3 -I $E1/checks/e1_pids.py spawn --registry $REG --label probe:$PASS -- bash $E1/v2_release_probe.sh $RUN/$PASS/profile/nsys $RUN/$PASS/probe.log $RUN/$PASS/probe.json | tee -a $RUN/$PASS/run.log
+# forced-release trigger and independent importer observer: registered probe; verifies the importer from /proc, confirms the import in
+# progress, writes the one pre-registered control line, then samples the importer after the controller's SIGTERM
+python3 -I $E1/checks/e1_pids.py spawn --registry $REG --label probe:$PASS -- python3 -I $E1/checks/e1_release_probe.py --nsys-dir $RUN/$PASS/profile/nsys --inputs $E1/E1-V2-FR-INPUTS.json --out $RUN/$PASS/probe.json --log $RUN/$PASS/probe.log | tee -a $RUN/$PASS/run.log
 cd $REPO
 source profiling/env/arm64-gb300/gb300.env
 unset CUDA_VISIBLE_DEVICES
 echo "[$PASS] start $(date -u +%FT%TZ) on $(hostname) launcher_tree=$REPO repo=$(git rev-parse HEAD) tree_alignment=$(git rev-parse HEAD:alignment | cut -c1-12) cfg_sha=$(sha256sum $CFG | cut -c1-16) trace_sha=$(sha256sum $TRACE | cut -c1-16) session_runner=$(sha256sum alignment/load_generator/req-frontend/target/release/session_runner | cut -c1-16)" | tee -a $RUN/$PASS/run.log
 BIN=alignment/load_generator/req-frontend/target/release/session_runner; BS0=$(sha256sum $BIN | cut -d' ' -f1)
-uv run --no-sync python -m launcher alignment profile "$RUN/$PASS/profile.json" 2>&1 | tee -a $RUN/$PASS/run.log
+# prebuilt load-generator contract: exact pinned bytes, pinned source, recorded build state; the launcher refuses before any engine
+# start on a mismatch, never runs cargo, and hashes the executable again when it ends
+uv run --no-sync python -m launcher alignment profile "$RUN/$PASS/profile.json" --frontend-provenance $E1/BINARY-PROVENANCE.json 2>&1 | tee -a $RUN/$PASS/run.log
 rc=${PIPESTATUS[0]}
-# the launcher runs `cargo build` for the load generator; it must find the pinned binary up to date and leave it byte-identical
-# (in V1 it rebuilt it at launch). Recorded for the post-run gate S.binary_unchanged.
+# independent of the launcher's own record (load_generator/frontend_binary.json): the driver's before/after hash and the count of cargo
+# "Compiling" lines in the run log (V1's launcher rebuilt the binary at launch). Both feed the post-run gate S.binary_unchanged.
 BS1=$(sha256sum $BIN | cut -d' ' -f1); nb=$(grep -ac "^ *Compiling " $RUN/$PASS/run.log)
 printf '{"binary": "%s", "sha256_before_launcher": "%s", "sha256_after_launcher": "%s", "unchanged": %s, "cargo_compiling_lines_in_run_log": %s}\n' "$BIN" "$BS0" "$BS1" "$([ "$BS0" = "$BS1" ] && echo true || echo false)" "$nb" > $RUN/$PASS/binary_check.json
 echo "[$PASS] session_runner before/after the launcher: ${BS0:0:16} / ${BS1:0:16} $([ "$BS0" = "$BS1" ] && [ "$nb" = 0 ] && echo "(unchanged, no rebuild)" || echo "(REBUILT OR CHANGED DURING THE RUN: gate S.binary_unchanged will FAIL)")" | tee -a $RUN/$PASS/run.log

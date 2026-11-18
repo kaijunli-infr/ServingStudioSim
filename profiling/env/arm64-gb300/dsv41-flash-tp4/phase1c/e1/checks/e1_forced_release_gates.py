@@ -11,10 +11,14 @@ They share helper code with checks/e1_lifecycle_gates_v2.py (trace summary) and 
   H    host identity: lifecycle record = run log = reservation node = every GPU observation
   FR1  exactly one profiler-stop request left the launcher; if it ended in an error, that happened after the release
   FR2  the pre-registered trigger: exactly one control line, the registered text, accepted while the phase was `importing`
-  FR3  the import was active when the release was requested (controller's release context, phase history, and the
-       trigger probe's own observation of the live Nsight process)
+  FR3  the import was active when the API server was signalled: phase `importing` observed by the controller and by
+       the probe; the importer's identity verified from /proc (pid + start time); the import confirmed in progress
+       immediately before the release (CPU time or progress advanced between two probe samples); the exact SIGTERM
+       time recorded and lying after the import began and before any report. If the import had completed before the
+       signal (or the probe could not confirm it in progress), the forced-release test is INCONCLUSIVE, not a pass
+  FR3b importer identity and state checked after the signal was delivered, by the controller and by the probe
   FR4  no destructive signal to the importer: every signalled pid is a recorded server process; the Nsight process is
-       signalled only after a report was written, if at all
+       signalled only after a report was written, if at all; the API-server SIGTERM is recorded with its exact time
   FR5  GPUs observed released within the deadline after the release request, by independent observations that bracket
        it (a held observation before, a released one after, none held later); controller time reported separately
   FR6  the session ended: terminal phase and Nsight gone (a still-running or hung importer is a FAIL)
@@ -74,6 +78,14 @@ def iso(t) -> str:
     return "-" if t is None else time.strftime("%H:%M:%SZ", time.gmtime(t))
 
 
+def no_forced_release(lc: dict) -> bool:
+    """The import (and the stop) finished without any release request: nothing was forced."""
+    return (lc.get("gpu") or {}).get("release_requested_at") is None and lc.get("phase") in TERMINAL and not lc.get("control_commands")
+
+
+NOT_FORCED = "no forced release took place (the import completed first): the forced-release test is inconclusive; "
+
+
 def phase_at(lc: dict, phase: str):
     return next((h["at"] for h in lc.get("phase_history", []) if h["phase"] == phase), None)
 
@@ -90,23 +102,65 @@ def gate_stop_request(res: list, lc: dict, server_log: Path | None) -> None:
     add(res, "FR1.one_stop_request", "INCONCLUSIVE" if stopping is None and ok is False and http.get("requests_sent") == 1 else ("PASS" if ok else "FAIL"), detail)
 
 
-def gate_trigger(res: list, lc: dict, inputs: dict) -> None:
+def gate_trigger(res: list, lc: dict, inputs: dict, probe: dict | None) -> None:
     want = inputs.get("trigger", {}).get("control_line")
     cmds = lc.get("control_commands", [])
-    ok = len(cmds) == 1 and cmds[0].get("command") == want and cmds[0].get("result") == "release requested" and cmds[0].get("phase") == "importing"
-    add(res, "FR2.registered_trigger", "PASS" if ok else "FAIL", f"control commands recorded {[(c.get('command'), c.get('result'), c.get('phase')) for c in cmds]}; expected exactly one: {want!r} → 'release requested' in phase 'importing'")
+    shown = [(c.get("command"), c.get("result"), c.get("phase")) for c in cmds]
+    exact = len(cmds) == 1 and cmds[0].get("command") == want and cmds[0].get("result") == "release requested"
+    if exact and cmds[0].get("phase") == "importing":
+        status, why = "PASS", "the registered line, accepted in phase 'importing'"
+    elif exact and cmds[0].get("phase") in TERMINAL:
+        status, why = "INCONCLUSIVE", f"the registered line was read only in phase {cmds[0].get('phase')!r}: the import had completed before the forced release"
+    elif not cmds and lc.get("phase") in TERMINAL and str((probe or {}).get("result", "")).startswith("NO TRIGGER"):
+        status, why = "INCONCLUSIVE", f"no trigger was written: {(probe or {}).get('result')}"
+    else:
+        status, why = "FAIL", "not exactly the one registered line accepted during the import"
+    add(res, "FR2.registered_trigger", status, f"{why}; control commands recorded {shown}; expected exactly one: {want!r} → 'release requested' in phase 'importing'")
 
 
 def gate_import_active(res: list, lc: dict, probe: dict | None) -> None:
     gpu = lc.get("gpu") or {}
     ctx = gpu.get("release_context") or {}
     rel = gpu.get("release_requested_at")
+    sig = (gpu.get("api_server_sigterm") or {}).get("at")
     imp, rep = phase_at(lc, "importing"), phase_at(lc, "report_written")
-    controller_ok = ctx.get("phase") == "importing" and ctx.get("nsys_alive") is True and ctx.get("report_written") is False and rel is not None and imp is not None and imp <= rel and (rep is None or rep > rel)
-    nsys_pid = (lc.get("nsys") or {}).get("pid")
-    probe_ok = bool(probe) and probe.get("saw_phase") == "importing" and probe.get("nsys_alive") is True and probe.get("nsys_pid") == nsys_pid and probe.get("wrote_trigger_at") is not None and rel is not None and probe["wrote_trigger_at"] <= rel + 1.0
-    status = "PASS" if controller_ok and probe_ok else ("INCONCLUSIVE" if controller_ok and probe is None else "FAIL")
-    add(res, "FR3.import_active_at_release", status, f"controller: release requested {iso(rel)} in phase {ctx.get('phase')!r}, import {ctx.get('import_progress_pct')}%, Nsight alive={ctx.get('nsys_alive')}, report written={ctx.get('report_written')}; importing since {iso(imp)}, report at {iso(rep)}; probe (independent of the controller): {probe}", release_context=ctx, probe=probe)
+    nsys = lc.get("nsys") or {}
+    samples = (probe or {}).get("samples") or []
+    probe_importing = len([s for s in samples if s.get("phase") == "importing"]) >= 2
+    probe_identity = bool(samples) and all(s.get("identity_verified") for s in samples) and samples[0].get("nsys_pid") == nsys.get("pid") and samples[0].get("nsys_starttime_proc") == (nsys.get("identity") or {}).get("starttime")
+    confirmed = (probe or {}).get("import_in_progress_confirmed") is True
+    wrote = (probe or {}).get("wrote_trigger_at")
+    detail = (
+        f"controller: release requested {iso(rel)} in phase {ctx.get('phase')!r}, import {ctx.get('import_progress_pct')}%, Nsight alive={ctx.get('nsys_alive')}, report written={ctx.get('report_written')}; "
+        f"importing since {iso(imp)}, API-server SIGTERM at {sig if sig is None else f'{sig:.3f}'} ({iso(sig)}), report at {iso(rep)}; "
+        f"probe: {len(samples)} sample(s), phase importing in ≥ 2={probe_importing}, importer identity verified from /proc={probe_identity}, import in progress confirmed={confirmed}, trigger written {iso(wrote)}"
+    )
+    data = {"release_context": ctx, "api_server_sigterm_at": sig, "importing_at": imp, "report_written_at": rep, "probe": probe}
+    if rel is None or sig is None or imp is None:
+        completed_first = lc.get("phase") in TERMINAL and not lc.get("control_commands")
+        add(res, "FR3.import_active_at_release", "INCONCLUSIVE" if completed_first else "FAIL", ("no forced release took place: the import completed first; " if completed_first else "release request, SIGTERM time or importing phase missing; ") + detail, **data)
+        return
+    if (rep is not None and rep <= sig) or ctx.get("report_written") is True or ctx.get("phase") in TERMINAL:
+        add(res, "FR3.import_active_at_release", "INCONCLUSIVE", "the import completed before the forced-release signal: the forced-release test is inconclusive; " + detail, **data)
+        return
+    controller_ok = ctx.get("phase") == "importing" and ctx.get("nsys_alive") is True and ctx.get("report_written") is False and imp <= rel <= sig + 1e-6
+    if not controller_ok or (probe is not None and not probe_identity):
+        add(res, "FR3.import_active_at_release", "FAIL", detail, **data)
+    elif probe is None or not probe_importing or not confirmed or wrote is None or wrote > sig:
+        add(res, "FR3.import_active_at_release", "INCONCLUSIVE", "the import was not independently confirmed in progress immediately before the release; " + detail, **data)
+    else:
+        add(res, "FR3.import_active_at_release", "PASS", detail, **data)
+
+
+def gate_importer_after_signal(res: list, lc: dict, probe: dict | None) -> None:
+    gpu = lc.get("gpu") or {}
+    sig = (gpu.get("api_server_sigterm") or {}).get("at")
+    ctrl = [s for s in gpu.get("importer_after_signal") or [] if sig is not None and s.get("at", 0) >= sig and s.get("nsys_pid") == (lc.get("nsys") or {}).get("pid") and s.get("identity_matches") is not None]
+    pr = [s for s in (probe or {}).get("after_signal") or [] if sig is not None and s.get("at", 0) >= sig and s.get("nsys_pid") == (lc.get("nsys") or {}).get("pid")]
+    show_c = [(s.get("label"), s.get("identity_matches"), s.get("proc_state"), s.get("phase")) for s in ctrl]
+    show_p = [(round(s["at"] - sig, 1), s.get("identity_verified"), s.get("nsys_state"), s.get("phase")) for s in pr]
+    status = "PASS" if ctrl and pr else ("INCONCLUSIVE" if sig is not None or no_forced_release(lc) else "FAIL")
+    add(res, "FR3b.importer_checked_after_signal", status, (NOT_FORCED if no_forced_release(lc) else "") + f"after the SIGTERM at {iso(sig)}: controller checks (label, identity intact, /proc state, phase) {show_c}; probe checks (seconds after, identity intact, /proc state, phase) {show_p}; both sources are required, the importer's state itself is evidence for the outcome, not a pass condition", controller=ctrl, probe=pr)
 
 
 def gate_no_signal_to_importer(res: list, lc: dict) -> None:
@@ -127,8 +181,12 @@ def gate_no_signal_to_importer(res: list, lc: dict) -> None:
         elif a.get("pid") not in server_pids:
             bad.append(a)
     release_sigs = [s for s in sigs if str(s[2]).startswith("operator: release-gpus")]
-    ok = not bad and bool(release_sigs) and nsys_pid is not None and bool(server_pids)
-    add(res, "FR4.no_signal_to_importer", "PASS" if ok else "FAIL", f"Nsight pid {nsys_pid}; recorded server pids {sorted(server_pids)}; signals {sigs}; release signals {len(release_sigs)}; disallowed {bad}")
+    api = (server.get("api_server") or {}).get("pid")
+    stamp = (lc.get("gpu") or {}).get("api_server_sigterm") or {}
+    exact = stamp.get("at") is not None and stamp.get("pid") == api and stamp.get("outcome") == "signalled" and any(a.get("pid") == api and a.get("action") == "SIGTERM" and a.get("at") == stamp.get("at") for a in lc.get("actions", []))
+    ok = not bad and bool(release_sigs) and nsys_pid is not None and bool(server_pids) and exact
+    status = "PASS" if ok else ("INCONCLUSIVE" if not bad and no_forced_release(lc) else "FAIL")
+    add(res, "FR4.no_signal_to_importer", status, (NOT_FORCED if status == "INCONCLUSIVE" else "") + f"Nsight pid {nsys_pid}; recorded server pids {sorted(server_pids)}; signals {sigs}; release signals {len(release_sigs)}; API-server SIGTERM recorded with its exact time and matching action={exact} ({stamp}); disallowed {bad}")
 
 
 def gate_gpu_release(res: list, run: Path, lc: dict, inputs: dict, g2, host: str | None) -> None:
@@ -142,7 +200,8 @@ def gate_gpu_release(res: list, run: Path, lc: dict, inputs: dict, g2, host: str
     held_later = [o["at"] for o in obs if not o["released"] and first_rel is not None and o["at"] > first_rel]
     last_held = max((o["at"] for o in obs if not o["released"] and (first_rel is None or o["at"] < first_rel)), default=None)
     ok = rel is not None and deadline is not None and bool(held_before) and first_rel is not None and first_rel - rel <= deadline and not held_later
-    add(res, "FR5.gpu_release_within_deadline", "PASS" if ok else "FAIL", f"{len(obs)} independent observation(s) on {host}; release requested {iso(rel)}; GPUs last observed held {iso(last_held)}, first observed released {iso(first_rel)} → release in ({iso(last_held)}, {iso(first_rel)}], at most {None if first_rel is None or rel is None else round(first_rel - rel, 1)} s after the request (deadline {deadline} s); held observations before the request: {len(held_before)}; held after the first released one: {len(held_later)}; controller time, separate: {iso(ctrl)}", last_held=last_held, first_released=first_rel, release_requested_at=rel, controller_released_at=ctrl)
+    status = "PASS" if ok else ("INCONCLUSIVE" if no_forced_release(lc) and not held_later else "FAIL")
+    add(res, "FR5.gpu_release_within_deadline", status, (NOT_FORCED if status == "INCONCLUSIVE" else "") + f"{len(obs)} independent observation(s) on {host}; release requested {iso(rel)}; GPUs last observed held {iso(last_held)}, first observed released {iso(first_rel)} → release in ({iso(last_held)}, {iso(first_rel)}], at most {None if first_rel is None or rel is None else round(first_rel - rel, 1)} s after the request (deadline {deadline} s); held observations before the request: {len(held_before)}; held after the first released one: {len(held_later)}; controller time, separate: {iso(ctrl)}", last_held=last_held, first_released=first_rel, release_requested_at=rel, controller_released_at=ctrl)
 
 
 def gate_session_end(res: list, lc: dict) -> str | None:
@@ -254,7 +313,9 @@ def gate_bounds(res: list, lc: dict) -> None:
     close_s = closed - rel if rel and closed else None
     esc = lc.get("escalations", [])
     ok = held is not None and policy.get("gpu_held_ceiling_s") is not None and held <= policy["gpu_held_ceiling_s"] and close_s is not None and close_s <= policy.get("session_close_timeout_s", 0) and not esc
-    add(res, "FR9.bounds", "PASS" if ok else "FAIL", f"GPU-held {held and round(held)} s (ceiling {policy.get('gpu_held_ceiling_s')}); release request → session closed {close_s and round(close_s)} s (timeout {policy.get('session_close_timeout_s')}); escalations {[(e.get('kind'), e.get('phase')) for e in esc]}; warnings {[w.get('message') for w in lc.get('warnings', [])][:6]}")
+    within = held is not None and policy.get("gpu_held_ceiling_s") is not None and held <= policy["gpu_held_ceiling_s"] and not esc
+    status = "PASS" if ok else ("INCONCLUSIVE" if no_forced_release(lc) and within else "FAIL")
+    add(res, "FR9.bounds", status, (NOT_FORCED if status == "INCONCLUSIVE" else "") + f"GPU-held {held and round(held)} s (ceiling {policy.get('gpu_held_ceiling_s')}); release request → session closed {close_s and round(close_s)} s (timeout {policy.get('session_close_timeout_s')}); escalations {[(e.get('kind'), e.get('phase')) for e in esc]}; warnings {[w.get('message') for w in lc.get('warnings', [])][:6]}")
 
 
 def evaluate(run: Path, inputs: dict, *, importer=None, nsys=None, scratch=None, keep_scratch=False, durable_stream=None, reservation=None, identity=None, extras=None) -> list:
@@ -269,8 +330,10 @@ def evaluate(run: Path, inputs: dict, *, importer=None, nsys=None, scratch=None,
     add(res, "H.host_identity", h["status"], h["detail"], sources=h["sources"])
     logs = sorted(glob.glob(str(run / "profile" / "vllm" / "*_server.log")))
     gate_stop_request(res, lc, Path(logs[0]) if logs else None)
-    gate_trigger(res, lc, inputs)
-    gate_import_active(res, lc, load(run / "probe.json"))
+    probe = load(run / "probe.json")
+    gate_trigger(res, lc, inputs, probe)
+    gate_import_active(res, lc, probe)
+    gate_importer_after_signal(res, lc, probe)
     gate_no_signal_to_importer(res, lc)
     gate_gpu_release(res, run, lc, inputs, g2, lc.get("host"))
     gate_session_end(res, lc)

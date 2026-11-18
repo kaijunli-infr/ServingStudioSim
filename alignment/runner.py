@@ -362,7 +362,11 @@ def _preflight_capture_environment(
 
 
 def run_profile(
-    cfg: ProfileConfig, *, resume: bool = False, import_stream: Path | None = None
+    cfg: ProfileConfig,
+    *,
+    resume: bool = False,
+    import_stream: Path | None = None,
+    frontend_provenance: Path | None = None,
 ) -> dict:
     """Run one explicit measured pass: NSYS, workload timing, or popularity.
 
@@ -374,6 +378,10 @@ def run_profile(
     `import_stream` (implies resume) first imports a preserved raw `.qdstrm`
     offline with the matching `QdstrmImporter` into this profile's report and
     then exports and finalizes it. CPU only.
+
+    `frontend_provenance` selects the prebuilt load-generator contract: the pinned
+    `session_runner` is verified byte for byte and nothing is compiled. Without it
+    (development) the load generator is built with cargo as before.
     """
     if import_stream is not None:
         resume = True
@@ -411,7 +419,14 @@ def run_profile(
         # Build and normalize before nsys starts. This avoids capturing Rust
         # compile work and ensures a bad trace fails before allocating vLLM GPU
         # memory.
-        load_generator.build_session_runner()
+        if frontend_provenance is not None:
+            # Fail closed, before any engine or GPU start: exact executable hash, pinned
+            # source, recorded build state. This path never invokes cargo.
+            load_generator.write_frontend_record(
+                log_dir, load_generator.verify_prebuilt_session_runner(frontend_provenance)
+            )
+        else:
+            load_generator.build_session_runner()
     engine_dir = log_dir / cfg.engine
     nsys_dir = log_dir / "nsys"
     engine_dir.mkdir(parents=True, exist_ok=True)

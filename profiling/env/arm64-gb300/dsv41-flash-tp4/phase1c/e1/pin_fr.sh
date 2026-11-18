@@ -16,7 +16,7 @@ python3 -I - "$REPO" "$E1/V2-FR-PIN.json" "$(hostname)" <<'PY'
 import json, subprocess, sys, hashlib, datetime
 repo, out, host = sys.argv[1:4]
 g = lambda *a: subprocess.run(["git", "-C", repo, *a], capture_output=True, text=True, check=True).stdout.strip()
-keys = ['alignment', 'launcher', 'tests/fixtures', 'tests/cpu_only_guard.py', 'tests/cpu_only.sh', 'tests/test_profiler_lifecycle.py', 'tests/test_profiler_preflight.py', 'tests/test_e1_lifecycle_gates.py', 'tests/test_e1_pids_cleanup.py', 'tests/test_cpu_only_guard.py', 'tests/test_e1_lifecycle_gates_v2.py', 'tests/test_e1_launch_identity_v2.py', 'tests/test_profiler_lifecycle_stop_concurrency.py', 'tests/test_profiler_lifecycle_host_stream.py', 'tests/test_profiler_preflight_retained.py', 'tests/test_e1_host_identity.py', 'tests/test_e1_forced_release_gates.py']
+keys = ['alignment', 'launcher', 'tests/fixtures', 'tests/cpu_only_guard.py', 'tests/cpu_only.sh', 'tests/test_profiler_lifecycle.py', 'tests/test_profiler_preflight.py', 'tests/test_e1_lifecycle_gates.py', 'tests/test_e1_pids_cleanup.py', 'tests/test_cpu_only_guard.py', 'tests/test_e1_lifecycle_gates_v2.py', 'tests/test_e1_launch_identity_v2.py', 'tests/test_profiler_lifecycle_stop_concurrency.py', 'tests/test_profiler_lifecycle_host_stream.py', 'tests/test_profiler_preflight_retained.py', 'tests/test_e1_host_identity.py', 'tests/test_e1_forced_release_gates.py', 'tests/test_load_generator_prebuilt.py', 'tests/test_e1_release_probe.py', 'tests/test_profiler_lifecycle_release_evidence.py']
 pin = {
   "pass": "e1_v2_forced_release",
   "pinned_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "host": host,
