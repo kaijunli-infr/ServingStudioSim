@@ -11,7 +11,7 @@
         Checks one validator output (used for the post-run on the preserved V2 run) the same way.
 
 Positive fixtures: nominal, every phase exactly at its deadline, release upper edge exactly at the deadline, peaks
-exactly at the ceilings, temporary lack of importer progress. Negative fixtures: one registered defect each.
+exactly at the ceilings, temporary lack of importer progress, soft-deadline warning with every phase in time. Negative fixtures: one registered defect each.
 Exit 0 only if every expectation holds. Stdlib only.
 """
 
@@ -412,6 +412,8 @@ def fixtures() -> list[Fixture]:
         Fixture("release_upper_edge_exactly_90s", "boundary", "first 'released' reading window ends 90.0 s after the SIGTERM", "PASS", {}, mutate=_release_at(90.0)),
         Fixture("peaks_exactly_at_ceilings", "boundary", "temporary 10.0 GB, persistent 8.0 GB, importer 256 GB, MemAvailable exactly at the floor", "PASS", {},
                 mutate=_both(_scale_rows("post_storage", "temporary", 10.0), _scale_rows("storage", "persistent", 8.0), _scale_rows("post_storage", "persistent", 8.0), _scale_rows("mem", None, 256.0), _mem_available(64.0))),
+        Fixture("soft_deadline_warning_recorded", "positive", "stop → report 400 s (flush 250 s, import 140 s): the controller's soft-deadline warning is recorded, every phase is inside its deadline", "PASS", {},
+                clocks={"flush": 250.0, "report_after_importing": 150.0, "imp_duration": 140.0}, mutate=_set("lc.escalations", [{"kind": "soft_deadline", "phase": "importing", "elapsed_s": 300.0}])),
         Fixture("importer_temporarily_inactive", "positive", "ACTIVE, then NO_PROGRESS, then ACTIVE again, then completed", "PASS", {}, mutate=_probe_states(["NOT_FOUND", "NO_PROGRESS", "ACTIVE", "NO_PROGRESS", "ACTIVE", "SETTLING", "COMPLETED"], "COMPLETED")),
         # phase deadlines
         Fixture("stop_accepted_late", "negative", "stop accepted after 30.5 s", F, np(G4=F), clocks={"accepted": 30.5}),
@@ -423,7 +425,8 @@ def fixtures() -> list[Fixture]:
         # phase order, forced release
         Fixture("phase_missing", "negative", "capture_ended missing from the phase history", F, np(G3=F), mutate=_phases(lambda h: [x for x in h if x["phase"] != "capture_ended"])),
         Fixture("stop_failed", "negative", "final phase stop_failed", F, np(G3=F, G4=INC), mutate=_both(_set("lc.phase", "stop_failed"), _phases(lambda h: h[:-1] + [{"phase": "stop_failed", "at": h[-1]["at"]}]))),
-        Fixture("escalation_recorded", "negative", "a soft-deadline escalation is recorded", F, np(G3=F), mutate=_set("lc.escalations", [{"kind": "soft_deadline", "phase": "importing", "elapsed_s": 301}])),
+        Fixture("hard_deadline_escalation", "negative", "a hard-deadline escalation is recorded", F, np(G3=F), mutate=_set("lc.escalations", [{"kind": "hard_deadline", "phase": "importing", "elapsed_s": 600}])),
+        Fixture("gpu_held_ceiling_escalation", "negative", "a GPU-held-ceiling escalation is recorded", F, np(G3=F), mutate=_set("lc.escalations", [{"kind": "gpu_held_ceiling", "phase": "capturing", "elapsed_s": 2700}])),
         Fixture("operator_control_line", "negative", "an `extend` control line was accepted", F, np(G3=F), mutate=_set("lc.control_commands", [{"at": T0 + 1700, "command": "extend 60 test", "phase": "importing", "result": "extended"}])),
         Fixture("forced_release", "negative", "a GPU release was requested (hard deadline)", F, np(G3=F), mutate=_set("lc.gpu.release_requested_at", T0 + 1700)),
         # stop request

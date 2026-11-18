@@ -10,7 +10,8 @@
   G0   source and executable: launch record = pinned trees and gitlinks, clean; executable = pinned bytes before and after
   G1   host identity: lifecycle = run log = reservation node = every sampler (GPU, memory, storage, import probe)
   G2   one stop request, returned OK, before the server was signalled
-  G3   phases in the registered order; final report_written; no escalation, no control line, no forced release
+  G3   phases in the registered order; final report_written; no hard-deadline or ceiling escalation, no control line,
+       no forced release (a soft-deadline escalation is the controller's 300 s warning: recorded, judged by G4)
   G4   phase deadlines on the registered clocks (below)
   G5   importer observed by the importer-specific probe: one importer, activity from its own counters, completed;
        no signal to anything but the recorded server processes
@@ -174,8 +175,9 @@ def gate_phases(res: list, lc: dict) -> None:
     phases = [h["phase"] for h in lc.get("phase_history", [])]
     ats = [h["at"] for h in lc.get("phase_history", [])]
     esc, ctl, rel = lc.get("escalations", []), lc.get("control_commands", []), (lc.get("gpu") or {}).get("release_requested_at")
-    ok = phases == ORDER and ats == sorted(ats) and lc.get("phase") == "report_written" and not esc and not ctl and rel is None
-    add(res, "G3.phases_in_order", "PASS" if ok else "FAIL", f"phases {phases} (registered {ORDER}); times non-decreasing={ats == sorted(ats)}; final phase {lc.get('phase')!r}; escalations {[(e.get('kind'), e.get('phase')) for e in esc]}; control lines {[c.get('command') for c in ctl]}; forced release requested={rel is not None}")
+    acting = [e for e in esc if e.get("kind") != "soft_deadline"]  # hard deadline, GPU-held ceiling, or anything unknown
+    ok = phases == ORDER and ats == sorted(ats) and lc.get("phase") == "report_written" and not acting and not ctl and rel is None
+    add(res, "G3.phases_in_order", "PASS" if ok else "FAIL", f"phases {phases} (registered {ORDER}); times non-decreasing={ats == sorted(ats)}; final phase {lc.get('phase')!r}; escalations {[(e.get('kind'), e.get('phase')) for e in esc]} (soft_deadline is a recorded warning, any other kind fails); control lines {[c.get('command') for c in ctl]}; forced release requested={rel is not None}")
 
 
 # ---- G4

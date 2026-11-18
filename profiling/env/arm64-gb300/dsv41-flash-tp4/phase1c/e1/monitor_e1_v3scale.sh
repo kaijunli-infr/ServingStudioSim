@@ -24,7 +24,7 @@ f=lambda t: "-" if not t else time.strftime("%H:%M:%SZ", time.gmtime(t))
 print(f"lifecycle: phase={d['phase']} stop_requested={f(d.get('stop_requested_at'))} hard_at={f(dl.get('hard_at'))} ceiling_at={f(dl.get('gpu_held_ceiling_at'))} ext={dl.get('hard_extension_s',0)} s (reported progress {d.get('import_progress_pct')}%: not evidence of importer activity)")
 print(f"lifecycle: stream={st.get('path')} size={st.get('size')} preserved={st.get('preserved_path')} ({st.get('preserved_size')}) report={d.get('report',{}).get('size')} gpu_released={f(gpu.get('released_at'))} nsys_alive={(d.get('nsys') or {}).get('alive')} server_alive={(d.get('server') or {}).get('alive')}")
 print(f"lifecycle: control={[(c['command'][:40], c['result'][:40]) for c in d.get('control_commands',[])]} warnings={len(d.get('warnings',[]))} last={(d.get('warnings') or [{}])[-1].get('message')}")
-for e in d.get("escalations", []): print(f"ABORT-CONDITION escalation {e.get('kind')} after {e.get('elapsed_s',0):.0f} s in phase {e.get('phase')} (controller acts; operator reviews)")
+for e in d.get("escalations", []): print(("NOTE soft-deadline warning" if e.get("kind") == "soft_deadline" else f"ABORT-CONDITION escalation {e.get('kind')}") + f" after {e.get('elapsed_s',0):.0f} s in phase {e.get('phase')} (the controller acts on hard deadline and ceiling only; operator reviews)")
 if d.get("control_commands"): print("ABORT-CONDITION a control line was accepted (V3 registers none)")
 if d["phase"] == "stop_failed": print("ABORT-CONDITION stop_failed: preserved stream → offline recovery (CPU) after closeout")
 if d.get("stop_requested_at") is None and d.get("launch_started_at") and now - d["launch_started_at"] > (cl + 30) * 60:

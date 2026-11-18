@@ -1,0 +1,132 @@
+{
+ "fixtures": 8,
+ "met": 8,
+ "rows": [
+  {
+   "fixture": "four_waves",
+   "expected_exit": 0,
+   "exit": 0,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": []
+  },
+  {
+   "fixture": "v2_two_waves_only",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         cell b=8 kv=32768 wave=1: pure-decode iterations 0 (need >= 400), ramp 0",
+    "FAIL         cell b=48 kv=32768 wave=1: pure-decode iterations 0 (need >= 400), ramp 0"
+   ]
+  },
+  {
+   "fixture": "wave1_b8_missing",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         cell b=8 kv=32768 wave=1: pure-decode iterations 0 (need >= 400), ramp 0",
+    "FAIL         corpus num_tokens 114576 vs 104 x (1024-1) = 106392",
+    "FAIL         segment names == metrics request ids: missing [] extra ['independent_e1_b8_kv32k_w1_r00', 'independent_e1_b8_kv32k_w1_r01', 'independent_e1_b8_kv32k_w1_r02']",
+    "FAIL         requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 8",
+    "FAIL         segments whose every row maps to exactly one iteration: 104 of 112"
+   ]
+  },
+  {
+   "fixture": "routing_file_missing",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         routed_experts files 111 vs requests 112; missing ['independent_e1_b48_kv32k_w1_r00'] extra []",
+    "FAIL         requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 1"
+   ]
+  },
+  {
+   "fixture": "routing_array_altered",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 1"
+   ]
+  },
+  {
+   "fixture": "corpus_checksum_wrong",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         corpus checksum_fnv1a64 11509374275385362213 vs manifest 11509374275385362214"
+   ]
+  },
+  {
+   "fixture": "waves_overlap",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=8 kv=32768 wave=1: pure-decode iterations 968 (need >= 400",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         iterations carrying requests of two cells (overrun): 40",
+    "FAIL         (request, position) pairs emitted in more than one iteration (duplicate join): 40",
+    "FAIL         segments whose every row maps to exactly one iteration: 111 of 112"
+   ]
+  },
+  {
+   "fixture": "request_short_by_one_token",
+   "expected_exit": 1,
+   "exit": 1,
+   "met": true,
+   "cells_passing": [
+    "b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40",
+    "b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40",
+    "b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40",
+    "b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40"
+   ],
+   "fail_lines": [
+    "FAIL         requests seen 112; requests whose emitted tokens != 1024: 1 [('independent_e1_b48_kv32k_w1_r17', 1023)]",
+    "FAIL         per request, positions 1..1023 emitted in pure + ramp iterations == 1023: NOT all; ramp-emitted per request min/median/max = 15/95/95",
+    "FAIL         (request, position) pairs never emitted (missing join): 1",
+    "FAIL         segments whose every row maps to exactly one iteration: 111 of 112"
+   ]
+  }
+ ]
+}

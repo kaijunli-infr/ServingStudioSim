@@ -39,7 +39,7 @@ def _evaluate(a: dict) -> dict:
 
 def test_fixture_matrix_is_what_the_packet_says():
     kinds = [f.kind for f in FIXTURES]
-    assert len(FIXTURES) == 85 and kinds.count("positive") == 2 and kinds.count("boundary") == 3 and kinds.count("negative") == 80
+    assert len(FIXTURES) == 87 and kinds.count("positive") == 3 and kinds.count("boundary") == 3 and kinds.count("negative") == 81
     assert len({f.name for f in FIXTURES}) == len(FIXTURES)
     assert all(f.verdict == "PASS" and not f.not_pass for f in FIXTURES if f.kind != "negative")
     assert all(f.verdict in ("FAIL", "INCONCLUSIVE") and f.not_pass for f in FIXTURES if f.kind == "negative")
