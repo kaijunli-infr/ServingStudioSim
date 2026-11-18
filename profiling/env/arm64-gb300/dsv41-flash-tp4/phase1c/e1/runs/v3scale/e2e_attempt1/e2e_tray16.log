@@ -1,0 +1,47 @@
+# V3 end-to-end rehearsal 2026-11-18T19:30:46Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at df4a888061de5dca4d0b3713492bdbf9bb1f21dc (0 modified tracked file(s)); scenarios: success
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+Using CPython 3.12.13
+Creating virtual environment at: .venv
+PASS  stand-in importer / exporter and rehearsal inputs written (kernel-row band scaled to the stand-in exporter; every other limit is the registered one)
+## scenario success (19:30:46)
+driver exit code 3; 65 PASS / 1 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 0: # closeout result: CLEAN;
+post-run exit code 1: 
+archive exit code 1: FAIL  tray-preserved stream not found (lifecycle preserved_path directory: '');FAIL  expected the stream twice in the archive (tray original and durable copy), found 0;# archive result: NOT VERIFIED;
+second post-run with a failing importer: exit code 1: 
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  driver.rc: driver exit code 3
+FAIL  lifecycle.phases: phases []; control lines 0; escalations 0
+PASS  closeout.clean: closeout exit code 0
+FAIL  supervisor.no_response: response None; monitors effective None; complete None; samples None
+Traceback (most recent call last):
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 178, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 120, in main
+    check("stream.checksums", bool(final.get("sha256")) and sha(pres) == final.get("sha256") == sha(dur), f"controller final record {str(final.get('sha256'))[:16]}…, preserved original {str(sha(pres))[:16]}…, durable copy {str(sha(dur))[:16]}…")
+                                                                                                                                                                                              ^^^^^^^^^
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 40, in sha
+    with open(p, "rb") as fh:
+         ^^^^^^^^^^^^^
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+FAIL  scenario success: expectations not met (see /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt1/success/E2E-CHECK.txt)
+## state after the rehearsal
+PASS  load-generator executable after the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2, same inode/mtime/size
+PASS  no file under the load generator's build directory was written during the rehearsal (no build tool ran)
+gpu after (MiB / compute processes): 0 0 0 0 / 0
+PASS  no GPU compute process after the rehearsal
+PASS  no mock process left
+PASS  rehearsal run root, mock preserve directory and scratch removed
+# result: E2E REHEARSAL EXPECTATIONS NOT MET
+e2e exit 1 at df4a8880
+E2EDONE

@@ -1,0 +1,249 @@
+{
+ "status": "inputs of the proposed V3 packet; authorizes nothing",
+ "pass": "e1_v3_scale",
+ "derived_from": {
+  "config": "configs_fr/e1_v2_forced_release/profile.json",
+  "sha256": "7f7e4f66047fb09115d897066900a23e30508a2fd844cf7df83c6f4150d00ef5",
+  "trace": "traces/e1_dry.csv",
+  "trace_sha256": "c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158"
+ },
+ "changes": [
+  "name",
+  "log_dir",
+  "workload.frontend.path -> traces/e1_v3_scale.csv (the accepted 56 rows twice; second pair +80 s, wave index 1)"
+ ],
+ "unchanged": [
+  "server",
+  "python_runtime",
+  "workload.* except the trace path",
+  "nsys capture flags",
+  "nsys lifecycle bounds (V1/V2 values)",
+  "server environment (no tmp_dir)"
+ ],
+ "lifecycle": {
+  "finalize_soft_deadline_s": 300.0,
+  "finalize_hard_deadline_s": 600.0,
+  "finalize_stall_timeout_s": 300.0,
+  "finalize_on_hard_deadline": "release_gpus",
+  "finalize_session_close_timeout_s": 300.0,
+  "finalize_max_extension_s": 120.0,
+  "gpu_held_ceiling_s": 2700.0,
+  "preserve_raw_stream": true
+ },
+ "trace": {
+  "path": "traces/e1_v3_scale.csv",
+  "sha256": "d9d2dc77b316b7862f12e860a49b84010b385946e04f1b2b2ab80a9746710eb8",
+  "requests": 112,
+  "waves": {
+   "e1_b8_kv32k_w0": {
+    "requests": 8,
+    "input_len": 32768,
+    "output_len": 1024,
+    "arrival_s": 0.0
+   },
+   "e1_b48_kv32k_w0": {
+    "requests": 48,
+    "input_len": 32768,
+    "output_len": 1024,
+    "arrival_s": 18.627200000000002
+   },
+   "e1_b8_kv32k_w1": {
+    "requests": 8,
+    "input_len": 32768,
+    "output_len": 1024,
+    "arrival_s": 80.0
+   },
+   "e1_b48_kv32k_w1": {
+    "requests": 48,
+    "input_len": 32768,
+    "output_len": 1024,
+    "arrival_s": 98.6272
+   }
+  },
+  "second_pair_offset_ms": 80000.0
+ },
+ "expected": {
+  "basis": "2 x the V2 measurement of the same 56 rows (same cells, same recipe); not an extrapolation in trace content",
+  "iterations": 4320,
+  "iterations_band": [
+   4200,
+   4500
+  ],
+  "nvtx_per_iteration": 4,
+  "nvtx_forward_ranges": 17280,
+  "kernel_rows": 24501664,
+  "kernel_rows_band": [
+   2327,
+   2572
+  ],
+  "kernel_rows_vs_25.6M": 0.957,
+  "pure_decode_iterations_per_wave": {
+   "b8": 1008,
+   "b48": 928
+  },
+  "ranks": 4,
+  "routing_files": 112,
+  "request_timings": 112,
+  "replay_s": 131.2,
+  "qdstrm_bytes": 696576222,
+  "report_bytes": 783594606,
+  "sqlite_bytes": 3928645632,
+  "run_dir_gb": 6.0,
+  "importer_peak_rss_gb": {
+   "measured_offline_at_12.25M_rows": 8.7,
+   "assumed_upper_for_planning": 64,
+   "note": "scaling with rows is not known; 61 GB was sampled at >= 49 % of the 216 M-row import"
+  }
+ },
+ "finalisation": {
+  "stop_to_report_s_nearest_measured": [
+   160,
+   163
+  ],
+  "nearest_measured_at_rows": [
+   25609900,
+   25626612
+  ],
+  "note": "taken from the two captures of nearly the same size, not scaled from V2's 27 s import; their recipe differs (Phase 0 backend, no routing hook), so this is a prediction with unknown error, and the flush/import split at this size has never been recorded",
+  "predicted_stop_to_report_s": [
+   140,
+   190
+  ],
+  "flush_s_range_considered": [
+   60,
+   140
+  ],
+  "import_s_range_considered": [
+   27,
+   110
+  ]
+ },
+ "phase_deadlines_s": {
+  "stop_accepted": 30,
+  "flush_stop_to_importing": 300,
+  "import_importer_first_seen_to_gone": 300,
+  "stop_to_report_written": 600,
+  "session_close_after_server_sigterm": 300
+ },
+ "limits": {
+  "gpu_release_deadline_s": 90,
+  "gpu_watch_interval_s": 2,
+  "gpu_watch_max_gap_s": 10,
+  "sampler_max_gap_s": 30,
+  "import_probe_interval_s": 0.5,
+  "import_probe_min_progress": 2,
+  "mem_watch_interval_s": 1,
+  "storage_watch_interval_s": 2,
+  "supervisor_interval_s": 1,
+  "supervisor_ack_s": 10,
+  "supervisor_stale_s": 60,
+  "supervisor_cleanup_grace_s": 30
+ },
+ "supervisor": {
+  "control_line": "release-gpus V3 resource-limit abort (registered supervisor response)",
+  "registry": "pids/supervisor.tsv",
+  "acts_on_registry": "pids/owned.tsv"
+ },
+ "ceilings": {
+  "reservation_hard_min": 90,
+  "gpu_held_ceiling_s": 2700.0,
+  "gpu_held_nominal_s": 1800,
+  "temporary_storage_gb": 10,
+  "persistent_storage_gb": 8,
+  "persistent_storage_with_archive_gb": 16,
+  "host_mem_available_preflight_min_gb": 448,
+  "host_mem_available_floor_gb": 64,
+  "importer_rss_ceiling_gb": 128,
+  "memory_basis": "GiB (1024^3 B). tray16: MemTotal 958 GiB, no swap, no cgroup limit, MemAvailable 862 GiB idle (2026-11-18). Importer ceiling 128 GiB = 2 x the largest importer RSS ever sampled (61 GB at >= 49 % of 216 M rows), 15 % of idle MemAvailable; preflight needs ceiling + floor + 256 GiB for the server",
+  "startup_limit_min": 30,
+  "capture_limit_min": 10
+ },
+ "design": {
+  "OUT_LEN": 1024,
+  "MIN_PURE_DECODE": 400
+ },
+ "dry": {
+  "requests": 112,
+  "trace_span_s": 152.7,
+  "plan": [
+   {
+    "b": 8,
+    "kv": 32768,
+    "wave": 0,
+    "arrival_s": 0.0,
+    "pure_decode_iters_min": 1008
+   },
+   {
+    "b": 48,
+    "kv": 32768,
+    "wave": 0,
+    "arrival_s": 18.6,
+    "pure_decode_iters_min": 928
+   },
+   {
+    "b": 8,
+    "kv": 32768,
+    "wave": 1,
+    "arrival_s": 80.0,
+    "pure_decode_iters_min": 1008
+   },
+   {
+    "b": 48,
+    "kv": 32768,
+    "wave": 1,
+    "arrival_s": 98.6,
+    "pure_decode_iters_min": 928
+   }
+  ]
+ },
+ "calibration_stop_to_report": [
+  {
+   "pass": "e1_b8_recovery",
+   "kernel_rows": 5887244,
+   "stop_to_report_s": 45
+  },
+  {
+   "pass": "e1_nsys_val",
+   "kernel_rows": 6363588,
+   "stop_to_report_s": 63
+  },
+  {
+   "pass": "e1_v1_lifecycle",
+   "kernel_rows": 12250832,
+   "stop_to_report_s": 90.8,
+   "flush_s": 63.8,
+   "import_s": 27.0
+  },
+  {
+   "pass": "e1_v2_forced_release",
+   "kernel_rows": 12250832,
+   "stop_to_report_s": 90.8,
+   "flush_s": 61.9,
+   "import_s": 28.9,
+   "note": "import end = report mtime; server signalled 1.2 s into the import"
+  },
+  {
+   "pass": "quadrant_nsys run1 (Phase 0 recipe)",
+   "kernel_rows": 25609900,
+   "stop_to_report_s": 160
+  },
+  {
+   "pass": "quadrant_nsys run2 (Phase 0 recipe)",
+   "kernel_rows": 25626612,
+   "stop_to_report_s": 163
+  },
+  {
+   "pass": "diverse_nsys_run2 (Phase 0 recipe)",
+   "kernel_rows": 97151212,
+   "stop_to_report_s": 567
+  },
+  {
+   "pass": "e1_main_v3 (lost)",
+   "kernel_rows": 216000000,
+   "stop_to_report_s": null,
+   "note": "> 1230 s when destroyed; import 49 % at about 1080 s"
+  }
+ ],
+ "config_sha256": "fc91bddbf0fd6b34966948464c8cf2c3dc4887539edb71a5103d2dbf80de71da",
+ "rehearsal_note": "kernel_rows_band scaled 1:10000 for the fake exporter; every other value is the registered one"
+}

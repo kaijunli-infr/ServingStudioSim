@@ -35,6 +35,8 @@ def load(p):
 
 
 def sha(p) -> str | None:
+    if p is None:
+        return None
     try:
         h = hashlib.sha256()
         with open(p, "rb") as fh:

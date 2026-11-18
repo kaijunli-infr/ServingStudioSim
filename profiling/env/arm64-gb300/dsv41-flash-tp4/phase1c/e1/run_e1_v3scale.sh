@@ -28,7 +28,9 @@ IMPORTER=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
 NAME=dsv41_flash_1017_gb300_tp4_$PASS; RSS_CEIL=128; TMP_CEIL=10; PERS_CEIL=8
 if [ "$MODE" = rehearsal ]; then
   RUN=$S/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e; NAME=${NAME}_e2e; export CUDA_VISIBLE_DEVICES=""
-  IMPORTER=$(cd $REPO && uv run --no-sync python -c "import os,sys; print(os.path.realpath(sys.executable))")   # the mock importer is this interpreter
+  # the mock importer is the interpreter the mock launcher runs under: resolve it inside the project environment (uv must not create a venv)
+  IMPORTER=$(cd $REPO && source profiling/env/arm64-gb300/gb300.env >/dev/null 2>&1 && uv run --no-sync python -c "import os,sys; print(os.path.realpath(sys.executable))")
+  [ -x "$IMPORTER" ] && [ ! -e "$REPO/.venv" ] || { echo "rehearsal: could not resolve the project interpreter cleanly (got '$IMPORTER'; $REPO/.venv exists: $([ -e $REPO/.venv ] && echo yes || echo no))"; exit 2; }
   RSS_CEIL=${E1_V3S_REHEARSAL_IMPORTER_RSS_GB:-$RSS_CEIL}; TMP_CEIL=${E1_V3S_REHEARSAL_TEMPORARY_GB:-$TMP_CEIL}; PERS_CEIL=${E1_V3S_REHEARSAL_PERSISTENT_GB:-$PERS_CEIL}
   echo "REHEARSAL MODE: run root $RUN, CUDA hidden, mock launcher, importer executable $IMPORTER, ceilings importer $RSS_CEIL GiB / temporary $TMP_CEIL GB / persistent $PERS_CEIL GB"
 fi

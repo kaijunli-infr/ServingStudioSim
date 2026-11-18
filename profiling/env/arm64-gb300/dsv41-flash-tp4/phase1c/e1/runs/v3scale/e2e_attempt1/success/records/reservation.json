@@ -1,0 +1,7 @@
+{
+ "pod": "e2e-rehearsal-no-pod",
+ "node": "pod4-gb300-10-tray16-f3",
+ "phase": "Running",
+ "creation_timestamp": "2026-11-18T19:30:46Z",
+ "note": "REHEARSAL: no reservation pod exists; nothing uses a GPU"
+}

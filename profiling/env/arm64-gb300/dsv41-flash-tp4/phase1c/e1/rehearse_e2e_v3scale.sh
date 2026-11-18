@@ -29,7 +29,8 @@ echo "gpu before (MiB / compute processes): $(nvidia-smi --query-gpu=memory.used
 b0=$(sha256sum $BIN | cut -d' ' -f1); st0=$(stat -c '%i %Y %s' $BIN); [ "$b0" = "$PINSHA" ] && ok "load-generator executable before the rehearsal = pinned $PINSHA" || bad "load-generator executable is $b0, pinned $PINSHA"
 touch $OUT/.e2e_started
 [ -e $R ] || [ -e $PRES ] && { bad "rehearsal run root $R or mock preserve directory $PRES exists: not touching it"; echo "# result: E2E REHEARSAL NOT RUN"; exit 2; }
-T=$OUT/tools; rm -rf $T; PYEXE=$(cd $REPO && uv run --no-sync python -c "import os,sys; print(os.path.realpath(sys.executable))")
+T=$OUT/tools; rm -rf $T; PYEXE=$(cd $REPO && source profiling/env/arm64-gb300/gb300.env >/dev/null 2>&1 && uv run --no-sync python -c "import os,sys; print(os.path.realpath(sys.executable))")
+[ -x "$PYEXE" ] && [ ! -e "$REPO/.venv" ] && ok "project interpreter $PYEXE (no virtual environment created in the worktree)" || { bad "could not resolve the project interpreter cleanly ('$PYEXE'; $REPO/.venv exists: $([ -e $REPO/.venv ] && echo yes || echo no))"; echo "# result: E2E REHEARSAL NOT RUN"; exit 2; }
 python3 -I $E1/e1_v3scale_rehearsal.py tools --out $T --python $PYEXE > $OUT/tools.json && ok "stand-in importer / exporter and rehearsal inputs written (kernel-row band scaled to the stand-in exporter; every other limit is the registered one)" || bad "rehearsal tools"
 for sc in $SCENARIOS; do
   O=$OUT/$sc; rm -rf $O; mkdir -p $O
