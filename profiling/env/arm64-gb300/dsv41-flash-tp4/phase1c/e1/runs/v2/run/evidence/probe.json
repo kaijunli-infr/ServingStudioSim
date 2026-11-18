@@ -1,0 +1,383 @@
+{
+ "source": "e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity",
+ "control_line": "release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)",
+ "started_at": 1795015759.5184927,
+ "samples": [
+  {
+   "at": 1795017362.3359463,
+   "phase": "importing",
+   "import_progress_pct": 8,
+   "nsys_pid": 1556601,
+   "nsys_starttime_recorded": 300975475,
+   "nsys_starttime_proc": 300975475,
+   "identity_verified": true,
+   "nsys_state": "S",
+   "tree": [
+    {
+     "pid": 1556601,
+     "comm": "nsys",
+     "state": "S",
+     "cpu_ticks": 168
+    },
+    {
+     "pid": 1556644,
+     "comm": "nsys-launcher",
+     "state": "S",
+     "cpu_ticks": 0
+    },
+    {
+     "pid": 1556646,
+     "comm": "nsys-tee",
+     "state": "S",
+     "cpu_ticks": 12
+    },
+    {
+     "pid": 1556645,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 3030
+    },
+    {
+     "pid": 1557062,
+     "comm": "VLLM::EngineCor",
+     "state": "S",
+     "cpu_ticks": 9139
+    },
+    {
+     "pid": 1557342,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 135885
+    },
+    {
+     "pid": 1557341,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 143549
+    },
+    {
+     "pid": 1557340,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 142493
+    },
+    {
+     "pid": 1557339,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 150067
+    },
+    {
+     "pid": 1557061,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 5
+    }
+   ],
+   "tree_cpu_ticks": 584348
+  },
+  {
+   "at": 1795017362.7896159,
+   "phase": "importing",
+   "import_progress_pct": 8,
+   "nsys_pid": 1556601,
+   "nsys_starttime_recorded": 300975475,
+   "nsys_starttime_proc": 300975475,
+   "identity_verified": true,
+   "nsys_state": "S",
+   "tree": [
+    {
+     "pid": 1556601,
+     "comm": "nsys",
+     "state": "S",
+     "cpu_ticks": 168
+    },
+    {
+     "pid": 1556644,
+     "comm": "nsys-launcher",
+     "state": "S",
+     "cpu_ticks": 0
+    },
+    {
+     "pid": 1556646,
+     "comm": "nsys-tee",
+     "state": "S",
+     "cpu_ticks": 12
+    },
+    {
+     "pid": 1556645,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 3030
+    },
+    {
+     "pid": 1557062,
+     "comm": "VLLM::EngineCor",
+     "state": "S",
+     "cpu_ticks": 9139
+    },
+    {
+     "pid": 1557342,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 135886
+    },
+    {
+     "pid": 1557341,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 143550
+    },
+    {
+     "pid": 1557340,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 142493
+    },
+    {
+     "pid": 1557339,
+     "comm": "VLLM::Worker_TP",
+     "state": "S",
+     "cpu_ticks": 150068
+    },
+    {
+     "pid": 1557061,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 5
+    }
+   ],
+   "tree_cpu_ticks": 584351
+  }
+ ],
+ "saw_phase": "importing",
+ "saw_at": 1795017362.2806356,
+ "import_in_progress_confirmed": true,
+ "nsys_pid": 1556601,
+ "nsys_alive": true,
+ "identity_verified": true,
+ "wrote_trigger_at": 1795017362.7899582,
+ "api_server_sigterm_at_from_controller": 1795017363.074009,
+ "after_signal": [
+  {
+   "at": 1795017363.544317,
+   "phase": "importing",
+   "import_progress_pct": 8,
+   "nsys_pid": 1556601,
+   "nsys_starttime_recorded": 300975475,
+   "nsys_starttime_proc": 300975475,
+   "identity_verified": true,
+   "nsys_state": "S",
+   "tree": [
+    {
+     "pid": 1556601,
+     "comm": "nsys",
+     "state": "S",
+     "cpu_ticks": 168
+    },
+    {
+     "pid": 1556644,
+     "comm": "nsys-launcher",
+     "state": "S",
+     "cpu_ticks": 0
+    },
+    {
+     "pid": 1557342,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 135925
+    },
+    {
+     "pid": 1557341,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 143592
+    },
+    {
+     "pid": 1557340,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 142546
+    },
+    {
+     "pid": 1557339,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 150105
+    },
+    {
+     "pid": 1556646,
+     "comm": "nsys-tee",
+     "state": "S",
+     "cpu_ticks": 12
+    },
+    {
+     "pid": 1556645,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 3036
+    },
+    {
+     "pid": 1557062,
+     "comm": "VLLM::EngineCor",
+     "state": "Z",
+     "cpu_ticks": 9148
+    },
+    {
+     "pid": 1557061,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 5
+    }
+   ],
+   "tree_cpu_ticks": 584537
+  },
+  {
+   "at": 1795017365.2433646,
+   "phase": "importing",
+   "import_progress_pct": 8,
+   "nsys_pid": 1556601,
+   "nsys_starttime_recorded": 300975475,
+   "nsys_starttime_proc": 300975475,
+   "identity_verified": true,
+   "nsys_state": "S",
+   "tree": [
+    {
+     "pid": 1556601,
+     "comm": "nsys",
+     "state": "S",
+     "cpu_ticks": 168
+    },
+    {
+     "pid": 1556644,
+     "comm": "nsys-launcher",
+     "state": "S",
+     "cpu_ticks": 0
+    },
+    {
+     "pid": 1557342,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 136033
+    },
+    {
+     "pid": 1557341,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 143676
+    },
+    {
+     "pid": 1557340,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 142603
+    },
+    {
+     "pid": 1557339,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 150173
+    },
+    {
+     "pid": 1556646,
+     "comm": "nsys-tee",
+     "state": "S",
+     "cpu_ticks": 12
+    },
+    {
+     "pid": 1556645,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 3036
+    },
+    {
+     "pid": 1557062,
+     "comm": "VLLM::EngineCor",
+     "state": "Z",
+     "cpu_ticks": 9148
+    },
+    {
+     "pid": 1557061,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 5
+    }
+   ],
+   "tree_cpu_ticks": 584854
+  },
+  {
+   "at": 1795017368.240331,
+   "phase": "importing",
+   "import_progress_pct": 8,
+   "nsys_pid": 1556601,
+   "nsys_starttime_recorded": 300975475,
+   "nsys_starttime_proc": 300975475,
+   "identity_verified": true,
+   "nsys_state": "S",
+   "tree": [
+    {
+     "pid": 1556601,
+     "comm": "nsys",
+     "state": "S",
+     "cpu_ticks": 168
+    },
+    {
+     "pid": 1556644,
+     "comm": "nsys-launcher",
+     "state": "S",
+     "cpu_ticks": 0
+    },
+    {
+     "pid": 1557342,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 136033
+    },
+    {
+     "pid": 1557341,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 143676
+    },
+    {
+     "pid": 1557340,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 142603
+    },
+    {
+     "pid": 1557339,
+     "comm": "VLLM::Worker_TP",
+     "state": "Z",
+     "cpu_ticks": 150173
+    },
+    {
+     "pid": 1556646,
+     "comm": "nsys-tee",
+     "state": "S",
+     "cpu_ticks": 12
+    },
+    {
+     "pid": 1556645,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 3036
+    },
+    {
+     "pid": 1557062,
+     "comm": "VLLM::EngineCor",
+     "state": "Z",
+     "cpu_ticks": 9148
+    },
+    {
+     "pid": 1557061,
+     "comm": "python",
+     "state": "S",
+     "cpu_ticks": 5
+    }
+   ],
+   "tree_cpu_ticks": 584854
+  }
+ ],
+ "result": "trigger written"
+}

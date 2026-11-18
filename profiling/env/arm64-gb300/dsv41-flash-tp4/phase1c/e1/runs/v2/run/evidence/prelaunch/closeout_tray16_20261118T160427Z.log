@@ -1,0 +1,44 @@
+# closeout e1_v2_forced_release on pod4-gb300-10-tray16-f3 at 2026-11-18T16:04:27Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 1586279[bash] 1586281[bash] 1586282[tee] 1586295[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T16:04:38Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/pids/owned.tsv (3 records); cleanup pid 1600108, excluded ancestry [1, 9360, 1586200, 1586276, 1586279, 1586281, 1586295, 1586316, 1600108], own pipeline [1586279, 1586281, 1586282, 1586295, 1586316, 1600109]
+  GONE     pid 1526669 [driver:e1_v2_forced_release] start 300969635: no such process (already exited)
+  GONE     pid 1556462 [gpuwatch:e1_v2_forced_release] start 300975403: no such process (already exited)
+  GONE     pid 1556470 [probe:e1_v2_forced_release] start 300975406: no such process (already exited)
+  summary: owned 0, stale 0, gone 3, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T16:04:38Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T16:04:38Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/pids/owned.tsv (3 records); cleanup pid 1600115, excluded ancestry [1, 9360, 1586200, 1586276, 1586279, 1586281, 1586295, 1600115], own pipeline [1586279, 1586281, 1586282, 1586295]
+GONE     pid 1526669 [driver:e1_v2_forced_release] start 300969635: no such process (already exited)
+GONE     pid 1556462 [gpuwatch:e1_v2_forced_release] start 300975403: no such process (already exited)
+GONE     pid 1556470 [probe:e1_v2_forced_release] start 300975406: no such process (already exited)
+summary: owned 0, stale 0, gone 3, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive
+INFO  lifecycle final phase report_written nsys alive False server alive False gpu released 1795017424.123844 preserved /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm
+PASS  lifecycle phase report_written (a pre-registered outcome; acceptance is decided by postrun_e1_fr.sh)
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve
+INFO  the preserved stream is never removed by a script; postrun_e1_fr.sh copies it to durable storage and verifies the copy first
+INFO  [e1_v2_forced_release] rc=0 end 2026-11-18T16:02:12Z
+INFO  [e1_v2_forced_release] shutdown trigger at server-log line 7689; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+INFO  raw size 2.7G; nsys files: 391797303 dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.nsys-rep  1964322816 dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.sqlite  108 lifecycle.control  10203 lifecycle.json  
+INFO  reservation pod (from the laptop): HTTPS_PROXY=socks5://127.0.0.1:11080 kubectl --request-timeout=90s -n inference-bench delete pod dsv41-gb300-reserve-tray16 ; then kubectl get pods -A -o wide --field-selector spec.nodeName=pod4-gb300-10-tray16 (only daemonsets expected)
+# closeout result: CLEAN

@@ -1,0 +1,37 @@
+# negative control (V2) on pod4-gb300-10-tray16-f3 2026-11-18T15:24:40Z: scratch registry /mnt/shared/home/dc/workspace/serving-studio/scratch/pids/negctl_fr_20261118T152440Z.tsv
+{"pid": 1466586, "starttime": 300947497, "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26", "uid": 1000, "label": "negctl:lookalike", "registered_at": "2026-11-18T15:24:40Z", "host": "pod4-gb300-10-tray16-f3", "registered_by": 1466584, "cmd": "bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/not-a-real-pass", "argv": ["bash", "-c", "sleep 900; true", "lookalike", "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/not-a-real-pass"]}
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T15:24:41Z: registry /mnt/shared/home/dc/workspace/serving-studio/scratch/pids/negctl_fr_20261118T152440Z.tsv (1 records); cleanup pid 1466590, e
+OWNED    pid 1466587 depth 1 [descendant] start 300947497 sleep: sleep 900
+OWNED    pid 1466586 depth 0 [negctl:lookalike] start 300947497 bash: bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t
+## preflight with an independent lookalike present -> negative_control_tray16_20261118T152539Z.log (51 PASS, 2 FAIL)
+    # result: PREFLIGHT PASS
+  # result: PREFLIGHT PASS
+  INFO  own invocation pipeline (excluded from candidates): 1466596[bash] 1466597[bash] 1466598[tee] 1482516[sed]
+  FOUND other processes whose cmdline references the experiment dirs: pids 1466586  (candidate; ownership only via the registry)
+  INFO  own tmux session (excluded): e1v2-negctl 
+  # process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T15:25:38Z: CANDIDATES FOUND (pids: 1466586 ) -> review against the registry; nothing was signalled
+FAIL  process discovery found candidates (see above; review, never kill by pattern)
+  LOOKALIKE pid 1466586 uid 1000 bash: bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t (cwd /home/dc) -> NOT owned, not touched; stop-and-report
+FAIL  registry plan rc 2 (owned/lookalike/refused; see above)
+# result: PREFLIGHT FAIL
+preflight_rc=1
+## verified cleanup of the scratch registry only
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T15:25:39Z: registry /mnt/shared/home/dc/workspace/serving-studio/scratch/pids/negctl_fr_20261118T152440Z
+ACTION   {"pid": 1466587, "action": "SIGTERM", "cmd": "sleep 900", "starttime": 300947497}
+ACTION   {"pid": 1466586, "action": "SIGTERM", "cmd": "bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv4
+RESULT CLEAN: signalled 2, skipped 0, survivors 0, lookalikes 0 (never signalled)
+owned alive after cleanup: 0
+tmux after: no server running on /tmp/tmux-1000/default 
+/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr:
+total 0
+drwxrwxr-x 3 dc dc 1 Nov 18 15:25 .
+drwxrwxr-x 8 dc dc 6 Nov 18 15:23 ..
+drwxrwxr-x 2 dc dc 1 Nov 18 15:23 e1_v2_forced_release
+
+/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release:
+total 1
+drwxrwxr-x 2 dc dc   1 Nov 18 15:23 .
+drwxrwxr-x 3 dc dc   1 Nov 18 15:25 ..
+-rw-r--r-- 1 dc dc 414 Nov 18 15:23 reservation.json
+gpu MiB: 0 0 0 0 
+NEGCTLDONE

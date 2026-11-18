@@ -1,0 +1,86 @@
+{
+ "verdict": "PASS",
+ "pinned_sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "checks": [
+  {
+   "check": "pin.present",
+   "ok": true,
+   "detail": "pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  },
+  {
+   "check": "driver.record_present",
+   "ok": true,
+   "detail": "driver record (binary_check.json) readable"
+  },
+  {
+   "check": "driver.sha256_before_is_pinned",
+   "ok": true,
+   "detail": "before the launcher: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  },
+  {
+   "check": "driver.sha256_after_is_pinned",
+   "ok": true,
+   "detail": "after the launcher: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  },
+  {
+   "check": "driver.unchanged",
+   "ok": true,
+   "detail": "unchanged=True"
+  },
+  {
+   "check": "driver.file_identity_unchanged",
+   "ok": true,
+   "detail": "inode/mtime/size before '1100019664799 1794730282 28759968', after '1100019664799 1794730282 28759968'"
+  },
+  {
+   "check": "driver.no_compiling_lines",
+   "ok": true,
+   "detail": "cargo 'Compiling' lines in the run log: 0"
+  },
+  {
+   "check": "launcher.record_present",
+   "ok": true,
+   "detail": "launcher record (frontend_binary.json) readable"
+  },
+  {
+   "check": "launcher.prebuilt_mode",
+   "ok": true,
+   "detail": "mode 'prebuilt (no compilation in this launch path)'"
+  },
+  {
+   "check": "launcher.sha256_before_is_pinned",
+   "ok": true,
+   "detail": "verified before the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (record's pin 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2)"
+  },
+  {
+   "check": "launcher.sha256_after_is_pinned",
+   "ok": true,
+   "detail": "verified after the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  },
+  {
+   "check": "launcher.unchanged",
+   "ok": true,
+   "detail": "unchanged=True"
+  },
+  {
+   "check": "launcher.cargo_not_consulted",
+   "ok": true,
+   "detail": "cargo_consulted=False"
+  },
+  {
+   "check": "launcher.build_tool_guard_installed",
+   "ok": true,
+   "detail": "guard installed=True active=True"
+  },
+  {
+   "check": "launcher.no_build_tool_requested",
+   "ok": true,
+   "detail": "blocked build-tool requests: []"
+  },
+  {
+   "check": "binary.now_is_pinned",
+   "ok": true,
+   "detail": "executable at post-run time: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  }
+ ]
+}

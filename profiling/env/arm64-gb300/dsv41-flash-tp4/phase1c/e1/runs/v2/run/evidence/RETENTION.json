@@ -1,0 +1,23 @@
+{
+ "schema_version": 1,
+ "name": "dsv41_flash_1017_gb300_tp4_e1_v2_forced_release",
+ "stream_file": "dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm",
+ "size": 348288111,
+ "sha256": "4739d6581d1b035bae1f1a0f15a3163bf8e708dc022527fb64228f1143db839c",
+ "mtime_ns": 1795017390822347970,
+ "session_closed_at": 1795017424.123788,
+ "final_phase": "report_written",
+ "host": "pod4-gb300-10-tray16-f3",
+ "nsys": {
+  "pid": 1556601,
+  "starttime": 300975475,
+  "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+  "uid": 1000,
+  "ppid": 1556498,
+  "name": "nsys",
+  "cmd": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys profile --trace-fork-before-exec=true --trace=cuda,nvtx --sample=none --cpuctxsw=none --cuda-graph-trace=node --cuda-event-trace=false --force-overwrite=true -o /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release --capture-range=cudaProfilerApi --capture-range-end=stop /mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /mnt/shared/weights/DeepSeek-V4.1-Flash-1017 --api-server-count 1 --host 127.0.0.1 --port 8000 --tensor-parallel-size 4 --data-parallel-size 1 --max-num-batched-tokens 16384 --enable-chunked-prefill --enable-prompt-tokens-details --gpu-memory-utilization 0.9 --enable-server-load-tracking --enable-logging-iteration-details --served-model-name dsv41-flash-1017 --tokenizer-mode deepseek_v41 --attention-config {\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true} --kv-cache-dtype fp8 --max-num-seqs 128 --engram-config {\"cpu_offload\":true} --max-model-len 131072 --language-model-only --enable-return-routed-experts --profiler-config.profiler=cuda"
+ },
+ "status_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/nsys/lifecycle.json",
+ "written_by": "lifecycle controller",
+ "completeness": "NOT established by a stable size or a matching checksum; requires an offline import and a semantic comparison (kernel rows, NVTX ranges, iterations, capture boundaries)"
+}

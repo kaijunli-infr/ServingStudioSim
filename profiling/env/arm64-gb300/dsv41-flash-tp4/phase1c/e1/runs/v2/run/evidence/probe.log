@@ -1,0 +1,3 @@
+[probe] start pid 1556470 watching /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/nsys/lifecycle.json 2026-11-18T15:29:19Z
+[probe] trigger line written; import in progress confirmed=True 2026-11-18T15:56:02Z
+[probe] trigger written 2026-11-18T15:56:08Z

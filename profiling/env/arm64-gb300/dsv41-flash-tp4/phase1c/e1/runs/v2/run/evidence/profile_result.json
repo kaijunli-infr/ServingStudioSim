@@ -1,0 +1,57 @@
+{
+  "token_corpus_manifest": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/token_corpus/manifest.json",
+  "token_corpus_tokens": 57288,
+  "token_corpus_layers": 40,
+  "profile_kind": "nsys",
+  "engine": "vllm",
+  "log_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile",
+  "sqlite": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.sqlite",
+  "metrics_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release_metrics.jsonl",
+  "request_timings_jsonl": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release_request_timings.jsonl",
+  "request_timing_count": 56,
+  "parsed_nsys": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/parsed.json",
+  "parsed_kernel_rows": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/parsed.kernels.parquet",
+  "kernel_sequences": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/kernel_sequences.json",
+  "host_timeline": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/host_timeline.json",
+  "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release_server.log",
+  "gpu": "NVIDIA GB300",
+  "server_tp_size": 4,
+  "server_dp_size": 1,
+  "cuda_visible_devices": "0,1,2,3",
+  "parsed_device_ids": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "parsed_dp_rank_by_device": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "replay_result": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/load_generator/replay.jsonl",
+  "drive_summary": {
+    "source_trace": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv",
+    "frontend_type": "independent",
+    "backend_type": "openai",
+    "log_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/load_generator/replay.jsonl",
+    "summary_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/load_generator/summary.json",
+    "warmup": true,
+    "routed_experts_dir": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr/e1_v2_forced_release/profile/routed_experts",
+    "replay_start_monotonic_ns": 3011243424314020,
+    "replay_end_monotonic_ns": 3011294614915443,
+    "measurement_log_offset": 863315,
+    "reached_idle": true
+  },
+  "validation": {
+    "nvtx_forward_ranges": 8640,
+    "kernel_rows": 12250832,
+    "kernel_span_ms": 50747.608915,
+    "ok": true
+  },
+  "nsys_profiler": {
+    "executable": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
+    "version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0"
+  }
+}

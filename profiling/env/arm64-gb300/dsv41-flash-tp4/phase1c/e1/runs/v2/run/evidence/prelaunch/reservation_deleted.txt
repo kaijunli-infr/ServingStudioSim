@@ -1,0 +1,5 @@
+2026-11-18T16:05:23Z
+pod "dsv41-gb300-reserve-tray16" deleted from inference-bench namespace
+2026-11-18T16:06:20Z
+18 pods on node; with GPUs: [] ; owners: ['DaemonSet']
+  nvidia.com/gpu             0            0

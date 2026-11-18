@@ -1,0 +1,23 @@
+dd4fbc6d V2 freeze: exact read-only driver-context preflight repeated at the freeze commit 30df7f61 (tray16: 52 PASS, 0 FAIL)
+FREEZE_fr.sha256 verifies
+done 2026-11-18T15:27:07Z: preflight_fr_tray16_driver_context_20261118T152707Z.log (53 PASS, 0 FAIL) at dd4fbc6d
+# V2 forced-release preflight on pod4-gb300-10-tray16-f3 at 2026-11-18T15:26:11Z; launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle
+    INFO  launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle HEAD dd4fbc6d1213604abca18dc568f8e1a7bd20692c (exp/profiler-lifecycle)
+    PASS  launcher tree fork submodule at 0ab18711
+    # result: PREFLIGHT PASS
+  # result: PREFLIGHT PASS
+PASS  launcher tree clean (tracked files)
+INFO  launcher tree HEAD dd4fbc6d1213604abca18dc568f8e1a7bd20692c (exp/profiler-lifecycle); pinned code commit e32fbab7b39c66894f2ff87a02ecf45139183ee7
+PASS  controller/preflight/gates/host/cleanup/guard test suites: 203 passed in 34.34s; cpu_only_guard: CUDA hidden 
+  # process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T15:27:05Z: CLEAN
+PASS  process discovery: no candidate alive
+PASS  registry plan: no owned process alive, no lookalike, no refusal
+PASS  GPU state: no compute process, memory.used within the idle bound on every GPU (census primitive works)
+INFO  ceilings: reservation 90 min hard; GPU-held 2700 s (controller-enforced from the launch); GPUs released ≤ 90 s after the forced-release request; temporary ≤ 5 GB in /tmp; persistent ≤ 5 GB run dir (≤ 10 GB with the archive copy); expected ≈ 2.4 GB raw, finalisation ≈ 90 s
+PASS  reservation record: pod Running on this node (pod4-gb300-10-tray16-f3)
+# result: PREFLIGHT PASS
+preflight_rc=0
+no server running on /tmp/tmux-1000/default
+7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+0 MiB 0 MiB 0 MiB 0 MiB compute apps: 0
+CTXDONE

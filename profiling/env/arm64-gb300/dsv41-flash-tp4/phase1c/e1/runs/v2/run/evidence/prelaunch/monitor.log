@@ -1,0 +1,377 @@
+== 2026-11-18T15:28:46Z tmux=e1v2-forced, gpu MiB: 0 0 0 0  compute apps: 0
+driver preflight/registration phase (pinned monitor not started so the driver's census sees no extra process)
+preflight.log: 46 PASS, 0 FAIL;     # result: PREFLIGHT PASS;  # result: PREFLIGHT PASS;
+== 2026-11-18T15:29:50Z tmux=e1v2-forced, gpu MiB: 3 3 3 3  compute apps: 0
+== 2026-11-18T15:29:50Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=0 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 3 MiB, 0 %;3 MiB, 0 %;3 MiB, 0 %;3 MiB, 0 %;
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:30:52Z tmux=e1v2-forced, gpu MiB: 84091 84091 84091 84091  compute apps: 4
+== 2026-11-18T15:30:52Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=1 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 84091 MiB, 2 %;84091 MiB, 2 %;84091 MiB, 4 %;84091 MiB, 4 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:32:00Z tmux=e1v2-forced, gpu MiB: 253859 253859 253859 253859  compute apps: 4
+== 2026-11-18T15:32:00Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=2 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 253859 MiB, 0 %;253859 MiB, 0 %;253859 MiB, 0 %;253859 MiB, 0 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:33:08Z tmux=e1v2-forced, gpu MiB: 255837 255837 255837 255837  compute apps: 4
+== 2026-11-18T15:33:08Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=3 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 255839 MiB, 0 %;255839 MiB, 1 %;255839 MiB, 0 %;255839 MiB, 1 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:34:09Z tmux=e1v2-forced, gpu MiB: 256303 256303 256303 256303  compute apps: 4
+== 2026-11-18T15:34:09Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=4 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 256303 MiB, 0 %;256303 MiB, 1 %;256303 MiB, 2 %;256303 MiB, 2 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:35:14Z tmux=e1v2-forced, gpu MiB: 256777 256777 256777 256777  compute apps: 4
+== 2026-11-18T15:35:14Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=5 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 256777 MiB, 8 %;256777 MiB, 31 %;256777 MiB, 31 %;256777 MiB, 12 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:36:28Z tmux=e1v2-forced, gpu MiB: 256061 256061 256061 256061  compute apps: 4
+== 2026-11-18T15:36:29Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=7 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 256319 MiB, 9 %;256319 MiB, 9 %;256319 MiB, 9 %;256319 MiB, 10 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:37:44Z tmux=e1v2-forced, gpu MiB: 255821 255821 255821 255819  compute apps: 4
+== 2026-11-18T15:37:44Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=8 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 255801 MiB, 3 %;255823 MiB, 3 %;255823 MiB, 9 %;255823 MiB, 3 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:40:11Z tmux=e1v2-forced, gpu MiB: 255869 255867 255867 255865  compute apps: 4
+== 2026-11-18T15:40:11Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=10 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 255819 MiB, 13 %;255869 MiB, 8 %;255869 MiB, 21 %;255867 MiB, 10 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:41:13Z tmux=e1v2-forced, gpu MiB: 255897 255897 255897 255813  compute apps: 4
+== 2026-11-18T15:41:13Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=11 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 255901 MiB, 16 %;255901 MiB, 16 %;255901 MiB, 16 %;255877 MiB, 8 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:42:21Z tmux=e1v2-forced, gpu MiB: 255885 255885 255885 255885  compute apps: 4
+== 2026-11-18T15:42:21Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=13 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 255885 MiB, 19 %;255885 MiB, 37 %;255883 MiB, 19 %;255807 MiB, 19 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:43:29Z tmux=e1v2-forced, gpu MiB: 255899 255807 255879 255879  compute apps: 4
+== 2026-11-18T15:43:30Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=14 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 255903 MiB, 33 %;255903 MiB, 34 %;255809 MiB, 38 %;255903 MiB, 29 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:44:31Z tmux=e1v2-forced, gpu MiB: 256181 256181 256181 256181  compute apps: 4
+== 2026-11-18T15:44:31Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=15 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 256181 MiB, 41 %;256181 MiB, 34 %;256181 MiB, 59 %;256093 MiB, 44 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:45:31Z tmux=e1v2-forced, gpu MiB: 256225 256073 256093 256225  compute apps: 4
+== 2026-11-18T15:45:31Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=16 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 256071 MiB, 28 %;256225 MiB, 17 %;256225 MiB, 7 %;256223 MiB, 26 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:46:35Z tmux=e1v2-forced, gpu MiB: 256513 256513 256513 256513  compute apps: 4
+== 2026-11-18T15:46:35Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=17 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 256513 MiB, 21 %;256513 MiB, 24 %;256497 MiB, 20 %;256513 MiB, 20 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:47:38Z tmux=e1v2-forced, gpu MiB: 256907 256907 256927 256611  compute apps: 4
+== 2026-11-18T15:47:39Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=18 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 257229 MiB, 26 %;256927 MiB, 29 %;256931 MiB, 25 %;256931 MiB, 25 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:48:42Z tmux=e1v2-forced, gpu MiB: 257751 257751 257751 257749  compute apps: 4
+== 2026-11-18T15:48:42Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=19 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 257751 MiB, 14 %;257751 MiB, 6 %;257751 MiB, 11 %;257751 MiB, 15 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:49:43Z tmux=e1v2-forced, gpu MiB: 254163 254163 254163 254163  compute apps: 4
+== 2026-11-18T15:49:43Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=20 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 254159 MiB, 5 %;254183 MiB, 2 %;254183 MiB, 6 %;254183 MiB, 6 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:50:44Z tmux=e1v2-forced, gpu MiB: 254179 254179 254179 254159  compute apps: 4
+== 2026-11-18T15:50:44Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=21 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 254183 MiB, 7 %;254183 MiB, 8 %;254181 MiB, 13 %;254183 MiB, 7 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:51:47Z tmux=e1v2-forced, gpu MiB: 254361 254361 254361 254361  compute apps: 4
+== 2026-11-18T15:51:48Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=22 tmux=e1v2-forced,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 254361 MiB, 100 %;254361 MiB, 100 %;254361 MiB, 8 %;254361 MiB, 100 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:52:49Z tmux=e1v2-forced, gpu MiB: 254389 254389 254389 254389  compute apps: 4
+== 2026-11-18T15:52:49Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=23 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 254389 MiB, 0 %;254389 MiB, 0 %;254389 MiB, 0 %;254389 MiB, 0 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:53:50Z tmux=e1v2-forced, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T15:53:50Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=24 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=0 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 260943 MiB, 100 %;260943 MiB, 100 %;260943 MiB, 100 %;260943 MiB, 100 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 1
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:54:52Z tmux=e1v2-forced, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T15:54:52Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=25 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=capturing import=None% stop_requested=- hard_at=- ceiling_at=- ext=0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+gpu: 260943 MiB, 100 %;260943 MiB, 100 %;260943 MiB, 100 %;260943 MiB, 100 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1161 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:55:52Z tmux=e1v2-forced, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T15:55:53Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=26 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=stop_accepted import=None% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=True server_alive=True
+lifecycle: control=[] warnings=0 last=None
+gpu: 260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;
+gpuproc 1557339 own=y VLLM::Worker_TP0                                                                
+gpuproc 1557340 own=y VLLM::Worker_TP1                                                                
+gpuproc 1557341 own=y VLLM::Worker_TP2                                                                
+gpuproc 1557342 own=y VLLM::Worker_TP3                                                                
+pass dir 1 GB (ceiling 5); /tmp free 1159 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(alive) 
+== 2026-11-18T15:56:54Z tmux=e1v2-forced, gpu MiB: 3 3 3 3  compute apps: 0
+== 2026-11-18T15:56:54Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=27 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=importing import=8% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=/tmp/nsys-report-a2d6.qdstrm size=348288081 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm (348288081) report=None gpu_released=- nsys_alive=True server_alive=True
+lifecycle: control=[] warnings=0 last=None
+gpu: 3 MiB, 0 %;3 MiB, 0 %;3 MiB, 0 %;3 MiB, 0 %;
+pass dir 1 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(alive) probe=1556470(gone) 
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+== 2026-11-18T15:57:56Z tmux=e1v2-forced, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T15:57:56Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=28 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written import=100% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=/tmp/nsys-report-a2d6.qdstrm size=348288081 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm (348288111) report=391797303 gpu_released=15:57:04Z nsys_alive=False server_alive=False
+lifecycle: control=[('release-gpus V2 forced release during im', 'release requested')] warnings=0 last=None
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+pass dir 2 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(gone) probe=1556470(gone) 
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+== 2026-11-18T15:59:21Z tmux=e1v2-forced, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T15:59:21Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=30 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written import=100% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=/tmp/nsys-report-a2d6.qdstrm size=348288081 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm (348288111) report=391797303 gpu_released=15:57:04Z nsys_alive=False server_alive=False
+lifecycle: control=[('release-gpus V2 forced release during im', 'release requested')] warnings=0 last=None
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+pass dir 3 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(gone) probe=1556470(gone) 
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+== 2026-11-18T16:00:17Z tmux=e1v2-forced, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T16:00:17Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=30 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written import=100% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=/tmp/nsys-report-a2d6.qdstrm size=348288081 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm (348288111) report=391797303 gpu_released=15:57:04Z nsys_alive=False server_alive=False
+lifecycle: control=[('release-gpus V2 forced release during im', 'release requested')] warnings=0 last=None
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+pass dir 3 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(gone) probe=1556470(gone) 
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+== 2026-11-18T16:01:13Z tmux=e1v2-forced, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T16:01:13Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=31 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written import=100% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=/tmp/nsys-report-a2d6.qdstrm size=348288081 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm (348288111) report=391797303 gpu_released=15:57:04Z nsys_alive=False server_alive=False
+lifecycle: control=[('release-gpus V2 forced release during im', 'release requested')] warnings=0 last=None
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+pass dir 3 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(gone) probe=1556470(gone) 
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+== 2026-11-18T16:02:09Z tmux=e1v2-forced, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T16:02:09Z e1_v2_forced_release driver=1526669 alive=y elapsed_min=32 tmux=e1v2-forced,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written import=100% stop_requested=15:55:00Z hard_at=16:05:00Z ceiling_at=16:14:20Z ext=0.0 s
+lifecycle: stream=/tmp/nsys-report-a2d6.qdstrm size=348288081 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm (348288111) report=391797303 gpu_released=15:57:04Z nsys_alive=False server_alive=False
+lifecycle: control=[('release-gpus V2 forced release during im', 'release requested')] warnings=0 last=None
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+pass dir 3 GB (ceiling 5); /tmp free 1164 GB (floor 50); CephFS free 20771 GB; streams in /tmp: 2
+registry: driver=1526669(alive) gpuwatch=1556462(gone) probe=1556470(gone) 
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+== 2026-11-18T16:03:10Z tmux= gpu MiB: 0 0 0 0  compute apps: 0
+LAUNCHER-FINISHED rc=0 end 2026-11-18T16:02:12Z
+registry: driver=1526669(gone) gpuwatch=1556462(gone) probe=1556470(gone) 
+lifecycle: phase report_written stop_requested 15:55:00Z report 391797303 gpu_released 15:57:04Z sigterm 15:56:03Z session_closed 15:57:04Z control [('release-gpus V2 forced release', 'release requested', 'importing')] escalations 0 warnings 0
+probe: {'source': 'e1_release_probe.py: /proc of the recorded Nsight pid, read by the probe; lifecycle.json only for phase and identity', 'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'started_at': 1795015759.5184927, 'samples': '…', 'saw_phase': 'importing', 'saw_at': 1795017362.2806356, 'import_in_progress_confirmed': True, 'nsys_pid': 1556601, 'nsys_alive': True, 'identity_verified': True, 'wrote_trigger_at': 1795017362.7899582, 'api_server_sigterm_at_from_controller': 1795017363.074009, 'after_signal': '…', 'result': 'trigger written'}
+DRIVER-EXITED (no tmux session)

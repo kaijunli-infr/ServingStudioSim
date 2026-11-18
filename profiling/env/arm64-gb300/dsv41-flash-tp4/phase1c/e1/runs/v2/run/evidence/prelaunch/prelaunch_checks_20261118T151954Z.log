@@ -1,0 +1,134 @@
+# V2 GO pre-launch checks on pod4-gb300-10-tray16-f3 at 2026-11-18T15:19:54Z
+## 1. HEAD and worktree
+PASS  HEAD dd4fbc6d1213604abca18dc568f8e1a7bd20692c on exp/profiler-lifecycle
+PASS  worktree clean (git status --porcelain empty, untracked included)
+## 2. pinned commits and trees
+PASS  V2-FR-PIN.json code commit e32fbab7b39c66894f2ff87a02ecf45139183ee7
+PASS  e32fbab7 (code) and 565206ee (pins) are ancestors of HEAD
+PASS  pin commit descends from the code commit
+  alignment: pinned 7b4df784a5b6 HEAD 7b4df784a5b6 code-commit 7b4df784a5b6 ok
+  launcher: pinned 5acab28980ef HEAD 5acab28980ef code-commit 5acab28980ef ok
+  tests/fixtures: pinned 9bd59ef93228 HEAD 9bd59ef93228 code-commit 9bd59ef93228 ok
+  tests/cpu_only_guard.py: pinned 5d2637224343 HEAD 5d2637224343 code-commit 5d2637224343 ok
+  tests/cpu_only.sh: pinned 9296518632ee HEAD 9296518632ee code-commit 9296518632ee ok
+  tests/test_profiler_lifecycle.py: pinned 14dcbfd92b3f HEAD 14dcbfd92b3f code-commit 14dcbfd92b3f ok
+  tests/test_profiler_preflight.py: pinned c5defd53c97b HEAD c5defd53c97b code-commit c5defd53c97b ok
+  tests/test_e1_lifecycle_gates.py: pinned 24321e142afb HEAD 24321e142afb code-commit 24321e142afb ok
+  tests/test_e1_pids_cleanup.py: pinned 92afc8b8f928 HEAD 92afc8b8f928 code-commit 92afc8b8f928 ok
+  tests/test_cpu_only_guard.py: pinned f46ce406349b HEAD f46ce406349b code-commit f46ce406349b ok
+  tests/test_e1_lifecycle_gates_v2.py: pinned 251a64d37073 HEAD 251a64d37073 code-commit 251a64d37073 ok
+  tests/test_e1_launch_identity_v2.py: pinned 56294e0fe8e3 HEAD 56294e0fe8e3 code-commit 56294e0fe8e3 ok
+  tests/test_profiler_lifecycle_stop_concurrency.py: pinned 393ffd049930 HEAD 393ffd049930 code-commit 393ffd049930 ok
+  tests/test_profiler_lifecycle_host_stream.py: pinned 83f60e6b1010 HEAD 83f60e6b1010 code-commit 83f60e6b1010 ok
+  tests/test_profiler_preflight_retained.py: pinned 3a60ddaf8dd7 HEAD 3a60ddaf8dd7 code-commit 3a60ddaf8dd7 ok
+  tests/test_e1_host_identity.py: pinned ad9f83ef3936 HEAD ad9f83ef3936 code-commit ad9f83ef3936 ok
+  tests/test_e1_forced_release_gates.py: pinned 0d094f70b1cb HEAD 0d094f70b1cb code-commit 0d094f70b1cb ok
+  tests/test_load_generator_prebuilt.py: pinned f291222745f1 HEAD f291222745f1 code-commit f291222745f1 ok
+  tests/test_e1_release_probe.py: pinned 35dd4df40c79 HEAD 35dd4df40c79 code-commit 35dd4df40c79 ok
+  tests/test_profiler_lifecycle_release_evidence.py: pinned f4b1ed8831bf HEAD f4b1ed8831bf code-commit f4b1ed8831bf ok
+  tests/test_e1_frontend_binary_gate.py: pinned 914f005e3cad HEAD 914f005e3cad code-commit 914f005e3cad ok
+  tests/test_e1_fr_rehearsal.py: pinned 31cdb5da305e HEAD 31cdb5da305e code-commit 31cdb5da305e ok
+PASS  every pinned tree/blob in V2-FR-PIN.json equals HEAD and the code commit e32fbab7
+PASS  no difference in alignment/ or launcher/ between e32fbab7 and HEAD
+  pin file keys: {'pass': 'e1_v2_forced_release', 'pinned_at': '2026-11-18T13:14:34Z', 'host': 'pod4-gb300-10-tray16-f3', 'session_runner_sha256': '7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2', 'identities_file': 'V2-FR-PIN-identities.json'}
+  submodule  5c20a259618976ecc360bda84abcc3653a04006e alignment/load_generator/req-frontend (remotes/origin/e1-stage15-stream-flag)
+  submodule -449cb04a53e2cdef7871246bd0eefd58aa86beb1 alignment/profiler/sglang
+  submodule  0ab18711335780e062d65994a3243da0281d2081 alignment/profiler/vllm (proto-v0.3.0-648-g0ab1871133)
+  gitlink 160000 commit 5c20a259618976ecc360bda84abcc3653a04006e	alignment/load_generator/req-frontend
+  req-frontend checkout: 5c20a259618976ecc360bda84abcc3653a04006e dirty=0
+PASS  SCRIPTS_fr.sha256: 51 files verify
+PASS  INPUTS_fr.sha256 verifies
+## 3. FREEZE_fr.sha256, every entry
+  E1-V2-FORCED-RELEASE-PACKET.md: OK
+  SCRIPTS_fr.sha256: OK
+  INPUTS_fr.sha256: OK
+  E1-V2-FR-INPUTS.json: OK
+  V2-FR-PIN.json: OK
+  V2-FR-PIN-identities.json: OK
+  BINARY-PROVENANCE.json: OK
+PASS  FREEZE_fr.sha256: all 7 entries OK (manifest itself sha256 fcfbf5cd5b46987b3512b77fab69dff91a6fb92c1ee8636cad4ee0f8ded3e7b9, blob at HEAD 5e3186c405c4, last changed in 30df7f61)
+## 4. load-generator executable
+PASS  executable sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (stat inode/mtime/size: 1100019664799 1794730282 28759968)
+PASS  BINARY-PROVENANCE.json names the same sha256
+## 5. prebuilt path selected by the driver
+PASS  run_e1_fr.sh has exactly one launcher line and it passes --frontend-provenance (prebuilt contract, arms the build-tool guard)
+PASS  driver has no cargo/rustc invocation (comments and PATH only)
+  alignment/runner.py:426:            load_generator.forbid_build_tools()
+  launcher/alignment.py:507:        frontend.forbid_build_tools()
+  alignment/load_generator/runner.py:94:def forbid_build_tools() -> dict:
+  (the guard tests, verify-prebuilt and the launcher dry-run run inside the preflight, check 6)
+## 8. storage
+  Mounted on   Avail
+  /            1164G
+  /mnt/shared 20771G
+  /tmp stream artefacts now: 332M : /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve 
+PASS  /tmp free 1164 GB (> 100; ceiling use 5 GB), CephFS free 20771 GB (> 1000; ceiling use 10 GB)
+  run root now: ls: cannot access '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr': No such file or directory 
+## 9. mechanisms present and responding (they are started and registered by the driver; verified again after the launch)
+  pinned+present checks/e1_pids.py
+  pinned+present checks/e1_gpu_watch.py
+  pinned+present checks/e1_release_probe.py
+  pinned+present checks/e1_gpu_release_census.py
+  pinned+present checks/e1_process_census.sh
+  pinned+present checks/e1_forced_release_gates.py
+  pinned+present checks/e1_frontend_binary_gate.py
+  pinned+present run_e1_fr.sh
+  pinned+present monitor_e1_fr.sh
+  pinned+present closeout_e1_fr.sh
+  pinned+present postrun_e1_fr.sh
+  registry tool: cleanup plan register spawn 
+  gpuwatch| usage: e1_gpu_watch.py [-h] --out OUT [--interval INTERVAL] [--max-s MAX_S]
+  gpuwatch|                        [--max-used-mib MAX_USED_MIB]
+  gpuwatch|                        [--stop-after-released STOP_AFTER_RELEASED]
+  gpuwatch| 
+  gpuwatch| Independent GPU-state sampler (V1 remediation, item E): timestamped nvidia-smi observations as JSONL.
+  gpuwatch| 
+  gpuwatch|     python3 -I checks/e1_gpu_watch.py --out <run>/gpu_observations.jsonl [--interval 5] [--max-s 3600]
+  gpuwatch|         [--stop-after-released 3]
+  gpuwatch| 
+  gpuwatch| Meant to be started by a driver through `e1_pids.py spawn` (registered, identity-verified cleanup) before the stop
+  gpuwatch| request, so the release of the GPUs is bracketed by a last "held" and a first "released" observation taken outside
+  gpuwatch| the lifecycle controller. Uses the census of checks/e1_gpu_release_census.py unchanged. Never signals anything.
+  probe| usage: e1_release_probe.py [-h] --nsys-dir NSYS_DIR --inputs INPUTS --out OUT
+  probe|                            --log LOG
+  probe| 
+  probe| V2 forced-release trigger and independent importer observer (registered via checks/e1_pids.py spawn).
+  probe| 
+  probe|     python3 -I checks/e1_release_probe.py --nsys-dir <run>/profile/nsys --inputs E1-V2-FR-INPUTS.json
+  probe|         --out <run>/probe.json --log <run>/probe.log
+  probe| 
+  probe| Reads lifecycle.json only to learn the phase and the recorded Nsight identity; everything else comes from /proc.
+  probe| 1. Waits for the first observation of phase `importing`.
+  probe| 2. Verifies the Nsight (importer) identity: pid alive with the recorded start time. Takes two or more samples of that
+  probe|    process tree (state, CPU ticks) until the import is confirmed in progress (CPU time or reported progress advanced
+  trigger: {'control_line': 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)', 'condition': 'first observation of phase `importing` in lifecycle.json by checks/e1_release_probe.py (registered in the pid registry; polls every 0.5 s; verifies the importer from /proc and confirms the import in progress, at most 3 s, before writing)', 'deterministic_in': 'phase, not wall time: the line is written once, on the first poll that sees `importing`', 'v1_reference': 'V1: importing lasted 27 s (03:22:16 → 03:22:43Z) for the same workload; the trigger needs about 2 s, at most about 5 s (probe poll 0.5 s + confirmation 0.4–3 s + controller poll 1 s)'}
+  limits: {'gpu_release_deadline_s': 90, 'gpu_watch_interval_s': 2, 'session_close_timeout_s': 300.0}
+  ceilings: {'reservation_hard_min': 90, 'gpu_held_ceiling_s': 2700.0, 'gpu_held_nominal_min': 28, 'temporary_storage_gb': 5, 'persistent_storage_gb': 5, 'persistent_storage_with_archive_gb': 10, 'startup_limit_min': 30, 'capture_limit_min': 10}
+  lifecycle: {'finalize_soft_deadline_s': 300.0, 'finalize_hard_deadline_s': 600.0, 'finalize_stall_timeout_s': 300.0, 'finalize_on_hard_deadline': 'release_gpus', 'finalize_session_close_timeout_s': 300.0, 'finalize_max_extension_s': 120.0, 'gpu_held_ceiling_s': 2700.0, 'preserve_raw_stream': True}
+  driver registration lines (driver, gpuwatch, probe): 3
+  ctl| 905:        """Stop the vLLM server (verified SIGTERM, then SIGKILL survivors). Never touches nsys."""
+  ctl| 929:        outcome = self._signal(self.api_server, signal.SIGTERM, log)
+  ctl| 930:        sigterm_at = self._wall()
+  ctl| 932:            entry.setdefault("at", sigterm_at)
+  ctl| 933:        # exact time of the API-server SIGTERM and what the importer looked like right after it
+  ctl| 934:        self.s.gpu["api_server_sigterm"] = {
+  ctl| 935:            "at": sigterm_at,
+  ctl| 939:        self.s.gpu["importer_after_signal"] = [self._importer_state("after the API-server SIGTERM")]
+  ctl| 994:            self._signal(self.api_server, signal.SIGTERM, log)
+  config: "finalize_soft_deadline_s": 300.0;"finalize_hard_deadline_s": 600.0;"finalize_stall_timeout_s": 300.0;"finalize_on_hard_deadline": "release;"finalize_session_close_timeout_s": 300.0;"finalize_max_extension_s": 120.0;"gpu_held_ceiling_s": 2700.0;"preserve_raw_stream": true;
+## 10. packet ceilings vs this GO
+  | resource | ceiling | enforced by |
+  | reservation | 90 min hard (exception: §7 item 3) | operator |
+  | GPU-held | 2700 s from the launch | controller, in any phase, not extendable |
+  | GPU release after the forced-release request | 90 s | gate FR5 (independent sampler) |
+  | finalisation | soft 300 s, hard 600 s after the stop request; session close 300 s | controller |
+  | temporary storage (`/tmp`, tray16) | 5 GB: new stream about 0.35 GB + post-run scratch about 2.4 GB (removed after counting) + the retained V1 stream 0.35 GB | preflight floor, monitor |
+  | persistent run storage | 5 GB: run directory about 2.7 GB (outcome A) + durable stream 0.35 GB | monitor, post-run |
+  | persistent including archive | 10 GB | closeout |
+  | cleanup | registry-verified only; closeout must be CLEAN; reservation deleted after GPUs idle | closeout script |
+  machine-readable: {'reservation_hard_min': 90, 'gpu_held_ceiling_s': 2700.0, 'gpu_held_nominal_min': 28, 'temporary_storage_gb': 5, 'persistent_storage_gb': 5, 'persistent_storage_with_archive_gb': 10, 'startup_limit_min': 30, 'capture_limit_min': 10} {'gpu_release_deadline_s': 90, 'gpu_watch_interval_s': 2, 'session_close_timeout_s': 300.0}
+PASS  GPU-held 2700 s and release 90 s in E1-V2-FR-INPUTS.json equal the GO; packet §8: reservation 90 min, /tmp 5 GB, run dir 5 GB, 10 GB with archive (table above)
+## state
+  tmux: no server running on /tmp/tmux-1000/default 
+  gpu MiB: 0 0 0 0  compute apps: 0
+# result: PRECHECK PASS
