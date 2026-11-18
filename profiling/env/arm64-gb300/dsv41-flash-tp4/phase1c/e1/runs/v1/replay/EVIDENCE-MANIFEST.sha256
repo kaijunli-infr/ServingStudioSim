@@ -1,0 +1,44 @@
+# V1 evidence manifest (sha256), generated 2026-11-18T04:36:12Z on pod4-gb300-10-tray16-f3
+## frozen originals (unchanged since 294db6d9)
+984e8916aa9295b28f5ab6eab5be996687a692ed86c3dddbcaba9bdf874057ba  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/runs/v1/run/E1-V1-RUN-REPORT.md
+33d1d4025b3de930f8fc88fab03c190ebfd31e348f9ae24c3a65724ab10c1ca6  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/runs/v1/run/evidence/V1-GATES.json
+eb9b406e4a4ce1f1652281bfbd9a827933122b9bf2ffde730a734b62dc77ad3f  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/runs/v1/run/evidence/V1-GATES.txt
+7d3dba8f0bfdf2aeca48403f8147643fe47c36abd58911cf590ffc5fb4bff518  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/runs/v1/run/evidence/lifecycle.json
+626f80eff679a0f6d312599d89000c27189e1873237ca93f45b6a762604af40b  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/runs/v1/run/evidence/supplementary_recovery.json
+832d4adb4e9cda880d9105e8e2869868583b753ef6bcfe89105e108c870a5b0d  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/runs/v1/run/evidence/ARCHIVE-SHA256SUMS
+8a718174ddbcb0c8ff70a1c7ffdc0c0cec738ff0cd5946ed67292ab0871f8b8f  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_lifecycle_gates.py
+50eff0d2280ba98adc297110ac9e30548285b9d6a9d78f61cc1a947b517eb8e4  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/SCRIPTS_v1.sha256
+5dd3dfca536c3e38b8c8d802c1c8a7d1d7d6f834f08375fc5e243867b2d595e5  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/postrun_e1_v1.sh
+## archive manifest and preserved stream (durable copy; tray16 /tmp original identical and retained)
+832d4adb4e9cda880d9105e8e2869868583b753ef6bcfe89105e108c870a5b0d  artifacts/phase1c-e1-v1-dsv41-flash-gb300-tp4-20261118/SHA256SUMS
+8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f  artifacts/phase1c-e1-v1-dsv41-flash-gb300-tp4-20261118/preserved/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm
+## original acceptance record in the run directory
+33d1d4025b3de930f8fc88fab03c190ebfd31e348f9ae24c3a65724ab10c1ca6  ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/cpu/V1-GATES.json
+## remediation validators
+7c41d9da79a40277461afcced428bfad32bd73901d449f74908a444f38d30558  replay_e1_v1.sh
+e57e1224c24910959614f3a43cb36c9600390d4a9c04fa1bbf47fe7b11e85965  hash_scripts_v1_replay.sh
+f03f0becbc7134ab6346a75fa6ec8054604b7f8f07fc07ba31000110fc62c1f7  checks/e1_lifecycle_gates_v2.py
+89dfcc90080f733c566cfc47008b4a3800cff96826870a01073f87692b0c36ee  checks/e1_launch_identity_v2.py
+5aded1a711470201d9a8e7ff515f6a9656c353ac2e82e72ef93ea2c8fb276d1c  checks/e1_identity_policy_v1.json
+32676d10190d06559b1ffe2de1c0d1a5437cc9596da0832464e7f90d5754f453  checks/e1_gpu_watch.py
+c506f8ddb167585787a956beabb1f0576dee94b859f31d23137f82ded543f0f7  ../../../../../../tests/test_e1_lifecycle_gates_v2.py
+948bfe21eecda8b758e7d99a817989bf8210e318b631424d7064e4c2305442ed  ../../../../../../tests/test_e1_launch_identity_v2.py
+313f65682ca9e941b6c4107f4d0c634ddf81d7a9b973de4c6a21c4bb805714cf  ../../../../../../tests/test_profiler_lifecycle_stop_concurrency.py
+## replay outputs
+a17f5e3320a06dbfde8a434ad9bc33e0ec6293c1491e5613fe9344d96349c392  ./V1-REMEDIATION-REPORT.md
+5be5465d62ba23a2d385e65fc48bf474a3f48dc5f9bd2d52fc4a3ab2ec5d1875  ./V1-RETRO-GATES.json
+2876e4f999428ab645f8f3b63784cde7f6df2bddde950adb9f3a156bbfd070b5  ./V1-RETRO-GATES.txt
+ef4673f316e001ecb6f5eb8be304db960e01aad2ce70a97e4acc61e066ddd987  ./attempt1_2bb2157c/V1-RETRO-GATES.json
+0889f4ddd5821f2c811d9475f6af7bcf29f55e7d53b58ca064b056f5f383be7d  ./attempt1_2bb2157c/V1-RETRO-GATES.txt
+04ba8d3f4172ecc73fcaf8ac0c612474a8d62064c219d0d4e301efb72a429acc  ./attempt1_2bb2157c/identity_v2.json
+5660adf9602ec5e35e91bd8a2a3aa8b0e836ea4101c1bc0a13241d169d0f2508  ./attempt1_2bb2157c/identity_v2.txt
+ff6f641ea53fd73cb03cd7355f481c28639e7da2b5fc11511646ad7478a932b8  ./attempt1_2bb2157c/replay_tray16_20261118T042035Z.log
+04ba8d3f4172ecc73fcaf8ac0c612474a8d62064c219d0d4e301efb72a429acc  ./identity_v2.json
+5660adf9602ec5e35e91bd8a2a3aa8b0e836ea4101c1bc0a13241d169d0f2508  ./identity_v2.txt
+863fcdd4860383252dcb030d5a2174c034dd24bce682ee60f351aa6642972320  ./operator_monitor_samples.jsonl
+cce0e1d86ff96d16faeccf6b8e76319a8308fefdd003b03a734310d0bf5f2802  ./operator_monitor_samples.raw.txt
+f42e102995025d1e2a29c65891a7d5848d0965935dd1edc57b90e0c5419cb840  ./pytest_fullsuite_cpu_only_f88f1aa9_tray14.log
+9fa606b233c1f6f056dff29f14e938328183187a5812a461b7465c76a6aa239e  ./pytest_fullsuite_cpu_only_f88f1aa9_tray16.log
+3d8dfbf6e56ebff2564e9209a05b7d7536b48f1e456ef4edf1bf0a152c4c4332  ./pytest_targeted_cpu_only_f88f1aa9_tray14.log
+129105d1bc3e3ec287b8e6b34c638d5a26c575c55e2c230585449e1ba025bf5b  ./pytest_targeted_cpu_only_f88f1aa9_tray16.log
+901811ad7f1566fc77af1b48276ef4f5fab1f66c3389b2d811972bf603afde3f  ./replay_tray16_attempt2.log

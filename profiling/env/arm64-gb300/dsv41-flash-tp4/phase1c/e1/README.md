@@ -90,3 +90,7 @@ Branch `exp/profiler-lifecycle` only (56c28ce3 → ece6dacf code → 0c626b7e/b0
 ## V1 run 2026-11-18: FAIL (STOP)
 
 One launch of `e1_v1_lifecycle` from 77f410a5 on tray16 (GO of 2026-11-18). The capture completed (2160 iterations, 12 250 832 kernel rows, both waves, GPU-held 1713 s, independent GPU census clean) but the pinned gates L1, L4 and S.config_identity failed and L10/L10b were not attempted, so V1 is not accepted. Report: `runs/v1/run/E1-V1-RUN-REPORT.md`; evidence `runs/v1/run/evidence/`; pre-launch audit note `runs/v1/preflight/AUDIT-NOTE-preflight-failure-20261118T0146Z.md`. No retry; V2 not started.
+
+## V1 gate remediation and evidence replay (2026-11-18, CPU-only)
+
+Two separate verdicts: original V1 **FAIL / STOP** under the pinned gates (record unchanged); retrospective evidence assessment under the corrected gates **PASS** (25 gates, 0 FAIL). Corrected validators are new files (`checks/e1_lifecycle_gates_v2.py`, `checks/e1_launch_identity_v2.py`, `checks/e1_identity_policy_v1.json`, `checks/e1_gpu_watch.py`, `replay_e1_v1.sh`, `SCRIPTS_v1_replay.sha256`); the pinned ones are untouched. Report `runs/v1/replay/V1-REMEDIATION-REPORT.md`, manifest `runs/v1/replay/EVIDENCE-MANIFEST.sha256`.

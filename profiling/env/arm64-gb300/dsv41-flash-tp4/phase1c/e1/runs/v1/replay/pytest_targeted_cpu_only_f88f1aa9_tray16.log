@@ -1,0 +1,72 @@
+........................................................................ [ 27%]
+........................................................................ [ 55%]
+.................................s.................................F.... [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+___________ test_preflight_cli_writes_pins_and_exits_nonzero_on_fail ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xe73ce5244590>
+
+    def test_preflight_cli_writes_pins_and_exits_nonzero_on_fail(tmp_path, monkeypatch):
+        nsys = _fake_install(tmp_path)
+        cfg_path = tmp_path / "profile.json"
+        raw = json.loads((FIX / "profile.json").read_text())
+        raw["nsys"]["executable"] = str(nsys)
+        raw["nsys"]["gpu_held_ceiling_s"] = 2700
+        raw["nsys"]["finalize_soft_deadline_s"] = 300
+        raw["nsys"]["finalize_hard_deadline_s"] = 600
+        raw["nsys"]["min_free_bytes_stream"] = 1
+        raw["nsys"]["min_free_bytes_report"] = 1
+        raw["fork_python"] = sys.executable
+        raw["log_dir"] = str(tmp_path / "run" / "profile")
+        cfg_path.write_text(json.dumps(raw))
+        monkeypatch.setattr(preflight, "_python_probe", _probe_ok)
+        monkeypatch.setattr(preflight.lifecycle, "_nvidia_smi_compute_pids", lambda: [])
+        out = tmp_path / "preflight.json"
+        pins = tmp_path / "pins.json"
+        rc = preflight.main(
+            [
+                "--config",
+                str(cfg_path),
+                "--reference-server-log",
+                str(FIX / "server_log_excerpt.log"),
+                "--json",
+                str(out),
+                "--write-pins",
+                str(pins),
+            ]
+        )
+>       assert rc == 0
+E       assert 1 == 0
+
+tests/test_profiler_preflight.py:187: AssertionError
+----------------------------- Captured stdout call -----------------------------
+INFO  profiler.nsys: no pins supplied; recorded only
+INFO  profiler.importer: no pins supplied; recorded only
+PASS  profiler.importer_matches_cli: importer /tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0/nsight/host-linux-fake/QdstrmImporter and CLI /tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0/nsight/target-linux-fake/nsys share the install root
+PASS  server.vllm_import: vllm 0.31.1.dev17+g0ab187113 from /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py
+INFO  server.identity: no pins supplied; recorded only
+PASS  server.model_path: /mnt/shared/weights/DeepSeek-V4.1-Flash-1017/config.json present
+INFO  recipe.reference: no reference launch record supplied
+PASS  cleanup.identity: pid 1103659 starttime 297006134 boot 54a59f08 uid 1000
+PASS  cleanup.ancestry: descendant test resolves this process under its parent
+PASS  cleanup.refuses_self: signal_verified(own pid) -> refused
+PASS  cleanup.refuses_pid1: -> refused
+PASS  cleanup.detects_identity_change: stale starttime on the parent pid -> changed (nothing signalled)
+PASS  cleanup.gpu_query: nvidia-smi compute-app query works; 0 compute pid(s) now
+PASS  parsers.pids: API server pid(s) ['32200'], engine roles ['EngineCore', 'Worker'], 5 distinct engine/worker pids
+PASS  parsers.phases: every phase line matched in order: stop_accepted@14, capture_ended@19, stream_written@20, import_start@22, import_progress@22, stop_returned@81
+PASS  policy.valid: soft 300 s, hard 600 s, stall 900 s, max extension 1200 s, GPU-held ceiling 2700, action release_gpus, preserve stream True
+PASS  policy.ceiling_set: gpu_held_ceiling_s is explicit
+PASS  locations.lifecycle.json: /tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0/run/profile/nsys/lifecycle.json absent
+PASS  locations.lifecycle.control: /tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0/run/profile/nsys/lifecycle.control absent
+PASS  locations.log_dir: /tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0/run/profile absent
+PASS  locations.stream_dir: /tmp: 1164 GiB free (floor 0)
+FAIL  locations.stream_leftovers: own raw streams / preserve dirs in /tmp: ['/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve']
+PASS  locations.report_dir: /tmp/pytest-of-dc/pytest-19/test_preflight_cli_writes_pins0: 1164 GiB free (floor 0)
+# identity preflight: 23 checks, 1 FAIL
+cpu_only_guard: CUDA hidden (CUDA_VISIBLE_DEVICES='' set by the caller); no /dev/nvidia<N> opened; torch.cuda not initialised
+=========================== short test summary info ============================
+FAILED tests/test_profiler_preflight.py::test_preflight_cli_writes_pins_and_exits_nonzero_on_fail
+1 failed, 258 passed, 1 skipped in 25.86s
