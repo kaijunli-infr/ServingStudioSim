@@ -1,17 +1,20 @@
 {
  "pass": "e1_v1_lifecycle",
- "pinned_at": "2026-11-17T22:36:30Z",
+ "pinned_at": "2026-11-18T01:45:58Z",
  "host": "pod4-gb300-10-tray16-f3",
  "code": {
-  "commit": "ece6dacfdc7f38337016e0fed680f7fe013d1f27",
+  "commit": "9d4abd3f364fd4ede6e9227bfd9566cde41df9df",
   "branch": "exp/profiler-lifecycle",
   "tree": {
    "alignment": "b2be218bbb09bd6b21fc9909b30af2e1850224ed",
    "launcher": "5a1b662f12e878798eb5c8be04ca445d4c6977b5",
    "tests/test_profiler_lifecycle.py": "14dcbfd92b3feeb1459cd58dfb7a1ab5206fb1dd",
    "tests/test_profiler_preflight.py": "c5defd53c97b2c435864402d2123af51a3594c8c",
-   "tests/test_e1_lifecycle_gates.py": "bd9fab6b8450d38468a636d32d1663e636d5631b",
-   "tests/fixtures": "9bd59ef93228c8a77ca1c3ac248f75892a8b30a1"
+   "tests/test_e1_lifecycle_gates.py": "24321e142afbbf6604e4a8cfb46fb4dd44fb1805",
+   "tests/fixtures": "9bd59ef93228c8a77ca1c3ac248f75892a8b30a1",
+   "tests/cpu_only_guard.py": "5d2637224343ec4260f6d712235afc68f311e51b",
+   "tests/cpu_only.sh": "9296518632ee5037c91c7482b51c723dc7d9ea55",
+   "tests/test_cpu_only_guard.py": "f46ce406349b31b5c395c81f39d4bc92bc204ac9"
   },
   "gitlinks": {
    "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
