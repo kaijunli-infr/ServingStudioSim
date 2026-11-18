@@ -1,0 +1,60 @@
+# synthetic V2 gate rehearsal at 2026-11-18T13:24:17Z: 50 fixtures through the command-line validators; CPU only; not V2 evidence
+# fixture                                              category                         expected      verdict       gates not PASS
+OK       01 positive_outcome_A_importer_finishes              positive                         PASS          PASS          -
+OK       02 positive_outcome_B_recovery_from_stream           positive                         PASS          PASS          -
+OK       03 positive_release_at_exactly_90_s                  positive                         PASS          PASS          -
+OK       04 import_report_written_before_sigterm              import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       05 release_context_already_report_written            import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       06 trigger_read_only_in_terminal_phase               import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR2.registered_trigger=INCONCLUSIVE, FR3.import_active_at_release=INCONCLUSIVE
+OK       07 no_release_import_finished_first                  import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR2.registered_trigger=INCONCLUSIVE, FR3.import_active_at_release=INCONCLUSIVE, FR3b.importer_checked_after_signal=INCONCLUSIVE, FR4.no_signal_to_importer=INCONCLUSIVE, FR5.gpu_release_within_deadline=INCONCLUSIVE, FR9.bounds=INCONCLUSIVE
+OK       08 probe_record_absent                               missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE, FR3b.importer_checked_after_signal=INCONCLUSIVE
+OK       09 probe_saw_importing_once                          missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       10 import_not_confirmed_in_progress                  missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       11 no_probe_check_after_signal                       missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3b.importer_checked_after_signal=INCONCLUSIVE
+OK       12 no_controller_check_after_signal                  missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3b.importer_checked_after_signal=INCONCLUSIVE
+OK       13 probe_trigger_written_after_sigterm               missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       14 importer_identity_not_verified                    missing_importer_observations    FAIL          FAIL          FR3.import_active_at_release=FAIL
+OK       15 probe_watched_another_process                     missing_importer_observations    FAIL          FAIL          FR3.import_active_at_release=FAIL
+OK       16 controller_release_context_missing                missing_importer_observations    FAIL          FAIL          FR3.import_active_at_release=FAIL
+OK       17 gpu_released_90_5_s_after_request                 late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       18 gpu_released_after_132_s                          late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       19 gpu_never_observed_released                       late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       20 gpu_release_not_bracketed                         late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       21 gpu_held_again_after_release                      late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       22 gpu_release_only_controller_time                  late_gpu_release                 FAIL          FAIL          H.host_identity=INCONCLUSIVE, FR5.gpu_release_within_deadline=FAIL
+OK       23 binary_changed_during_launch                      binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       24 binary_not_pinned_before_launch                   binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       25 binary_replaced_and_restored                      binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       26 binary_compiled_during_launch                     binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       27 build_tool_requested_and_blocked                  binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       28 launcher_record_without_guard                     binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       29 binary_records_missing                            binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       30 sigint_to_importer_before_report                  destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       31 sigkill_to_importer_process_group                 destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       32 sigterm_to_importer_in_outcome_A_before_report    destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       33 signal_to_unrecorded_process                      destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       34 sigterm_time_not_recorded                         destructive_importer_signal      FAIL          FAIL          FR3.import_active_at_release=FAIL, FR3b.importer_checked_after_signal=FAIL, FR4.no_signal_to_importer=FAIL
+OK       35 durable_stream_missing                            incomplete_recovery              FAIL          FAIL          FR7.stream_final_stable_durable=FAIL, FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       36 stream_differs_from_final_record                  incomplete_recovery              FAIL          FAIL          FR7.stream_final_stable_durable=FAIL, FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       37 no_final_stream_record                            incomplete_recovery              FAIL          FAIL          FR7.stream_final_stable_durable=FAIL, FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       38 offline_import_fails_truncated_stream             incomplete_recovery              FAIL          FAIL          FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       39 recovered_trace_too_few_kernels                   incomplete_recovery              FAIL          FAIL          FR8b.recovered_trace_complete=FAIL
+OK       40 recovered_trace_nvtx_not_4_per_iteration          incomplete_recovery              FAIL          FAIL          FR8b.recovered_trace_complete=FAIL
+OK       41 recovered_trace_differs_from_in_session_export    incomplete_recovery              FAIL          FAIL          FR8b.recovered_trace_complete=FAIL
+OK       42 recovery_tools_not_supplied                       incomplete_recovery              INCONCLUSIVE  INCONCLUSIVE  FR8.offline_import=INCONCLUSIVE, FR8b.recovered_trace_complete=INCONCLUSIVE
+OK       43 launcher_recovery_failed                          incomplete_recovery              FAIL          FAIL          S.launcher_recovery=FAIL
+OK       44 scientific_completeness_failed                    incomplete_recovery              FAIL          FAIL          S.completeness_v2=FAIL
+OK       45 importer_still_running                            other                            FAIL          FAIL          FR6.session_ended=FAIL, FR9.bounds=FAIL
+OK       46 trigger_in_wrong_phase                            other                            FAIL          FAIL          FR2.registered_trigger=FAIL
+OK       47 second_stop_request                               other                            FAIL          FAIL          FR1.one_stop_request=FAIL
+OK       48 host_conflict                                     other                            FAIL          FAIL          H.host_identity=FAIL, FR5.gpu_release_within_deadline=FAIL
+OK       49 escalation_recorded                               other                            FAIL          FAIL          FR9.bounds=FAIL
+OK       50 configuration_identity_failed                     other                            FAIL          FAIL          S.config_identity=FAIL
+# required category positive: 3 fixture(s), all as expected: True
+# required category import_completed_before_sigterm: 4 fixture(s), all as expected: True
+# required category missing_importer_observations: 9 fixture(s), all as expected: True
+# required category late_gpu_release: 6 fixture(s), all as expected: True
+# required category binary_mutation: 7 fixture(s), all as expected: True
+# required category destructive_importer_signal: 5 fixture(s), all as expected: True
+# required category incomplete_recovery: 10 fixture(s), all as expected: True
+# result: REHEARSAL EXPECTATIONS MET: 50/50 fixtures as expected; verdicts PASS 3, INCONCLUSIVE 11, FAIL 36; categories without a fixture: none

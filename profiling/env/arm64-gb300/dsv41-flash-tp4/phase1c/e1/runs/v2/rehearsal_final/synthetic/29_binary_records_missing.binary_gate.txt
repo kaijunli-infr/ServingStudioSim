@@ -1,0 +1,16 @@
+PASS  pin.present: pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+FAIL  driver.record_present: driver record missing or unreadable
+FAIL  driver.sha256_before_is_pinned: before the launcher: None
+FAIL  driver.sha256_after_is_pinned: after the launcher: None
+FAIL  driver.unchanged: unchanged=None
+FAIL  driver.file_identity_unchanged: inode/mtime/size before None, after None
+FAIL  driver.no_compiling_lines: cargo 'Compiling' lines in the run log: None
+FAIL  launcher.record_present: launcher record missing or unreadable
+FAIL  launcher.prebuilt_mode: mode None
+FAIL  launcher.sha256_before_is_pinned: verified before the launch: None (record's pin None)
+FAIL  launcher.sha256_after_is_pinned: verified after the launch: None
+FAIL  launcher.unchanged: unchanged=None
+FAIL  launcher.cargo_not_consulted: cargo_consulted=None
+FAIL  launcher.build_tool_guard_installed: guard installed=None active=None
+FAIL  launcher.no_build_tool_requested: blocked build-tool requests: None
+# load-generator binary gate: 14 FAIL of 15 → FAIL

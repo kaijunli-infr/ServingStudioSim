@@ -1,0 +1,256 @@
+{
+ "run": "/tmp/e1-fr-rehearsal-edo7i4od/positive_outcome_B_recovery_from_stream/e1_v2_forced_release",
+ "verdict": "PASS",
+ "gates": [
+  {
+   "gate": "FR0.record",
+   "status": "PASS",
+   "detail": "lifecycle.json schema 2 phase stop_failed"
+  },
+  {
+   "gate": "H.host_identity",
+   "status": "PASS",
+   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 4 GPU observation(s)",
+   "data": {
+    "sources": {
+     "lifecycle.host": "pod4-gb300-10-tray16-f3",
+     "lifecycle.host_identity.hostname": "pod4-gb300-10-tray16-f3",
+     "run_log": "pod4-gb300-10-tray16-f3",
+     "reservation.node": "pod4-gb300-10-tray16-f3",
+     "gpu_observations": [
+      "pod4-gb300-10-tray16-f3"
+     ]
+    }
+   }
+  },
+  {
+   "gate": "FR1.one_stop_request",
+   "status": "PASS",
+   "detail": "requests_sent=1, duplicates suppressed=0, stop_requested phases=1, http='error: connection reset' returned 08:26:10Z (release requested 08:26:08Z; an error is accepted only at or after the release), API-server 'Stopping profiler' lines=1"
+  },
+  {
+   "gate": "FR2.registered_trigger",
+   "status": "PASS",
+   "detail": "the registered line, accepted in phase 'importing'; control commands recorded [('release-gpus V2 forced release during import', 'release requested', 'importing')]; expected exactly one: 'release-gpus V2 forced release during import' \u2192 'release requested' in phase 'importing'"
+  },
+  {
+   "gate": "FR3.import_active_at_release",
+   "status": "PASS",
+   "detail": "controller: release requested 08:26:08Z in phase 'importing', import 12%, Nsight alive=True, report written=False; importing since 08:26:05Z, API-server SIGTERM at 1800001568.200 (08:26:08Z), report at -; probe: 2 sample(s), phase importing in \u2265 2=True, importer identity verified from /proc=True, import in progress confirmed=True, trigger written 08:26:07Z",
+   "data": {
+    "release_context": {
+     "phase": "importing",
+     "import_progress_pct": 12,
+     "nsys_alive": true,
+     "report_written": false
+    },
+    "api_server_sigterm_at": 1800001568.2,
+    "importing_at": 1800001565.0,
+    "report_written_at": null,
+    "probe": {
+     "result": "trigger written",
+     "samples": [
+      {
+       "phase": "importing",
+       "identity_verified": true,
+       "nsys_pid": 4000,
+       "nsys_starttime_proc": 777,
+       "nsys_state": "S",
+       "at": 1800001566.0,
+       "tree_cpu_ticks": 10
+      },
+      {
+       "phase": "importing",
+       "identity_verified": true,
+       "nsys_pid": 4000,
+       "nsys_starttime_proc": 777,
+       "nsys_state": "S",
+       "at": 1800001566.4,
+       "tree_cpu_ticks": 20
+      }
+     ],
+     "import_in_progress_confirmed": true,
+     "wrote_trigger_at": 1800001567.5,
+     "after_signal": [
+      {
+       "phase": "importing",
+       "identity_verified": true,
+       "nsys_pid": 4000,
+       "nsys_starttime_proc": 777,
+       "nsys_state": "S",
+       "at": 1800001568.6
+      }
+     ]
+    }
+   }
+  },
+  {
+   "gate": "FR3b.importer_checked_after_signal",
+   "status": "PASS",
+   "detail": "after the SIGTERM at 08:26:08Z: controller checks (label, identity intact, /proc state, phase) [('after the API-server SIGTERM', True, 'S', 'importing')]; probe checks (seconds after, identity intact, /proc state, phase) [(0.4, True, 'S', 'importing')]; both sources are required, the importer's state itself is evidence for the outcome, not a pass condition",
+   "data": {
+    "controller": [
+     {
+      "at": 1800001568.2,
+      "label": "after the API-server SIGTERM",
+      "nsys_pid": 4000,
+      "identity_matches": true,
+      "proc_state": "S",
+      "phase": "importing"
+     }
+    ],
+    "probe": [
+     {
+      "phase": "importing",
+      "identity_verified": true,
+      "nsys_pid": 4000,
+      "nsys_starttime_proc": 777,
+      "nsys_state": "S",
+      "at": 1800001568.6
+     }
+    ]
+   }
+  },
+  {
+   "gate": "FR4.no_signal_to_importer",
+   "status": "PASS",
+   "detail": "Nsight pid 4000; recorded server pids [4100, 4101, 4102]; signals [(4100, 'SIGTERM', 'operator: release-gpus V2 forced release during import'), (4101, 'SIGKILL', 'operator: release-gpus V2 forced release during import')]; release signals 2; API-server SIGTERM recorded with its exact time and matching action=True ({'at': 1800001568.2, 'pid': 4100, 'outcome': 'signalled'}); disallowed []"
+  },
+  {
+   "gate": "FR5.gpu_release_within_deadline",
+   "status": "PASS",
+   "detail": "4 independent observation(s) on pod4-gb300-10-tray16-f3; release requested 08:26:08Z; GPUs last observed held 08:26:06Z, first observed released 08:26:14Z \u2192 release in (08:26:06Z, 08:26:14Z], at most 6.0 s after the request (deadline 90 s); held observations before the request: 2; held after the first released one: 0; controller time, separate: 08:26:15Z",
+   "data": {
+    "last_held": 1800001566.0,
+    "first_released": 1800001574.0,
+    "release_requested_at": 1800001568.0,
+    "controller_released_at": 1800001575.0
+   }
+  },
+  {
+   "gate": "FR6.session_ended",
+   "status": "PASS",
+   "detail": "final phase 'stop_failed', Nsight alive=False, session closed 08:26:40Z \u2192 outcome B: no report; recovery from the preserved stream"
+  },
+  {
+   "gate": "FR7.stream_final_stable_durable",
+   "status": "PASS",
+   "detail": "controller's final record (taken 08:26:41Z, after session close): 2048 B sha256 a1583a7374c02c7b1e37fd9dc6e0061f7819069ff4cd4ae5a148ca4601e38cf9; durable copy /tmp/e1-fr-rehearsal-edo7i4od/positive_outcome_B_recovery_from_stream/e1_v2_forced_release/preserved/x.qdstrm: 2048 B sha256 a1583a7374c02c7b1e37fd9dc6e0061f7819069ff4cd4ae5a148ca4601e38cf9; two full reads identical=True; equals the final record=True; tray original present and equal=True; 1 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
+   "data": {
+    "sha256": "a1583a7374c02c7b1e37fd9dc6e0061f7819069ff4cd4ae5a148ca4601e38cf9",
+    "size": 2048,
+    "observations": [
+     {
+      "at": 1800001565.0,
+      "phase": "importing",
+      "size": 2018,
+      "mtime_ns": 1,
+      "path": "/tmp/e1-fr-rehearsal-edo7i4od/positive_outcome_B_recovery_from_stream/x.raw-preserve/x.qdstrm"
+     }
+    ]
+   }
+  },
+  {
+   "gate": "FR8.offline_import",
+   "status": "PASS",
+   "detail": "offline import of the durable stream rc 0 in 0 s \u2192 4096 B"
+  },
+  {
+   "gate": "FR8b.recovered_trace_complete",
+   "status": "PASS",
+   "detail": "recovered trace: 2160 iterations (band [2100, 2250]), NVTX forward ranges 8640, kernel rows 1225 (band [1163, 1286]), kernels per process [306, 306, 306, 307], kernel boundaries [1000000, 1001225] ns; absolute checks {'iterations_in_band': True, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': True, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; no in-session export exists (outcome B): equality with an original is not applicable; the absolute checks and the scientific checkers on the recovered profile decide",
+   "data": {
+    "absolute": {
+     "iterations_in_band": true,
+     "nvtx_is_per_iteration_multiple": true,
+     "kernel_rows_in_band": true,
+     "four_processes_with_kernels": true,
+     "capture_boundaries_present": true
+    },
+    "relative": null,
+    "table_row_differences": null,
+    "recovered": {
+     "nvtx_forward_ranges": 8640,
+     "kernel_rows": 1225,
+     "kernel_span_ms": 0.001225,
+     "ok": true,
+     "distinct_iterations": 2160,
+     "iteration_index_range": [
+      0,
+      2159
+     ],
+     "nvtx_forward_boundaries_ns": [
+      0,
+      86395
+     ],
+     "kernel_boundaries_ns": [
+      1000000,
+      1001225
+     ],
+     "kernels_per_process": [
+      306,
+      306,
+      306,
+      307
+     ],
+     "metadata": {
+      "ANALYSIS_DETAILS": [
+       "[1, 500, 0, 500]"
+      ],
+      "META_DATA_CAPTURE": [
+       "[\"START_TRIGGER\", \"Immediate\"]"
+      ],
+      "TARGET_INFO_SESSION_START_TIME": [
+       "[1, \"a\", \"a\", 2]"
+      ],
+      "META_DATA_EXPORT": [
+       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/e1-fr-rehearsal-edo7i4od/positive_outcome_B_recovery_from_stream/scratch/recovery.sqlite\"]",
+       "[\"EXPORT_PRODUCT_VERSION\", \"2025.6.3.541\"]",
+       "[\"EXPORT_TIME_UTC\", \"/tmp/e1-fr-rehearsal-edo7i4od/positive_outcome_B_recovery_from_stream/scratch/recovery.sqlite now\"]"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "gate": "FR9.bounds",
+   "status": "PASS",
+   "detail": "GPU-held 1575 s (ceiling 2700); release request \u2192 session closed 32 s (timeout 300); escalations []; warnings []"
+  },
+  {
+   "gate": "S.config_identity",
+   "status": "PASS",
+   "detail": "identity.json: PASS; 0 normalized field(s), each listed in the identity report"
+  },
+  {
+   "gate": "S.binary_unchanged",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.launcher_recovery",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.completeness_v2",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.extract",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.nsys_validation",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.closeout",
+   "status": "PASS",
+   "detail": "exit code 0"
+  }
+ ]
+}

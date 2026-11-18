@@ -1,0 +1,397 @@
+{
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/e1_v2_forced_release",
+ "verdict": "FAIL",
+ "gates": [
+  {
+   "gate": "FR0.record",
+   "status": "PASS",
+   "detail": "lifecycle.json schema 1 phase stop_failed"
+  },
+  {
+   "gate": "H.host_identity",
+   "status": "INCONCLUSIVE",
+   "detail": "lifecycle record has no host; reservation node host not available",
+   "data": {
+    "sources": {
+     "lifecycle.host": null,
+     "lifecycle.host_identity.hostname": null,
+     "run_log": "pod4-gb300-10-tray16-f3",
+     "reservation.node": null,
+     "gpu_observations": [
+      "pod4-gb300-10-tray16-f3"
+     ]
+    }
+   }
+  },
+  {
+   "gate": "FR1.one_stop_request",
+   "status": "PASS",
+   "detail": "requests_sent=1, duplicates suppressed=0, stop_requested phases=1, http='ok' returned 03:22:42Z (release requested -; an error is accepted only at or after the release), API-server 'Stopping profiler' lines=1"
+  },
+  {
+   "gate": "FR2.registered_trigger",
+   "status": "FAIL",
+   "detail": "not exactly the one registered line accepted during the import; control commands recorded [('note V1 operator probe: control file read', 'noted', 'stop_accepted'), ('extend 60 V1 operator probe: extension logged', 'hard deadline extended by 60 s (operator); GPU-held ceiling unchanged at 1794973153', 'stop_accepted')]; expected exactly one: 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)' \u2192 'release requested' in phase 'importing'"
+  },
+  {
+   "gate": "FR3.import_active_at_release",
+   "status": "FAIL",
+   "detail": "release request, SIGTERM time or importing phase missing; controller: release requested - in phase None, import None%, Nsight alive=None, report written=None; importing since 03:22:16Z, API-server SIGTERM at None (-), report at -; probe: 0 sample(s), phase importing in \u2265 2=False, importer identity verified from /proc=False, import in progress confirmed=False, trigger written -",
+   "data": {
+    "release_context": {},
+    "api_server_sigterm_at": null,
+    "importing_at": 1794972136.3510003,
+    "report_written_at": null,
+    "probe": null
+   }
+  },
+  {
+   "gate": "FR3b.importer_checked_after_signal",
+   "status": "FAIL",
+   "detail": "after the SIGTERM at -: controller checks (label, identity intact, /proc state, phase) []; probe checks (seconds after, identity intact, /proc state, phase) []; both sources are required, the importer's state itself is evidence for the outcome, not a pass condition",
+   "data": {
+    "controller": [],
+    "probe": []
+   }
+  },
+  {
+   "gate": "FR4.no_signal_to_importer",
+   "status": "FAIL",
+   "detail": "Nsight pid 1048204; recorded server pids [1048248, 1048837, 1049180, 1049181, 1049182, 1049183]; signals [(1048248, 'SIGTERM', 'shutdown')]; release signals 0; API-server SIGTERM recorded with its exact time and matching action=False ({}); disallowed []"
+  },
+  {
+   "gate": "FR5.gpu_release_within_deadline",
+   "status": "FAIL",
+   "detail": "2 independent observation(s) on None; release requested -; GPUs last observed held -, first observed released - \u2192 release in (-, -], at most None s after the request (deadline 90 s); held observations before the request: 0; held after the first released one: 0; controller time, separate: 03:22:46Z",
+   "data": {
+    "last_held": null,
+    "first_released": null,
+    "release_requested_at": null,
+    "controller_released_at": 1794972166.7016323
+   }
+  },
+  {
+   "gate": "FR6.session_ended",
+   "status": "PASS",
+   "detail": "final phase 'stop_failed', Nsight alive=False, session closed 03:22:48Z \u2192 outcome B: no report; recovery from the preserved stream"
+  },
+  {
+   "gate": "FR7.stream_final_stable_durable",
+   "status": "PASS",
+   "detail": "controller's final record (taken 03:22:49Z, after session close): 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/e1_v2_forced_release/preserved/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm: 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f; two full reads identical=True; equals the final record=True; tray original present and equal=True; 0 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
+   "data": {
+    "sha256": "8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f",
+    "size": 347628953,
+    "observations": null
+   }
+  },
+  {
+   "gate": "FR8.offline_import",
+   "status": "PASS",
+   "detail": "offline import of the durable stream rc 0 in 27 s \u2192 393019064 B"
+  },
+  {
+   "gate": "FR8b.recovered_trace_complete",
+   "status": "PASS",
+   "detail": "recovered trace: 2160 iterations (band [2100, 2250]), NVTX forward ranges 8640, kernel rows 12250832 (band [11638290, 12863373]), kernels per process [3062168, 3062168, 3062168, 3064328], kernel boundaries [89415511, 50605741376] ns; absolute checks {'iterations_in_band': True, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': True, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; in-session export exists \u2192 equality checks {'kernel_rows': True, 'nvtx_forward_ranges': True, 'distinct_iterations': True, 'iteration_index_range': True, 'kernel_boundaries_ns': True, 'nvtx_forward_boundaries_ns': True, 'kernels_per_process': True, 'every_table_row_count': True, 'capture_metadata': True, 'export_product_and_schema': True}, differing table row counts {}",
+   "data": {
+    "absolute": {
+     "iterations_in_band": true,
+     "nvtx_is_per_iteration_multiple": true,
+     "kernel_rows_in_band": true,
+     "four_processes_with_kernels": true,
+     "capture_boundaries_present": true
+    },
+    "relative": {
+     "kernel_rows": true,
+     "nvtx_forward_ranges": true,
+     "distinct_iterations": true,
+     "iteration_index_range": true,
+     "kernel_boundaries_ns": true,
+     "nvtx_forward_boundaries_ns": true,
+     "kernels_per_process": true,
+     "every_table_row_count": true,
+     "capture_metadata": true,
+     "export_product_and_schema": true
+    },
+    "table_row_differences": {},
+    "recovered": {
+     "nvtx_forward_ranges": 8640,
+     "kernel_rows": 12250832,
+     "kernel_span_ms": 50516.325865,
+     "ok": true,
+     "distinct_iterations": 2160,
+     "iteration_index_range": [
+      181,
+      2342
+     ],
+     "nvtx_forward_boundaries_ns": [
+      96784576,
+      50602186272
+     ],
+     "kernel_boundaries_ns": [
+      89415511,
+      50605741376
+     ],
+     "kernels_per_process": [
+      3062168,
+      3062168,
+      3062168,
+      3064328
+     ],
+     "metadata": {
+      "ANALYSIS_DETAILS": [
+       "[281474976710656, 51098964544, 2966194367482784, 2966245466447328]"
+      ],
+      "META_DATA_CAPTURE": [
+       "[\"ALLOW_SEND_ONLY_MODE\", \"false\"]",
+       "[\"APPLICATION_PID\", \"0\"]",
+       "[\"BANDWIDTH_RATE_HZ\", \"0\"]",
+       "[\"BANDWIDTH_VERSION\", \"0\"]",
+       "[\"CAPTURE_EVENT_TYPE\", \"Cuda\"]",
+       "[\"CAPTURE_EVENT_TYPE\", \"NvtxEvents\"]",
+       "[\"COLLECT_GPU_CTX_SW_TRACE\", \"false\"]",
+       "[\"COLLECT_GPU_MEMORY_USAGE\", \"false\"]",
+       "[\"COLLECT_OPENSHMEM_TRACE\", \"false\"]",
+       "[\"COLLECT_SLI_EVENTS\", \"false\"]",
+       "[\"COLLECT_THREAD_STATE_TRACE\", \"false\"]",
+       "[\"COLLECT_UVM_CPU_PAGE_FAULTS\", \"false\"]",
+       "[\"COLLECT_UVM_GPU_PAGE_FAULTS\", \"false\"]",
+       "[\"COLLECT_VSYNC\", \"false\"]",
+       "[\"COLLECT_WDDM_EVENTS\", \"false\"]",
+       "[\"CUDA_FLUSH_ON_CUDA_PROFILER_STOP\", \"false\"]",
+       "[\"CUDA_FLUSH_PERIOD\", \"0\"]",
+       "[\"CUDA_FLUSH_PERIODICALLY\", \"true\"]",
+       "[\"CUDA_GRAPH_TRACE_OPTIONS:MODE\", \"Node\"]",
+       "[\"CUDA_GRAPH_TRACE_OPTIONS:TRACE_DEVICE_GRAPH_LAUNCH\", \"false\"]",
+       "[\"CUDA_SKIP_SOME_API_CALLS\", \"true\"]",
+       "[\"CUDA_TRACE_SCOPE\", \"ProcessTree\"]",
+       "[\"DEVICE_DISPLAY_NAME\", \"pod4-gb300-10-tray16-f3\"]",
+       "[\"DEVICE_ID\", \"Local (CLI)\"]",
+       "[\"DEVICE_TYPE\", \"Unix\"]",
+       "[\"DISABLE_TIME_SYNC\", \"false\"]",
+       "[\"FORCE_ARCH_TIMER\", \"false\"]",
+       "[\"HAS_ANNOTATIONS\", \"false\"]",
+       "[\"HOTKEY_ENABLED\", \"false\"]",
+       "[\"HOTKEY_VALUE\", \"0\"]",
+       "[\"INCLUDE_CHILDREN\", \"true\"]",
+       "[\"IN_APP_FREQ_MODE\", \"false\"]",
+       "[\"LAUNCH_AS_ROOT\", \"false\"]",
+       "[\"NVTX_OPTIONS:NVTX_DOMAIN_FILTER_MODE_INCLUDE\", \"false\"]",
+       "[\"NVTX_OPTIONS:NVTX_DOMAIN_FILTER_STRING\", \"\"]",
+       "[\"NVTX_OPTIONS:TRACE_NVTX_RANGE_HOT_KEY\", \"false\"]",
+       "[\"NVTX_OPTIONS:TRACE_NVTX_RANGE_HOT_KEY_VALUE\", \"0\"]",
+       "[\"PACKAGE_NAME\", \"\"]",
+       "[\"POWER_RATE_SCAN_FREQ\", \"50\"]",
+       "[\"PROCESS_0:ARGUMENT_0\", \"-m\"]",
+       "[\"PROCESS_0:ARGUMENT_1\", \"vllm.entrypoints.cli.main\"]",
+       "[\"PROCESS_0:ARGUMENT_10\", \"--tensor-parallel-size\"]",
+       "[\"PROCESS_0:ARGUMENT_11\", \"4\"]",
+       "[\"PROCESS_0:ARGUMENT_12\", \"--data-parallel-size\"]",
+       "[\"PROCESS_0:ARGUMENT_13\", \"1\"]",
+       "[\"PROCESS_0:ARGUMENT_14\", \"--max-num-batched-tokens\"]",
+       "[\"PROCESS_0:ARGUMENT_15\", \"16384\"]",
+       "[\"PROCESS_0:ARGUMENT_16\", \"--enable-chunked-prefill\"]",
+       "[\"PROCESS_0:ARGUMENT_17\", \"--enable-prompt-tokens-details\"]",
+       "[\"PROCESS_0:ARGUMENT_18\", \"--gpu-memory-utilization\"]",
+       "[\"PROCESS_0:ARGUMENT_19\", \"0.9\"]",
+       "[\"PROCESS_0:ARGUMENT_2\", \"serve\"]",
+       "[\"PROCESS_0:ARGUMENT_20\", \"--enable-server-load-tracking\"]",
+       "[\"PROCESS_0:ARGUMENT_21\", \"--enable-logging-iteration-details\"]",
+       "[\"PROCESS_0:ARGUMENT_22\", \"--served-model-name\"]",
+       "[\"PROCESS_0:ARGUMENT_23\", \"dsv41-flash-1017\"]",
+       "[\"PROCESS_0:ARGUMENT_24\", \"--tokenizer-mode\"]",
+       "[\"PROCESS_0:ARGUMENT_25\", \"deepseek_v41\"]",
+       "[\"PROCESS_0:ARGUMENT_26\", \"--attention-config\"]",
+       "[\"PROCESS_0:ARGUMENT_27\", \"{\\\"backend\\\":\\\"FLASHINFER_MLA_SPARSE_DSV41\\\",\\\"indexer_kv_dtype\\\":\\\"mxfp4\\\",\\\"indexer_sparse_logits\\\":true}\"]",
+       "[\"PROCESS_0:ARGUMENT_28\", \"--kv-cache-dtype\"]",
+       "[\"PROCESS_0:ARGUMENT_29\", \"fp8\"]",
+       "[\"PROCESS_0:ARGUMENT_3\", \"/mnt/shared/weights/DeepSeek-V4.1-Flash-1017\"]",
+       "[\"PROCESS_0:ARGUMENT_30\", \"--max-num-seqs\"]",
+       "[\"PROCESS_0:ARGUMENT_31\", \"128\"]",
+       "[\"PROCESS_0:ARGUMENT_32\", \"--engram-config\"]",
+       "[\"PROCESS_0:ARGUMENT_33\", \"{\\\"cpu_offload\\\":true}\"]",
+       "[\"PROCESS_0:ARGUMENT_34\", \"--max-model-len\"]",
+       "[\"PROCESS_0:ARGUMENT_35\", \"131072\"]",
+       "[\"PROCESS_0:ARGUMENT_36\", \"--language-model-only\"]",
+       "[\"PROCESS_0:ARGUMENT_37\", \"--enable-return-routed-experts\"]",
+       "[\"PROCESS_0:ARGUMENT_38\", \"--profiler-config.profiler=cuda\"]",
+       "[\"PROCESS_0:ARGUMENT_4\", \"--api-server-count\"]",
+       "[\"PROCESS_0:ARGUMENT_5\", \"1\"]",
+       "[\"PROCESS_0:ARGUMENT_6\", \"--host\"]",
+       "[\"PROCESS_0:ARGUMENT_7\", \"127.0.0.1\"]",
+       "[\"PROCESS_0:ARGUMENT_8\", \"--port\"]",
+       "[\"PROCESS_0:ARGUMENT_9\", \"8000\"]",
+       "[\"PROCESS_0:COLLECT_CPU_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_CUDA_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_DX11_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_DX12_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_GL_WORKLOAD\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_GPU_MEMORY_USAGE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_NVMEDIA_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_NVTX_TRACE\", \"true\"]",
+       "[\"PROCESS_0:COLLECT_UVM_CPU_PAGE_FAULTS\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_UVM_GPU_PAGE_FAULTS\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_VIDEO_API_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_VULKAN_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COMMAND\", \"/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python\"]",
+       "[\"PROCESS_0:CUDA_FLUSH_ON_CUDA_PROFILER_STOP\", \"false\"]",
+       "[\"PROCESS_0:CUDA_FLUSH_PERIOD\", \"0\"]",
+       "[\"PROCESS_0:CUDA_FLUSH_PERIODICALLY\", \"false\"]",
+       "[\"PROCESS_0:CUDA_SKIP_SOME_API_CALLS\", \"false\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_CACHE_PATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_DEVICE_ORDER=\\\"PCI_BUS_ID\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_HOME=\\\"/usr/local/cuda-13.1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_VISIBLE_DEVICES=\\\"0,1,2,3\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"DBUS_SESSION_BUS_ADDRESS=\\\"unix:path=/run/user/1000/bus\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"DG_JIT_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"E1_REPO=\\\"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"FLASHINFER_WORKSPACE_BASE=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"GB300_ROOT=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"HF_HOME=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"HF_HUB_OFFLINE=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"HOME=\\\"/mnt/shared/home/dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LANG=\\\"C.UTF-8\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LD_LIBRARY_PATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/lib/python3.12/site-packages/torch/lib:\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LD_PRELOAD=\\\"{}\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LOGNAME=\\\"dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"MOESIM_CUPTI_BUILD_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/cupti-ext\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"OLDPWD=\\\"/home/dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"PATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin:/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin:/usr/local/cuda-13.1/bin:/mnt/shared/home/dc/.local/bin:/mnt/shared/home/dc/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"PWD=\\\"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"PYTHONPATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SHELL=\\\"/bin/bash\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SHLVL=\\\"2\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SSH_CLIENT=\\\"10.13.84.2 38550 22\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SSH_CONNECTION=\\\"10.13.84.2 38550 10.13.84.37 22\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TERM=\\\"tmux-256color\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TERM_PROGRAM=\\\"tmux\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TERM_PROGRAM_VERSION=\\\"3.4\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TMUX=\\\"/tmp/tmux-1000/default,1003919,0\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TMUX_PANE=\\\"%0\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TORCHINDUCTOR_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TORCH_CUDA_ARCH_LIST=\\\"10.3\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TORCH_EXTENSIONS_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/torch-extensions\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TRITON_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"USER=\\\"dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV=\\\"/mnt/shared/home/dc/.local/bin/uv\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/uv\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV_NO_SYNC=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV_RUN_RECURSION_DEPTH=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_PROFILE_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vibesim-profiler\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_PROFILE_DB=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/db/profile-gb300.db\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_PROFILE_RUNTIME=\\\"host\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_VLLM_FORK_ROOT=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/vllm-shim\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_CACHE_ROOT=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_ENGINE_READY_TIMEOUT_S=\\\"3600\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_LOGGING_LEVEL=\\\"INFO\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_NVTX_SCOPES_FOR_PROFILING=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_SERVER_DEV_MODE=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_RUNTIME_DIR=\\\"/run/user/1000\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_SESSION_CLASS=\\\"user\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_SESSION_ID=\\\"9575\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_SESSION_TYPE=\\\"tty\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"_=\\\"/mnt/shared/home/dc/.local/bin/uv\\\"\"]",
+       "[\"PROCESS_0:HOW_TO_ATTACH\", \"LaunchAnother\"]",
+       "[\"PROCESS_0:LAUNCH_AS_ROOT\", \"false\"]",
+       "[\"PROCESS_0:PID\", \"0\"]",
+       "[\"PROCESS_0:USER_NAME\", \"\"]",
+       "[\"PROCESS_0:WORKING_DIR\", \"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle\"]",
+       "[\"PROFILING_SESSION_ID\", \"\"]",
+       "[\"PROFILING_SESSION_UUID\", \"b1b54ea5-1939-4f41-828e-61b72d6bfd04\"]",
+       "[\"RATE_HZ\", \"0\"]",
+       "[\"RESUME\", \"false\"]",
+       "[\"RUN_DURATION_FRAMES\", \"0\"]",
+       "[\"RUN_DURATION_MS\", \"51099\"]",
+       "[\"SAMPLE_ALL_TASKS\", \"false\"]",
+       "[\"SHOW_BACKTRACE\", \"false\"]",
+       "[\"START_DELAY_MS\", \"0\"]",
+       "[\"START_FRAME_VALUE\", \"0\"]",
+       "[\"START_TRIGGER\", \"Immediate\"]",
+       "[\"STOP_TRIGGER\", \"Delayed\"]",
+       "[\"SYMBOL_RESOLUTION_OPTIONS:RESOLVE_SYMBOLS\", \"true\"]",
+       "[\"THREAD_STATE_SCAN_FREQ\", \"50\"]",
+       "[\"TRACE_AFTER_FORK_BEFORE_EXEC\", \"true\"]",
+       "[\"TRACE_ALL_TASKS\", \"false\"]",
+       "[\"USE_DWARF\", \"false\"]",
+       "[\"USE_FRAME_POINTERS\", \"false\"]",
+       "[\"USE_LBRS\", \"false\"]",
+       "[\"USE_LINUX_PERF\", \"false\"]",
+       "[\"USE_UNWIND_TABLES\", \"false\"]"
+      ],
+      "TARGET_INFO_SESSION_START_TIME": [
+       "[1794972021833377023, \"2026-11-18T03:20:21\", \"2026-11-18T03:20:21\", 2966194367482784]"
+      ],
+      "META_DATA_EXPORT": [
+       "[\"EXPORT_ARCH\", \"a64\"]",
+       "[\"EXPORT_CONFIG_TIME_SHIFT\", \"0\"]",
+       "[\"EXPORT_HOST\", \"pod4-gb300-10-tray16-f3\"]",
+       "[\"EXPORT_PARAM_APPEND\", \"false\"]",
+       "[\"EXPORT_PARAM_INPUT_FILE\", \"recovery.nsys-rep\"]",
+       "[\"EXPORT_PARAM_INPUT_PATH\", \"/tmp/v2-recovery-e1_v2_forced_release/recovery.nsys-rep\"]",
+       "[\"EXPORT_PARAM_INPUT_PATH_ABS\", \"/tmp/v2-recovery-e1_v2_forced_release/recovery.nsys-rep\"]",
+       "[\"EXPORT_PARAM_LAZY\", \"true\"]",
+       "[\"EXPORT_PARAM_OUTPUT_FILE\", \"recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/v2-recovery-e1_v2_forced_release/recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OUTPUT_PATH_ABS\", \"/tmp/v2-recovery-e1_v2_forced_release/recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OVERWRITE\", \"true\"]",
+       "[\"EXPORT_PARAM_TABLES_TO_EXPORT\", \"\"]",
+       "[\"EXPORT_PARAM_TIMES_TO_EXPORT\", \"\"]",
+       "[\"EXPORT_PARAM_TIME_NORMALIZE\", \"false\"]",
+       "[\"EXPORT_PARAM_TIME_SHIFT\", \"0\"]",
+       "[\"EXPORT_PLATFORM\", \"linux-desktop\"]",
+       "[\"EXPORT_PRODUCT_DATE\", \"2025.6\"]",
+       "[\"EXPORT_PRODUCT_NAME\", \"NVIDIA Nsight Systems\"]",
+       "[\"EXPORT_PRODUCT_VERSION\", \"2025.6.3.541\"]",
+       "[\"EXPORT_SCHEMA_VERSION\", \"3.24.8\"]",
+       "[\"EXPORT_SCHEMA_VERSION_CKSUM\", \"1897586836 176483\"]",
+       "[\"EXPORT_SCHEMA_VERSION_MAJOR\", \"3\"]",
+       "[\"EXPORT_SCHEMA_VERSION_MICRO\", \"8\"]",
+       "[\"EXPORT_SCHEMA_VERSION_MINOR\", \"24\"]",
+       "[\"EXPORT_TIME\", \"61.10 sec\"]",
+       "[\"EXPORT_TIME_LOCAL\", \"2026-11-18T13:23:03 +0000 UTC\"]",
+       "[\"EXPORT_TIME_UTC\", \"2026-11-18T13:23:03\"]",
+       "[\"EXPORT_USER\", \"dc\"]"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "gate": "FR9.bounds",
+   "status": "FAIL",
+   "detail": "GPU-held 1713 s (ceiling 2700.0); release request \u2192 session closed None s (timeout 300.0); escalations []; warnings []"
+  },
+  {
+   "gate": "S.config_identity",
+   "status": "PASS",
+   "detail": "identity_v2_e1_v2_forced_release.json: PASS; 30 normalized field(s), each listed in the identity report"
+  },
+  {
+   "gate": "S.binary_unchanged",
+   "status": "FAIL",
+   "detail": "exit code 1"
+  },
+  {
+   "gate": "S.launcher_recovery",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.completeness_v2",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.extract",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.nsys_validation",
+   "status": "PASS",
+   "detail": "exit code 0"
+  }
+ ]
+}

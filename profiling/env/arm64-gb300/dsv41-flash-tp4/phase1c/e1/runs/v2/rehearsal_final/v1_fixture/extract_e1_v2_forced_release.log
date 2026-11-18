@@ -1,0 +1,7 @@
+[e1_v2_forced_release] inputs verified in 0s
+[e1_v2_forced_release] parsed.json: 2160 iterations, 207 kernel names, devices [0, 1, 2, 3]
+[e1_v2_forced_release] kernels: 12250832 rows sorted in 1s
+[e1_v2_forced_release] host_timeline: 3599234 api calls
+[e1_v2_forced_release] 0/2160 iterations, 3s
+[e1_v2_forced_release] 2000/2160 iterations, 6s
+[e1_v2_forced_release] done: 2160 iterations, 8640 rank rows, 1067980 collective rows, unaligned 0, 7s

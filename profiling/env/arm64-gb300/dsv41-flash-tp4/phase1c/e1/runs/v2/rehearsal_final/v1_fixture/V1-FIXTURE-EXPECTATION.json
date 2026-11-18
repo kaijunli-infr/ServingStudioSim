@@ -1,0 +1,27 @@
+{
+ "ok": true,
+ "lines": [
+  "PASS  verdict_is_not_pass: V2 verdict on the V1 fixture: FAIL",
+  "PASS  v1_had_an_import_but_no_forced_release: import phase recorded=True; release requested at None; API-server SIGTERM record None; release-gpus control lines []; release signals 0",
+  "PASS  forced_release_gate_not_pass[FR2.registered_trigger]: FAIL",
+  "PASS  forced_release_gate_not_pass[FR3.import_active_at_release]: FAIL",
+  "PASS  forced_release_gate_not_pass[FR3b.importer_checked_after_signal]: FAIL",
+  "PASS  forced_release_gate_not_pass[FR4.no_signal_to_importer]: FAIL",
+  "PASS  forced_release_gate_not_pass[FR5.gpu_release_within_deadline]: FAIL",
+  "PASS  forced_release_gate_not_pass[FR9.bounds]: FAIL",
+  "PASS  verdict_from_forced_release_gates_alone: FAIL: with every other gate set aside the validation still stops, because no release was forced during the import",
+  "PASS  real_data_gate_pass[FR0.record]: PASS",
+  "PASS  real_data_gate_pass[FR1.one_stop_request]: PASS",
+  "PASS  real_data_gate_pass[FR6.session_ended]: PASS",
+  "PASS  real_data_gate_pass[FR7.stream_final_stable_durable]: PASS",
+  "PASS  real_data_gate_pass[FR8.offline_import]: PASS",
+  "PASS  real_data_gate_pass[FR8b.recovered_trace_complete]: PASS",
+  "PASS  real_data_gate_pass[S.launcher_recovery]: PASS",
+  "PASS  real_data_gate_pass[S.completeness_v2]: PASS",
+  "PASS  real_data_gate_pass[S.extract]: PASS",
+  "PASS  real_data_gate_pass[S.nsys_validation]: PASS",
+  "PASS  other_gate_explained[H.host_identity]: INCONCLUSIVE: the V1 record is schema 1 (no host field) and V1 wrote no reservation record",
+  "PASS  other_gate_explained[S.binary_unchanged]: FAIL: V1 has neither binary record, and its launcher rebuilt the executable (ADDENDUM-session-runner-rebuild.md)",
+  "# V1 fixture expectation: MET (verdict FAIL; 8 of 19 gates not PASS)"
+ ]
+}

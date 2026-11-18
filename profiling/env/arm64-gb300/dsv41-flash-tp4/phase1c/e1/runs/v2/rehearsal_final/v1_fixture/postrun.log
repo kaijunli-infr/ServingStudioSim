@@ -1,0 +1,67 @@
+# postrun e1_v2_forced_release 2026-11-18T13:16:53Z on pod4-gb300-10-tray16-f3; CUDA_VISIBLE_DEVICES=''
+[e1_v1_lifecycle] rc=0 end 2026-11-18T03:27:45Z
+[e1_v1_lifecycle] shutdown trigger at server-log line 7713; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+[e1_v1_lifecycle] stop timeline: 03:21:12 [api_router.py:31] Stopping profiler → 03:22:42 [api_router.py:33] Profiler stopped; Generating '/tmp/nsys-report-6835.qdstrm'
+## A. durable copy of the preserved stream (the tray original stays)
+PASS  durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/e1_v2_forced_release/preserved/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm: 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f = tray original (retained)
+## B. configuration identity under the normalization policy (launch record + profile config vs the accepted e1_nsys_val run)
+identity rc=0 (30 normalized fields listed in cpu/identity_v2_e1_v2_forced_release.txt)
+## C. outcome: lifecycle phase stop_failed
+outcome B (or an unfinished finalisation): recovering the profile from the durable stream through the launcher (CPU)
+[profile] parsed 2160 iteration(s), 12250832 kernel row(s) → parsed.json
+[profile] host 6 thread(s), 185583 nvtx range(s), 3599234 api call(s) → host_timeline.json
+[alignment] profiling complete: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/e1_v2_forced_release/profile/parsed.json
+[alignment] inspect parsed.json, then create timing_predict.yaml
+launcher recovery rc=0
+## D. scientific checkers on the profile
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95
+RESULT PASS [checker v2.0.0]
+completeness_v2 rc=0
+[e1_v2_forced_release] 2000/2160 iterations, 6s
+[e1_v2_forced_release] done: 2160 iterations, 8640 rank rows, 1067980 collective rows, unaligned 0, 7s
+extract rc=0
+RESULT PASS [checker v2.0.0]
+RESULT PASS
+nsys_validation rc=0
+FAIL  driver.record_present: driver record missing or unreadable
+FAIL  driver.sha256_before_is_pinned: before the launcher: None
+FAIL  driver.sha256_after_is_pinned: after the launcher: None
+FAIL  driver.unchanged: unchanged=None
+FAIL  driver.file_identity_unchanged: inode/mtime/size before None, after None
+FAIL  driver.no_compiling_lines: cargo 'Compiling' lines in the run log: None
+FAIL  launcher.record_present: launcher record missing or unreadable
+FAIL  launcher.prebuilt_mode: mode None
+FAIL  launcher.sha256_before_is_pinned: verified before the launch: None (record's pin None)
+FAIL  launcher.sha256_after_is_pinned: verified after the launch: None
+FAIL  launcher.unchanged: unchanged=None
+FAIL  launcher.cargo_not_consulted: cargo_consulted=None
+FAIL  launcher.build_tool_guard_installed: guard installed=None active=None
+FAIL  launcher.no_build_tool_requested: blocked build-tool requests: None
+# load-generator binary gate: 14 FAIL of 16 → FAIL
+load-generator executable = pinned bytes before and after the launch, prebuilt path, nothing compiled, no build tool requested (driver record + launcher record): rc=1
+## E. frozen V2 gates
+PASS         FR0.record: lifecycle.json schema 1 phase stop_failed
+INCONCLUSIVE H.host_identity: lifecycle record has no host; reservation node host not available
+PASS         FR1.one_stop_request: requests_sent=1, duplicates suppressed=0, stop_requested phases=1, http='ok' returned 03:22:42Z (release requested -; an error is accepted only at or after the release), API-server 'Stopping profiler' lines=1
+FAIL         FR2.registered_trigger: not exactly the one registered line accepted during the import; control commands recorded [('note V1 operator probe: control file read', 'noted', 'stop_accepted'), ('extend 60 V1 operator probe: extension logged', 'hard deadline extended by 60 s (operator); GPU-held ceiling unchanged at 1794973153', 'stop_accepted')]; expected exactly one: 'release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)' → 'release requested' in phase 'importing'
+FAIL         FR3.import_active_at_release: release request, SIGTERM time or importing phase missing; controller: release requested - in phase None, import None%, Nsight alive=None, report written=None; importing since 03:22:16Z, API-server SIGTERM at None (-), report at -; probe: 0 sample(s), phase importing in ≥ 2=False, importer identity verified from /proc=False, import in progress confirmed=False, trigger written -
+FAIL         FR3b.importer_checked_after_signal: after the SIGTERM at -: controller checks (label, identity intact, /proc state, phase) []; probe checks (seconds after, identity intact, /proc state, phase) []; both sources are required, the importer's state itself is evidence for the outcome, not a pass condition
+FAIL         FR4.no_signal_to_importer: Nsight pid 1048204; recorded server pids [1048248, 1048837, 1049180, 1049181, 1049182, 1049183]; signals [(1048248, 'SIGTERM', 'shutdown')]; release signals 0; API-server SIGTERM recorded with its exact time and matching action=False ({}); disallowed []
+FAIL         FR5.gpu_release_within_deadline: 2 independent observation(s) on None; release requested -; GPUs last observed held -, first observed released - → release in (-, -], at most None s after the request (deadline 90 s); held observations before the request: 0; held after the first released one: 0; controller time, separate: 03:22:46Z
+PASS         FR6.session_ended: final phase 'stop_failed', Nsight alive=False, session closed 03:22:48Z → outcome B: no report; recovery from the preserved stream
+PASS         FR7.stream_final_stable_durable: controller's final record (taken 03:22:49Z, after session close): 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/e1_v2_forced_release/preserved/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm: 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f; two full reads identical=True; equals the final record=True; tray original present and equal=True; 0 earlier observation(s) kept; this is not a completeness statement (FR8b decides)
+PASS         FR8.offline_import: offline import of the durable stream rc 0 in 27 s → 393019064 B
+PASS         FR8b.recovered_trace_complete: recovered trace: 2160 iterations (band [2100, 2250]), NVTX forward ranges 8640, kernel rows 12250832 (band [11638290, 12863373]), kernels per process [3062168, 3062168, 3062168, 3064328], kernel boundaries [89415511, 50605741376] ns; absolute checks {'iterations_in_band': True, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': True, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; in-session export exists → equality checks {'kernel_rows': True, 'nvtx_forward_ranges': True, 'distinct_iterations': True, 'iteration_index_range': True, 'kernel_boundaries_ns': True, 'nvtx_forward_boundaries_ns': True, 'kernels_per_process': True, 'every_table_row_count': True, 'capture_metadata': True, 'export_product_and_schema': True}, differing table row counts {}
+FAIL         FR9.bounds: GPU-held 1713 s (ceiling 2700.0); release request → session closed None s (timeout 300.0); escalations []; warnings []
+PASS         S.config_identity: identity_v2_e1_v2_forced_release.json: PASS; 30 normalized field(s), each listed in the identity report
+FAIL         S.binary_unchanged: exit code 1
+PASS         S.launcher_recovery: exit code 0
+PASS         S.completeness_v2: exit code 0
+PASS         S.extract: exit code 0
+PASS         S.nsys_validation: exit code 0
+# V2 forced-release gates e1_v2_forced_release: 19 gates, 7 FAIL, 1 INCONCLUSIVE → FAIL → STOP (no retry, no advance)
+## verdict
+V2 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/cpu/V2-GATES.txt). STOP: no retry, no advance; everything stays preserved.
+gpu memory after the post-run (MiB): 0 0 0 0 

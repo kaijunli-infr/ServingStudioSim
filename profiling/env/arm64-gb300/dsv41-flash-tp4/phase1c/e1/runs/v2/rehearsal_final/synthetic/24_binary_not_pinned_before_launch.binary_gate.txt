@@ -1,0 +1,16 @@
+PASS  pin.present: pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+PASS  driver.record_present: driver record (binary_check.json) readable
+FAIL  driver.sha256_before_is_pinned: before the launcher: 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549
+FAIL  driver.sha256_after_is_pinned: after the launcher: 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549
+PASS  driver.unchanged: unchanged=True
+PASS  driver.file_identity_unchanged: inode/mtime/size before '1234 1794990000 9000000', after '1234 1794990000 9000000'
+PASS  driver.no_compiling_lines: cargo 'Compiling' lines in the run log: 0
+PASS  launcher.record_present: launcher record (frontend_binary.json) readable
+PASS  launcher.prebuilt_mode: mode 'prebuilt (no compilation in this launch path)'
+FAIL  launcher.sha256_before_is_pinned: verified before the launch: 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549 (record's pin 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2)
+FAIL  launcher.sha256_after_is_pinned: verified after the launch: 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549
+PASS  launcher.unchanged: unchanged=True
+PASS  launcher.cargo_not_consulted: cargo_consulted=False
+PASS  launcher.build_tool_guard_installed: guard installed=True active=True
+PASS  launcher.no_build_tool_requested: blocked build-tool requests: []
+# load-generator binary gate: 4 FAIL of 15 → FAIL

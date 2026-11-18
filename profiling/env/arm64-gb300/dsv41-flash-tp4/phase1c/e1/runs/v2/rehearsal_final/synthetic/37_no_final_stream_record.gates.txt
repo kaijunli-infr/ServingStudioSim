@@ -1,0 +1,21 @@
+PASS         FR0.record: lifecycle.json schema 2 phase stop_failed
+PASS         H.host_identity: launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 4 GPU observation(s)
+PASS         FR1.one_stop_request: requests_sent=1, duplicates suppressed=0, stop_requested phases=1, http='error: connection reset' returned 08:26:10Z (release requested 08:26:08Z; an error is accepted only at or after the release), API-server 'Stopping profiler' lines=1
+PASS         FR2.registered_trigger: the registered line, accepted in phase 'importing'; control commands recorded [('release-gpus V2 forced release during import', 'release requested', 'importing')]; expected exactly one: 'release-gpus V2 forced release during import' → 'release requested' in phase 'importing'
+PASS         FR3.import_active_at_release: controller: release requested 08:26:08Z in phase 'importing', import 12%, Nsight alive=True, report written=False; importing since 08:26:05Z, API-server SIGTERM at 1800001568.200 (08:26:08Z), report at -; probe: 2 sample(s), phase importing in ≥ 2=True, importer identity verified from /proc=True, import in progress confirmed=True, trigger written 08:26:07Z
+PASS         FR3b.importer_checked_after_signal: after the SIGTERM at 08:26:08Z: controller checks (label, identity intact, /proc state, phase) [('after the API-server SIGTERM', True, 'S', 'importing')]; probe checks (seconds after, identity intact, /proc state, phase) [(0.4, True, 'S', 'importing')]; both sources are required, the importer's state itself is evidence for the outcome, not a pass condition
+PASS         FR4.no_signal_to_importer: Nsight pid 4000; recorded server pids [4100, 4101, 4102]; signals [(4100, 'SIGTERM', 'operator: release-gpus V2 forced release during import'), (4101, 'SIGKILL', 'operator: release-gpus V2 forced release during import')]; release signals 2; API-server SIGTERM recorded with its exact time and matching action=True ({'at': 1800001568.2, 'pid': 4100, 'outcome': 'signalled'}); disallowed []
+PASS         FR5.gpu_release_within_deadline: 4 independent observation(s) on pod4-gb300-10-tray16-f3; release requested 08:26:08Z; GPUs last observed held 08:26:06Z, first observed released 08:26:14Z → release in (08:26:06Z, 08:26:14Z], at most 6.0 s after the request (deadline 90 s); held observations before the request: 2; held after the first released one: 0; controller time, separate: 08:26:15Z
+PASS         FR6.session_ended: final phase 'stop_failed', Nsight alive=False, session closed 08:26:40Z → outcome B: no report; recovery from the preserved stream
+FAIL         FR7.stream_final_stable_durable: controller has no final stream record: None
+FAIL         FR8.offline_import: not attempted: FR7 did not establish a final, stable, durable stream
+FAIL         FR8b.recovered_trace_complete: not attempted (FR8)
+PASS         FR9.bounds: GPU-held 1575 s (ceiling 2700); release request → session closed 32 s (timeout 300); escalations []; warnings []
+PASS         S.config_identity: identity.json: PASS; 0 normalized field(s), each listed in the identity report
+PASS         S.binary_unchanged: exit code 0
+PASS         S.launcher_recovery: exit code 0
+PASS         S.completeness_v2: exit code 0
+PASS         S.extract: exit code 0
+PASS         S.nsys_validation: exit code 0
+PASS         S.closeout: exit code 0
+# V2 forced-release gates e1_v2_forced_release: 20 gates, 3 FAIL, 0 INCONCLUSIVE → FAIL → STOP (no retry, no advance)

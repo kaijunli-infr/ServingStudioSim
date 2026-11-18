@@ -1,0 +1,1037 @@
+{
+ "ok": true,
+ "fixtures": [
+  {
+   "index": 1,
+   "name": "positive_outcome_A_importer_finishes",
+   "category": "positive",
+   "why": "import verified active by controller and probe immediately before the SIGTERM, signal time recorded, importer identity intact after it, GPUs released 6 s after the request, the importer then wrote its report; offline recovery equals the in-session export",
+   "expected_verdict": "PASS",
+   "verdict": "PASS",
+   "exit_code": 0,
+   "expected_gates": {},
+   "not_pass": {},
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 2,
+   "name": "positive_outcome_B_recovery_from_stream",
+   "category": "positive",
+   "why": "same, but no report: complete semantic recovery from the preserved stream",
+   "expected_verdict": "PASS",
+   "verdict": "PASS",
+   "exit_code": 0,
+   "expected_gates": {},
+   "not_pass": {},
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 3,
+   "name": "positive_release_at_exactly_90_s",
+   "category": "positive",
+   "why": "first released observation exactly 90.0 s after the request: the deadline is inclusive and unchanged",
+   "expected_verdict": "PASS",
+   "verdict": "PASS",
+   "exit_code": 0,
+   "expected_gates": {},
+   "not_pass": {},
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 4,
+   "name": "import_report_written_before_sigterm",
+   "category": "import_completed_before_sigterm",
+   "why": "report written at 1567 s, API server signalled at 1568.2 s",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 5,
+   "name": "release_context_already_report_written",
+   "category": "import_completed_before_sigterm",
+   "why": "the controller's own release context says the report existed",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 6,
+   "name": "trigger_read_only_in_terminal_phase",
+   "category": "import_completed_before_sigterm",
+   "why": "the registered line was accepted only after the report was written",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR2.registered_trigger": "INCONCLUSIVE",
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR2.registered_trigger": "INCONCLUSIVE",
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 7,
+   "name": "no_release_import_finished_first",
+   "category": "import_completed_before_sigterm",
+   "why": "the probe never wrote the trigger; normal shutdown",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR2.registered_trigger": "INCONCLUSIVE",
+    "FR3.import_active_at_release": "INCONCLUSIVE",
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE",
+    "FR4.no_signal_to_importer": "INCONCLUSIVE",
+    "FR5.gpu_release_within_deadline": "INCONCLUSIVE",
+    "FR9.bounds": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR2.registered_trigger": "INCONCLUSIVE",
+    "FR3.import_active_at_release": "INCONCLUSIVE",
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE",
+    "FR4.no_signal_to_importer": "INCONCLUSIVE",
+    "FR5.gpu_release_within_deadline": "INCONCLUSIVE",
+    "FR9.bounds": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 8,
+   "name": "probe_record_absent",
+   "category": "missing_importer_observations",
+   "why": "no independent importer observation at all",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3.import_active_at_release": "INCONCLUSIVE",
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "INCONCLUSIVE",
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 9,
+   "name": "probe_saw_importing_once",
+   "category": "missing_importer_observations",
+   "why": "one sample cannot show progress",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 10,
+   "name": "import_not_confirmed_in_progress",
+   "category": "missing_importer_observations",
+   "why": "",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 11,
+   "name": "no_probe_check_after_signal",
+   "category": "missing_importer_observations",
+   "why": "",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 12,
+   "name": "no_controller_check_after_signal",
+   "category": "missing_importer_observations",
+   "why": "",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3b.importer_checked_after_signal": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 13,
+   "name": "probe_trigger_written_after_sigterm",
+   "category": "missing_importer_observations",
+   "why": "the probe's confirmation does not precede the signal",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 14,
+   "name": "importer_identity_not_verified",
+   "category": "missing_importer_observations",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR3.import_active_at_release": "FAIL"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 15,
+   "name": "probe_watched_another_process",
+   "category": "missing_importer_observations",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR3.import_active_at_release": "FAIL"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 16,
+   "name": "controller_release_context_missing",
+   "category": "missing_importer_observations",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR3.import_active_at_release": "FAIL"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 17,
+   "name": "gpu_released_90_5_s_after_request",
+   "category": "late_gpu_release",
+   "why": "0.5 s over the frozen 90 s deadline",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "not_pass": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 18,
+   "name": "gpu_released_after_132_s",
+   "category": "late_gpu_release",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "not_pass": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 19,
+   "name": "gpu_never_observed_released",
+   "category": "late_gpu_release",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "not_pass": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 20,
+   "name": "gpu_release_not_bracketed",
+   "category": "late_gpu_release",
+   "why": "no held observation before the request",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "not_pass": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 21,
+   "name": "gpu_held_again_after_release",
+   "category": "late_gpu_release",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "not_pass": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 22,
+   "name": "gpu_release_only_controller_time",
+   "category": "late_gpu_release",
+   "why": "the controller's timestamp alone is not accepted",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "not_pass": {
+    "H.host_identity": "INCONCLUSIVE",
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 23,
+   "name": "binary_changed_during_launch",
+   "category": "binary_mutation",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 24,
+   "name": "binary_not_pinned_before_launch",
+   "category": "binary_mutation",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 25,
+   "name": "binary_replaced_and_restored",
+   "category": "binary_mutation",
+   "why": "pinned bytes at both ends, but another file identity",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 26,
+   "name": "binary_compiled_during_launch",
+   "category": "binary_mutation",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 27,
+   "name": "build_tool_requested_and_blocked",
+   "category": "binary_mutation",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 28,
+   "name": "launcher_record_without_guard",
+   "category": "binary_mutation",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 29,
+   "name": "binary_records_missing",
+   "category": "binary_mutation",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "not_pass": {
+    "S.binary_unchanged": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 1,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 30,
+   "name": "sigint_to_importer_before_report",
+   "category": "destructive_importer_signal",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "not_pass": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 31,
+   "name": "sigkill_to_importer_process_group",
+   "category": "destructive_importer_signal",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "not_pass": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 32,
+   "name": "sigterm_to_importer_in_outcome_A_before_report",
+   "category": "destructive_importer_signal",
+   "why": "report written at 1592 s; the signal came 12 s earlier",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "not_pass": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 33,
+   "name": "signal_to_unrecorded_process",
+   "category": "destructive_importer_signal",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "not_pass": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 34,
+   "name": "sigterm_time_not_recorded",
+   "category": "destructive_importer_signal",
+   "why": "without the exact signal time nothing can be ordered against the importer",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "not_pass": {
+    "FR3.import_active_at_release": "FAIL",
+    "FR3b.importer_checked_after_signal": "FAIL",
+    "FR4.no_signal_to_importer": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 35,
+   "name": "durable_stream_missing",
+   "category": "incomplete_recovery",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR7.stream_final_stable_durable": "FAIL",
+    "FR8.offline_import": "FAIL",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "not_pass": {
+    "FR7.stream_final_stable_durable": "FAIL",
+    "FR8.offline_import": "FAIL",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 36,
+   "name": "stream_differs_from_final_record",
+   "category": "incomplete_recovery",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR7.stream_final_stable_durable": "FAIL"
+   },
+   "not_pass": {
+    "FR7.stream_final_stable_durable": "FAIL",
+    "FR8.offline_import": "FAIL",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 37,
+   "name": "no_final_stream_record",
+   "category": "incomplete_recovery",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR7.stream_final_stable_durable": "FAIL"
+   },
+   "not_pass": {
+    "FR7.stream_final_stable_durable": "FAIL",
+    "FR8.offline_import": "FAIL",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 38,
+   "name": "offline_import_fails_truncated_stream",
+   "category": "incomplete_recovery",
+   "why": "a stable, checksummed stream that does not import",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR7.stream_final_stable_durable": "PASS",
+    "FR8.offline_import": "FAIL",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "not_pass": {
+    "FR8.offline_import": "FAIL",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 39,
+   "name": "recovered_trace_too_few_kernels",
+   "category": "incomplete_recovery",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR8.offline_import": "PASS",
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "not_pass": {
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 40,
+   "name": "recovered_trace_nvtx_not_4_per_iteration",
+   "category": "incomplete_recovery",
+   "why": "2160 iterations but 8638 forward ranges",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "not_pass": {
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 41,
+   "name": "recovered_trace_differs_from_in_session_export",
+   "category": "incomplete_recovery",
+   "why": "one kernel row fewer than the in-session export, still inside the band",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "not_pass": {
+    "FR8b.recovered_trace_complete": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 42,
+   "name": "recovery_tools_not_supplied",
+   "category": "incomplete_recovery",
+   "why": "the recovery proof is mandatory",
+   "expected_verdict": "INCONCLUSIVE",
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "expected_gates": {
+    "FR8.offline_import": "INCONCLUSIVE",
+    "FR8b.recovered_trace_complete": "INCONCLUSIVE"
+   },
+   "not_pass": {
+    "FR8.offline_import": "INCONCLUSIVE",
+    "FR8b.recovered_trace_complete": "INCONCLUSIVE"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 43,
+   "name": "launcher_recovery_failed",
+   "category": "incomplete_recovery",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.launcher_recovery": "FAIL"
+   },
+   "not_pass": {
+    "S.launcher_recovery": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 44,
+   "name": "scientific_completeness_failed",
+   "category": "incomplete_recovery",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.completeness_v2": "FAIL"
+   },
+   "not_pass": {
+    "S.completeness_v2": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 45,
+   "name": "importer_still_running",
+   "category": "other",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR6.session_ended": "FAIL"
+   },
+   "not_pass": {
+    "FR6.session_ended": "FAIL",
+    "FR9.bounds": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 46,
+   "name": "trigger_in_wrong_phase",
+   "category": "other",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR2.registered_trigger": "FAIL"
+   },
+   "not_pass": {
+    "FR2.registered_trigger": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 47,
+   "name": "second_stop_request",
+   "category": "other",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR1.one_stop_request": "FAIL"
+   },
+   "not_pass": {
+    "FR1.one_stop_request": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 48,
+   "name": "host_conflict",
+   "category": "other",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "H.host_identity": "FAIL"
+   },
+   "not_pass": {
+    "H.host_identity": "FAIL",
+    "FR5.gpu_release_within_deadline": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 49,
+   "name": "escalation_recorded",
+   "category": "other",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "FR9.bounds": "FAIL"
+   },
+   "not_pass": {
+    "FR9.bounds": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  },
+  {
+   "index": 50,
+   "name": "configuration_identity_failed",
+   "category": "other",
+   "why": "",
+   "expected_verdict": "FAIL",
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "expected_gates": {
+    "S.config_identity": "FAIL"
+   },
+   "not_pass": {
+    "S.config_identity": "FAIL"
+   },
+   "gates_evaluated": 20,
+   "binary_gate_rc": 0,
+   "ok": true,
+   "mismatches": []
+  }
+ ],
+ "required_categories": {
+  "positive": [
+   "positive_outcome_A_importer_finishes",
+   "positive_outcome_B_recovery_from_stream",
+   "positive_release_at_exactly_90_s"
+  ],
+  "import_completed_before_sigterm": [
+   "import_report_written_before_sigterm",
+   "release_context_already_report_written",
+   "trigger_read_only_in_terminal_phase",
+   "no_release_import_finished_first"
+  ],
+  "missing_importer_observations": [
+   "probe_record_absent",
+   "probe_saw_importing_once",
+   "import_not_confirmed_in_progress",
+   "no_probe_check_after_signal",
+   "no_controller_check_after_signal",
+   "probe_trigger_written_after_sigterm",
+   "importer_identity_not_verified",
+   "probe_watched_another_process",
+   "controller_release_context_missing"
+  ],
+  "late_gpu_release": [
+   "gpu_released_90_5_s_after_request",
+   "gpu_released_after_132_s",
+   "gpu_never_observed_released",
+   "gpu_release_not_bracketed",
+   "gpu_held_again_after_release",
+   "gpu_release_only_controller_time"
+  ],
+  "binary_mutation": [
+   "binary_changed_during_launch",
+   "binary_not_pinned_before_launch",
+   "binary_replaced_and_restored",
+   "binary_compiled_during_launch",
+   "build_tool_requested_and_blocked",
+   "launcher_record_without_guard",
+   "binary_records_missing"
+  ],
+  "destructive_importer_signal": [
+   "sigint_to_importer_before_report",
+   "sigkill_to_importer_process_group",
+   "sigterm_to_importer_in_outcome_A_before_report",
+   "signal_to_unrecorded_process",
+   "sigterm_time_not_recorded"
+  ],
+  "incomplete_recovery": [
+   "durable_stream_missing",
+   "stream_differs_from_final_record",
+   "no_final_stream_record",
+   "offline_import_fails_truncated_stream",
+   "recovered_trace_too_few_kernels",
+   "recovered_trace_nvtx_not_4_per_iteration",
+   "recovered_trace_differs_from_in_session_export",
+   "recovery_tools_not_supplied",
+   "launcher_recovery_failed",
+   "scientific_completeness_failed"
+  ]
+ },
+ "pinned_sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+}

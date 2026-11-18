@@ -1,0 +1,160 @@
+# final V2 gate rehearsal 2026-11-18T13:16:52Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at 565206ee405905826f82db998b1d2a333a589fae (0 modified tracked file(s)); CUDA_VISIBLE_DEVICES=''
+gpu memory before (MiB): 0 0 0 0 
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+## 1. V1 fixture: the retained V1 stream and the archived V1 run (read only)
+PASS  retained V1 stream present with its retention record (sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f)
+fixture lifecycle: phase stop_failed | release requested None | control commands ['note V1 operator probe: control file read', 'extend 60 V1 operator probe: extension logged']
+## 2. the complete pinned V2 post-run on the V1 fixture
+postrun exit code 1 (0 = PASS, 1 = FAIL, 3 = INCONCLUSIVE)
+[e1_v1_lifecycle] rc=0 end 2026-11-18T03:27:45Z
+## A. durable copy of the preserved stream (the tray original stays)
+PASS  durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/e1_v2_forced_release/preserved/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm: 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f = tray o
+## B. configuration identity under the normalization policy (launch record + profile config vs the accepted e1_nsys_val run)
+identity rc=0 (30 normalized fields listed in cpu/identity_v2_e1_v2_forced_release.txt)
+## C. outcome: lifecycle phase stop_failed
+launcher recovery rc=0
+## D. scientific checkers on the profile
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95
+RESULT PASS [checker v2.0.0]
+completeness_v2 rc=0
+extract rc=0
+RESULT PASS [checker v2.0.0]
+RESULT PASS
+nsys_validation rc=0
+FAIL  driver.record_present: driver record missing or unreadable
+FAIL  driver.sha256_before_is_pinned: before the launcher: None
+FAIL  driver.sha256_after_is_pinned: after the launcher: None
+FAIL  driver.unchanged: unchanged=None
+FAIL  driver.file_identity_unchanged: inode/mtime/size before None, after None
+FAIL  driver.no_compiling_lines: cargo 'Compiling' lines in the run log: None
+FAIL  launcher.record_present: launcher record missing or unreadable
+FAIL  launcher.prebuilt_mode: mode None
+FAIL  launcher.sha256_before_is_pinned: verified before the launch: None (record's pin None)
+FAIL  launcher.sha256_after_is_pinned: verified after the launch: None
+FAIL  launcher.unchanged: unchanged=None
+FAIL  launcher.cargo_not_consulted: cargo_consulted=None
+FAIL  launcher.build_tool_guard_installed: guard installed=None active=None
+FAIL  launcher.no_build_tool_requested: blocked build-tool requests: None
+load-generator executable = pinned bytes before and after the launch, prebuilt path, nothing compiled, no build tool requested (driver record + launcher record): rc=1
+## E. frozen V2 gates
+PASS         FR0.record: lifecycle.json schema 1 phase stop_failed
+INCONCLUSIVE H.host_identity: lifecycle record has no host; reservation node host not available
+PASS         FR1.one_stop_request: requests_sent=1, duplicates suppressed=0, stop_requested phases=1, http='ok' returned 03:22:42Z (release requested -; an error is accepted only at or after the release), API-server 'Stopping profiler' lines=1
+FAIL         FR2.registered_trigger: not exactly the one registered line accepted during the import; control commands recorded [('note V1 operator probe: control file read', 'noted', 'stop_accepted'), ('extend 60 V1 operator probe: extension logged', 'hard deadline extended by 60 s (operator); GPU-h
+FAIL         FR3.import_active_at_release: release request, SIGTERM time or importing phase missing; controller: release requested - in phase None, import None%, Nsight alive=None, report written=None; importing since 03:22:16Z, API-server SIGTERM at None (-), report at -; probe: 0 sample(s), phase 
+FAIL         FR3b.importer_checked_after_signal: after the SIGTERM at -: controller checks (label, identity intact, /proc state, phase) []; probe checks (seconds after, identity intact, /proc state, phase) []; both sources are required, the importer's state itself is evidence for the outcome, not a 
+FAIL         FR4.no_signal_to_importer: Nsight pid 1048204; recorded server pids [1048248, 1048837, 1049180, 1049181, 1049182, 1049183]; signals [(1048248, 'SIGTERM', 'shutdown')]; release signals 0; API-server SIGTERM recorded with its exact time and matching action=False ({}); disallowed []
+FAIL         FR5.gpu_release_within_deadline: 2 independent observation(s) on None; release requested -; GPUs last observed held -, first observed released - → release in (-, -], at most None s after the request (deadline 90 s); held observations before the request: 0; held after the first release
+PASS         FR6.session_ended: final phase 'stop_failed', Nsight alive=False, session closed 03:22:48Z → outcome B: no report; recovery from the preserved stream
+PASS         FR7.stream_final_stable_durable: controller's final record (taken 03:22:49Z, after session close): 347628953 B sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e
+PASS         FR8.offline_import: offline import of the durable stream rc 0 in 27 s → 393019064 B
+PASS         FR8b.recovered_trace_complete: recovered trace: 2160 iterations (band [2100, 2250]), NVTX forward ranges 8640, kernel rows 12250832 (band [11638290, 12863373]), kernels per process [3062168, 3062168, 3062168, 3064328], kernel boundaries [89415511, 50605741376] ns; absolute checks {'iter
+FAIL         FR9.bounds: GPU-held 1713 s (ceiling 2700.0); release request → session closed None s (timeout 300.0); escalations []; warnings []
+PASS         S.config_identity: identity_v2_e1_v2_forced_release.json: PASS; 30 normalized field(s), each listed in the identity report
+FAIL         S.binary_unchanged: exit code 1
+PASS         S.launcher_recovery: exit code 0
+PASS         S.completeness_v2: exit code 0
+PASS         S.extract: exit code 0
+PASS         S.nsys_validation: exit code 0
+# V2 forced-release gates e1_v2_forced_release: 19 gates, 7 FAIL, 1 INCONCLUSIVE → FAIL → STOP (no retry, no advance)
+## verdict
+V2 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v2fr_rehearsal/cpu/V2-GATES.txt). STOP: no retry, no advance; everything stays preserved.
+gpu memory after the post-run (MiB): 0 0 0 0 
+PASS  the V2 post-run does not pass on V1 (exit code 1)
+## 3. why it does not pass (e1_fr_rehearsal.py expect-v1)
+PASS  verdict_is_not_pass: V2 verdict on the V1 fixture: FAIL
+PASS  v1_had_an_import_but_no_forced_release: import phase recorded=True; release requested at None; API-server SIGTERM record None; release-gpus control lines []; release signals 0
+PASS  forced_release_gate_not_pass[FR2.registered_trigger]: FAIL
+PASS  forced_release_gate_not_pass[FR3.import_active_at_release]: FAIL
+PASS  forced_release_gate_not_pass[FR3b.importer_checked_after_signal]: FAIL
+PASS  forced_release_gate_not_pass[FR4.no_signal_to_importer]: FAIL
+PASS  forced_release_gate_not_pass[FR5.gpu_release_within_deadline]: FAIL
+PASS  forced_release_gate_not_pass[FR9.bounds]: FAIL
+PASS  verdict_from_forced_release_gates_alone: FAIL: with every other gate set aside the validation still stops, because no release was forced during the import
+PASS  real_data_gate_pass[FR0.record]: PASS
+PASS  real_data_gate_pass[FR1.one_stop_request]: PASS
+PASS  real_data_gate_pass[FR6.session_ended]: PASS
+PASS  real_data_gate_pass[FR7.stream_final_stable_durable]: PASS
+PASS  real_data_gate_pass[FR8.offline_import]: PASS
+PASS  real_data_gate_pass[FR8b.recovered_trace_complete]: PASS
+PASS  real_data_gate_pass[S.launcher_recovery]: PASS
+PASS  real_data_gate_pass[S.completeness_v2]: PASS
+PASS  real_data_gate_pass[S.extract]: PASS
+PASS  real_data_gate_pass[S.nsys_validation]: PASS
+PASS  other_gate_explained[H.host_identity]: INCONCLUSIVE: the V1 record is schema 1 (no host field) and V1 wrote no reservation record
+PASS  other_gate_explained[S.binary_unchanged]: FAIL: V1 has neither binary record, and its launcher rebuilt the executable (ADDENDUM-session-runner-rebuild.md)
+# V1 fixture expectation: MET (verdict FAIL; 8 of 19 gates not PASS)
+PASS  V1 fixture: FAIL/INCONCLUSIVE specifically because no release was forced during the import
+fixture size 3.0G
+fixture copy removed
+PASS  retained V1 stream unchanged (sha256 8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f)
+PASS  V1 archive re-verified against its SHA256SUMS
+## 4. synthetic fixtures through the command-line validators
+# synthetic V2 gate rehearsal at 2026-11-18T13:24:17Z: 50 fixtures through the command-line validators; CPU only; not V2 evidence
+# fixture                                              category                         expected      verdict       gates not PASS
+OK       01 positive_outcome_A_importer_finishes              positive                         PASS          PASS          -
+OK       02 positive_outcome_B_recovery_from_stream           positive                         PASS          PASS          -
+OK       03 positive_release_at_exactly_90_s                  positive                         PASS          PASS          -
+OK       04 import_report_written_before_sigterm              import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       05 release_context_already_report_written            import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       06 trigger_read_only_in_terminal_phase               import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR2.registered_trigger=INCONCLUSIVE, FR3.import_active_at_release=INCONCLUSIVE
+OK       07 no_release_import_finished_first                  import_completed_before_sigterm  INCONCLUSIVE  INCONCLUSIVE  FR2.registered_trigger=INCONCLUSIVE, FR3.import_active_at_release=INCONCLUSIVE, FR3b.importer_checked_after_signal=INCONCLUSIVE, FR4.no_s
+OK       08 probe_record_absent                               missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE, FR3b.importer_checked_after_signal=INCONCLUSIVE
+OK       09 probe_saw_importing_once                          missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       10 import_not_confirmed_in_progress                  missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       11 no_probe_check_after_signal                       missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3b.importer_checked_after_signal=INCONCLUSIVE
+OK       12 no_controller_check_after_signal                  missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3b.importer_checked_after_signal=INCONCLUSIVE
+OK       13 probe_trigger_written_after_sigterm               missing_importer_observations    INCONCLUSIVE  INCONCLUSIVE  FR3.import_active_at_release=INCONCLUSIVE
+OK       14 importer_identity_not_verified                    missing_importer_observations    FAIL          FAIL          FR3.import_active_at_release=FAIL
+OK       15 probe_watched_another_process                     missing_importer_observations    FAIL          FAIL          FR3.import_active_at_release=FAIL
+OK       16 controller_release_context_missing                missing_importer_observations    FAIL          FAIL          FR3.import_active_at_release=FAIL
+OK       17 gpu_released_90_5_s_after_request                 late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       18 gpu_released_after_132_s                          late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       19 gpu_never_observed_released                       late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       20 gpu_release_not_bracketed                         late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       21 gpu_held_again_after_release                      late_gpu_release                 FAIL          FAIL          FR5.gpu_release_within_deadline=FAIL
+OK       22 gpu_release_only_controller_time                  late_gpu_release                 FAIL          FAIL          H.host_identity=INCONCLUSIVE, FR5.gpu_release_within_deadline=FAIL
+OK       23 binary_changed_during_launch                      binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       24 binary_not_pinned_before_launch                   binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       25 binary_replaced_and_restored                      binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       26 binary_compiled_during_launch                     binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       27 build_tool_requested_and_blocked                  binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       28 launcher_record_without_guard                     binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       29 binary_records_missing                            binary_mutation                  FAIL          FAIL          S.binary_unchanged=FAIL
+OK       30 sigint_to_importer_before_report                  destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       31 sigkill_to_importer_process_group                 destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       32 sigterm_to_importer_in_outcome_A_before_report    destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       33 signal_to_unrecorded_process                      destructive_importer_signal      FAIL          FAIL          FR4.no_signal_to_importer=FAIL
+OK       34 sigterm_time_not_recorded                         destructive_importer_signal      FAIL          FAIL          FR3.import_active_at_release=FAIL, FR3b.importer_checked_after_signal=FAIL, FR4.no_signal_to_importer=FAIL
+OK       35 durable_stream_missing                            incomplete_recovery              FAIL          FAIL          FR7.stream_final_stable_durable=FAIL, FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       36 stream_differs_from_final_record                  incomplete_recovery              FAIL          FAIL          FR7.stream_final_stable_durable=FAIL, FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       37 no_final_stream_record                            incomplete_recovery              FAIL          FAIL          FR7.stream_final_stable_durable=FAIL, FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       38 offline_import_fails_truncated_stream             incomplete_recovery              FAIL          FAIL          FR8.offline_import=FAIL, FR8b.recovered_trace_complete=FAIL
+OK       39 recovered_trace_too_few_kernels                   incomplete_recovery              FAIL          FAIL          FR8b.recovered_trace_complete=FAIL
+OK       40 recovered_trace_nvtx_not_4_per_iteration          incomplete_recovery              FAIL          FAIL          FR8b.recovered_trace_complete=FAIL
+OK       41 recovered_trace_differs_from_in_session_export    incomplete_recovery              FAIL          FAIL          FR8b.recovered_trace_complete=FAIL
+OK       42 recovery_tools_not_supplied                       incomplete_recovery              INCONCLUSIVE  INCONCLUSIVE  FR8.offline_import=INCONCLUSIVE, FR8b.recovered_trace_complete=INCONCLUSIVE
+OK       43 launcher_recovery_failed                          incomplete_recovery              FAIL          FAIL          S.launcher_recovery=FAIL
+OK       44 scientific_completeness_failed                    incomplete_recovery              FAIL          FAIL          S.completeness_v2=FAIL
+OK       45 importer_still_running                            other                            FAIL          FAIL          FR6.session_ended=FAIL, FR9.bounds=FAIL
+OK       46 trigger_in_wrong_phase                            other                            FAIL          FAIL          FR2.registered_trigger=FAIL
+OK       47 second_stop_request                               other                            FAIL          FAIL          FR1.one_stop_request=FAIL
+OK       48 host_conflict                                     other                            FAIL          FAIL          H.host_identity=FAIL, FR5.gpu_release_within_deadline=FAIL
+OK       49 escalation_recorded                               other                            FAIL          FAIL          FR9.bounds=FAIL
+OK       50 configuration_identity_failed                     other                            FAIL          FAIL          S.config_identity=FAIL
+# required category positive: 3 fixture(s), all as expected: True
+# required category import_completed_before_sigterm: 4 fixture(s), all as expected: True
+# required category missing_importer_observations: 9 fixture(s), all as expected: True
+# required category late_gpu_release: 6 fixture(s), all as expected: True
+# required category binary_mutation: 7 fixture(s), all as expected: True
+# required category destructive_importer_signal: 5 fixture(s), all as expected: True
+# required category incomplete_recovery: 10 fixture(s), all as expected: True
+# result: REHEARSAL EXPECTATIONS MET: 50/50 fixtures as expected; verdicts PASS 3, INCONCLUSIVE 11, FAIL 36; categories without a fixture: none
+PASS  synthetic fixtures: every expectation met
+## 5. state after the rehearsal
+PASS  load-generator executable after the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+gpu memory after (MiB): 0 0 0 0 
+# result: REHEARSAL EXPECTATIONS MET
+rehearsal_rc=0

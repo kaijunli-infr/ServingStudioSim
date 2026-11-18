@@ -1,0 +1,86 @@
+{
+ "verdict": "FAIL",
+ "pinned_sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "checks": [
+  {
+   "check": "pin.present",
+   "ok": true,
+   "detail": "pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  },
+  {
+   "check": "driver.record_present",
+   "ok": false,
+   "detail": "driver record missing or unreadable"
+  },
+  {
+   "check": "driver.sha256_before_is_pinned",
+   "ok": false,
+   "detail": "before the launcher: None"
+  },
+  {
+   "check": "driver.sha256_after_is_pinned",
+   "ok": false,
+   "detail": "after the launcher: None"
+  },
+  {
+   "check": "driver.unchanged",
+   "ok": false,
+   "detail": "unchanged=None"
+  },
+  {
+   "check": "driver.file_identity_unchanged",
+   "ok": false,
+   "detail": "inode/mtime/size before None, after None"
+  },
+  {
+   "check": "driver.no_compiling_lines",
+   "ok": false,
+   "detail": "cargo 'Compiling' lines in the run log: None"
+  },
+  {
+   "check": "launcher.record_present",
+   "ok": false,
+   "detail": "launcher record missing or unreadable"
+  },
+  {
+   "check": "launcher.prebuilt_mode",
+   "ok": false,
+   "detail": "mode None"
+  },
+  {
+   "check": "launcher.sha256_before_is_pinned",
+   "ok": false,
+   "detail": "verified before the launch: None (record's pin None)"
+  },
+  {
+   "check": "launcher.sha256_after_is_pinned",
+   "ok": false,
+   "detail": "verified after the launch: None"
+  },
+  {
+   "check": "launcher.unchanged",
+   "ok": false,
+   "detail": "unchanged=None"
+  },
+  {
+   "check": "launcher.cargo_not_consulted",
+   "ok": false,
+   "detail": "cargo_consulted=None"
+  },
+  {
+   "check": "launcher.build_tool_guard_installed",
+   "ok": false,
+   "detail": "guard installed=None active=None"
+  },
+  {
+   "check": "launcher.no_build_tool_requested",
+   "ok": false,
+   "detail": "blocked build-tool requests: None"
+  },
+  {
+   "check": "binary.now_is_pinned",
+   "ok": true,
+   "detail": "executable at post-run time: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+  }
+ ]
+}
