@@ -78,7 +78,7 @@
   {
    "name": "cleanup.identity",
    "status": "PASS",
-   "detail": "pid 2053559 starttime 302580473 boot 54a59f08 uid 1000",
+   "detail": "pid 2317192 starttime 302678274 boot 54a59f08 uid 1000",
    "data": null
   },
   {
@@ -94,7 +94,7 @@
    "data": {
     "log": [
      {
-      "pid": 2053559,
+      "pid": 2317192,
       "action": "refuse",
       "reason": "own process or ancestry"
      }
@@ -122,7 +122,7 @@
    "data": {
     "log": [
      {
-      "pid": 2053555,
+      "pid": 2317188,
       "action": "skip",
       "reason": "identity changed before signal (pid reuse)",
       "live": "uv run --no-sync python -m alignment.profiler.preflight --config /mnt/shared/home/dc/workspace/serving-studio/wt-lifecyc"

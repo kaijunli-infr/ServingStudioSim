@@ -1,9 +1,9 @@
 {
  "pass": "e1_v3_scale",
- "pinned_at": "2026-11-18T19:56:54Z",
+ "pinned_at": "2026-11-18T20:13:12Z",
  "host": "pod4-gb300-10-tray16-f3",
  "code": {
-  "commit": "080c1cf91116fbec705ad2a320880d6b779a5a50",
+  "commit": "4b30adcdd55d0d080c30e989a1f484e9c16c1c8a",
   "branch": "exp/profiler-lifecycle",
   "tree": {
    "alignment": "7b4df784a5b6daff7c792e81cbc6503ba2c806ec",
@@ -26,8 +26,8 @@
    "tests/test_load_generator_prebuilt.py": "f291222745f167e1dcf64fb7403afcce9f11e839",
    "tests/test_profiler_lifecycle_release_evidence.py": "f4b1ed8831bfe0181d991283c549183f6b9fbc0c",
    "tests/test_e1_frontend_binary_gate.py": "914f005e3cad82f1318a587416719fa52f03cf66",
-   "tests/test_e1_import_probe.py": "be9b1975ffd20cc9150ef7d4493af4a926365516",
-   "tests/test_e1_mem_watch.py": "7fd3a3fde9bfc7e19be6b2ce33555993de838c53",
+   "tests/test_e1_import_probe.py": "217f5895c4e75030a94d985445507023c488aa12",
+   "tests/test_e1_mem_watch.py": "50441625099396e3fe7e4d480bfb5482c533236d",
    "tests/test_e1_storage_watch.py": "8068616b8a9d1ccb22f02765186591257aa451a7",
    "tests/test_e1_v3scale_gates.py": "4ef45dd919d0c4b6ff86265f58107939c126c7a4",
    "tests/test_e1_supervisor.py": "8fd3041f8c1c82982409572cea4ad3079fd1708e",
