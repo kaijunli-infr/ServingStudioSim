@@ -34,7 +34,10 @@ def _run(tmp_path: Path, *, stops: int = 1, host: str = "tray", **over) -> Path:
     log = run / "profile" / "vllm" / "x_server.log"
     log.write_text(
         "".join(
-            "INFO [api_router.py:31] Stopping profiler...\nINFO [api_router.py:33] Profiler stopped.\n"
+            "(APIServer pid=4100) INFO 11-18 03:21:12 [api_router.py:31] Stopping profiler...\n"
+            "(Worker_TP0 pid=4200) INFO 11-18 03:21:12 [wrapper.py:86] Profiler stopped successfully.\n"
+            "(APIServer pid=4100) INFO 11-18 03:22:42 [api_router.py:33] Profiler stopped.\n"
+            'INFO:     127.0.0.1:36694 - "POST /stop_profile HTTP/1.1" 200 OK\n'
             for _ in range(stops)
         )
     )
@@ -51,7 +54,9 @@ def _run(tmp_path: Path, *, stops: int = 1, host: str = "tray", **over) -> Path:
     return run
 
 
-def _fake_tools(tmp_path: Path, *, kernel_rows: int, nvtx: int) -> tuple[Path, Path]:
+def _fake_tools(
+    tmp_path: Path, *, kernel_rows: int, nvtx: int, product: str = "2025.6.3.541"
+) -> tuple[Path, Path]:
     """Fake QdstrmImporter and fake `nsys export` with the tables the corrected L10b reads (the
     pinned tests' fake has only the two count columns)."""
     imp = tmp_path / "QdstrmImporter"
@@ -76,7 +81,9 @@ con.executemany("INSERT INTO CUPTI_ACTIVITY_KIND_KERNEL VALUES (?, ?, ?)",
                 [(1_000_000 + i, 1_000_000 + i + 1, i % 4) for i in range({kernel_rows})])
 con.execute("INSERT INTO ANALYSIS_DETAILS VALUES (1, 500, 0, 500)")
 con.execute("INSERT INTO META_DATA_CAPTURE VALUES ('START_TRIGGER', 'Immediate')")
-con.execute("INSERT INTO META_DATA_EXPORT VALUES ('EXPORT_PRODUCT_VERSION', '2025.6.3.541')")
+con.execute("INSERT INTO META_DATA_EXPORT VALUES ('EXPORT_PRODUCT_VERSION', '{product}')")
+con.execute("INSERT INTO META_DATA_EXPORT VALUES ('EXPORT_PARAM_OUTPUT_PATH', ?)", (out,))
+con.execute("INSERT INTO META_DATA_EXPORT VALUES ('EXPORT_TIME_UTC', ?)", (out + " now",))
 con.execute("INSERT INTO TARGET_INFO_SESSION_START_TIME VALUES (1, 'a', 'a', 2)")
 con.commit(); con.close()
 """
@@ -236,12 +243,23 @@ def test_recovery_is_mandatory_and_semantic(tmp_path):
         "capture_metadata",
     }
     assert not (tmp_path / "s1" / "recovery.sqlite").exists()  # derived scratch removed
+    g = next(r for r in res if r["gate"] == "L10b.recovery_semantic_completeness")
+    # export file paths and export time differ between the two exports: recorded, not judged
+    assert (
+        g["data"]["export_run_rows_not_judged"]["recovered"]
+        != g["data"]["export_run_rows_not_judged"]["in_session"]
+    )
     (tmp_path / "t2").mkdir()
     imp, nsys = _fake_tools(tmp_path / "t2", kernel_rows=1_224, nvtx=8640)
     st = _status(
         _evaluate(mod, run, tmp_path, importer=str(imp), nsys=str(nsys), scratch=tmp_path / "s2")
     )
     assert st["L10b.recovery_semantic_completeness"] == "FAIL"
+    (tmp_path / "t4").mkdir()
+    imp, nsys = _fake_tools(tmp_path / "t4", kernel_rows=1_225, nvtx=8640, product="2099.1")
+    res = _evaluate(mod, run, tmp_path, importer=str(imp), nsys=str(nsys), scratch=tmp_path / "s4")
+    g = next(r for r in res if r["gate"] == "L10b.recovery_semantic_completeness")
+    assert g["status"] == "FAIL" and g["data"]["checks"]["export_product_and_schema"] is False
     (run / "profile" / "nsys" / "x.sqlite").unlink()
     (tmp_path / "t3").mkdir()
     imp, nsys = _fake_tools(tmp_path / "t3", kernel_rows=1_225, nvtx=8640)

@@ -47,6 +47,15 @@ HERE = Path(__file__).resolve().parent
 REPLACED = ("L1.", "L4.", "L6c.", "L10.", "L10b.", "S.")
 FINAL_PHASES = ("stop_requested", "stop_accepted", "capture_ended", "importing", "report_written")
 ITER_RE = re.compile(r"_iteration\((\d+)\): forward$")
+# the API server's own stop lines (one pair per effective /stop_profile); a worker's "Profiler stopped successfully."
+# is a different message and is counted separately, for the record only
+API_STOPPING = re.compile(rb"^\(APIServer pid=\d+\).*\[api_router\.py:\d+\] Stopping profiler", re.M)
+API_STOPPED = re.compile(rb"^\(APIServer pid=\d+\).*\[api_router\.py:\d+\] Profiler stopped\.", re.M)
+HTTP_STOP = re.compile(rb'"POST /stop_profile HTTP/[\d.]+" (\d+)')
+WORKER_STOPPED = re.compile(rb"^\(Worker\S* pid=\d+\).*Profiler stopped successfully", re.M)
+# META_DATA_EXPORT rows that describe the export run itself (file names, paths, wall time): they differ between any two
+# exports and are reported, not judged; product and schema rows must be equal
+EXPORT_RUN_KEYS = ("EXPORT_PARAM_", "EXPORT_TIME")
 
 
 def load_pinned():
@@ -88,14 +97,18 @@ def gate_l1(res: list, lc: dict, server_log: Path | None) -> None:
     phases = [h["phase"] for h in lc.get("phase_history", [])]
     counts = {p: phases.count(p) for p in FINAL_PHASES}
     once = all(c == 1 for c in counts.values()) and phases.count("stream_written") <= 1
-    log_counts = None
+    log_counts, http_ok, worker_lines = None, False, 0
     if server_log and server_log.is_file():
         text = server_log.read_bytes()
-        log_counts = (text.count(b"] Stopping profiler"), text.count(b"] Profiler stopped"))
-    ok = sent == 1 and http.get("status") == "ok" and dup >= 0 and once and log_counts == (1, 1)
+        responses = HTTP_STOP.findall(text)
+        log_counts = (len(API_STOPPING.findall(text)), len(API_STOPPED.findall(text)), len(responses))
+        worker_lines = len(WORKER_STOPPED.findall(text))
+        http_ok = responses == [b"200"]
+    ok = sent == 1 and http.get("status") == "ok" and dup >= 0 and once and log_counts == (1, 1, 1) and http_ok
     detail = (
         f"requests_sent={sent} http={http.get('status')}; duplicates recorded as suppressed={dup} (zero or more permitted); "
-        f"finalisation phases each once={once} {counts}; server log 'Stopping profiler'/'Profiler stopped' lines={log_counts}"
+        f"finalisation phases each once={once} {counts}; server log, API server only: 'Stopping profiler' / 'Profiler stopped.' / POST /stop_profile responses = {log_counts}"
+        + ("" if log_counts is None else f" (response 200={http_ok}; worker 'Profiler stopped successfully' lines, informational: {worker_lines})")
     )
     if log_counts is None and sent == 1 and http.get("status") == "ok" and once:
         add(res, "L1.one_effective_stop", "INCONCLUSIVE", detail + " — server log not available for the independent count", duplicates=dup)
@@ -179,6 +192,11 @@ def trace_summary(sqlite_path: Path, pinned) -> dict:
     return out
 
 
+def export_rows(summary: dict, run_specific: bool) -> list:
+    rows = [json.loads(r) for r in summary["metadata"].get("META_DATA_EXPORT", [])]
+    return [r for r in rows if str(r[0]).startswith(EXPORT_RUN_KEYS) == run_specific]
+
+
 def gate_l10(res: list, run: Path, exp: dict, stream: dict | None, importer: str | None, nsys: str | None, scratch: Path | None, keep: bool, pinned) -> None:
     pr = load(run / "profile" / "profile_result.json") or {}
     val = pr.get("validation") or {}
@@ -231,8 +249,9 @@ def gate_l10(res: list, run: Path, exp: dict, stream: dict | None, importer: str
         "kernels_per_process": rec.get("kernels_per_process") == ins.get("kernels_per_process"),
         "every_table_row_count": rec["table_rows"] == ins["table_rows"],
         "capture_metadata": all(rec["metadata"].get(t) == ins["metadata"].get(t) for t in ("ANALYSIS_DETAILS", "META_DATA_CAPTURE", "TARGET_INFO_SESSION_START_TIME")),
-        "export_metadata": rec["metadata"].get("META_DATA_EXPORT") == ins["metadata"].get("META_DATA_EXPORT"),
+        "export_product_and_schema": export_rows(rec, False) == export_rows(ins, False),
     }
+    export_run_rows = {"recovered": export_rows(rec, True), "in_session": export_rows(ins, True)}
     table_diff = {t: (ins["table_rows"].get(t), rec["table_rows"].get(t)) for t in sorted(set(ins["table_rows"]) | set(rec["table_rows"])) if ins["table_rows"].get(t) != rec["table_rows"].get(t)}
     ok = all(checks.values())
     add(
@@ -242,8 +261,10 @@ def gate_l10(res: list, run: Path, exp: dict, stream: dict | None, importer: str
         f"recovered vs in-session export: kernel rows {rec['kernel_rows']} / {ins['kernel_rows']}; NVTX forward ranges {rec['nvtx_forward_ranges']} / {ins['nvtx_forward_ranges']}; "
         f"distinct iterations {rec['distinct_iterations']} / {ins['distinct_iterations']} (index range {rec['iteration_index_range']}, band {band}); "
         f"kernel boundaries {rec.get('kernel_boundaries_ns')} / {ins.get('kernel_boundaries_ns')} ns; NVTX boundaries {rec['nvtx_forward_boundaries_ns']} / {ins['nvtx_forward_boundaries_ns']} ns; "
-        f"kernels per process {rec.get('kernels_per_process')}; tables {len(rec['table_rows'])} / {len(ins['table_rows'])}, differing row counts {table_diff}; checks {checks}",
+        f"kernels per process {rec.get('kernels_per_process')}; tables {len(rec['table_rows'])} / {len(ins['table_rows'])}, differing row counts {table_diff}; checks {checks}; "
+        f"export-run rows (file names, paths, export time) differ by construction and are recorded, not judged: {len(export_run_rows['recovered'])} / {len(export_run_rows['in_session'])} rows",
         checks=checks,
+        export_run_rows_not_judged=export_run_rows,
         table_row_differences=table_diff,
         recovered={k: v for k, v in rec.items() if k != "table_rows"},
         in_session={k: v for k, v in ins.items() if k != "table_rows"},
