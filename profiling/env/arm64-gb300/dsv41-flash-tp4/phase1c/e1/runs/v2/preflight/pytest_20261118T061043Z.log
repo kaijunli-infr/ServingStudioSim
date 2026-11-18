@@ -1,0 +1,4 @@
+........................................................................ [ 55%]
+..........................................................               [100%]
+cpu_only_guard: CUDA hidden (CUDA_VISIBLE_DEVICES='' set by the caller); no /dev/nvidia<N> opened; torch.cuda not initialised
+130 passed in 29.89s

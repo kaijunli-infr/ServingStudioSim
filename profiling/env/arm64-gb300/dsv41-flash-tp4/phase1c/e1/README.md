@@ -94,3 +94,7 @@ One launch of `e1_v1_lifecycle` from 77f410a5 on tray16 (GO of 2026-11-18). The 
 ## V1 gate remediation and evidence replay (2026-11-18, CPU-only)
 
 Two separate verdicts: original V1 **FAIL / STOP** under the pinned gates (record unchanged); retrospective evidence assessment under the corrected gates **PASS** (25 gates, 0 FAIL). Corrected validators are new files (`checks/e1_lifecycle_gates_v2.py`, `checks/e1_launch_identity_v2.py`, `checks/e1_identity_policy_v1.json`, `checks/e1_gpu_watch.py`, `replay_e1_v1.sh`, `SCRIPTS_v1_replay.sha256`); the pinned ones are untouched. Report `runs/v1/replay/V1-REMEDIATION-REPORT.md`, manifest `runs/v1/replay/EVIDENCE-MANIFEST.sha256`.
+
+## Controller improvements and V2 readiness (2026-11-18, CPU-only)
+
+Records kept separate: original V1 **FAIL / STOP**; retrospective V1 evidence assessment **PASS, qualified** (`runs/v1/replay/`, first failed replay attempt kept). Controller: launch host identity, stream observations, final stream record after session close (never a completeness claim), release context; preflight distinguishes a retained inactive recovery stream from an active session. V2 request: `E1-V2-FORCED-RELEASE-PACKET.md` (frozen gates `checks/e1_forced_release_gates.py`, scripts `*_e1_fr.sh`, `SCRIPTS_fr.sha256`, `V2-FR-PIN.json`). **Open blocker:** the read-only V2 preflight fails (45 PASS, 1 FAIL) because the V1 launcher rebuilt the load generator at launch; see packet §12 and `runs/v1/ADDENDUM-session-runner-rebuild.md`. Nothing GPU is authorized.

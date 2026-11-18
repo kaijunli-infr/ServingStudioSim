@@ -1,0 +1,12 @@
+# 2026-11-18T06:23:59Z pod4-gb300-10-tray14-f3; cargo cargo 1.98.1 (797e8a9bc 2026-08-05); rustc rustc 1.98.1 (48a229cea 2026-09-01)
+pinned (provenance, built 2026-11-15 on tray14):      7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+wt-e1stage1 binary now:                               7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2  mtime 2026-11-15 08:11:22
+wt-lifecycle binary now (rebuilt by the V1 launcher): 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549  mtime 2026-11-18 02:54:12
+source: wt-lifecycle 5c20a259618976ecc360bda84abcc3653a04006e status ''; wt-e1stage1 5c20a259618976ecc360bda84abcc3653a04006e status ''
+scratch build a in /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/bin_diag/a: rc=0     Finished `release` profile [optimized] target(s) in 39.30s sha256 d7eebd1e9f876820464d7fbb566890f54de023208d4e7548e216732df6b8695b
+scratch build b in /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/bin_diag/b: rc=0     Finished `release` profile [optimized] target(s) in 38.24s sha256 2ecb69719e28839f9e79404baccc1b89e2b327ab89b4bd6c3c96319f110d0252
+differing bytes between the pinned and the rebuilt binary: 273451
+strings mentioning wt-lifecycle in the rebuilt binary: 4
+strings mentioning wt-e1stage1 in the pinned binary: 4
+rebuilt binary supports --stream: 1
+done
