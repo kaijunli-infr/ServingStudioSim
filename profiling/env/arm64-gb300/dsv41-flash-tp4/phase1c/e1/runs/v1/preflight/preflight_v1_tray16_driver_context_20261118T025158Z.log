@@ -1,0 +1,140 @@
+# V1 preflight on pod4-gb300-10-tray16-f3 at 2026-11-18T02:51:10Z; launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle
+  # Stage 1.5 preflight on pod4-gb300-10-tray16-f3 at 2026-11-18T02:51:10Z
+    # E1 host preflight on pod4-gb300-10-tray16-f3 at 2026-11-18T02:51:10Z
+    PASS  not an off-limits tray
+    PASS  no compute apps on GPUs
+    PASS  GPU memory used total 0 MiB
+    PASS  4 GPUs visible
+    PASS  driver 595.71.05 (Phase 0)
+    PASS  no leftover vllm/nsys/req-frontend processes
+    PASS  fork submodule at 0ab18711
+    PASS  venv 0.31.1.dev17+g0ab187113 2.13.0+cu130
+    PASS  nsys 2025.6.3.541
+    PASS  weights present
+    PASS  enwik9 corpus 1e9 bytes
+    PASS  cache warm: deepgemm
+    PASS  cache warm: triton
+    PASS  cache warm: nv-compute
+    PASS  cache warm: flashinfer-autotune
+    INFO  launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle HEAD 77f410a562167d3f4dcb15e9dfe0e52cb4aadac0 (exp/profiler-lifecycle)
+    PASS  launcher tree fork submodule at 0ab18711
+    PASS  repo tree clean (tracked files)
+    PASS  E1 traces/configs match INPUTS.sha256
+    PASS  nsys delayed start 10 s, no bounded stop
+    PASS  no capture_duration_seconds (Phase 0 lesson)
+    PASS  CephFS free 21100 GB (> 500)
+    PASS  root disk free 1165 GB (> 100)
+    PASS  no previous e1_main output dir
+    PASS  launcher dry-run e1_main
+    # result: PREFLIGHT PASS
+  PASS  Stage 1 host preflight
+  PASS  configs_v2 / trace match INPUTS_v2.sha256
+  PASS  e1_dry_off_v2: stream=false explicit
+  PASS  e1_dry_on_v2: stream=false explicit
+  PASS  e1_dry_off2_v2: stream=false explicit
+  PASS  e1_nsys_val: stream=false explicit
+  PASS  no previous output dir for e1_v1_lifecycle
+  PASS  e1_nsys_val: nsys delayed start 10 s
+  PASS  e1_nsys_val: no bounded stop
+  PASS  config identity off_v2/on_v2 and off_v2/off2_v2
+  PASS  launcher: workload.stream opt-out applied
+  PASS  submodule gitlink pinned to 5c20a259618976ecc360bda84abcc3653a04006e
+  PASS  req-frontend checkout HEAD == pinned commit
+  PASS  req-frontend checkout clean
+  PASS  session_runner sha256 == provenance (7f6eb81d45e6b98f)
+  PASS  session_runner supports --stream
+  PASS  launcher dry-run e1_dry_off_v2
+  PASS  launcher dry-run e1_dry_on_v2
+  PASS  launcher dry-run e1_dry_off2_v2
+  PASS  launcher dry-run e1_nsys_val
+  INFO  flashinfer-autotune cache: 2 hash dirs, newest 2026-11-16 09:15:53; expect ~19 min of tuning per launch regardless
+  # result: PREFLIGHT PASS
+PASS  Stage 1.5 preflight (incl. Stage 1 host preflight)
+PASS  V1 config, its accepted source and the trace match INPUTS_v1.sha256
+PASS  trace is the frozen dry-run trace e1_dry.csv (sha c6d8e13b…)
+PASS  trace has 56 requests
+PASS  2 waves (b=8 at 0 s, b=48 at 18.6 s)
+PASS  config points at the dry-run trace
+PASS  stream=false explicit
+PASS  hook on (capture_routed_experts)
+PASS  openai backend (routes)
+PASS  no bounded stop
+PASS  no delayed start: profiler armed before the first request (both waves in the capture)
+PASS  lifecycle bounds explicit: soft 300 s, hard 600 s, GPU-held ceiling 2700 s, stream preserved
+PASS  no nsys.tmp_dir: server environment identical to the accepted launch
+PASS  nsys capture flags == Phase 0 quadrant_nsys nsys block (lifecycle keys excepted)
+PASS  config identity vs accepted e1_nsys_val: only name, log_dir, trace path (same bytes), delayed start and the lifecycle bounds differ
+PASS  E1-V1-INPUTS.json: 56 requests, 2 waves, 2160 iterations expected, ceilings consistent, 2 probe lines
+PASS  launcher dry-run e1_v1_lifecycle (CUDA hidden)
+PASS  no previous output dir for e1_v1_lifecycle
+PASS  pinned tree alignment = b2be218bbb09
+PASS  pinned tree launcher = 5a1b662f12e8
+PASS  pinned tree tests/test_profiler_lifecycle.py = 14dcbfd92b3f
+PASS  pinned tree tests/test_profiler_preflight.py = c5defd53c97b
+PASS  pinned tree tests/test_e1_lifecycle_gates.py = 24321e142afb
+PASS  pinned tree tests/fixtures = 9bd59ef93228
+PASS  pinned tree tests/cpu_only_guard.py = 5d2637224343
+PASS  pinned tree tests/cpu_only.sh = 9296518632ee
+PASS  pinned tree tests/test_cpu_only_guard.py = f46ce406349b
+PASS  launcher tree clean (tracked files)
+INFO  launcher tree HEAD 77f410a562167d3f4dcb15e9dfe0e52cb4aadac0 (exp/profiler-lifecycle); pinned code commit 9d4abd3f364fd4ede6e9227bfd9566cde41df9df
+PASS  V1 scripts, checks, tests and fixtures match SCRIPTS_v1.sha256 (30 files)
+  PASS  profiler.nsys: matches pins: path, version, sha256
+  PASS  profiler.importer: matches pins: path, sha256
+  PASS  profiler.importer_matches_cli: importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter and CLI /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys share the install root
+  PASS  server.vllm_import: vllm 0.31.1.dev17+g0ab187113 from /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py
+  PASS  server.identity: matches pins: fork_python, python_realpath, python_sha256, vllm_version, fork_head
+  PASS  server.model_path: /mnt/shared/weights/DeepSeek-V4.1-Flash-1017/config.json present
+  PASS  recipe.server_argv: server argv identical to the reference launch
+  PASS  recipe.nsys_prefix: nsys flags identical to the reference launch (output stem excepted)
+  PASS  recipe.nsys_executable: /usr/local/bin/nsys resolves to the reference launch's /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+  PASS  recipe.env: no environment variable added relative to the reference launch
+  PASS  cleanup.identity: pid 975616 starttime 296427062 boot 54a59f08 uid 1000
+  PASS  cleanup.ancestry: descendant test resolves this process under its parent
+  PASS  cleanup.refuses_self: signal_verified(own pid) -> refused
+  PASS  cleanup.refuses_pid1: -> refused
+  PASS  cleanup.detects_identity_change: stale starttime on the parent pid -> changed (nothing signalled)
+  PASS  cleanup.gpu_query: nvidia-smi compute-app query works; 0 compute pid(s) now
+  PASS  parsers.pids: API server pid(s) ['32200'], engine roles ['EngineCore', 'Worker'], 5 distinct engine/worker pids
+  PASS  parsers.phases: every phase line matched in order: stop_accepted@8584, capture_ended@8589, stream_written@8590, import_start@8592, import_progress@8592, stop_returned@8651
+  PASS  policy.valid: soft 300 s, hard 600 s, stall 300 s, max extension 120 s, GPU-held ceiling 2700.0, action release_gpus, preserve stream True
+  PASS  policy.ceiling_set: gpu_held_ceiling_s is explicit
+  PASS  locations.lifecycle.json: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/nsys/lifecycle.json absent
+  PASS  locations.lifecycle.control: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/nsys/lifecycle.control absent
+  PASS  locations.log_dir: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile absent
+  PASS  locations.stream_dir: /tmp: 1164 GiB free (floor 50)
+  PASS  locations.stream_leftovers: own raw streams / preserve dirs in /tmp: none
+  PASS  locations.report_dir: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1: 21100 GiB free (floor 20)
+  # identity preflight: 26 checks, 0 FAIL
+PASS  identity preflight (alignment.profiler.preflight): all checks PASS → /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/ctxtest/identity_20261118T025110Z.json
+PASS  lifecycle/preflight/gates/cleanup/guard test suites: 50 passed in 26.14s; cpu_only_guard: CUDA hidden 
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_process_census.sh: line 39: /proc/991748/cmdline: No such file or directory
+  INFO  own invocation pipeline (excluded from candidates): 974744[bash] 974745[bash] 974746[tee] 989810[sed]
+  PASS  vllm server processes: none
+  PASS  nsys profiler sessions: none
+  PASS  req-frontend session_runner: none
+  PASS  launcher (alignment profile): none
+  PASS  E1 driver / preflight / postrun shells: none
+  PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+  PASS  nvidia-smi loops / watch: none
+  PASS  python monitors/checkers of the experiment: none
+  PASS  other processes whose cmdline references the experiment dirs: none
+  PASS  processes whose cwd is inside the experiment dirs: none
+  INFO  own tmux session (excluded): e1v1-ctxtest 
+  PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+  INFO  other tmux sessions on this tray (not experiment-owned): e1v1-ctxtest 
+  PASS  GPU compute apps: none
+  INFO  GPU memory used MiB per GPU: 0 0 0 0 
+  # process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T02:51:56Z: CLEAN
+PASS  process discovery: no candidate alive
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T02:51:56Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/pids/owned.tsv (0 records); cleanup pid 1003642, excluded ancestry [1, 974743, 974744, 974745, 1003642], own pipeline [974744, 974745, 974746, 1003643]
+  summary: owned 0, stale 0, gone 0, refused 0, lookalikes 0
+PASS  registry plan: no owned process alive, no lookalike, no refusal
+  # gpu release census preflight on pod4-gb300-10-tray16-f3 at 2026-11-18T02:51:56Z: RELEASED — no compute process on any GPU; memory.used within the idle bound on every GPU; compute pids []; memory.used MiB per GPU: 0 0 0 0
+PASS  GPU state: no compute process, memory.used within the idle bound on every GPU (census primitive works)
+PASS  CephFS free 21100 GB (> 1000)
+PASS  /tmp (stream directory, tray root NVMe) free 1165 GB (> 100)
+INFO  ceilings: reservation 90 min hard; GPU-held 2700 s (controller-enforced from the launch); temporary ≤ 5 GB in /tmp; persistent ≤ 5 GB run dir (≤ 10 GB with the archive copy); expected ≈ 2.4 GB raw, finalisation ≈ 90 s
+INFO  reservation (from the laptop): pod dsv41-gb300-reserve-tray16 Running and the only GPU pod on the node before the go
+# result: PREFLIGHT PASS
+preflight_rc=0

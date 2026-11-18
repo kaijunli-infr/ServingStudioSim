@@ -1,0 +1,41 @@
+# closeout e1_v1_lifecycle on pod4-gb300-10-tray16-f3 at 2026-11-18T03:31:02Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 1079223[bash] 1079224[bash] 1079225[cut] 1079239[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T03:31:12Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/pids/owned.tsv (2 records); cleanup pid 1092971, excluded ancestry [1, 9360, 1079146, 1079221, 1079223, 1079224, 1079239, 1079260, 1092971], own pipeline [1079223, 1079224, 1079225, 1079239, 1079260, 1092972]
+  GONE     pid 1003920 [driver:e1_v1_lifecycle] start 296435105: no such process (already exited)
+  GONE     pid 1032963 [probe:e1_v1_lifecycle] start 296439767: no such process (already exited)
+  summary: owned 0, stale 0, gone 2, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T03:31:12Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T03:31:13Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/pids/owned.tsv (2 records); cleanup pid 1092978, excluded ancestry [1, 9360, 1079146, 1079221, 1079223, 1079224, 1079239, 1092978], own pipeline [1079223, 1079224, 1079225, 1079239]
+GONE     pid 1003920 [driver:e1_v1_lifecycle] start 296435105: no such process (already exited)
+GONE     pid 1032963 [probe:e1_v1_lifecycle] start 296439767: no such process (already exited)
+summary: owned 0, stale 0, gone 2, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive
+INFO  lifecycle final phase report_written nsys alive False server alive False gpu released 1794972166.7016323 preserved /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm
+PASS  lifecycle phase report_written
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  the preserved stream is removed by the operator only after postrun_e1_v1.sh reports PASS (its L10 recovery proof needs it)
+INFO  [e1_v1_lifecycle] rc=0 end 2026-11-18T03:27:45Z
+INFO  [e1_v1_lifecycle] shutdown trigger at server-log line 7713; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+INFO  raw size 2.7G; nsys files: 393018929 dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.nsys-rep  1962573824 dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.sqlite  88 lifecycle.control  7318 lifecycle.json  
+INFO  reservation pod (from the laptop): HTTPS_PROXY=socks5://127.0.0.1:11080 kubectl --request-timeout=90s -n inference-bench delete pod dsv41-gb300-reserve-tray16 ; then kubectl get pods -A -o wide --field-selector spec.nodeName=pod4-gb300-10-tray16 (only daemonsets expected)
+# closeout result: CLEAN

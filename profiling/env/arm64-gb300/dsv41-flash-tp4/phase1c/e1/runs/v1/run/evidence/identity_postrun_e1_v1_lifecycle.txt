@@ -1,0 +1,26 @@
+INFO  profiler.nsys: no pins supplied; recorded only
+INFO  profiler.importer: no pins supplied; recorded only
+PASS  profiler.importer_matches_cli: importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter and CLI /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys share the install root
+PASS  server.vllm_import: vllm 0.31.1.dev17+g0ab187113 from /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py
+INFO  server.identity: no pins supplied; recorded only
+PASS  server.model_path: /mnt/shared/weights/DeepSeek-V4.1-Flash-1017/config.json present
+PASS  recipe.server_argv: server argv identical to the reference launch
+PASS  recipe.nsys_prefix: nsys flags identical to the reference launch (output stem excepted)
+PASS  recipe.nsys_executable: /usr/local/bin/nsys resolves to the reference launch's /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+PASS  recipe.env: no environment variable added relative to the reference launch
+PASS  cleanup.identity: pid 1093692 starttime 296672341 boot 54a59f08 uid 1000
+PASS  cleanup.ancestry: descendant test resolves this process under its parent
+PASS  cleanup.refuses_self: signal_verified(own pid) -> refused
+PASS  cleanup.refuses_pid1: -> refused
+PASS  cleanup.detects_identity_change: stale starttime on the parent pid -> changed (nothing signalled)
+PASS  cleanup.gpu_query: nvidia-smi compute-app query works; 0 compute pid(s) now
+INFO  parsers.reference_log: no reference server log supplied
+PASS  policy.valid: soft 300 s, hard 600 s, stall 300 s, max extension 120 s, GPU-held ceiling 2700.0, action release_gpus, preserve stream True
+PASS  policy.ceiling_set: gpu_held_ceiling_s is explicit
+FAIL  locations.lifecycle.json: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/nsys/lifecycle.json exists (previous run?)
+FAIL  locations.lifecycle.control: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/nsys/lifecycle.control exists (previous run?)
+FAIL  locations.log_dir: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile exists
+PASS  locations.stream_dir: /tmp: 1164 GiB free (floor 50)
+FAIL  locations.stream_leftovers: own raw streams / preserve dirs in /tmp: ['/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve']
+PASS  locations.report_dir: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile: 21100 GiB free (floor 20)
+# identity preflight: 25 checks, 4 FAIL

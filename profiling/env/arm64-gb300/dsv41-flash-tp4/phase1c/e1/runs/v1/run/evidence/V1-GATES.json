@@ -1,0 +1,126 @@
+{
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle",
+ "gates": [
+  {
+   "gate": "L0.record",
+   "status": "PASS",
+   "detail": "lifecycle.json schema 1 phase report_written"
+  },
+  {
+   "gate": "L1.idempotent_stop",
+   "status": "FAIL",
+   "detail": "requests_sent=1 duplicates_suppressed=0 http=ok (the runner's finally path re-requests the stop; exactly one POST must have left)"
+  },
+  {
+   "gate": "L2.phase_order",
+   "status": "PASS",
+   "detail": "history ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; strictly increasing=True timestamps monotone=True final=report_written=True"
+  },
+  {
+   "gate": "L2b.stream_phase",
+   "status": "PASS",
+   "detail": "Nsight announced the raw stream"
+  },
+  {
+   "gate": "L3.report_complete",
+   "status": "PASS",
+   "detail": "report dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.nsys-rep size=393018929 validation.ok=True kernel_rows=12250832 band=[11638290, 12863373]"
+  },
+  {
+   "gate": "L3b.coverage",
+   "status": "PASS",
+   "detail": "NVTX forward ranges 8640 \u2192 2160 iterations (band [2100, 2250]); both waves expected (b=8 at 0 s, b=48 at 18.6 s)"
+  },
+  {
+   "gate": "L4.stream_preserved",
+   "status": "FAIL",
+   "detail": "path=/tmp/nsys-report-6835.qdstrm discovered_by=log preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm size=347628923 preserved_size=347628953 on_disk=347628953 sha256=None"
+  },
+  {
+   "gate": "L5.no_signal_to_importer",
+   "status": "PASS",
+   "detail": "actions=1; server signals=[('SIGTERM', 'shutdown')]; disallowed=[]"
+  },
+  {
+   "gate": "L5b.server_stopped_by_identity",
+   "status": "PASS",
+   "detail": "api_server pid 1048248: [('SIGTERM', 'shutdown')]"
+  },
+  {
+   "gate": "L6.gpu_held_within_ceiling",
+   "status": "PASS",
+   "detail": "GPU-held 1713 s (launch \u2192 release), ceiling 2700.0 s"
+  },
+  {
+   "gate": "L6b.finalisation_within_hard_deadline",
+   "status": "PASS",
+   "detail": "stop request \u2192 report 91 s; soft 300.0 hard 600.0"
+  },
+  {
+   "gate": "L6c.gpu_release_verified_independently",
+   "status": "PASS",
+   "detail": "2 census sample(s) ['gpu_release_census_t0.json', 'gpu_release_census_t20.json']; last: 2026-11-18T03:28:06Z released=True compute_pids=[] memory.used MiB=[0, 0, 0, 0] (bound 64); after controller release_at=1794972166.7016323: True"
+  },
+  {
+   "gate": "L7.control_probe",
+   "status": "PASS",
+   "detail": "recorded [('note V1 operator probe: control file read', 'noted'), ('extend 60 V1 operator probe: extension logged', 'hard deadline extended by 60 s (operator); GPU-held ceiling unchanged at 1794973153')]; expected ['note V1 operator probe: control file read', 'extend 60 V1 operator probe: extension logged']"
+  },
+  {
+   "gate": "L8.no_escalation",
+   "status": "PASS",
+   "detail": "escalations=[]"
+  },
+  {
+   "gate": "L8b.warnings",
+   "status": "PASS",
+   "detail": "0 warning(s): []"
+  },
+  {
+   "gate": "L8c.extension_accounting",
+   "status": "PASS",
+   "detail": "hard_extension_s=60.0 == sum of accepted extend commands 60.0 (no silent extension)"
+  },
+  {
+   "gate": "L9.session_closed",
+   "status": "PASS",
+   "detail": "nsys alive=False server alive=False closed_at=1794972168.711829"
+  },
+  {
+   "gate": "L10.recovery_proof",
+   "status": "INFO",
+   "detail": "NOT RUN (no --importer, or L4 failed: no byte-complete preserved stream)"
+  },
+  {
+   "gate": "R.launch_record",
+   "status": "PASS",
+   "detail": "nsys NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0 exe /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys"
+  },
+  {
+   "gate": "S.completeness_v2",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.extract",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.nsys_validation",
+   "status": "PASS",
+   "detail": "exit code 0"
+  },
+  {
+   "gate": "S.config_identity",
+   "status": "FAIL",
+   "detail": "exit code 1"
+  },
+  {
+   "gate": "S.recipe",
+   "status": "PASS",
+   "detail": "exit code 0"
+  }
+ ],
+ "verdict": "STOP"
+}

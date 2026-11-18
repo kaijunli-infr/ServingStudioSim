@@ -1,0 +1,81 @@
+# postrun e1_v1_lifecycle 2026-11-18T03:31:55Z on pod4-gb300-10-tray16-f3
+[e1_v1_lifecycle] rc=0 end 2026-11-18T03:27:45Z
+[e1_v1_lifecycle] shutdown trigger at server-log line 7713; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+[e1_v1_lifecycle] stop timeline: 03:21:12 [api_router.py:31] Stopping profiler → 03:22:42 [api_router.py:33] Profiler stopped; Generating '/tmp/nsys-report-6835.qdstrm'
+## sizes
+154915863 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/host_timeline.json
+81557955 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/parsed.json
+78009561 /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/parsed.kernels.parquet
+ 
+ 
+ 
+393018929 dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.nsys-rep
+1962573824 dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.sqlite
+88 lifecycle.control
+7318 lifecycle.json
+validation: {'nvtx_forward_ranges': 8640, 'kernel_rows': 12250832, 'kernel_span_ms': 50516.325865, 'ok': True}
+nsys_profiler: {'executable': '/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys', 'version': 'NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0'}
+## 1. completeness v2 (routing-to-iteration joins, both waves; dry plan)
+INFO         ramp iterations (prefill present or decode_requests != b inside a cell): 220
+PASS         iterations carrying requests of two cells (overrun): 0
+INFO         plan 'dry' (2 cells, 56 requests) selected by --plan dry; every planned cell is checked
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         requests seen 56; requests whose emitted tokens != 1024: 0 []
+PASS         per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95
+PASS         (request, position) pairs emitted in more than one iteration (duplicate join): 0
+PASS         (request, position) pairs never emitted (missing join): 0
+PASS         requests whose position->iteration map is not strictly increasing: 0
+completeness_v2 rc=0
+## 2. input hashes + Phase 1A tables (costmodel.extract)
+[e1_v1_lifecycle] 0/2160 iterations, 4s
+[e1_v1_lifecycle] 2000/2160 iterations, 7s
+[e1_v1_lifecycle] done: 2160 iterations, 8640 rank rows, 1067980 collective rows, unaligned 0, 8s
+extract rc=0
+## 3. nsys validation checker (NVTX complete, GPU windows overlap, collective spread, JIT, joins)
+RESULT PASS [checker v2.0.0]
+RESULT PASS
+PASS lines: 90
+nsys_validation rc=0
+## 4. configuration identity of the launch record vs the accepted e1_nsys_val run (argv, env, server config)
+FAIL  argv: only in a ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val'], only in b ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle'] (permitted: ['--enable-return-routed-experts'])
+FAIL  server env differs in ['PYTHONPATH'] (ignored: ['PATH'])
+FAIL  launch nsys_config differs: ['nsys_config.capture_start_delay_seconds', 'nsys_config.finalize_hard_deadline_s', 'nsys_config.finalize_max_extension_s', 'nsys_config.finalize_on_hard_deadline', 'nsys_config.finalize_session_close_timeout_s', 'nsys_config.finalize_soft_deadline_s']
+FAIL  launch fork_git differs: ['fork_git.path']
+FAIL  launch records identical apart from the hook flag
+RESULT FAIL (5)
+config_identity rc=1
+## 5. recipe test against this run's launch record (argv/prefix/env unchanged by the lifecycle controller)
+PASS  recipe.server_argv: server argv identical to the reference launch
+PASS  recipe.nsys_prefix: nsys flags identical to the reference launch (output stem excepted)
+PASS  recipe.nsys_executable: /usr/local/bin/nsys resolves to the reference launch's /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+PASS  recipe.env: no environment variable added relative to the reference launch
+recipe rc=0
+## 6. lifecycle gates (+ offline recovery proof: import, sqlite export, in-session counts; + independent GPU-release census)
+PASS  L0.record: lifecycle.json schema 1 phase report_written
+FAIL  L1.idempotent_stop: requests_sent=1 duplicates_suppressed=0 http=ok (the runner's finally path re-requests the stop; exactly one POST must have left)
+PASS  L2.phase_order: history ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; strictly increasing=True timestamps monotone=True final=report_written=True
+PASS  L2b.stream_phase: Nsight announced the raw stream
+PASS  L3.report_complete: report dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.nsys-rep size=393018929 validation.ok=True kernel_rows=12250832 band=[11638290, 12863373]
+PASS  L3b.coverage: NVTX forward ranges 8640 → 2160 iterations (band [2100, 2250]); both waves expected (b=8 at 0 s, b=48 at 18.6 s)
+FAIL  L4.stream_preserved: path=/tmp/nsys-report-6835.qdstrm discovered_by=log preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm size=347628923 preserved_size=347628953 on_disk=347628953 sha256=None
+PASS  L5.no_signal_to_importer: actions=1; server signals=[('SIGTERM', 'shutdown')]; disallowed=[]
+PASS  L5b.server_stopped_by_identity: api_server pid 1048248: [('SIGTERM', 'shutdown')]
+PASS  L6.gpu_held_within_ceiling: GPU-held 1713 s (launch → release), ceiling 2700.0 s
+PASS  L6b.finalisation_within_hard_deadline: stop request → report 91 s; soft 300.0 hard 600.0
+PASS  L6c.gpu_release_verified_independently: 2 census sample(s) ['gpu_release_census_t0.json', 'gpu_release_census_t20.json']; last: 2026-11-18T03:28:06Z released=True compute_pids=[] memory.used MiB=[0, 0, 0, 0] (bound 64); after controller release_at=1794972166.7016323: True
+PASS  L7.control_probe: recorded [('note V1 operator probe: control file read', 'noted'), ('extend 60 V1 operator probe: extension logged', 'hard deadline extended by 60 s (operator); GPU-held ceiling unchanged at 1794973153')]; expected ['note V1 operator probe: control file read', 'extend 60 V1 operator probe: extension logged']
+PASS  L8.no_escalation: escalations=[]
+PASS  L8b.warnings: 0 warning(s): []
+PASS  L8c.extension_accounting: hard_extension_s=60.0 == sum of accepted extend commands 60.0 (no silent extension)
+PASS  L9.session_closed: nsys alive=False server alive=False closed_at=1794972168.711829
+INFO  L10.recovery_proof: NOT RUN (no --importer, or L4 failed: no byte-complete preserved stream)
+PASS  R.launch_record: nsys NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0 exe /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+PASS  S.completeness_v2: exit code 0
+PASS  S.extract: exit code 0
+PASS  S.nsys_validation: exit code 0
+FAIL  S.config_identity: exit code 1
+PASS  S.recipe: exit code 0
+# lifecycle gates e1_v1_lifecycle: 24 gates, 3 FAIL → FAIL → STOP (no advance to the next validation step; review required)
+## verdict
+V1 ACCEPTANCE: STOP (a gate FAILED; see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/cpu/V1-GATES.txt). Do not advance to V2; keep the preserved stream and the run directory for review.

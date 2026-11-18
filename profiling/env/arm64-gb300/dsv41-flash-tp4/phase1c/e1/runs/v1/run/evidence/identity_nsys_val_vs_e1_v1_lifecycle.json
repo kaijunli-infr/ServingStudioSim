@@ -1,0 +1,39 @@
+{
+ "a": "/mnt/shared/home/dc/workspace/serving-studio/artifacts/phase1c-e1-stage15-dsv41-flash-gb300-tp4-20261115/run/e1_nsys_val",
+ "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle",
+ "checks": [
+  {
+   "status": "PASS",
+   "msg": "profile configs identical apart from ['log_dir', 'name', 'nsys.capture_start_delay_seconds', 'nsys.finalize_hard_deadline_s', 'nsys.finalize_max_extension_s', 'nsys.finalize_on_hard_deadline', 'nsys.finalize_session_close_timeout_s', 'nsys.finalize_soft_deadline_s', 'nsys.finalize_stall_timeout_s', 'nsys.gpu_held_ceiling_s', 'nsys.preserve_raw_stream', 'workload.frontend.path']"
+  },
+  {
+   "status": "PASS",
+   "msg": "effective wire mode (stream and not capture): a=non-streaming b=non-streaming"
+  },
+  {
+   "status": "FAIL",
+   "msg": "argv: only in a ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val'], only in b ['/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v1/e1_v1_lifecycle/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle'] (permitted: ['--enable-return-routed-experts'])"
+  },
+  {
+   "status": "PASS",
+   "msg": "server_argv: only in a [], only in b [] (permitted: ['--enable-return-routed-experts'])"
+  },
+  {
+   "status": "FAIL",
+   "msg": "server env differs in ['PYTHONPATH'] (ignored: ['PATH'])"
+  },
+  {
+   "status": "FAIL",
+   "msg": "launch nsys_config differs: ['nsys_config.capture_start_delay_seconds', 'nsys_config.finalize_hard_deadline_s', 'nsys_config.finalize_max_extension_s', 'nsys_config.finalize_on_hard_deadline', 'nsys_config.finalize_session_close_timeout_s', 'nsys_config.finalize_soft_deadline_s']"
+  },
+  {
+   "status": "FAIL",
+   "msg": "launch fork_git differs: ['fork_git.path']"
+  },
+  {
+   "status": "FAIL",
+   "msg": "launch records identical apart from the hook flag"
+  }
+ ],
+ "fails": 5
+}

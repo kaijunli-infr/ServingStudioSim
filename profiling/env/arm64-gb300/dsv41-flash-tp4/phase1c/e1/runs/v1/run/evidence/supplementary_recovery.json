@@ -1,0 +1,30 @@
+{
+ "note": "SUPPLEMENTARY diagnostic outside the pinned gates; does not change the V1 verdict",
+ "started": "2026-11-18T03:48:38Z",
+ "finished": "2026-11-18T03:50:06Z",
+ "preserved_stream": {
+  "sha256": "8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f",
+  "size": 347628953
+ },
+ "import_rc": 0,
+ "export_rc": 0,
+ "recovered_report_size": 393018979,
+ "in_session_report_size": 393018929,
+ "recovered": {
+  "nvtx_forward_ranges": 8640,
+  "kernel_rows": 12250832,
+  "kernel_span_ms": 50516.325865,
+  "ok": true
+ },
+ "in_session": {
+  "nvtx_forward_ranges": 8640,
+  "kernel_rows": 12250832,
+  "kernel_span_ms": 50516.325865,
+  "ok": true
+ },
+ "equal": {
+  "kernel_rows": true,
+  "nvtx_forward_ranges": true,
+  "kernel_span_ms_rel_diff": 0.0
+ }
+}

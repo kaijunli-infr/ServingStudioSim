@@ -1,0 +1,25 @@
+PASS  L0.record: lifecycle.json schema 1 phase report_written
+FAIL  L1.idempotent_stop: requests_sent=1 duplicates_suppressed=0 http=ok (the runner's finally path re-requests the stop; exactly one POST must have left)
+PASS  L2.phase_order: history ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; strictly increasing=True timestamps monotone=True final=report_written=True
+PASS  L2b.stream_phase: Nsight announced the raw stream
+PASS  L3.report_complete: report dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.nsys-rep size=393018929 validation.ok=True kernel_rows=12250832 band=[11638290, 12863373]
+PASS  L3b.coverage: NVTX forward ranges 8640 → 2160 iterations (band [2100, 2250]); both waves expected (b=8 at 0 s, b=48 at 18.6 s)
+FAIL  L4.stream_preserved: path=/tmp/nsys-report-6835.qdstrm discovered_by=log preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm size=347628923 preserved_size=347628953 on_disk=347628953 sha256=None
+PASS  L5.no_signal_to_importer: actions=1; server signals=[('SIGTERM', 'shutdown')]; disallowed=[]
+PASS  L5b.server_stopped_by_identity: api_server pid 1048248: [('SIGTERM', 'shutdown')]
+PASS  L6.gpu_held_within_ceiling: GPU-held 1713 s (launch → release), ceiling 2700.0 s
+PASS  L6b.finalisation_within_hard_deadline: stop request → report 91 s; soft 300.0 hard 600.0
+PASS  L6c.gpu_release_verified_independently: 2 census sample(s) ['gpu_release_census_t0.json', 'gpu_release_census_t20.json']; last: 2026-11-18T03:28:06Z released=True compute_pids=[] memory.used MiB=[0, 0, 0, 0] (bound 64); after controller release_at=1794972166.7016323: True
+PASS  L7.control_probe: recorded [('note V1 operator probe: control file read', 'noted'), ('extend 60 V1 operator probe: extension logged', 'hard deadline extended by 60 s (operator); GPU-held ceiling unchanged at 1794973153')]; expected ['note V1 operator probe: control file read', 'extend 60 V1 operator probe: extension logged']
+PASS  L8.no_escalation: escalations=[]
+PASS  L8b.warnings: 0 warning(s): []
+PASS  L8c.extension_accounting: hard_extension_s=60.0 == sum of accepted extend commands 60.0 (no silent extension)
+PASS  L9.session_closed: nsys alive=False server alive=False closed_at=1794972168.711829
+INFO  L10.recovery_proof: NOT RUN (no --importer, or L4 failed: no byte-complete preserved stream)
+PASS  R.launch_record: nsys NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0 exe /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+PASS  S.completeness_v2: exit code 0
+PASS  S.extract: exit code 0
+PASS  S.nsys_validation: exit code 0
+FAIL  S.config_identity: exit code 1
+PASS  S.recipe: exit code 0
+# lifecycle gates e1_v1_lifecycle: 24 gates, 3 FAIL → FAIL → STOP (no advance to the next validation step; review required)

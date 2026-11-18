@@ -1,0 +1,7 @@
+[e1_v1_lifecycle] inputs verified in 0s
+[e1_v1_lifecycle] parsed.json: 2160 iterations, 207 kernel names, devices [0, 1, 2, 3]
+[e1_v1_lifecycle] kernels: 12250832 rows sorted in 1s
+[e1_v1_lifecycle] host_timeline: 3599234 api calls
+[e1_v1_lifecycle] 0/2160 iterations, 4s
+[e1_v1_lifecycle] 2000/2160 iterations, 7s
+[e1_v1_lifecycle] done: 2160 iterations, 8640 rank rows, 1067980 collective rows, unaligned 0, 8s
