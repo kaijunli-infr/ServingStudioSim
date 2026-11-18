@@ -7,12 +7,14 @@
         [--postrun-storage storage_postrun.jsonl] [--postrun-memory mem_postrun.jsonl]
         [--reservation-deleted reservation_deleted.json] [--extra name=rc ...] [--out V3S-GATES.json]
 
-  G0   source and executable: launch record = pinned trees and gitlinks, clean; executable = pinned bytes before and after
+  G0   source and executable: launch record = pinned trees and gitlinks, clean, real mode (a rehearsal launch can never
+       pass); executable = pinned bytes before and after
   G1   host identity: lifecycle = run log = reservation node = every sampler (GPU, memory, storage, import probe)
   G2   one stop request, returned OK, before the server was signalled
   G3   phases in the registered order; final report_written; no hard-deadline or ceiling escalation, no control line,
        no forced release (a soft-deadline escalation is the controller's 300 s warning: recorded, judged by G4)
-  G4   phase deadlines on the registered clocks (below)
+  G4   phase deadlines on the registered clocks (below); the controller's hard deadline must be the registered total,
+       counted from the original stop request and not extended (its soft warning never moves it)
   G5   importer observed by the importer-specific probe: one importer, activity from its own counters, completed;
        no signal to anything but the recorded server processes
   G6   GPU release as a sampled interval after the server SIGTERM; its upper edge within the deadline
@@ -20,7 +22,8 @@
   G8   offline import of the durable copy and semantic completeness (absolute bands; equality with the in-session export)
   G9   scientific checkers: four-wave completeness and routing records, extract, Nsight validation, configuration identity
   G10  bounds: GPU-held ceiling, session close, reservation
-  G11  storage and host memory: measured peaks within the ceilings; an unmeasured peak is INCONCLUSIVE
+  G11  storage and host memory: measured peaks within the ceilings; an unmeasured peak is INCONCLUSIVE; the registered
+       supervisor's record complete, monitors effective throughout, no abort response
   G12  closeout clean, reservation deleted
 
 Phase clocks (all wall-clock seconds, each from one named record):
@@ -123,6 +126,8 @@ def gate_source(res: list, run: Path, pin: dict | None, provenance: dict | None,
             problems.append(f"gitlink {path} {str((src.get('gitlinks') or {}).get(path))[:12]} != pinned {want[:12]}")
     if src.get("tracked_changes") != 0:
         problems.append(f"tracked changes in the launch tree: {src.get('tracked_changes')}")
+    if src.get("mode") != "real":
+        problems.append(f"launch mode is {src.get('mode')!r}, not 'real' (a rehearsal launch is never V3 evidence)")
     if src.get("descends_from_pinned_commit") is not True:
         problems.append("launch commit does not descend from the pinned code commit")
     sha = (provenance or {}).get("sha256")
@@ -207,8 +212,17 @@ def gate_deadlines(res: list, lc: dict, probe: dict | None, inputs: dict) -> Non
             unseen.append(name)
         elif dur > limit or dur < 0:
             late.append(name)
+    # the controller's hard deadline: the registered total, from the original stop request, never extended
+    d, total = lc.get("deadlines") or {}, dl.get("stop_to_report_written")
+    hard = {"hard_at_minus_stop_s": None if d.get("hard_at") is None or c["t_stop"] is None else round(d["hard_at"] - c["t_stop"], 3), "hard_extension_s": d.get("hard_extension_s"), "policy_hard_deadline_s": (lc.get("policy") or {}).get("hard_deadline_s"),
+            "soft_warnings": sum(e.get("kind") == "soft_deadline" for e in lc.get("escalations", []))}
+    if hard["hard_at_minus_stop_s"] is None or hard["hard_extension_s"] is None or hard["policy_hard_deadline_s"] is None or total is None:
+        unseen.append("controller hard deadline record")
+    elif abs(hard["hard_at_minus_stop_s"] - total) > 0.5 or hard["hard_extension_s"] != 0 or hard["policy_hard_deadline_s"] != total:
+        late.append(f"controller hard deadline is not the registered {total} s from the stop request, unextended")
     status = "FAIL" if late else ("INCONCLUSIVE" if unseen else "PASS")
-    add(res, "G4.phase_deadlines", status, "; ".join(f"{n} {r['seconds']} s (deadline {r['deadline_s']})" for n, r in rows.items()) + (f"; exceeded or negative: {late}" if late else "") + (f"; boundary not observed or deadline not registered: {unseen}" if unseen else ""), phases=rows, clocks=c)
+    add(res, "G4.phase_deadlines", status, "; ".join(f"{n} {r['seconds']} s (deadline {r['deadline_s']})" for n, r in rows.items()) + f"; controller hard deadline {hard['hard_at_minus_stop_s']} s after the stop request, extension {hard['hard_extension_s']} s, soft warnings recorded {hard['soft_warnings']} (informational)"
+        + (f"; exceeded or negative: {late}" if late else "") + (f"; boundary not observed or deadline not registered: {unseen}" if unseen else ""), phases=rows, clocks=c, hard_deadline=hard)
 
 
 # ---- G5
@@ -223,6 +237,8 @@ def gate_importer(res: list, lc: dict, probe: dict | None) -> None:
     bad_signals = []
     for a in lc.get("actions", []):
         pid = a.get("pid")
+        if pid is None and "nsys" in str(a.get("action", "")) + str(a.get("reason", "")):
+            pid = nsys_pid  # the controller's own late interrupt of a lingering Nsight CLI carries no pid
         if pid in protected:
             bad_signals.append((pid, a.get("action"), "importer or its agent"))
         elif pid == nsys_pid:
@@ -390,6 +406,16 @@ def gate_resources(res: list, run: Path, lc: dict, inputs: dict, post_storage: P
     breach_files = [p.name for p in (run / "MEMORY-BREACH", run / "STORAGE-BREACH") if p.exists()]
     if breach_files:
         over.append(f"breach file(s) written during the run: {breach_files}")
+    sup = load(run / "supervisor.json")
+    if sup is None:
+        unmeasured["supervisor"] = "no supervisor record: the breach markers had no registered consumer on record"
+    else:
+        if sup.get("response") is not None:
+            over.append(f"the supervisor gave an abort response: {(sup['response'] or {}).get('outcome')} for {[(c.get('cause'), c.get('source'), c.get('kind')) for c in sup.get('causes', [])]}")
+        if sup.get("monitors_effective") is not True:
+            over.append("an independent safety monitor stopped producing samples during the run")
+        if sup.get("complete") is not True and sup.get("response") is None:
+            unmeasured["supervisor"] = "the supervisor's record is not complete (it did not end through its stop file)"
     add(res, "G11.storage_and_memory", "FAIL" if over else ("INCONCLUSIVE" if unmeasured else "PASS"), f"measured peaks {measured}; ceilings temporary {ceil.get('temporary_storage_gb')} GB, persistent {ceil.get('persistent_storage_gb')} GB, importer {ceil.get('importer_rss_ceiling_gb')} GB, MemAvailable floor {ceil.get('host_mem_available_floor_gb')} GB" + (f"; exceeded: {over}" if over else "") + (f"; NOT MEASURED: {unmeasured}" if unmeasured else ""), measured=measured, unmeasured=unmeasured)
 
 
@@ -407,7 +433,7 @@ def evaluate(run: Path, inputs: dict, *, pin=None, provenance=None, binary_now=N
     extras = dict(extras or {})
     probe, reservation, deleted = load(run / "import_probe.json"), load(run / "reservation.json"), load(reservation_deleted) if reservation_deleted else None
     gate_source(res, run, pin, provenance, binary_now)
-    gate_host(res, run, lc, reservation, probe, {"memory sampler": next((r.get("host") for r in load_jsonl(run / "mem_observations.jsonl") or []), None), "storage sampler": next((r.get("host") for r in load_jsonl(run / "storage_observations.jsonl") or []), None)})
+    gate_host(res, run, lc, reservation, probe, {"supervisor": (load(run / "supervisor.json") or {}).get("host"), "memory sampler": next((r.get("host") for r in load_jsonl(run / "mem_observations.jsonl") or []), None), "storage sampler": next((r.get("host") for r in load_jsonl(run / "storage_observations.jsonl") or []), None)})
     logs = sorted(glob.glob(str(run / "profile" / "vllm" / "*_server.log")))
     gate_stop_request(res, lc, Path(logs[0]) if logs else None)
     gate_phases(res, lc)

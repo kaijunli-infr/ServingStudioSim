@@ -9,14 +9,14 @@ set -u
 export HOME=/mnt/shared/home/dc; S=$HOME/workspace/serving-studio
 RUN=${E1_V3S_RUN:-$S/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale}; PASS=e1_v3_scale
 OP=${1:?operator log directory}; A=${2:-$S/artifacts/phase1c-e1-v3scale-dsv41-flash-gb300-tp4-$(date -u +%Y%m%d)}
-TP=/tmp/dsv41_flash_1017_gb300_tp4_$PASS.raw-preserve
+TP=$(python3 -I -c "import json,os,sys; print(os.path.dirname((json.load(open(sys.argv[1])).get('stream') or {}).get('preserved_path') or ''))" $RUN/$PASS/profile/nsys/lifecycle.json 2>/dev/null)   # the directory the controller preserved the stream in
 fail=0; ok() { echo "PASS  $*"; }; bad() { echo "FAIL  $*"; fail=1; }
 echo "# archive $PASS on $(hostname) at $(date -u +%FT%TZ) -> $A"
 [ -e "$A" ] && { bad "archive directory exists: not touching it"; exit 1; }
 [ -d "$RUN/$PASS" ] || { bad "no run directory $RUN/$PASS"; exit 1; }
 mkdir -p $A/run $A/preserved $A/operator
 cp -a $RUN/. $A/run/ && ok "run root copied" || bad "copy of the run root"
-cp -p $TP/* $A/preserved/ 2>/dev/null && ok "tray-preserved stream and retention record copied" || bad "tray-preserved stream not found in $TP"
+[ -n "$TP" ] && cp -p $TP/* $A/preserved/ 2>/dev/null && ok "tray-preserved stream and retention record copied from $TP" || bad "tray-preserved stream not found (lifecycle preserved_path directory: '${TP}')"
 cp -p $OP/* $A/operator/ 2>/dev/null; echo "INFO  operator logs: $(ls $A/operator | wc -l) file(s)"
 ( cd $A && find run preserved operator -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS )
 ( cd $RUN && find . -type f -print0 | sort -z | xargs -0 sha256sum ) | sed 's#  \./#  run/#' > $A/.src.sha

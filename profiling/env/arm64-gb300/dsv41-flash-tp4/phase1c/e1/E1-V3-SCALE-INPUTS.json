@@ -133,7 +133,16 @@
   "import_probe_interval_s": 0.5,
   "import_probe_min_progress": 2,
   "mem_watch_interval_s": 1,
-  "storage_watch_interval_s": 2
+  "storage_watch_interval_s": 2,
+  "supervisor_interval_s": 1,
+  "supervisor_ack_s": 10,
+  "supervisor_stale_s": 60,
+  "supervisor_cleanup_grace_s": 30
+ },
+ "supervisor": {
+  "control_line": "release-gpus V3 resource-limit abort (registered supervisor response)",
+  "registry": "pids/supervisor.tsv",
+  "acts_on_registry": "pids/owned.tsv"
  },
  "ceilings": {
   "reservation_hard_min": 90,
@@ -142,9 +151,10 @@
   "temporary_storage_gb": 10,
   "persistent_storage_gb": 8,
   "persistent_storage_with_archive_gb": 16,
-  "host_mem_available_preflight_min_gb": 128,
+  "host_mem_available_preflight_min_gb": 448,
   "host_mem_available_floor_gb": 64,
-  "importer_rss_ceiling_gb": 256,
+  "importer_rss_ceiling_gb": 128,
+  "memory_basis": "GiB (1024^3 B). tray16: MemTotal 958 GiB, no swap, no cgroup limit, MemAvailable 862 GiB idle (2026-11-18). Importer ceiling 128 GiB = 2 x the largest importer RSS ever sampled (61 GB at >= 49 % of 216 M rows), 15 % of idle MemAvailable; preflight needs ceiling + floor + 256 GiB for the server",
   "startup_limit_min": 30,
   "capture_limit_min": 10
  },

@@ -19,6 +19,12 @@ PY=$S/gb300/venv/bin/python
 AR15=$S/artifacts/phase1c-e1-stage15-dsv41-flash-gb300-tp4-20261115/run/e1_nsys_val
 IMPORTER=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
 NSYS=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+MEMEXE=$IMPORTER
+if [ "${E1_V3S_MODE:-real}" = rehearsal ]; then   # end-to-end rehearsal only: stand-in importer / exporter; the verdict can never be PASS (gate G0)
+  case "$RUN" in */dsv41_flash_gb300_tp4_e1_v3scale_e2e) ;; *) echo "rehearsal tools are accepted only on the rehearsal run root"; exit 2;; esac
+  IMPORTER=${E1_V3S_MOCK_IMPORTER:?}; NSYS=${E1_V3S_MOCK_NSYS:?}; MEMEXE=${E1_V3S_MOCK_IMPORTER_EXE:?}
+  echo "REHEARSAL MODE: stand-in importer $IMPORTER and exporter $NSYS"
+fi
 LC=$PROF/nsys/lifecycle.json; SCR=/tmp/v3scale-recovery-$PASS
 cd $REPO && source $S/scripts/env.sh && source profiling/env/arm64-gb300/gb300.env; export CUDA_VISIBLE_DEVICES=""
 echo "# postrun $PASS $(date -u +%FT%TZ) on $(hostname); CUDA_VISIBLE_DEVICES='$CUDA_VISIBLE_DEVICES'"
@@ -31,7 +37,7 @@ DST=$RUN/$PASS/preserved/$(basename "${SRC:-none.qdstrm}")
 echo "## samplers for this post-run (own children of this script; stopped through a stop file; they signal nothing)"
 STOPF=$CPU/postrun_samplers.stop; rm -f $STOPF $CPU/storage_postrun.jsonl $CPU/mem_postrun.jsonl
 python3 -I $E1/checks/e1_storage_watch.py --out $CPU/storage_postrun.jsonl --summary $CPU/storage_postrun.json --group "temporary=/tmp/nsys-report-*.qdstrm,/tmp/*.raw-preserve,/tmp/v3scale-recovery-*" --group "persistent=$RUN,$TAB" --ceiling-gb temporary=10 --ceiling-gb persistent=8 --interval 2 --max-s 7200 --stop-file $STOPF & SW=$!
-python3 -I $E1/checks/e1_mem_watch.py --out $CPU/mem_postrun.jsonl --summary $CPU/mem_postrun.json --importer-exe $IMPORTER --stream $DST --report $SCR/recovery.nsys-rep --min-available-gb 64 --max-importer-rss-gb 256 --interval 1 --max-s 7200 --stop-file $STOPF & MW=$!
+python3 -I $E1/checks/e1_mem_watch.py --out $CPU/mem_postrun.jsonl --summary $CPU/mem_postrun.json --importer-exe $MEMEXE --stream $DST --report $SCR/recovery.nsys-rep --min-available-gb 64 --max-importer-rss-gb 128 --interval 1 --max-s 7200 --stop-file $STOPF & MW=$!
 stop_samplers() { touch $STOPF; wait $SW $MW 2>/dev/null; }
 trap stop_samplers EXIT
 sleep 3

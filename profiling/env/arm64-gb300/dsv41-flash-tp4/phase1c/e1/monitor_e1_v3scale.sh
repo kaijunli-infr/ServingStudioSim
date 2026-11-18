@@ -41,6 +41,12 @@ p=load(run+"/import_probe.json")
 if p: print(f"import probe: {p.get('result')} | importer {(p.get('importer') or {}).get('pid')} first seen {f((p.get('importer') or {}).get('first_seen_at'))} | states {[(t['state'], f(t['at'])) for t in p.get('transitions', [])][-5:]}")
 m=load(run+"/mem_watch.json")
 if m: print(f"memory: samples {m['samples']} last {f(m['last_at'])} min MemAvailable {m['min_available_kb'] and round(m['min_available_kb']/1048576,1)} GB (floor {m['policy']['min_available_gb']}) importer peak {m['importer_peak_rss_kb'] and round(m['importer_peak_rss_kb']/1048576,2)} GB (ceiling {m['policy']['max_importer_rss_gb']}) breaches {len(m['breaches'])}")
+u=load(run+"/supervisor.json")
+if u:
+    age = time.time() - (u.get("last_check_at") or 0)
+    print(f"supervisor: samples {u['samples']} last check {f(u.get('last_check_at'))} ({age:.0f} s ago) monitors effective {u.get('monitors_effective')} heartbeats {({k: v['age_s'] for k, v in (u.get('heartbeats') or {}).items()})} response {(u.get('response') or {}).get('outcome')}")
+    if u.get("response"): print(f"ABORT-CONDITION the supervisor responded: {u['response'].get('outcome')} for {[(c.get('cause'), c.get('source'), c.get('kind')) for c in u.get('causes', [])]}")
+    elif not u.get("complete") and age > 30: print(f"ABORT-CONDITION the supervisor has not checked for {age:.0f} s (breach markers have no consumer; operator: registry cleanup)")
 s=load(run+"/storage_watch.json")
 if s: print("storage: samples", s["samples"], "last", f(s["last_at"]), {g: f"peak {round((v['peak_bytes'] or 0)/1e9,3)} GB (ceiling {v['ceiling_gb']})" for g, v in s["groups"].items()}, "breaches", len(s["breaches"]))
 PY

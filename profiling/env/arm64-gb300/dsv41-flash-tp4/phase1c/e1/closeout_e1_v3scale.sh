@@ -16,6 +16,9 @@ E1_PID_REGISTRY=$REG bash $E1/checks/e1_process_census.sh; [ $? = 0 ] || fail=1
 echo "## termination plan (dry-run; nothing is signalled here)"
 python3 -I $E1/checks/e1_pids.py cleanup --registry $REG; prc=$?
 case $prc in 0) echo "PASS  registry plan: nothing owned is alive (driver, GPU sampler, import probe, memory sampler, storage sampler)";; 2) echo "FAIL  registry plan: owned processes alive or lookalikes present -> review; to terminate ONLY the verified owned tree: python3 -I $E1/checks/e1_pids.py cleanup --registry $REG --execute --grace 30 --log $RUN/cpu/cleanup_$(date -u +%Y%m%dT%H%M%SZ).jsonl"; fail=1;; *) echo "FAIL  registry plan refused (rc $prc): a registered pid is in this shell's ancestry or another user's -> stop and report"; fail=1;; esac
+SREG=$RUN/pids/supervisor.tsv
+python3 -I $E1/checks/e1_pids.py plan --registry $SREG | sed 's/^/  /'; src=${PIPESTATUS[0]}
+[ "$src" = 0 ] && echo "PASS  supervisor registry plan: the supervisor is gone, no refusal" || { echo "FAIL  supervisor registry plan rc $src (the supervisor is still alive, or a refusal / lookalike; see above)"; fail=1; }
 ns=$(for d in /proc/[0-9]*; do [ "$(stat -c %u $d 2>/dev/null)" = "$(id -u)" ] || continue; e=$(readlink $d/exe 2>/dev/null) || continue; case "$e" in /opt/nvidia/nsight-systems/*) echo "pid ${d#/proc/} $(basename $e) ppid $(awk '/^PPid:/{print $2}' $d/status 2>/dev/null): $(tr '\0' ' ' < $d/cmdline 2>/dev/null | cut -c1-160)";; esac; done)
 if [ -z "$ns" ]; then echo "PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)"; else echo "FAIL  Nsight processes of this user alive (the agent and the importer are outside the registered tree; they are never signalled by pattern; an importer is ended only by the packet's procedure, after the durable stream copy is verified):"; echo "$ns" | sed 's/^/      /'; fail=1; fi
 LC=$RUN/$PASS/profile/nsys/lifecycle.json
@@ -23,6 +26,11 @@ if [ -f $LC ]; then
   python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print('INFO  lifecycle final phase', d['phase'], 'nsys alive', (d.get('nsys') or {}).get('alive'), 'server alive', (d.get('server') or {}).get('alive'), 'gpu released', (d.get('gpu') or {}).get('released_at'), 'preserved', (d.get('stream') or {}).get('preserved_path'))" $LC
   ph=$(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print(d['phase'])" $LC); case "$ph" in report_written|stop_failed) echo "PASS  lifecycle phase $ph is terminal (acceptance is decided by postrun_e1_v3scale.sh; V3 requires report_written)";; *) echo "FAIL  lifecycle phase $ph is not terminal (importer running or hung: stream stays preserved; verified registry cleanup only)"; fail=1;; esac
 else echo "INFO  no lifecycle.json for $PASS (nothing ran)"; fi
+if [ -f $RUN/$PASS/supervisor.json ]; then python3 -I -c "
+import json,sys
+d=json.load(open(sys.argv[1])); r=d.get('response')
+print(('FAIL  ' if r else 'PASS  ') + 'supervisor: ' + ('ABORT RESPONSE ' + str(r.get('outcome')) + ' for ' + str([(c.get('cause'), c.get('source'), c.get('kind')) for c in d.get('causes', [])]) if r else 'no abort response') + '; monitors effective=%s; complete=%s; samples=%s; signals sent by the supervisor itself=%s' % (d.get('monitors_effective'), d.get('complete'), d.get('samples'), d.get('signals_sent_by_supervisor')))
+sys.exit(1 if r or d.get('monitors_effective') is not True else 0)" $RUN/$PASS/supervisor.json || fail=1; else echo "INFO  supervisor.json not present"; fi
 for f in import_probe.json mem_watch.json storage_watch.json; do
   if [ -f $RUN/$PASS/$f ]; then python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print('INFO  ' + sys.argv[2] + ':', d.get('result') or ('complete=%s samples=%s breaches=%s' % (d.get('complete'), d.get('samples'), len(d.get('breaches', [])))))" $RUN/$PASS/$f $f; else echo "INFO  $f not present"; fi
 done

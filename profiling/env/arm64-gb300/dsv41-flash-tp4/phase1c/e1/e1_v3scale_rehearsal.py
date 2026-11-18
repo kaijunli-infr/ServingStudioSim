@@ -112,6 +112,7 @@ class World:
     driver_bin: dict | None = field(default_factory=dict)
     launcher_bin: dict | None = field(default_factory=dict)
     reservation: dict | None = field(default_factory=dict)
+    supervisor: dict | None = field(default_factory=dict)
     deleted: dict | None = field(default_factory=dict)
     identity: dict | None = field(default_factory=lambda: {"verdict": "PASS", "normalized": []})
     extras: dict = field(default_factory=lambda: {"completeness_v2": 0, "extract": 0, "nsys_validation": 0, "closeout": 0})
@@ -153,7 +154,8 @@ class World:
         self.lc = {
             "schema_version": 2, "host": HOST, "host_identity": {"hostname": HOST, "boot_id": "54a59f08"}, "phase": "report_written", "launch_started_at": T0, "stop_requested_at": T0 + self.t_stop,
             "phase_history": [{"phase": p, "at": T0 + t} for p, t in phases], "http": {"status": "ok", "returned_at": T0 + tr + self.http_returned_after_report, "requests_sent": 1},
-            "policy": {"gpu_held_ceiling_s": 2700.0, "session_close_timeout_s": 300.0, "hard_deadline_s": 600.0, "server_term_grace_s": 60.0}, "escalations": [], "warnings": [], "control_commands": [],
+            "policy": {"gpu_held_ceiling_s": 2700.0, "session_close_timeout_s": 300.0, "hard_deadline_s": 600.0, "soft_deadline_s": 300.0, "server_term_grace_s": 60.0}, "escalations": [], "warnings": [], "control_commands": [],
+            "deadlines": {"soft_at": T0 + self.t_stop + 300.0, "hard_at": T0 + self.t_stop + 600.0, "hard_extension_s": 0.0, "max_extension_s": 120.0, "gpu_held_ceiling_at": T0 + 2700.0},
             "nsys": {"pid": NSYS, "alive": False, "identity": {"pid": NSYS, "starttime": 777}}, "server": {"api_server": {"pid": API}, "engine_processes": [{"pid": ENGINE}, {"pid": ENGINE + 1}], "alive": False},
             "gpu": {"release_requested_at": None, "released_at": T0 + ts + 1.5}, "session_closed_at": T0 + tc, "actions": [{"at": T0 + ts, "reason": "shutdown", "pid": API, "action": "SIGTERM"}],
             "report": {"path": "x.nsys-rep", "size": 4096, "written_at": T0 + tr},
@@ -180,7 +182,8 @@ class World:
                              for t in frange(-10.0, 240, 2.0)]
         self.post_memory = [{"at": now + t, "host": HOST, "mem_total_kb": 1004 * KB, "mem_available_kb": int(self.mem_available_gb * KB), "candidates": 1, "importer": {"pid": 6000, "starttime": 950, "rss_kb": int(self.importer_rss_gb * KB), "hwm_kb": int(self.importer_rss_gb * KB)}}
                             for t in frange(-10.0, 240, 1.0)]
-        self.source = {"commit": "c" * 40, "trees": dict(TREES), "gitlinks": dict(GITLINKS), "tracked_changes": 0, "descends_from_pinned_commit": True}
+        self.source = {"commit": "c" * 40, "mode": "real", "trees": dict(TREES), "gitlinks": dict(GITLINKS), "tracked_changes": 0, "descends_from_pinned_commit": True}
+        self.supervisor = {"supervisor": "e1_supervisor.py", "host": HOST, "samples": int(tc) + 30, "causes": [], "response": None, "monitors_effective": True, "signals_sent_by_supervisor": 0, "complete": True}
         self.driver_bin = {"sha256_before_launcher": PIN_SHA, "sha256_after_launcher": PIN_SHA, "unchanged": True, "cargo_compiling_lines_in_run_log": 0, "stat_before": "1 2 3", "stat_after": "1 2 3"}
         self.launcher_bin = {"mode": "prebuilt (no compilation in this launch path)", "sha256": PIN_SHA, "pinned_sha256": PIN_SHA, "sha256_after_launch": PIN_SHA, "unchanged": True, "cargo_consulted": False, "build_tool_guard": {"installed": True, "active": True, "blocked": []}}
         self.reservation = {"pod": "dsv41-gb300-reserve-tray16", "node": HOST, "phase": "Running", "creation_timestamp": "2026-11-19T00:00:00Z"}
@@ -231,7 +234,7 @@ def write_world(w: World, root: Path) -> dict:
     (run / "run.log").write_text(f"[e1_v3_scale] start 2026-11-19T00:00:00Z on {HOST} x\n")
     if w.server_log is not None:
         (vllm / "x_server.log").write_text(w.server_log)
-    for name, obj in (("import_probe.json", w.probe), ("launch_source.json", w.source), ("binary_check.json", w.driver_bin), ("reservation.json", w.reservation)):
+    for name, obj in (("import_probe.json", w.probe), ("launch_source.json", w.source), ("binary_check.json", w.driver_bin), ("reservation.json", w.reservation), ("supervisor.json", w.supervisor)):
         if obj is not None:
             (run / name).write_text(json.dumps(obj))
     if w.launcher_bin is not None:
@@ -410,8 +413,10 @@ def fixtures() -> list[Fixture]:
         Fixture("phases_exactly_at_deadlines", "boundary", "stop accepted 30 s, flush 300 s, import 300 s, stop→report 600 s, session close 300 s", "PASS", {},
                 clocks={"accepted": 30.0, "flush": 300.0, "report_after_importing": 300.0, "imp_first_after_importing": 0.0, "imp_duration": 300.0, "sigterm_after_report": 3.0, "close_after_sigterm": 300.0, "t_stop": 1000.0}),
         Fixture("release_upper_edge_exactly_90s", "boundary", "first 'released' reading window ends 90.0 s after the SIGTERM", "PASS", {}, mutate=_release_at(90.0)),
-        Fixture("peaks_exactly_at_ceilings", "boundary", "temporary 10.0 GB, persistent 8.0 GB, importer 256 GB, MemAvailable exactly at the floor", "PASS", {},
-                mutate=_both(_scale_rows("post_storage", "temporary", 10.0), _scale_rows("storage", "persistent", 8.0), _scale_rows("post_storage", "persistent", 8.0), _scale_rows("mem", None, 256.0), _mem_available(64.0))),
+        Fixture("peaks_exactly_at_ceilings", "boundary", "temporary 10.0 GB, persistent 8.0 GB, importer 128 GiB, MemAvailable exactly at the floor", "PASS", {},
+                mutate=_both(_scale_rows("post_storage", "temporary", 10.0), _scale_rows("storage", "persistent", 8.0), _scale_rows("post_storage", "persistent", 8.0), _scale_rows("mem", None, 128.0), _mem_available(64.0))),
+        Fixture("soft_warning_total_exactly_600s", "boundary", "flush 300 s + import 300 s = stop → report 600.0 s, with the controller's soft warning recorded at 300 s", "PASS", {},
+                clocks={"flush": 300.0, "report_after_importing": 300.0, "imp_first_after_importing": 0.0, "imp_duration": 300.0, "t_stop": 1000.0}, mutate=_set("lc.escalations", [{"kind": "soft_deadline", "phase": "importing", "elapsed_s": 300.0}])),
         Fixture("soft_deadline_warning_recorded", "positive", "stop → report 400 s (flush 250 s, import 140 s): the controller's soft-deadline warning is recorded, every phase is inside its deadline", "PASS", {},
                 clocks={"flush": 250.0, "report_after_importing": 150.0, "imp_duration": 140.0}, mutate=_set("lc.escalations", [{"kind": "soft_deadline", "phase": "importing", "elapsed_s": 300.0}])),
         Fixture("importer_temporarily_inactive", "positive", "ACTIVE, then NO_PROGRESS, then ACTIVE again, then completed", "PASS", {}, mutate=_probe_states(["NOT_FOUND", "NO_PROGRESS", "ACTIVE", "NO_PROGRESS", "ACTIVE", "SETTLING", "COMPLETED"], "COMPLETED")),
@@ -420,6 +425,16 @@ def fixtures() -> list[Fixture]:
         Fixture("flush_over_deadline", "negative", "flush 300.5 s", F, np(G4=F), clocks={"flush": 300.5}),
         Fixture("import_over_deadline", "negative", "importer first seen → gone 300.5 s", F, np(G4=F), clocks={"report_after_importing": 305.0, "imp_duration": 300.5}),
         Fixture("stop_to_report_over_deadline", "negative", "stop → report 600.5 s with each phase inside its own deadline", F, np(G4=F), clocks={"flush": 300.0, "report_after_importing": 300.5, "imp_duration": 290.0, "t_stop": 1000.0}),
+        Fixture("soft_warning_then_total_over_deadline", "negative", "soft warning recorded; flush 300 s and import 290 s are inside their deadlines but stop → report is 600.5 s", F, np(G4=F),
+                clocks={"flush": 300.0, "report_after_importing": 300.5, "imp_duration": 290.0, "t_stop": 1000.0}, mutate=_set("lc.escalations", [{"kind": "soft_deadline", "phase": "importing", "elapsed_s": 300.0}])),
+        Fixture("phases_inside_but_total_over", "negative", "flush 299 s and import 299 s, each inside its deadline; with the gaps between them stop → report is 601 s", F, np(G4=F),
+                clocks={"flush": 299.0, "report_after_importing": 302.0, "imp_first_after_importing": 1.5, "imp_duration": 299.0, "t_stop": 1000.0}),
+        Fixture("flush_over_while_total_inside", "negative", "flush 300.5 s, import 30 s: stop → report 340.5 s is inside the total, the flush is not inside its own deadline", F, np(G4=F),
+                clocks={"flush": 300.5, "report_after_importing": 40.0, "imp_duration": 30.0}),
+        Fixture("hard_deadline_extended", "negative", "an operator `extend` moved the controller's hard deadline by 60 s", F, np(G3=F, G4=F),
+                mutate=_both(_set("lc.control_commands", [{"at": T0 + 1700, "command": "extend 60 test", "phase": "importing", "result": "hard deadline extended by 60 s (operator)"}]), lambda w: w.lc["deadlines"].update(hard_extension_s=60.0, hard_at=w.lc["deadlines"]["hard_at"] + 60.0))),
+        Fixture("hard_deadline_not_the_registered_total", "negative", "the controller ran with a 900 s hard deadline", F, np(G4=F), mutate=_both(_set("lc.policy.hard_deadline_s", 900.0), lambda w: w.lc["deadlines"].update(hard_at=w.lc["deadlines"]["hard_at"] + 300.0))),
+        Fixture("hard_deadline_record_missing", "negative", "the lifecycle record has no deadline block", INC, np(G4=INC), mutate=lambda w: w.lc.pop("deadlines")),
         Fixture("session_close_over_deadline", "negative", "session closed 300.5 s after the SIGTERM", F, np(G4=F, G10=F), clocks={"close_after_sigterm": 300.5, "t_stop": 1000.0}),
         Fixture("phase_boundary_unobserved", "negative", "the probe never recorded the importer leaving", INC, np(G4=INC, G5=INC), mutate=_probe_states(["NOT_FOUND", "NO_PROGRESS", "ACTIVE"], "ACTIVE")),
         # phase order, forced release
@@ -482,6 +497,7 @@ def fixtures() -> list[Fixture]:
         Fixture("launch_tree_not_pinned", "negative", "launch tree `alignment` differs from the pin", F, np(G0=F), mutate=_set("source.trees", {"alignment": "0" * 40, "launcher": TREES["launcher"]})),
         Fixture("launch_tree_dirty", "negative", "tracked changes in the launch tree", F, np(G0=F), mutate=_set("source.tracked_changes", 2)),
         Fixture("submodule_not_pinned", "negative", "vLLM gitlink differs from the pin", F, np(G0=F), mutate=_set("source.gitlinks", {**GITLINKS, "alignment/profiler/vllm": "1" * 40})),
+        Fixture("rehearsal_mode_launch", "negative", "the launch record says the driver ran in rehearsal mode", F, np(G0=F), mutate=_set("source.mode", "rehearsal")),
         Fixture("launch_source_record_missing", "negative", "no launch source record", INC, np(G0=INC), mutate=_attr("source", None)),
         # host
         Fixture("reservation_other_node", "negative", "reservation record names another node", F, np(G1=F), mutate=_set("reservation.node", "pod4-gb300-10-tray14-f3")),
@@ -489,8 +505,14 @@ def fixtures() -> list[Fixture]:
         # storage and memory
         Fixture("temporary_storage_over_ceiling", "negative", "post-run scratch peak makes temporary storage 10.05 GB", F, np(G11=F), mutate=_scale_rows("post_storage", "temporary", 10.05)),
         Fixture("persistent_storage_over_ceiling", "negative", "run directory peak 8.05 GB", F, np(G11=F), mutate=_scale_rows("storage", "persistent", 8.05)),
-        Fixture("importer_memory_over_ceiling", "negative", "in-session importer 257 GB", F, np(G11=F), mutate=_scale_rows("mem", None, 257.0)),
-        Fixture("offline_importer_memory_over_ceiling", "negative", "offline importer 257 GB", F, np(G11=F), mutate=_scale_rows("post_memory", None, 257.0)),
+        Fixture("importer_memory_over_ceiling", "negative", "in-session importer 128.5 GiB", F, np(G11=F), mutate=_scale_rows("mem", None, 128.5)),
+        Fixture("offline_importer_memory_over_ceiling", "negative", "offline importer 128.5 GiB", F, np(G11=F), mutate=_scale_rows("post_memory", None, 128.5)),
+        Fixture("supervisor_record_missing", "negative", "no supervisor record", INC, np(G1=INC, G11=INC), mutate=_attr("supervisor", None)),
+        Fixture("supervisor_record_incomplete", "negative", "the supervisor did not end through its stop file", INC, np(G11=INC), mutate=_set("supervisor.complete", False)),
+        Fixture("supervisor_gave_abort_response", "negative", "the supervisor wrote its release line for a memory breach", F, np(G11=F),
+                mutate=_both(_set("supervisor.causes", [{"cause": "breach", "source": "MEMORY-BREACH", "kind": "importer_rss_above_ceiling"}]), _set("supervisor.response", {"outcome": "release requested through the controller", "steps": [{"kind": "R1 control line", "acknowledged": True}]}))),
+        Fixture("supervisor_lost_a_monitor", "negative", "the storage sampler stopped producing samples; the supervisor responded", F, np(G11=F),
+                mutate=_both(_set("supervisor.monitors_effective", False), _set("supervisor.causes", [{"cause": "monitor_lost", "source": "storage sampler", "kind": "last sample too old"}]), _set("supervisor.response", {"outcome": "registry cleanup rc 0", "steps": [{"kind": "R2 registry cleanup"}]}))),
         Fixture("host_memory_below_floor", "negative", "MemAvailable 63.5 GB in one sample", F, np(G11=F), mutate=_mem_available(63.5)),
         Fixture("breach_file_present", "negative", "the memory sampler wrote its breach file", F, np(G11=F), mutate=_attr("breach_files", ["MEMORY-BREACH"])),
         Fixture("run_storage_unmeasured", "negative", "no storage samples during the run", INC, np(G1=INC, G11=INC), mutate=_attr("storage", None)),
@@ -594,6 +616,9 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--out", required=True, type=Path)
     s.add_argument("--keep-work", action="store_true")
     s.add_argument("--only", nargs="*")
+    t = sub.add_parser("tools", help="stand-in importer / exporter and rehearsal inputs for the end-to-end rehearsal")
+    t.add_argument("--out", required=True, type=Path)
+    t.add_argument("--python", required=True, help="interpreter the stand-in importer runs as (the memory sampler identifies it by this executable)")
     e = sub.add_parser("expect")
     e.add_argument("--gates", required=True, type=Path)
     e.add_argument("--verdict", required=True, choices=["PASS", "FAIL", "INCONCLUSIVE"])
@@ -602,6 +627,15 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     if args.cmd == "synthetic":
         return synthetic(args.out, args.keep_work, args.only)
+    if args.cmd == "tools":
+        _, nsys = fake_tools(args.out)
+        for name, rc in (("QdstrmImporter", 0), ("QdstrmImporter-failing", 1)):
+            imp = args.out / name  # `<importer> -i <stream> -o <report>`: reads the stream, takes a few seconds, writes a report (or fails)
+            imp.write_text(f"#!{args.python}\nimport sys, time\nopen(sys.argv[2], 'rb').read(1 << 20)\ntime.sleep(4)\nif {rc}:\n    sys.stderr.write('stand-in importer: simulated import failure\\n'); sys.exit({rc})\nopen(sys.argv[4], 'wb').write(b'r' * 4096)\n")
+            imp.chmod(0o755)
+        (args.out / "inputs.json").write_text(json.dumps(rehearsal_inputs(), indent=1) + "\n")
+        print(json.dumps({"importer": str(args.out / "QdstrmImporter"), "importer_failing": str(args.out / "QdstrmImporter-failing"), "nsys": str(nsys), "inputs": str(args.out / "inputs.json")}))
+        return 0
     not_pass = dict(x.split("=") for x in args.expect_not_pass.split(",") if x)
     report = json.loads(args.gates.read_text())
     problems = judge(report, args.verdict, not_pass)

@@ -114,9 +114,13 @@ def main() -> None:
         },
         # clocks: checks/e1_v3scale_gates.py docstring. A phase passes at or below its deadline.
         "phase_deadlines_s": {"stop_accepted": 30, "flush_stop_to_importing": 300, "import_importer_first_seen_to_gone": 300, "stop_to_report_written": 600, "session_close_after_server_sigterm": 300},
-        "limits": {"gpu_release_deadline_s": 90, "gpu_watch_interval_s": 2, "gpu_watch_max_gap_s": 10, "sampler_max_gap_s": 30, "import_probe_interval_s": 0.5, "import_probe_min_progress": 2, "mem_watch_interval_s": 1, "storage_watch_interval_s": 2},
+        "limits": {"gpu_release_deadline_s": 90, "gpu_watch_interval_s": 2, "gpu_watch_max_gap_s": 10, "sampler_max_gap_s": 30, "import_probe_interval_s": 0.5, "import_probe_min_progress": 2, "mem_watch_interval_s": 1, "storage_watch_interval_s": 2,
+                   "supervisor_interval_s": 1, "supervisor_ack_s": 10, "supervisor_stale_s": 60, "supervisor_cleanup_grace_s": 30},
+        # the one line the registered supervisor may write; any accepted control line fails gate G3, so an abort is always a FAIL
+        "supervisor": {"control_line": "release-gpus V3 resource-limit abort (registered supervisor response)", "registry": "pids/supervisor.tsv", "acts_on_registry": "pids/owned.tsv"},
         "ceilings": {"reservation_hard_min": 90, "gpu_held_ceiling_s": cfg["nsys"]["gpu_held_ceiling_s"], "gpu_held_nominal_s": 1800, "temporary_storage_gb": 10, "persistent_storage_gb": 8, "persistent_storage_with_archive_gb": 16,
-                     "host_mem_available_preflight_min_gb": 128, "host_mem_available_floor_gb": 64, "importer_rss_ceiling_gb": 256, "startup_limit_min": 30, "capture_limit_min": 10},
+                     "host_mem_available_preflight_min_gb": 448, "host_mem_available_floor_gb": 64, "importer_rss_ceiling_gb": 128,
+                     "memory_basis": "GiB (1024^3 B). tray16: MemTotal 958 GiB, no swap, no cgroup limit, MemAvailable 862 GiB idle (2026-11-18). Importer ceiling 128 GiB = 2 x the largest importer RSS ever sampled (61 GB at >= 49 % of 216 M rows), 15 % of idle MemAvailable; preflight needs ceiling + floor + 256 GiB for the server", "startup_limit_min": 30, "capture_limit_min": 10},
         # read by checks/e1_completeness_v2.py (--plan dry) and checks/e1_nsys_validation.py: the four cells of this trace
         "design": {"OUT_LEN": 1024, "MIN_PURE_DECODE": 400},
         "dry": {"requests": len(out_rows), "trace_span_s": round(SECOND_PAIR_OFFSET_MS / 1000.0 + 72.7, 1),

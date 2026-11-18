@@ -39,7 +39,7 @@ def _evaluate(a: dict) -> dict:
 
 def test_fixture_matrix_is_what_the_packet_says():
     kinds = [f.kind for f in FIXTURES]
-    assert len(FIXTURES) == 87 and kinds.count("positive") == 3 and kinds.count("boundary") == 3 and kinds.count("negative") == 81
+    assert len(FIXTURES) == 99 and kinds.count("positive") == 3 and kinds.count("boundary") == 4 and kinds.count("negative") == 92
     assert len({f.name for f in FIXTURES}) == len(FIXTURES)
     assert all(f.verdict == "PASS" and not f.not_pass for f in FIXTURES if f.kind != "negative")
     assert all(f.verdict in ("FAIL", "INCONCLUSIVE") and f.not_pass for f in FIXTURES if f.kind == "negative")
@@ -131,4 +131,7 @@ def test_registered_inputs_carry_every_limit_the_gates_read():
     assert set(d["phase_deadlines_s"]) == {"stop_accepted", "flush_stop_to_importing", "import_importer_first_seen_to_gone", "stop_to_report_written", "session_close_after_server_sigterm"}
     assert {"gpu_release_deadline_s", "gpu_watch_interval_s", "gpu_watch_max_gap_s", "sampler_max_gap_s"} <= set(d["limits"])
     assert {"reservation_hard_min", "gpu_held_ceiling_s", "temporary_storage_gb", "persistent_storage_gb", "host_mem_available_floor_gb", "importer_rss_ceiling_gb"} <= set(d["ceilings"])
+    assert d["ceilings"]["importer_rss_ceiling_gb"] == 128 and d["ceilings"]["host_mem_available_floor_gb"] == 64 and d["ceilings"]["host_mem_available_preflight_min_gb"] == 448
+    assert d["supervisor"]["control_line"].startswith("release-gpus ") and d["limits"]["supervisor_ack_s"] == 10 and d["limits"]["supervisor_stale_s"] == 60
+    assert d["phase_deadlines_s"]["flush_stop_to_importing"] == 300 and d["phase_deadlines_s"]["import_importer_first_seen_to_gone"] == 300 and d["phase_deadlines_s"]["stop_to_report_written"] == 600
     assert d["expected"]["iterations"] == 4320 and d["trace"]["requests"] == 112 and len(d["dry"]["plan"]) == 4
