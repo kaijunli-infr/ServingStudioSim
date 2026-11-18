@@ -16,7 +16,7 @@ d176ae5362c539feef97e8952f255a8fdf4074ef5fec6842e9664c3eb69923f4  e1_v3scale_reh
 665e8adef8d1ad094db87a0d68be0ed719cde1a1e7a0c3b5612cb9398a637648  preflight_e1_stage15.sh
 1db667d84db8884db281c0a7dcdcebd23f469075497dfa70088c3fcff6b2e593  preflight_e1_host.sh
 17d8a854f8f4bf055af536eed29f431abc8aed09c90236cfd612a94326fa7e8e  checks/e1_v3scale_gates.py
-26eef2573f6ca20a8a5e8d7c816fb213cfc5ce0044f003b4aa7a490bb34d3c7e  checks/e1_supervisor.py
+6ae418ce8440bfcbeb6139e49a2e7a08d7c4bf7307551a7cdf8688a55f62b106  checks/e1_supervisor.py
 60522be04f4addb37297e2544c80836452f98dc06fce5b2cde7d56392b5e6505  checks/e1_import_probe.py
 6e57606af2e2bf54802405ad5d2736584fd5a377fbf21ce2cf04383bbc70bd06  checks/e1_mem_watch.py
 2483565f955d542bb734ba0bec0cd032e8e8b9ae81929cbf66e57dc419240bb8  checks/e1_storage_watch.py
@@ -56,7 +56,7 @@ a5c40a30b2d16b280289957867054c2751a81ca88bb0a4a6458b567d98c8b600  ../../../../..
 0081f2c8070b8737000e9d68b298de9393a4e7e0281b5b8f28447451d9d5801b  ../../../../../../tests/test_e1_mem_watch.py
 22875ffdea34e3594360a87a4123a1422828d03ef785ebff55fc8e79de604f2d  ../../../../../../tests/test_e1_storage_watch.py
 0d0017a2f399eed3582ae18dd77dd463f431d8c896c48e81eb2197f8960fc252  ../../../../../../tests/test_e1_v3scale_gates.py
-92427e846d276415e713ef00f59e6e62730d9760fd1651d5e9061d8a841c2a7f  ../../../../../../tests/test_e1_supervisor.py
+92a39d738f586d4321b6d0b942c47efda5cef769648004d702358a87362c5712  ../../../../../../tests/test_e1_supervisor.py
 eacc9b9900c900596975e7da617f5cbc6dc488615d1349956875c23d17e60740  ../../../../../../tests/test_profiler_lifecycle_v3_deadlines.py
 535e962f23999812f0332975abd77bfc218dff41b28a316cc525bd847a44da3e  ../../../../../../tests/test_e1_gpu_watch_v3.py
 8bd51ebe0f8e3363c2d1b089c23e869c7991d69581cfd391b8d8fdc6c94c2332  ../../../../../../tests/fixtures/e1_main_v3/profile.json

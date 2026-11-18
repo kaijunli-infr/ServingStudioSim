@@ -1,9 +1,9 @@
 {
  "pass": "e1_v3_scale",
- "pinned_at": "2026-11-18T20:13:12Z",
+ "pinned_at": "2026-11-18T20:26:52Z",
  "host": "pod4-gb300-10-tray16-f3",
  "code": {
-  "commit": "4b30adcdd55d0d080c30e989a1f484e9c16c1c8a",
+  "commit": "d3b9c264a113fd0795d2aedaded070dffe6d05c0",
   "branch": "exp/profiler-lifecycle",
   "tree": {
    "alignment": "7b4df784a5b6daff7c792e81cbc6503ba2c806ec",
@@ -30,7 +30,7 @@
    "tests/test_e1_mem_watch.py": "50441625099396e3fe7e4d480bfb5482c533236d",
    "tests/test_e1_storage_watch.py": "8068616b8a9d1ccb22f02765186591257aa451a7",
    "tests/test_e1_v3scale_gates.py": "4ef45dd919d0c4b6ff86265f58107939c126c7a4",
-   "tests/test_e1_supervisor.py": "8fd3041f8c1c82982409572cea4ad3079fd1708e",
+   "tests/test_e1_supervisor.py": "2aec7e037ba0d00c8244325888990fd00aca9372",
    "tests/test_profiler_lifecycle_v3_deadlines.py": "0b8ca686d41d55c966950662d5408b74f9a4e8a7",
    "tests/test_e1_gpu_watch_v3.py": "2c53eef76fa645b99061581f3833d9e413908b26"
   },
