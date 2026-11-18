@@ -1,0 +1,554 @@
+== 2026-11-18T21:28:04Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+driver preflight/registration phase (pinned monitor not started so the driver's census sees no extra process)
+preflight.log: 57 PASS, 0 FAIL;     # result: PREFLIGHT PASS;  # result: PREFLIGHT PASS;
+registry: 
+== 2026-11-18T21:28:58Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+driver preflight/registration phase (pinned monitor not started so the driver's census sees no extra process)
+preflight.log: 58 PASS, 0 FAIL;     # result: PREFLIGHT PASS;  # result: PREFLIGHT PASS;
+registry: 
+== 2026-11-18T21:29:54Z tmux=e1v3-scale, gpu MiB: 1237 1277 1227 1227  compute apps: 4
+== 2026-11-18T21:29:54Z e1_v3_scale driver=2980845 alive=y elapsed_min=0 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 40 last 21:29:49Z min MemAvailable 843.8 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 49 last check 21:29:54Z (1 s ago) monitors effective True heartbeats {'memory sampler': 1.0, 'storage sampler': 1.48, 'GPU sampler': 0.69} response None
+storage: samples 20 last 21:29:44Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 1611 MiB, 0 %;1611 MiB, 0 %;1611 MiB, 0 %;1611 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker                                                                    
+gpuproc 3016990 own=y VLLM::Worker                                                                    
+gpuproc 3016991 own=y VLLM::Worker                                                                    
+gpuproc 3016992 own=y VLLM::Worker                                                                    
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 843 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:30:54Z tmux=e1v3-scale, gpu MiB: 84091 84091 84091 84091  compute apps: 4
+== 2026-11-18T21:30:54Z e1_v3_scale driver=2980845 alive=y elapsed_min=1 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 90 last 21:30:47Z min MemAvailable 561.2 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 109 last check 21:30:54Z (1 s ago) monitors effective True heartbeats {'memory sampler': 1.03, 'storage sampler': 1.5, 'GPU sampler': 1.2} response None
+storage: samples 50 last 21:30:44Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 84091 MiB, 3 %;84091 MiB, 3 %;84091 MiB, 3 %;84091 MiB, 3 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 555 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:31:55Z tmux=e1v3-scale, gpu MiB: 253859 253859 253859 253859  compute apps: 4
+== 2026-11-18T21:31:55Z e1_v3_scale driver=2980845 alive=y elapsed_min=2 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 140 last 21:31:44Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 170 last check 21:31:55Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.86, 'storage sampler': 0.17, 'GPU sampler': 1.53} response None
+storage: samples 80 last 21:31:45Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 253859 MiB, 0 %;253859 MiB, 0 %;253859 MiB, 0 %;253859 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 574 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:33:08Z tmux=e1v3-scale, gpu MiB: 255839 255839 255839 255839  compute apps: 4
+== 2026-11-18T21:33:08Z e1_v3_scale driver=2980845 alive=y elapsed_min=4 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 210 last 21:33:03Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 242 last check 21:33:07Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.32, 'storage sampler': 1.15, 'GPU sampler': 0.52} response None
+storage: samples 120 last 21:33:06Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 255839 MiB, 1 %;255839 MiB, 1 %;255839 MiB, 1 %;255839 MiB, 1 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:34:10Z tmux=e1v3-scale, gpu MiB: 256303 256303 256303 256303  compute apps: 4
+== 2026-11-18T21:34:10Z e1_v3_scale driver=2980845 alive=y elapsed_min=5 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 260 last 21:34:00Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 304 last check 21:34:09Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.91, 'storage sampler': 0.92, 'GPU sampler': 0.3} response None
+storage: samples 150 last 21:34:06Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 256303 MiB, 0 %;256303 MiB, 0 %;256303 MiB, 0 %;256303 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:35:16Z tmux=e1v3-scale, gpu MiB: 256795 256795 256795 256793  compute apps: 4
+== 2026-11-18T21:35:16Z e1_v3_scale driver=2980845 alive=y elapsed_min=6 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 320 last 21:35:08Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 370 last check 21:35:16Z (0 s ago) monitors effective True heartbeats {'memory sampler': 1.1, 'storage sampler': 1.09, 'GPU sampler': 1.24} response None
+storage: samples 180 last 21:35:07Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 256795 MiB, 12 %;256795 MiB, 11 %;256795 MiB, 12 %;256795 MiB, 5 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:36:20Z tmux=e1v3-scale, gpu MiB: 256059 256059 256059 256059  compute apps: 4
+== 2026-11-18T21:36:20Z e1_v3_scale driver=2980845 alive=y elapsed_min=7 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 380 last 21:36:16Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 433 last check 21:36:19Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.05, 'storage sampler': 1.79, 'GPU sampler': 0.4} response None
+storage: samples 210 last 21:36:08Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 256059 MiB, 11 %;256059 MiB, 12 %;256059 MiB, 11 %;256059 MiB, 11 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:37:36Z tmux=e1v3-scale, gpu MiB: 255823 255823 255823 255823  compute apps: 4
+== 2026-11-18T21:37:36Z e1_v3_scale driver=2980845 alive=y elapsed_min=8 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 450 last 21:37:34Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 509 last check 21:37:36Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.34, 'storage sampler': 0.68, 'GPU sampler': 0.82} response None
+storage: samples 250 last 21:37:29Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.0 GB (ceiling 8.0)'} breaches 0
+gpu: 255823 MiB, 7 %;255821 MiB, 7 %;255823 MiB, 6 %;255823 MiB, 7 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:38:36Z tmux=e1v3-scale, gpu MiB: 255827 255827 255807 255827  compute apps: 4
+== 2026-11-18T21:38:36Z e1_v3_scale driver=2980845 alive=y elapsed_min=9 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 500 last 21:38:30Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 569 last check 21:38:36Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.08, 'storage sampler': 0.68, 'GPU sampler': 0.11} response None
+storage: samples 280 last 21:38:29Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 255823 MiB, 8 %;255827 MiB, 13 %;255827 MiB, 14 %;255805 MiB, 13 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:39:34Z tmux=e1v3-scale, gpu MiB: 255863 255863 255833 255863  compute apps: 4
+== 2026-11-18T21:39:34Z e1_v3_scale driver=2980845 alive=y elapsed_min=10 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 550 last 21:39:26Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 626 last check 21:39:33Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.09, 'storage sampler': 1.88, 'GPU sampler': 1.13} response None
+storage: samples 310 last 21:39:31Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 255863 MiB, 4 %;255863 MiB, 10 %;255861 MiB, 10 %;255811 MiB, 12 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:40:35Z tmux=e1v3-scale, gpu MiB: 255815 255935 255817 255935  compute apps: 4
+== 2026-11-18T21:40:35Z e1_v3_scale driver=2980845 alive=y elapsed_min=11 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 610 last 21:40:33Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 687 last check 21:40:34Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.77, 'storage sampler': 1.73, 'GPU sampler': 1.41} response None
+storage: samples 340 last 21:40:32Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 255959 MiB, 12 %;255959 MiB, 14 %;255819 MiB, 14 %;255959 MiB, 14 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:41:42Z tmux=e1v3-scale, gpu MiB: 255831 255831 255811 255873  compute apps: 4
+== 2026-11-18T21:41:42Z e1_v3_scale driver=2980845 alive=y elapsed_min=12 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 670 last 21:41:40Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 754 last check 21:41:41Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.78, 'storage sampler': 1.88, 'GPU sampler': 1.23} response None
+storage: samples 370 last 21:41:33Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 255873 MiB, 13 %;255871 MiB, 22 %;255811 MiB, 25 %;255873 MiB, 22 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:42:43Z tmux=e1v3-scale, gpu MiB: 255883 255881 255861 255883  compute apps: 4
+== 2026-11-18T21:42:43Z e1_v3_scale driver=2980845 alive=y elapsed_min=13 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 720 last 21:42:36Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 815 last check 21:42:42Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.46, 'storage sampler': 0.88, 'GPU sampler': 1.96} response None
+storage: samples 400 last 21:42:33Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 255881 MiB, 25 %;255827 MiB, 18 %;255885 MiB, 23 %;255885 MiB, 22 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 572 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:45:24Z tmux=e1v3-scale, gpu MiB: 256225 256225 256225 256225  compute apps: 4
+== 2026-11-18T21:45:24Z e1_v3_scale driver=2980845 alive=y elapsed_min=16 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 870 last 21:45:24Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 976 last check 21:45:24Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.88, 'storage sampler': 0.79, 'GPU sampler': 0.51} response None
+storage: samples 480 last 21:45:15Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 256225 MiB, 16 %;256225 MiB, 33 %;256225 MiB, 22 %;256073 MiB, 34 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:47:01Z tmux=e1v3-scale, gpu MiB: 256531 256531 256529 256529  compute apps: 4
+== 2026-11-18T21:47:01Z e1_v3_scale driver=2980845 alive=y elapsed_min=17 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 950 last 21:46:53Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1073 last check 21:47:01Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.95, 'storage sampler': 1.69, 'GPU sampler': 1.66} response None
+storage: samples 530 last 21:46:55Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 256531 MiB, 29 %;256531 MiB, 38 %;256339 MiB, 39 %;256531 MiB, 30 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:48:02Z tmux=e1v3-scale, gpu MiB: 256963 256963 256963 256963  compute apps: 4
+== 2026-11-18T21:48:02Z e1_v3_scale driver=2980845 alive=y elapsed_min=18 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1010 last 21:48:00Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1134 last check 21:48:02Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.55, 'storage sampler': 1.83, 'GPU sampler': 0.44} response None
+storage: samples 560 last 21:47:56Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 256963 MiB, 22 %;257291 MiB, 28 %;257291 MiB, 33 %;256963 MiB, 22 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:49:21Z tmux=e1v3-scale, gpu MiB: 254179 254179 254179 254177  compute apps: 4
+== 2026-11-18T21:49:22Z e1_v3_scale driver=2980845 alive=y elapsed_min=20 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1080 last 21:49:18Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1213 last check 21:49:21Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.26, 'storage sampler': 1.36, 'GPU sampler': 1.52} response None
+storage: samples 600 last 21:49:18Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 254179 MiB, 4 %;254159 MiB, 5 %;254181 MiB, 5 %;254181 MiB, 5 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:50:22Z tmux=e1v3-scale, gpu MiB: 254179 254179 254181 254161  compute apps: 4
+== 2026-11-18T21:50:22Z e1_v3_scale driver=2980845 alive=y elapsed_min=21 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1130 last 21:50:14Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1274 last check 21:50:22Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.98, 'storage sampler': 1.62, 'GPU sampler': 2.2} response None
+storage: samples 630 last 21:50:19Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 254161 MiB, 7 %;254183 MiB, 7 %;254181 MiB, 8 %;254163 MiB, 7 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:51:37Z tmux=e1v3-scale, gpu MiB: 254181 254183 254181 254179  compute apps: 4
+== 2026-11-18T21:51:37Z e1_v3_scale driver=2980845 alive=y elapsed_min=22 tmux=e1v3-scale,
+launcher: startup_complete=0 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1200 last 21:51:33Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1348 last check 21:51:37Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.53, 'storage sampler': 1.31, 'GPU sampler': 0.48} response None
+storage: samples 660 last 21:51:19Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 254181 MiB, 10 %;254161 MiB, 9 %;254165 MiB, 2 %;254215 MiB, 9 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 573 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:53:47Z tmux=e1v3-scale, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T21:53:47Z e1_v3_scale driver=2980845 alive=y elapsed_min=24 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=0 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1320 last 21:53:47Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1478 last check 21:53:47Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.94, 'storage sampler': 1.31, 'GPU sampler': 0.8} response None
+storage: samples 730 last 21:53:40Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.001 GB (ceiling 8.0)'} breaches 0
+gpu: 260943 MiB, 100 %;260943 MiB, 100 %;260943 MiB, 100 %;260943 MiB, 100 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 568 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:54:51Z tmux=e1v3-scale, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T21:54:51Z e1_v3_scale driver=2980845 alive=y elapsed_min=25 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1370 last 21:54:44Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1541 last check 21:54:50Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.89, 'storage sampler': 0.31, 'GPU sampler': 0.6} response None
+storage: samples 760 last 21:54:40Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.003 GB (ceiling 8.0)'} breaches 0
+gpu: 260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1161 GB (floor 50); CephFS free 20771 GB; MemAvailable 565 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:56:09Z tmux=e1v3-scale, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T21:56:09Z e1_v3_scale driver=2980845 alive=y elapsed_min=27 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=capturing stop_requested=- hard_at=- ceiling_at=- ext=0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=None server_alive=None
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1440 last 21:56:02Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1619 last check 21:56:08Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.64, 'storage sampler': 0.29, 'GPU sampler': 0.88} response None
+storage: samples 800 last 21:56:00Z {'temporary': 'peak 0.696 GB (ceiling 10.0)', 'persistent': 'peak 0.049 GB (ceiling 8.0)'} breaches 0
+gpu: 260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1157 GB (floor 50); CephFS free 20771 GB; MemAvailable 563 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:57:11Z tmux=e1v3-scale, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T21:57:12Z e1_v3_scale driver=2980845 alive=y elapsed_min=28 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=stop_accepted stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=True server_alive=True
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1500 last 21:57:09Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1682 last check 21:57:11Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.68, 'storage sampler': 1.79, 'GPU sampler': 0.94} response None
+storage: samples 830 last 21:57:01Z {'temporary': 'peak 0.719 GB (ceiling 10.0)', 'persistent': 'peak 0.096 GB (ceiling 8.0)'} breaches 0
+gpu: 260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1155 GB (floor 50); CephFS free 20771 GB; MemAvailable 563 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:58:11Z tmux=e1v3-scale, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T21:58:11Z e1_v3_scale driver=2980845 alive=y elapsed_min=29 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=stop_accepted stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress None%: not evidence of importer activity)
+lifecycle: stream=None size=None preserved=None (None) report=None gpu_released=- nsys_alive=True server_alive=True
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer None first seen - | states [('NOT_FOUND', '21:29:06Z')]
+memory: samples 1550 last 21:58:06Z min MemAvailable 552.0 GB (floor 64.0) importer peak None GB (ceiling 128.0) breaches 0
+supervisor: samples 1741 last check 21:58:10Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.99, 'storage sampler': 0.26, 'GPU sampler': 1.79} response None
+storage: samples 860 last 21:58:02Z {'temporary': 'peak 1.102 GB (ceiling 10.0)', 'persistent': 'peak 0.096 GB (ceiling 8.0)'} breaches 0
+gpu: 260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1154 GB (floor 50); CephFS free 20771 GB; MemAvailable 563 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(alive) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T21:59:35Z tmux=e1v3-scale, gpu MiB: 260943 260943 260943 260943  compute apps: 4
+== 2026-11-18T21:59:35Z e1_v3_scale driver=2980845 alive=y elapsed_min=30 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=- nsys_alive=True server_alive=True
+lifecycle: control=[] warnings=0 last=None
+import probe: running | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z')]
+memory: samples 1620 last 21:59:25Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 1825 last check 21:59:35Z (1 s ago) monitors effective True heartbeats {'memory sampler': 1.11, 'storage sampler': 0.15, 'GPU sampler': 1.9} response None
+storage: samples 900 last 21:59:22Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 0.309 GB (ceiling 8.0)'} breaches 0
+gpu: 260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;260943 MiB, 0 %;
+gpuproc 3016989 own=y VLLM::Worker_TP0                                                                
+gpuproc 3016990 own=y VLLM::Worker_TP1                                                                
+gpuproc 3016991 own=y VLLM::Worker_TP2                                                                
+gpuproc 3016992 own=y VLLM::Worker_TP3                                                                
+run root 1 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 562 GB
+registry: driver=2980845(alive) gpuwatch=3016066(alive) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:02:07Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:02:07Z e1_v3_scale driver=2980845 alive=y elapsed_min=33 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 1760 last 22:02:02Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 1977 last check 22:02:07Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.35, 'storage sampler': 1.19, 'GPU sampler': 83.59} response None
+storage: samples 980 last 22:02:04Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 860 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:03:05Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:03:05Z e1_v3_scale driver=2980845 alive=y elapsed_min=33 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 1810 last 22:02:58Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2035 last check 22:03:05Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.04, 'storage sampler': 0.56, 'GPU sampler': 141.69} response None
+storage: samples 1010 last 22:03:04Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 859 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:03:58Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:03:58Z e1_v3_scale driver=2980845 alive=y elapsed_min=34 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 1860 last 22:03:54Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2087 last check 22:03:57Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.52, 'storage sampler': 1.87, 'GPU sampler': 193.77} response None
+storage: samples 1030 last 22:03:45Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 858 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:04:54Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:04:55Z e1_v3_scale driver=2980845 alive=y elapsed_min=35 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 1910 last 22:04:50Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2144 last check 22:04:54Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.39, 'storage sampler': 0.8, 'GPU sampler': 250.85} response None
+storage: samples 1060 last 22:04:45Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 856 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:05:50Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:05:50Z e1_v3_scale driver=2980845 alive=y elapsed_min=36 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 1960 last 22:05:46Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2199 last check 22:05:49Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.8, 'storage sampler': 1.53, 'GPU sampler': 306.11} response None
+storage: samples 1090 last 22:05:46Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 855 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:06:36Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:06:37Z e1_v3_scale driver=2980845 alive=y elapsed_min=37 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 2000 last 22:06:31Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2245 last check 22:06:36Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.31, 'storage sampler': 0.02, 'GPU sampler': 352.47} response None
+storage: samples 1110 last 22:06:27Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 854 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:07:27Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:07:27Z e1_v3_scale driver=2980845 alive=y elapsed_min=38 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 2050 last 22:07:26Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2296 last check 22:07:27Z (0 s ago) monitors effective True heartbeats {'memory sampler': 0.62, 'storage sampler': 1.99, 'GPU sampler': 403.7} response None
+storage: samples 1130 last 22:07:08Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 854 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:08:17Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+== 2026-11-18T22:08:18Z e1_v3_scale driver=2980845 alive=y elapsed_min=39 tmux=e1v3-scale,
+launcher: startup_complete=1 measurement_begun=1 running
+lifecycle: phase=report_written stop_requested=21:56:49Z hard_at=22:06:49Z ceiling_at=22:14:06Z ext=0.0 s (reported progress 100%: not evidence of importer activity)
+lifecycle: stream=/tmp/nsys-report-e577.qdstrm size=661640928 preserved=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm (661640958) report=792004886 gpu_released=21:59:40Z nsys_alive=False server_alive=False
+lifecycle: control=[] warnings=0 last=None
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc | importer 3030970 first seen 21:58:41Z | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 2090 last 22:08:11Z min MemAvailable 547.2 GB (floor 64.0) importer peak 15.61 GB (ceiling 128.0) breaches 0
+supervisor: samples 2346 last check 22:08:17Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.53, 'storage sampler': 1.95, 'GPU sampler': 453.79} response None
+storage: samples 1160 last 22:08:09Z {'temporary': 'peak 1.358 GB (ceiling 10.0)', 'persistent': 'peak 4.979 GB (ceiling 8.0)'} breaches 0
+gpu: 0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;0 MiB, 0 %;
+run root 5 GB (ceiling 8); /tmp free 1163 GB (floor 50); CephFS free 20771 GB; MemAvailable 854 GB
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+== 2026-11-18T22:10:11Z tmux=e1v3-scale, gpu MiB: 0 0 0 0  compute apps: 0
+LAUNCHER-FINISHED rc=0 end 2026-11-18T22:09:53Z
+registry: driver=2980845(alive) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(alive) storagewatch=3016089(alive) supervisor=3016097(alive) 
+lifecycle: phase report_written stop_requested 21:56:49Z report 792004886 gpu_released 21:59:40Z session_closed 21:59:40Z control 0 escalations [] actions [('SIGTERM', 'shutdown')]
+supervisor: samples 2459 last check 22:10:11Z (1 s ago) monitors effective True heartbeats {'memory sampler': 0.71, 'storage sampler': 1.75, 'GPU sampler': 567.21} response None complete False
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable fro | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 2190 min MemAvailable GiB 547.2 importer peak GiB 15.61 importer samples 47 ambiguous 0 breaches 0
+storage: samples 1220 {'temporary': 1.358, 'persistent': 5.623} breaches 0
+== 2026-11-18T22:11:08Z tmux= gpu MiB: 0 0 0 0  compute apps: 0
+LAUNCHER-FINISHED rc=0 end 2026-11-18T22:09:53Z
+registry: driver=2980845(gone) gpuwatch=3016066(gone) importprobe=3016075(gone) memwatch=3016082(gone) storagewatch=3016089(gone) supervisor=3016097(gone) 
+lifecycle: phase report_written stop_requested 21:56:49Z report 792004886 gpu_released 21:59:40Z session_closed 21:59:40Z control 0 escalations [] actions [('SIGTERM', 'shutdown')]
+supervisor: samples 2463 last check 22:10:15Z (54 s ago) monitors effective True heartbeats {'memory sampler': 0.27, 'storage sampler': 1.74, 'GPU sampler': 571.21} response None complete True
+import probe: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable fro | states [('NOT_FOUND', '21:29:06Z'), ('NO_PROGRESS', '21:58:41Z'), ('ACTIVE', '21:58:42Z'), ('SETTLING', '21:59:34Z'), ('COMPLETED', '21:59:35Z')]
+memory: samples 2200 min MemAvailable GiB 547.2 importer peak GiB 15.61 importer samples 47 ambiguous 0 breaches 0
+storage: samples 1222 {'temporary': 1.358, 'persistent': 5.623} breaches 0
+DRIVER-EXITED (no tmux session)

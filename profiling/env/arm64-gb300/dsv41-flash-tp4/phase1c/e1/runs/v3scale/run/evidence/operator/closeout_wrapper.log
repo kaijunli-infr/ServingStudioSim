@@ -1,0 +1,38 @@
+driver 2980845 alive: no at 2026-11-18T22:15:51Z; tmux: no server running on /tmp/tmux-1000/default 
+closeout rc=0 -> closeout_tray16_20261118T221551Z.log
+# closeout e1_v3_scale on pod4-gb300-10-tray16-f3 at 2026-11-18T22:15:51Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/pids/owned.tsv)
+  summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T22:16:01Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T22:16:01Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/pids/owned.tsv (5 records); cleanup pid 3062227, exclu
+summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+PASS  registry plan: nothing owned is alive (driver, GPU sampler, import probe, memory sampler, storage sampler)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  supervisor registry plan: the supervisor is gone, no refusal
+PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)
+INFO  lifecycle final phase report_written nsys alive False server alive False gpu released 1795039180.0738554 preserved /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm
+PASS  lifecycle phase report_written is terminal (acceptance is decided by postrun_e1_v3scale.sh; V3 requires report_written)
+PASS  supervisor: no abort response; monitors effective=True; complete=True; samples=2463; signals sent by the supervisor itself=0
+INFO  import_probe.json: COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc
+INFO  mem_watch.json: complete=True samples=2200 breaches=0
+INFO  storage_watch.json: complete=True samples=1222 breaches=0
+INFO  [e1_v3_scale] rc=0 end 2026-11-18T22:09:53Z
+INFO  [e1_v3_scale] shutdown trigger at server-log line 14742; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+# closeout result: CLEAN

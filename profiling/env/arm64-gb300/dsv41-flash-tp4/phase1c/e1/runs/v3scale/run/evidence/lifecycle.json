@@ -1,0 +1,217 @@
+{
+ "schema_version": 2,
+ "name": "dsv41_flash_1017_gb300_tp4_e1_v3_scale",
+ "host": "pod4-gb300-10-tray16-f3",
+ "host_identity": {
+  "hostname": "pod4-gb300-10-tray16-f3",
+  "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+  "launcher_pid": 3016130,
+  "source": "launcher process: socket.gethostname() and /proc/sys/kernel/random/boot_id",
+  "recorded_at": 1795037346.8026977
+ },
+ "phase": "report_written",
+ "phase_history": [
+  {
+   "phase": "stop_requested",
+   "at": 1795039009.0464575,
+   "mono": 3033003.616779796
+  },
+  {
+   "phase": "stop_accepted",
+   "at": 1795039009.0481603,
+   "mono": 3033003.618481466
+  },
+  {
+   "phase": "capture_ended",
+   "at": 1795039121.0398583,
+   "mono": 3033115.610179729
+  },
+  {
+   "phase": "stream_written",
+   "at": 1795039121.0410092,
+   "mono": 3033115.611330325,
+   "path": "/tmp/nsys-report-e577.qdstrm"
+  },
+  {
+   "phase": "importing",
+   "at": 1795039121.0427556,
+   "mono": 3033115.613076443
+  },
+  {
+   "phase": "report_written",
+   "at": 1795039175.2727623,
+   "mono": 3033169.843083577,
+   "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale.nsys-rep"
+  }
+ ],
+ "launch_started_at": 1795037346.802615,
+ "stop_requested_at": 1795039009.0453963,
+ "http": {
+  "status": "ok",
+  "returned_at": 1795039174.4392602,
+  "requests_sent": 1,
+  "returned_logged_at": 1795039175.2725978
+ },
+ "stream": {
+  "path": "/tmp/nsys-report-e577.qdstrm",
+  "size": 661640928,
+  "preserved_path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm",
+  "preserved_size": 661640958,
+  "observations": [
+   {
+    "at": 1795039121.0444126,
+    "phase": "importing",
+    "path": "/tmp/nsys-report-e577.qdstrm",
+    "size": 661640928,
+    "mtime_ns": 1795039121030830770
+   },
+   {
+    "at": 1795039175.272658,
+    "phase": "importing",
+    "path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm",
+    "size": 661640958,
+    "mtime_ns": 1795039174358010657
+   }
+  ],
+  "final": {
+   "taken_at": 1795039180.075396,
+   "basis": "after the nsys session closed (no writer left)",
+   "session_closed_at": 1795039180.0738032,
+   "phase": "report_written",
+   "completeness": "NOT established by a stable size or a matching checksum; requires an offline import and a semantic comparison (kernel rows, NVTX ranges, iterations, capture boundaries)",
+   "available": true,
+   "path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm",
+   "size": 661640958,
+   "mtime_ns": 1795039174358010657,
+   "sha256": "764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3",
+   "stable_during_read": true,
+   "changed_after_last_observation": false
+  },
+  "discovered_by": "log"
+ },
+ "import_progress_pct": 100,
+ "report": {
+  "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale.nsys-rep",
+  "size": 792004886,
+  "written_at": 1795039175.272751
+ },
+ "deadlines": {
+  "soft_at": 1795039309.0453963,
+  "hard_at": 1795039609.0453963,
+  "hard_extension_s": 0.0,
+  "max_extension_s": 120.0,
+  "gpu_held_ceiling_at": 1795040046.802615
+ },
+ "policy": {
+  "soft_deadline_s": 300.0,
+  "hard_deadline_s": 600.0,
+  "stall_timeout_s": 300.0,
+  "poll_interval_s": 1.0,
+  "on_hard_deadline": "release_gpus",
+  "preserve_raw_stream": true,
+  "raw_preserve_dir": null,
+  "min_free_bytes_stream": 53687091200,
+  "min_free_bytes_report": 21474836480,
+  "session_close_timeout_s": 300.0,
+  "server_term_grace_s": 60.0,
+  "max_extension_s": 120.0,
+  "gpu_held_ceiling_s": 2700.0,
+  "stream_dir": null
+ },
+ "escalations": [],
+ "control_commands": [],
+ "warnings": [],
+ "nsys": {
+  "pid": 3016231,
+  "identity": {
+   "pid": 3016231,
+   "starttime": 303134137,
+   "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+   "uid": 1000,
+   "ppid": 3016130,
+   "name": "nsys",
+   "cmd": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys profile --trace-fork-before-exec=true --trace=cuda,nvtx --sample=none --cpuctxsw=none --cuda-graph-trace=node --cuda-event-trace=false --force-overwrite=true -o /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale --capture-range=cudaProfilerApi --capture-range-end=stop /mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /mnt/shared/weights/DeepSeek-V4.1-Flash-1017 --api-server-count 1 --host 127.0.0.1 --port 8000 --tensor-parallel-size 4 --data-parallel-size 1 --max-num-batched-tokens 16384 --enable-chunked-prefill --enable-prompt-tokens-details --gpu-memory-utilization 0.9 --enable-server-load-tracking --enable-logging-iteration-details --served-model-name dsv41-flash-1017 --tokenizer-mode deepseek_v41 --attention-config {\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true} --kv-cache-dtype fp8 --max-num-seqs 128 --engram-config {\"cpu_offload\":true} --max-model-len 131072 --language-model-only --enable-return-routed-experts --profiler-config.profiler=cuda"
+  },
+  "alive": false
+ },
+ "server": {
+  "api_server": {
+   "pid": 3016276,
+   "starttime": 303134408,
+   "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+   "uid": 1000,
+   "ppid": 3016275,
+   "name": "python",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /mnt/shared/weights/DeepSeek-V4.1-Flash-1017 --api-server-count 1 --host 127.0.0.1 --port 8000 --tensor-parallel-size 4 --data-parallel-size 1 --max-num-batched-tokens 16384 --enable-chunked-prefill --enable-prompt-tokens-details --gpu-memory-utilization 0.9 --enable-server-load-tracking --enable-logging-iteration-details --served-model-name dsv41-flash-1017 --tokenizer-mode deepseek_v41 --attention-config {\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true} --kv-cache-dtype fp8 --max-num-seqs 128 --engram-config {\"cpu_offload\":true} --max-model-len 131072 --language-model-only --enable-return-routed-experts --profiler-config.profiler=cuda"
+  },
+  "engine_processes": [
+   {
+    "pid": 3016707,
+    "starttime": 303136336,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 3016276,
+    "name": "VLLM::EngineCor",
+    "cmd": "VLLM::EngineCore"
+   },
+   {
+    "pid": 3016989,
+    "starttime": 303136992,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 3016707,
+    "name": "VLLM::Worker_TP",
+    "cmd": "VLLM::Worker_TP0"
+   },
+   {
+    "pid": 3016990,
+    "starttime": 303136992,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 3016707,
+    "name": "VLLM::Worker_TP",
+    "cmd": "VLLM::Worker_TP1"
+   },
+   {
+    "pid": 3016991,
+    "starttime": 303136992,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 3016707,
+    "name": "VLLM::Worker_TP",
+    "cmd": "VLLM::Worker_TP2"
+   },
+   {
+    "pid": 3016992,
+    "starttime": 303136992,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 3016707,
+    "name": "VLLM::Worker_TP",
+    "cmd": "VLLM::Worker_TP3"
+   }
+  ],
+  "alive": false
+ },
+ "gpu": {
+  "release_requested_at": null,
+  "released_at": 1795039180.0738554,
+  "compute_pids": [
+   3016991
+  ]
+ },
+ "session_closed_at": 1795039180.0738032,
+ "actions": [
+  {
+   "at": 1795039177.365283,
+   "reason": "shutdown",
+   "pid": 3016276,
+   "action": "SIGTERM",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python -m vllm.entrypoints.cli.main serve /",
+   "starttime": 303134408
+  }
+ ],
+ "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_v3_scale_server.log",
+ "control_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/lifecycle.control",
+ "updated_at": 1795039180.4482503
+}

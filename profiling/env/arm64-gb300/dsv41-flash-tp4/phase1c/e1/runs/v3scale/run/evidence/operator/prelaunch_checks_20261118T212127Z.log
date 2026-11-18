@@ -1,0 +1,70 @@
+# V3 GO pre-launch checks on pod4-gb300-10-tray16-f3 at 2026-11-18T21:21:27Z
+## 1. HEAD and worktree
+PASS  HEAD e82c8df90e2116f2fa13a853c0ab4805806d9837 on exp/profiler-lifecycle
+PASS  worktree clean (untracked included)
+PASS  no .venv in the worktree
+## 2. pinned identities
+PASS  V3S-PIN.json code commit d3b9c264a113fd0795d2aedaded070dffe6d05c0
+PASS  code commit d3b9c264 → packet commit 2fa0f367 → HEAD, in that order
+  27 pinned entries (alignment 7b4df784a5b6, launcher 5acab28980ef, 22 test files)
+  gitlink alignment/load_generator/req-frontend: pinned 5c20a2596189 tree 5c20a2596189 checkout 5c20a2596189 dirty=False
+  gitlink alignment/profiler/vllm: pinned 0ab187113357 tree 0ab187113357 checkout 0ab187113357 dirty=False
+PASS  every pinned tree/blob in V3S-PIN.json equals HEAD and the code commit
+PASS  alignment/ and launcher/ unchanged since e32fbab7 (the V2 code commit)
+PASS  nothing outside runs/ changed between the packet commit 2fa0f367 and HEAD
+PASS  SCRIPTS_v3scale.sha256: 66 files verify
+PASS  INPUTS_v3scale.sha256 verifies (trace d9d2dc77…, config fc91bddb…)
+  Nsight CLI NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0 2d53d710fead2076 | importer b30312a66165fdf1
+PASS  Nsight CLI and QdstrmImporter on this tray = pinned sha256
+## 3. FREEZE_v3scale.sha256, every entry
+  E1-V3-SCALE-PACKET.md: OK
+  SCRIPTS_v3scale.sha256: OK
+  INPUTS_v3scale.sha256: OK
+  E1-V3-SCALE-INPUTS.json: OK
+  V3S-PIN.json: OK
+  V3S-PIN-identities.json: OK
+  BINARY-PROVENANCE.json: OK
+PASS  FREEZE_v3scale.sha256: all 7 entries OK (manifest sha256 0478fdcc08565cd99afd38c21daf17d093a235c7b2a1b99a64191620e73d0a71, last changed in 2fa0f367)
+## 4. load-generator executable
+PASS  executable sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (inode/mtime/size 1100019664799 1794730282 28759968)
+PASS  BINARY-PROVENANCE.json and V3S-PIN.json name the same sha256
+## 5. prebuilt path and build-tool guard
+PASS  one launcher line in the driver, with --frontend-provenance (prebuilt contract; arms the guard)
+  alignment/runner.py:426:            load_generator.forbid_build_tools()
+  launcher/alignment.py:507:        frontend.forbid_build_tools()
+PASS  E1_V3S_MODE is not set in this shell
+## 9. host memory and storage
+  MemTotal 958 GiB, MemAvailable 861 GiB, SwapTotal 0 GiB
+PASS  MemAvailable 861 GiB >= 448
+  Mounted on   Avail
+  /            1163G
+  /mnt/shared 20771G
+PASS  /tmp free 1163 GB, CephFS free 20771 GB
+  stream artefacts in /tmp now: 664M: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve 
+PASS  no V3 run root, archive or preserve directory exists yet
+## 10. tools present, pinned and responding
+  17 tools pinned and present
+  responds: e1_supervisor
+  responds: e1_gpu_watch_v3
+  responds: e1_import_probe
+  responds: e1_mem_watch
+  responds: e1_storage_watch
+  responds: e1_v3scale_gates
+  registry tool: cleanup plan register spawn 
+  recovery tool: 335560 /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
+  recovery tool: 78902472 /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+  observer + supervisor registration lines in the driver: 5
+## 11. supervisor: standalone liveness check on a scratch directory (the in-run heartbeat is checked right after the launch)
+  samples 3 | heartbeats {'memory sampler': 2.06, 'storage sampler': 2.06, 'GPU sampler': 2.06} | causes [('gpu_held_ceiling_before_stop', 2700.0, 2700.0)] | response ['R2 registry cleanup'] registry cleanup rc 0 | signals by supervisor 0
+PASS  the pinned supervisor runs on this tray: fresh heartbeats read, and a GPU-held ceiling passing before any stop request (simulated at 2698 s, empty scratch registry) is detected and answered with the registry cleanup
+## 12. ceilings and deadlines: frozen inputs vs this GO
+   {'reservation_hard_min': 90, 'gpu_held_ceiling_s': 2700.0, 'gpu_held_nominal_s': 1800, 'temporary_storage_gb': 10, 'persistent_storage_gb': 8, 'persistent_storage_with_archive_gb': 16, 'host_mem_available_preflight_min_gb': 448, 'host_mem_available_floor_gb': 64, 'importer_rss_ceiling_gb': 128, 'memory_basis': 'GiB (1024^3 B). tray16: MemTotal 958 GiB, no swap, no cgroup limit, MemAvailable 862 GiB idle (2026-11-18). Importer ceiling 128 GiB = 2 x the largest importer RSS ever sampled (61 GB at >= 49 % of 216 M rows), 15 % of idle MemAvailable; preflight needs ceiling + floor + 256 GiB for the server', 'startup_limit_min': 30, 'capture_limit_min': 10, 'stop_accepted': 30, 'flush_stop_to_importing': 300, 'import_importer_first_seen_to_gone': 300, 'stop_to_report_written': 600, 'session_close_after_server_sigterm': 300, 'gpu_release_deadline_s': 90, 'supervisor_ack_s': 10, 'supervisor_stale_s': 60, 'supervisor_cleanup_grace_s': 30}
+PASS  frozen inputs and config equal the GO: reservation 90 min, GPU-held 2700 s, release 90 s, flush 300 s, import 300 s, stop→report 600 s (= controller hard deadline, soft warning 300 s), temporary 10 GB, run root 8 GB, with archive 16 GB, MemAvailable floor 64 GiB (preflight 448), importer 128 GiB; 112 requests, 4 waves, 4320 iterations, 24 501 664 rows ± 5 %
+  driver passes: --gpu-held-ceiling-s 2700 --ack-s 10 --stale-s 60 --cleanup-grace 30
+  driver passes: --min-available-gb 64
+  driver passes: RSS_CEIL=128; TMP_CEIL=10; PERS_CEIL=8
+## state
+  tmux: no server running on /tmp/tmux-1000/default 
+  gpu MiB: 0 0 0 0  compute apps: 0
+  experiment-looking processes of this user: 0
+# result: PRECHECK PASS

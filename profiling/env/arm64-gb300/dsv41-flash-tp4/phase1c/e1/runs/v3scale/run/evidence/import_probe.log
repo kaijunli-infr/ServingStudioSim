@@ -1,0 +1,8 @@
+[import-probe] start pid 3016075 importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter report /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale.nsys-rep 2026-11-18T21:29:06Z
+[import-probe] state NOT_FOUND: no process matches the importer criteria and there is no complete report 2026-11-18T21:29:06Z
+[import-probe] importer identified: pid 3030970 (--input-file is the session stream; --output-file is the session report; holds the session stream open) 2026-11-18T21:58:41Z
+[import-probe] state NO_PROGRESS: importer pid 3030970 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2) 2026-11-18T21:58:41Z
+[import-probe] state ACTIVE: importer pid 3030970 alive; 2 consecutive interval(s) of its own CPU/I-O advance 2026-11-18T21:58:42Z
+[import-probe] state SETTLING: importer pid 3030970 no longer present; waiting 3 samples for the report to settle 2026-11-18T21:59:34Z
+[import-probe] state COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc 2026-11-18T21:59:35Z
+[import-probe] COMPLETED: importer pid 3030970 is gone; report 792004886 B, stable; no Nsight log given; exit status not observable from /proc 2026-11-18T21:59:35Z

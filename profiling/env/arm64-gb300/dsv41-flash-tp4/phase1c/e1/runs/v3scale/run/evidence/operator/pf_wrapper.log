@@ -1,0 +1,46 @@
+e82c8df9 E1 V3: negative control and exact read-only driver-context preflight at the proposed-freeze commit (evidence only)
+## negative control: an independent lookalike registered only in a scratch registry must stop the preflight
+{"pid": 2909670, "starttime": 303106397, "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26", "uid": 1000, "label": "negctl:lookalike", "registered_at": "2026-11-
+negative control -> negative_control_tray16_20261118T212552Z.log (66 PASS, 3 FAIL)
+    # result: PREFLIGHT PASS
+  # result: PREFLIGHT PASS
+FAIL  process discovery found candidates (see above; review, never kill by pattern)
+  LOOKALIKE pid 2909670 uid 1000 bash: bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t (cwd /mnt/shared/home/dc/workspace/servi
+FAIL  registry plan rc 2 (owned/lookalike/refused; see above)
+  LOOKALIKE pid 2909670 uid 1000 bash: bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t (cwd /mnt/shared/home/dc/workspace/servi
+FAIL  supervisor registry plan rc 2 (see above)
+# result: PREFLIGHT FAIL
+preflight_rc=1
+ACTION   {"pid": 2909671, "action": "SIGTERM", "cmd": "sleep 900", "starttime": 303106397}
+ACTION   {"pid": 2909670, "action": "SIGTERM", "cmd": "bash -c sleep 900; true lookalike /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_t", "starttime": 303106397
+RESULT CLEAN: signalled 2, skipped 0, survivors 0, lookalikes 0 (never signalled)
+## exact read-only driver-context preflight
+preflight -> preflight_v3scale_tray16_driver_context_20261118T212711Z.log (69 PASS, 0 FAIL) at e82c8df9
+    # result: PREFLIGHT PASS
+  # result: PREFLIGHT PASS
+PASS  FREEZE_v3scale.sha256: all 7 entries verify (manifest sha256 0478fdcc08565cd9…)
+PASS  E1_V3S_MODE is not set: a launch from this context is a real launch
+PASS  controller / preflight / gates / observers / V3 gate test suites: 377 passed in 51.16s; cpu_only_guard: CUDA hidden 
+PASS  no Nsight process (CLI, agent, importer) of this user is running
+PASS  GPU state: no compute process, memory.used within the idle bound on every GPU
+INFO  host memory: MemTotal 958 GiB, MemAvailable 858 GiB, swap 0 GiB, cgroup memory.max on this session's path: max
+PASS  host MemAvailable 858 GiB >= 448 = importer ceiling 128 + floor 64 + 256 for the server; margin above that 410 GiB
+INFO  ceilings: reservation 90 min hard; GPU-held 2700 s (controller); GPU release upper edge <= 90 s after the server SIGTERM; stop -> report 600 s hard; temporary <= 10 GB; run root <= 8 GB (<= 16 GB with the archive); MemAvailable floor 64 GiB; importer <= 
+PASS  reservation record: pod Running on this node (pod4-gb300-10-tray16-f3), creation time recorded
+# result: PREFLIGHT PASS
+preflight_rc=0
+/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale:
+total 0
+drwxrwxr-x 3 dc dc 1 Nov 18 21:27 .
+drwxrwxr-x 9 dc dc 7 Nov 18 21:24 ..
+drwxrwxr-x 2 dc dc 1 Nov 18 21:24 e1_v3_scale
+
+/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale:
+total 1
+drwxrwxr-x 2 dc dc   1 Nov 18 21:24 .
+drwxrwxr-x 3 dc dc   1 Nov 18 21:27 ..
+-rw-r--r-- 1 dc dc 414 Nov 18 21:24 reservation.json
+no server running on /tmp/tmux-1000/default
+7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+0 MiB 0 MiB 0 MiB 0 MiB compute apps: 0
+PFDONE

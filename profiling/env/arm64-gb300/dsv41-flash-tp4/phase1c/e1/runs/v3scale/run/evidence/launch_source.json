@@ -1,0 +1,15 @@
+{
+ "mode": "real",
+ "commit": "e82c8df90e2116f2fa13a853c0ab4805806d9837",
+ "branch": "exp/profiler-lifecycle",
+ "trees": {
+  "alignment": "7b4df784a5b6daff7c792e81cbc6503ba2c806ec",
+  "launcher": "5acab28980ef9974bf4cb6dcd676481c357e655d"
+ },
+ "gitlinks": {
+  "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
+  "alignment/profiler/vllm": "0ab18711335780e062d65994a3243da0281d2081"
+ },
+ "tracked_changes": 0,
+ "descends_from_pinned_commit": true
+}

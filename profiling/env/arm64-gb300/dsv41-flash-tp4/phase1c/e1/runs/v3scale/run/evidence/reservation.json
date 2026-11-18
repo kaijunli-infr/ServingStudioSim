@@ -1,0 +1,12 @@
+{
+ "pod": "dsv41-gb300-reserve-tray16",
+ "namespace": "inference-bench",
+ "uid": "79c054d5-c16d-4e1d-9d29-23d46055b5a8",
+ "node": "pod4-gb300-10-tray16-f3",
+ "phase": "Running",
+ "gpu_request": "4",
+ "creation_timestamp": "2026-11-18T21:23:51Z",
+ "start_time": "2026-11-18T21:23:51Z",
+ "observed_at": "2026-11-18T21:23:57Z",
+ "source": "kubectl get pod -o json from the laptop (Rancher context via socks proxy)"
+}

@@ -1,0 +1,13 @@
+{
+ "pod": "dsv41-gb300-reserve-tray16",
+ "delete_requested_at": "2026-11-18T22:23:04Z",
+ "deleted_observed_at": "2026-11-18T22:24:06Z",
+ "reservation_pod_still_listed": false,
+ "gpu_pods_on_node": 0,
+ "gpu_pod_names": [],
+ "pods_on_node": 18,
+ "pod_owner_kinds": [
+  "DaemonSet"
+ ],
+ "source": "kubectl get pods --field-selector spec.nodeName from the laptop after the delete returned"
+}
