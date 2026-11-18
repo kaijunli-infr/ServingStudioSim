@@ -62,13 +62,13 @@ def proc_mem(pid: int, proc: Path = Path("/proc")) -> dict | None:
         return None
 
 
-def take_sample(probe, args, stream: str | None, *, host: str, now=time.time) -> dict:
+def take_sample(probe, args, stream: str | None, *, host: str, now=time.time, ambiguous: bool = False) -> dict:
     mi = meminfo(args.meminfo)
     s: dict = {"at": now(), "host": host, "mem_total_kb": mi.get("MemTotal"), "mem_available_kb": mi.get("MemAvailable"), "importer": None, "candidates": None}
     if args.importer_exe:
         cands = probe.find_importers(args.importer_exe, stream, args.report, proc=args.proc, uid=args.uid)
         s["candidates"] = len(cands)
-        if len(cands) == 1:
+        if len(cands) == 1 and not ambiguous:  # after an ambiguous sample no survivor is adopted as the importer
             mem = proc_mem(cands[0]["pid"], args.proc) or {}
             s["importer"] = {"pid": cands[0]["pid"], "starttime": cands[0]["starttime"], "rss_kb": mem.get("VmRSS"), "hwm_kb": mem.get("VmHWM"), "matched_by": cands[0]["matched_by"]}
     return s
@@ -138,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
                     stream = (json.loads((args.nsys_dir / "lifecycle.json").read_text()).get("stream") or {}).get("path")
                 except (OSError, ValueError):
                     stream = None
-            s = take_sample(probe, args, stream, host=host)
+            s = take_sample(probe, args, stream, host=host, ambiguous=any((x.get("candidates") or 0) > 1 for x in samples))
             new = breaches_of(s, args.min_available_gb, args.max_importer_rss_gb)
             if new:
                 s["breach"] = [b["kind"] for b in new]

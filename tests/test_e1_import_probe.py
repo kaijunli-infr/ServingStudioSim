@@ -309,6 +309,30 @@ def test_two_matching_importers_are_ambiguous(tmp_path):
     assert rc == 3 and not w.control.exists() and rec["final"]["state"] == mod.AMBIGUOUS and "importer" not in rec
 
 
+def test_ambiguity_latches_a_survivor_is_never_adopted(tmp_path):
+    """Two processes match; one exits; the other keeps working and finishes. The survivor is not singled out, activity is not
+    established, no trigger is written, and the session ends AMBIGUOUS."""
+    def both(w):
+        w.importer(ticks=int(w.t * 10), io=(int(w.t * 100), 0))
+        w.importer(pid=IMP + 1, ticks=int(w.t * 10), io=(int(w.t * 100), 0))
+
+    def first_exits(w):
+        w.remove(IMP + 1)
+
+    def survivor_works(w):
+        w.importer(ticks=int(w.t * 10), io=(int(w.t * 100), 0))
+
+    mod, w = _load(), World(tmp_path, steps=[both, both, first_exits, survivor_works, survivor_works, survivor_works, finish()])
+    both(w)
+    rc = w.run(mod, max_s=30.0)
+    rec = w.record()
+    assert rc == 3 and not w.control.exists() and "importer" not in rec and "ambiguity_first_seen_at" in rec
+    assert w.states() == [mod.AMBIGUOUS] and rec["final"]["state"] == mod.AMBIGUOUS and rec["trigger"]["withheld"]
+    rows = [json.loads(line) for line in w.samples.read_text().splitlines()]
+    assert all(r["importer"] is None for r in rows) and [r["candidates"] for r in rows][:5] == [2, 2, 2, 1, 1] and len(rows) < 15  # ended by itself once the report existed
+    assert w.run(mod, trigger=False, max_s=5.0) == 0  # a later session on the finished report: nothing ambiguous is running any more
+
+
 def test_trigger_is_withheld_when_the_importer_changes_before_the_write(tmp_path, monkeypatch):
     mod, w = _load(), World(tmp_path, steps=[advance(), advance()])
     w.importer()

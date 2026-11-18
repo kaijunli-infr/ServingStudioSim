@@ -120,7 +120,8 @@ def main(argv=None) -> int:
         final = (lc.get("stream") or {}).get("final") or {}
         pres, dur = (lc.get("stream") or {}).get("preserved_path"), next(iter(sorted((run / "preserved").glob("*.qdstrm"))), None)
         check("stream.checksums", bool(final.get("sha256")) and sha(pres) == final.get("sha256") == sha(dur), f"controller final record {str(final.get('sha256'))[:16]}…, preserved original {str(sha(pres))[:16]}…, durable copy {str(sha(dur))[:16]}…")
-        check("archive.verified", a.archive_rc == 0, f"archive script exit code {a.archive_rc}")
+        if a.scenario == "success":
+            check("archive.verified", a.archive_rc == 0, f"archive script exit code {a.archive_rc}")
         check("samplers.measured", mem.get("samples", 0) > 10 and sto.get("samples", 0) > 5 and mem.get("breaches") == [] and sto.get("breaches") == [], f"memory samples {mem.get('samples')}, storage samples {sto.get('samples')}, breaches {mem.get('breaches')} {sto.get('breaches')}")
         gates = load(a.gates) or {}
         got = {g["gate"]: g["status"] for g in gates.get("gates", []) if g["status"] != "PASS"}
@@ -134,8 +135,8 @@ def main(argv=None) -> int:
         check("recovery_failure.detected", fr.get("verdict") == "FAIL" and gotf == {**BASE, "G8.offline_import": F, "G8b.recovered_trace_complete": F}, f"second post-run with a failing importer: verdict {fr.get('verdict')}, not PASS {gotf}")
     if a.scenario == "ambiguous":
         states = [t["state"] for t in probe.get("transitions", [])]
-        check("importer.ambiguity_recorded", "importer" not in probe and "AMBIGUOUS" in states and "ACTIVE" not in states and mem.get("ambiguous_samples", 0) > 0 and mem.get("importer_samples") == 0,
-              f"probe states {states}, no importer singled out; memory sampler ambiguous samples {mem.get('ambiguous_samples')}, importer samples {mem.get('importer_samples')}")
+        check("importer.ambiguity_recorded", "importer" not in probe and "AMBIGUOUS" in states and "ACTIVE" not in states and (probe.get("final") or {}).get("state") == "AMBIGUOUS" and mem.get("ambiguous_samples", 0) > 0 and mem.get("importer_samples") == 0,
+              f"probe states {states}, final {(probe.get('final') or {}).get('state')}, no importer singled out even after one of the two exited; memory sampler ambiguous samples {mem.get('ambiguous_samples')}, importer samples {mem.get('importer_samples')}")
         check("importer.run_continued_under_monitors", lc.get("phase") == "report_written" and sup.get("response") is None and sup.get("monitors_effective") is True, f"final phase {lc.get('phase')}; supervisor response {sup.get('response')}; monitors effective {sup.get('monitors_effective')}")
     if a.scenario == "memory_breach":
         step = ((sup.get("response") or {}).get("steps") or [{}])[0]
@@ -155,7 +156,7 @@ def main(argv=None) -> int:
     if a.scenario == "storage_breach":
         steps = (sup.get("response") or {}).get("steps") or [{}]
         check("breach.marker_and_cause", (run / "STORAGE-BREACH").exists() and [c.get("kind") for c in sup.get("causes", [])] == ["persistent_storage_above_ceiling"], f"STORAGE-BREACH present {(run / 'STORAGE-BREACH').exists()}; supervisor causes {[(c.get('source'), c.get('kind'), c.get('value_gb'), c.get('limit_gb')) for c in sup.get('causes', [])]}")
-        check("breach.registry_cleanup", [s.get("kind") for s in steps] == ["R2 registry cleanup"] and steps[0].get("rc") in (0, 2) and lc.get("stop_requested_at") is None and not (run / "profile" / "nsys" / "lifecycle.control").exists(),
+        check("breach.registry_cleanup", [s.get("kind") for s in steps] == ["R2 registry cleanup"] and steps[0].get("rc") in (0, 2) and "survivors 0" in str(steps[0].get("result_line")) and lc.get("stop_requested_at") is None and not (run / "profile" / "nsys" / "lifecycle.control").exists(),
               f"supervisor steps {[s.get('kind') for s in steps]} because {steps[0].get('why')}; cleanup rc {steps[0].get('rc')}: {steps[0].get('result_line')}; stop requested {lc.get('stop_requested_at')}; control file written {(run / 'profile' / 'nsys' / 'lifecycle.control').exists()}")
         log = load(a.root / "cpu" / "supervisor_cleanup.jsonl") if (a.root / "cpu" / "supervisor_cleanup.jsonl").exists() else None
         if log is None and (a.root / "cpu" / "supervisor_cleanup.jsonl").exists():

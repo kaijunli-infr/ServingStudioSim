@@ -1,0 +1,12 @@
+# archive e1_v3_scale on pod4-gb300-10-tray16-f3 at 2026-11-18T20:00:10Z -> /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e.archive
+PASS  run root copied
+PASS  tray-preserved stream and retention record copied from /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.raw-preserve
+INFO  operator logs: 6 file(s)
+PASS  archive copy of the run root equals the source, file by file (49 files)
+PASS  archived stream preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.qdstrm: sha256 71482922e1e161f1ced46ab66d25db64e1f4e90568bf586b0326935e02bf59dd = the controller's final record
+PASS  archived stream run/e1_v3_scale/preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.qdstrm: sha256 71482922e1e161f1ced46ab66d25db64e1f4e90568bf586b0326935e02bf59dd = the controller's final record
+PASS  SHA256SUMS verifies (57 files; its own sha256 8b940d551a6ee68b387f8ad318367597012725b03686d9f584781b66551d50f2)
+INFO  run root 0.004 GB + archive 0.006 GB = 0.010 GB (ceiling 16)
+PASS  persistent storage including the archive within 16 GB
+INFO  nothing was removed; the tray original stays in /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.raw-preserve
+# archive result: VERIFIED

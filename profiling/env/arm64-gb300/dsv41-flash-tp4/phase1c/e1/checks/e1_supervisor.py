@@ -167,6 +167,7 @@ def supervise(run: Path, registry: Path, out: Path, control_line: str, *, gpu_he
                     sleep(min(0.5, interval))
             if not resp["steps"] or not resp["steps"][-1].get("acknowledged"):
                 why = "the controller is not in its finalisation loop" if not resp["steps"] else f"the control line was not acknowledged within {ack_s} s"
+                (run.parent / "cpu").mkdir(parents=True, exist_ok=True)
                 step = {"kind": "R2 registry cleanup", "why": why, **cleanup(registry, cleanup_grace, run.parent / "cpu" / "supervisor_cleanup.jsonl")}
                 resp["steps"].append(step)
             resp["completed_at"] = now()

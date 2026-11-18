@@ -20,7 +20,8 @@ parent pid 1, own session), not a descendant of the CLI. This probe
 4. classifies the state as ACTIVE, NO_PROGRESS (alive, identity intact, nothing advanced in the last interval: temporary),
    COMPLETED (importer gone; report present, non-empty and stable over the settle samples; whether Nsight has logged
    "Generated:" is recorded, and the exit status, which /proc does not show, is stated as not observed), TERMINATED
-   (importer gone or replaced and the report missing or empty), NOT_FOUND or AMBIGUOUS;
+   (importer gone or replaced and the report missing or empty), NOT_FOUND or AMBIGUOUS. Ambiguity latches: once more than
+   one process has matched, no process is singled out later in that session, even if only one of them remains;
 5. fails closed: "import active" is established only by --min-progress consecutive intervals of importer-specific
    advance; in trigger mode the registered line is written only then, after one more identity check, else withheld.
 It never sends a signal. Stdlib only.
@@ -226,7 +227,10 @@ def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, s
     end = now() + max_s
 
     def save(result: str) -> None:
-        record.update({"result": result, "ended_at": now(), "samples_file": str(samples_path), "samples": len(samples), "final": classify(samples, min_progress=min_progress, generated=generated_in_log(nsys_log, report))})
+        final = classify(samples, min_progress=min_progress, generated=generated_in_log(nsys_log, report))
+        if "ambiguity_first_seen_at" in record:
+            final = {"state": AMBIGUOUS, "reason": "more than one process matched the importer criteria during this session; none is singled out, then or later", "importer_seen": bool(known)}
+        record.update({"result": result, "ended_at": now(), "samples_file": str(samples_path), "samples": len(samples), "final": final})
         out.write_text(json.dumps(record, indent=1) + "\n")
         log(f"[import-probe] {result}")
 
@@ -245,6 +249,11 @@ def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, s
                     nsys_pid = ((status or {}).get("nsys") or {}).get("pid")
                     record["recorded_nsys_cli_pid"] = nsys_pid
             s = take_sample(importer_exe, stream, report, known=known, status=status, proc=proc, uid=uid, now=now)
+            if s["candidates"] > 1 and "ambiguity_first_seen_at" not in record:
+                record["ambiguity_first_seen_at"] = s["at"]  # latched: a survivor is never adopted as "the" importer
+                log(f"[import-probe] {s['candidates']} processes match the importer criteria: identity is ambiguous for this session")
+            if "ambiguity_first_seen_at" in record and known is None:
+                s["importer"] = None
             samples.append(s)
             fh.write(json.dumps(s) + "\n")
             fh.flush()
@@ -256,7 +265,9 @@ def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, s
             if known is not None and not s.get("importer"):
                 gone_streak += 1
             c = classify(samples, min_progress=min_progress, generated=generated_in_log(nsys_log, report) if known and not s.get("importer") else None)
-            if known is not None and 0 < gone_streak < settle:
+            if "ambiguity_first_seen_at" in record:
+                c = {"state": AMBIGUOUS, "reason": "more than one process matched the importer criteria during this session; none is singled out, then or later"}
+            elif known is not None and 0 < gone_streak < settle:
                 c = {"state": SETTLING, "reason": f"importer pid {known['pid']} no longer present; waiting {settle} samples for the report to settle"}
             if c["state"] != state:
                 state = c["state"]
@@ -283,9 +294,17 @@ def run(importer_exe: str, report: str, out: Path, samples_path: Path, log, *, s
                 break
             elif known is None and state == COMPLETED:
                 break
+            if "ambiguity_first_seen_at" in record and s["candidates"] == 0 and s.get("report_size"):
+                gone_streak += 1  # ambiguous session: end once no candidate is left and the report exists
+                if gone_streak >= settle:
+                    break
             out.write_text(json.dumps({**record, "result": "running", "samples": len(samples)}, indent=1) + "\n")
             sleep(interval)
     final = classify(samples, min_progress=min_progress, generated=generated_in_log(nsys_log, report))
+    if "ambiguity_first_seen_at" in record:
+        record["trigger"].setdefault("withheld", "importer identity ambiguous") if record["trigger"]["requested"] and not record["trigger"]["written"] else None
+        save("NOT ESTABLISHED (AMBIGUOUS): more than one process matched the importer criteria during this session")
+        return 3 if record["trigger"]["requested"] and not record["trigger"]["written"] else 2
     if record["trigger"]["requested"] and not record["trigger"]["written"]:
         record["trigger"].setdefault("withheld", f"import activity never established (final state {final['state']})")
         save(f"TRIGGER WITHHELD: {record['trigger']['withheld']}")

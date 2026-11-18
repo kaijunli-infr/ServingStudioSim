@@ -119,7 +119,7 @@ def role_importer(args: list[str]) -> int:
         ballast[i] = 1
     with open(stream, "rb") as fh:
         fh.read(1 << 20)
-        end, x = time.time() + IMPORT_S, 0
+        end, x = time.time() + IMPORT_S + (0 if write else 5), 0  # in the ambiguous scenario the second process outlives the first
         while time.time() < end:  # the importer's own CPU time advances throughout
             x = (x * 1103515245 + 12345) % (1 << 31)
         if write:
@@ -158,7 +158,8 @@ def role_nsys(work: str, report: str) -> int:
     stream = f"/tmp/nsys-report-e2e{os.getpid():x}.qdstrm"
     with open(stream, "wb") as fh:
         fh.write(os.urandom(2 << 20))
-    held = open(stream, "rb")  # the CLI keeps the stream open; the controller finds it by this descriptor
+    # the mock CLI does not keep the stream open: every mock process runs under the same interpreter, and a second holder of the
+    # stream would look like a second importer; the controller takes the path from the "Generating" line below
     say(f"Generating '{stream}'\n\n\n")
     say(f"[1/1] [0%                          ] {Path(report).name}Processing events...\n")
     subprocess.Popen([sys.executable, ME, "agent", "--start-agent", "--session-name", f"profile-{os.getpid()}", stream, report]).wait()
@@ -170,7 +171,6 @@ def role_nsys(work: str, report: str) -> int:
         if time.time() - t0 > IMPORT_S + 60:
             break
     say(f"\r[1/1] [========================100%] {Path(report).name}\n")
-    held.close()
     try:
         os.unlink(stream)  # Nsight removes its own stream; the controller's hard link keeps the bytes
     except OSError:

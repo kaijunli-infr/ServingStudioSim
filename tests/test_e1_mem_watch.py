@@ -118,3 +118,31 @@ def test_importer_arguments_are_required_together(tmp_path):
     mod = _load()
     with pytest.raises(SystemExit):
         mod.main(["--out", str(tmp_path / "o"), "--summary", str(tmp_path / "s"), "--importer-exe", EXE])
+
+
+def test_after_an_ambiguous_sample_no_survivor_is_measured_as_the_importer(tmp_path):
+    mod = _load()
+    proc, mi = _host(tmp_path)
+    _importer(proc, 5003, 1.0)
+    _importer(proc, 5004, 2.0)
+    out, summary, stop = tmp_path / "mem.jsonl", tmp_path / "mem.json", tmp_path / "stop"
+    args = ["--out", str(out), "--summary", str(summary), "--interval", "0.05", "--max-s", "5", "--stop-file", str(stop), "--meminfo", str(mi), "--proc", str(proc), "--uid", str(os.getuid()), "--importer-exe", EXE, "--stream", STREAM, "--report", "/run/out.nsys-rep"]
+    import threading
+
+    def later():
+        import shutil
+        import time as _t
+
+        _t.sleep(0.3)
+        shutil.rmtree(proc / "5004")
+        _t.sleep(0.4)
+        stop.write_text("")
+
+    th = threading.Thread(target=later)
+    th.start()
+    rc = mod.main(args)
+    th.join()
+    rows = [json.loads(line) for line in out.read_text().splitlines()]
+    s = json.loads(summary.read_text())
+    assert rc == 0 and rows[0]["candidates"] == 2 and rows[-1]["candidates"] == 1 and all(r["importer"] is None for r in rows)
+    assert s["ambiguous_samples"] >= 1 and s["importer_samples"] == 0 and s["importer_peak_rss_kb"] is None

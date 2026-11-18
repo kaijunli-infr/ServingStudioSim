@@ -1,0 +1,4 @@
+{"at": 1795032485.882352, "at_iso": "2026-11-18T20:08:05Z", "host": "pod4-gb300-10-tray16-f3", "source": "e1_gpu_watch", "memory_used_mib": [0, 0, 0, 0], "compute_pids": [], "released": true, "available": true}
+{"at": 1795032488.0391989, "at_iso": "2026-11-18T20:08:08Z", "host": "pod4-gb300-10-tray16-f3", "source": "e1_gpu_watch", "memory_used_mib": [0, 0, 0, 0], "compute_pids": [], "released": true, "available": true}
+{"at": 1795032490.1957037, "at_iso": "2026-11-18T20:08:10Z", "host": "pod4-gb300-10-tray16-f3", "source": "e1_gpu_watch", "memory_used_mib": [0, 0, 0, 0], "compute_pids": [], "released": true, "available": true}
+{"at": 1795032492.4596038, "at_iso": "2026-11-18T20:08:12Z", "host": "pod4-gb300-10-tray16-f3", "source": "e1_gpu_watch", "memory_used_mib": [0, 0, 0, 0], "compute_pids": [], "released": true, "available": true}
