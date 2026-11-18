@@ -1,0 +1,48 @@
+# synthetic CPU-only session on pod4-gb300-10-tray14-f3 2026-11-18T16:39:40Z; CUDA_VISIBLE_DEVICES=''
+gpu before (MiB / compute apps): 0 0 0 0  / 0
+session rc=0; files: 4096 .;53248 ..;0 stop;228504 synth.nsys-rep;323 target.py;
+target done, writes: 14180000
+Collecting data...
+Generating '/tmp/nsys-report-df11.qdstrm'
+
+Generated:
+	/tmp/v2close-synth-20261118T163940Z/synth.nsys-rep
+194 samples over 10.7 s; t0 = 16:39:40Z
+pid 2255869 comm=nsys ppid=2255853→2255853 pgid=2255852 sid=2255852 seen +0.00..+9.66 s ticks 1→54 rchar 241072→470683 wchar 208→3041
+    exe=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+    cmd=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys profile --trace=osrt --sample=none --cpuctxsw=none --force-overwrite=true -o /tmp/v2close-synth-20261118T163940Z/synth python3 -I target.py
+    fds=[]
+pid 2255884 comm=nsys ppid=1→1 pgid=2255884 sid=2255884 seen +0.56..+9.66 s ticks 0→173 rchar 2757→62915644 wchar 13→2525327
+    exe=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+    cmd=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys --start-agent --session-name profile-2255869 --shm-name NSys-create-agent-3b4adae1-46eb-410b-894c-a0689fdaa02d-4026531836-2025.6.3
+    fds=[]
+pid 2255894 comm=nsys-launcher ppid=2255869→2255869 pgid=2255852 sid=2255852 seen +1.11..+9.66 s ticks 0→0 rchar 13059→None wchar 32→None
+    exe=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys-launcher
+    cmd=
+    fds=None
+pid 2255895 comm=nsys-launcher ppid=2255894→2255894 pgid=2255895 sid=2255895 seen +1.11..+2.55 s ticks 0→0 rchar 0→0 wchar 5→5
+    exe=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys-launcher
+    cmd=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys-launcher /tmp/1ca8-201e-3dde-74ea 45
+    fds=[]
+pid 2255896 comm=nsys-tee ppid=2255894→2255894 pgid=2255852 sid=2255852 seen +1.11..+8.61 s ticks 0→0 rchar 10119→None wchar 0→None
+    exe=/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys-launcher
+    cmd=
+    fds=None
+pid 2255970 comm=QdstrmImporter ppid=2255884→2255884 pgid=2255884 sid=2255884 seen +9.11..+9.17 s ticks 0→1 rchar 8787→49555 wchar 0→0
+    exe=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
+    cmd=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter --version
+    fds=[]
+pid 2255971 comm=QdstrmImporter ppid=2255884→2255884 pgid=2255884 sid=2255884 seen +9.55..+9.66 s ticks 1→14 rchar 49555→15866386 wchar 0→169672
+    exe=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
+    cmd=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter --input-file /tmp/nsys-report-df11.qdstrm --output-file /tmp/v2close-synth-20261118T163940Z/synth.nsys-rep --force-overwrite
+    fds=['/tmp/nsys-report-df11.qdstrm', '/tmp/v2close-synth-20261118T163940Z/synth.nsys-rep']
+    +  9.11 s state D ticks 0 rchar 8787 wchar 0
+    +  9.17 s state R ticks 1 rchar 49555 wchar 0
+    +  9.17 s state R ticks 1 rchar 49555 wchar 0
+    +  9.55 s state R ticks 1 rchar 49555 wchar 0
+    +  9.61 s state S ticks 8 rchar 15866386 wchar 81
+    +  9.66 s state R ticks 14 rchar 15866386 wchar 169672
+    +  9.66 s state R ticks 14 rchar 15866386 wchar 169672
+gpu after (MiB / compute apps): 0 0 0 0  / 0
+leftover nsight processes: 0
+SYNDONE

@@ -1,0 +1,3 @@
+importer child pid 2258327 started 1795020435.164
+SIGKILL sent to own child pid 2258327 at 1795020445.165 (+10.00 s)
+importer rc -9 after 10.05 s

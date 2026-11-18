@@ -1,0 +1,6 @@
+target done, writes: 14180000
+Collecting data...
+Generating '/tmp/nsys-report-df11.qdstrm'
+[1/1] [0%                          ] synth.nsys-rep[1/1] [0%                          ] synth.nsys-rep[1/1] [==20%                       ] synth.nsys-rep[1/1] [==========48%               ] synth.nsys-rep[1/1] [==================76%       ] synth.nsys-rep[1/1] [==================77%       ] synth.nsys-rep[1/1] [==================78%       ] synth.nsys-rep[1/1] [===================79%      ] synth.nsys-rep[1/1] [========================100%] synth.nsys-rep[1/1] [========================100%] synth.nsys-rep
+Generated:
+	/tmp/v2close-synth-20261118T163940Z/synth.nsys-rep

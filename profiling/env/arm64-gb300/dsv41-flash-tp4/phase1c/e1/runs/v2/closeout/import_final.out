@@ -1,0 +1,38 @@
+# offline import 'final' on pod4-gb300-10-tray14-f3 2026-11-18T17:00:41Z; kill own importer after: 0 s; source sha256 4739d6581d1b035bae1f1a0f15a3163bf8e708dc022527fb64228f1143db839c
+gpu before (MiB / compute apps): 0 0 0 0  / 0
+importer child pid 2262247 started 1795021243.025
+importer rc 0 after 26.17 s
+probe rc=0
+[import-probe] start pid 2262235 importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter report /tmp/v2close-import-final/out.nsys-rep 2026-11-18T17:00:41Z
+[import-probe] state NOT_FOUND: no process matches the importer criteria and there is no complete report 2026-11-18T17:00:41Z
+[import-probe] importer identified: pid 2262247 (--input-file is the session stream; --output-file is the session report; holds the session stream open) 2026-11-18T17:00:43Z
+[import-probe] state NO_PROGRESS: importer pid 2262247 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2) 2026-11-18T17:00:43Z
+[import-probe] state ACTIVE: importer pid 2262247 alive; 2 consecutive interval(s) of its own CPU/I-O advance 2026-11-18T17:00:44Z
+[import-probe] state SETTLING: importer pid 2262247 no longer present; waiting 3 samples for the report to settle 2026-11-18T17:01:09Z
+[import-probe] state COMPLETED: importer pid 2262247 is gone; report 391797430 B, stable; no Nsight log given; exit status not observable from /proc 2026-11-18T17:01:10Z
+[import-probe] COMPLETED: importer pid 2262247 is gone; report 391797430 B, stable; no Nsight log given; exit status not observable from /proc 2026-11-18T17:01:10Z
+result: COMPLETED: importer pid 2262247 is gone; report 391797430 B, stable; no Nsight log given; exit status not observable from /proc
+importer: {'pid': 2262247, 'starttime': 301584570, 'exe': '/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter', 'matched_by': ['--input-file is the session stream', '--output-file is the session report', 'holds the session stream open'], 'first_seen_at': 1795021243.449429}
+agent/parent: {'pid': 2262241, 'found': True, 'is_agent': False, 'session_name': None, 'ppid': 2262217, 'sid': 2262216, 'starttime': 301584569, 'linked_to_recorded_cli': None}
+transitions: [(0.0, 'NOT_FOUND'), (1.92, 'NO_PROGRESS'), (3.15, 'ACTIVE'), (27.83, 'SETTLING'), (29.06, 'COMPLETED')]
+  +  1.92 s state S ticks 58 rchar 118967892 wchar 1296 report_size None
+  +  3.78 s state S ticks 251 rchar 346361428 wchar 2106 report_size None
+  +  5.68 s state S ticks 441 rchar 346361428 wchar 2916 report_size None
+  +  7.53 s state S ticks 627 rchar 346361428 wchar 3645 report_size None
+  +  9.35 s state S ticks 811 rchar 346361428 wchar 4374 report_size None
+  + 11.20 s state S ticks 996 rchar 346361428 wchar 5184 report_size None
+  + 13.04 s state S ticks 1182 rchar 346361428 wchar 5346 report_size None
+  + 14.92 s state S ticks 1368 rchar 346361428 wchar 5346 report_size None
+  + 16.76 s state S ticks 1552 rchar 346361428 wchar 5346 report_size None
+  + 18.62 s state S ticks 1753 rchar 346361428 wchar 5346 report_size None
+  + 20.46 s state R ticks 1938 rchar 346361428 wchar 25745326 report_size 20598498
+  + 22.31 s state R ticks 2122 rchar 346361428 wchar 105109026 report_size 100126198
+  + 24.17 s state R ticks 2306 rchar 346361428 wchar 195169626 report_size 190457398
+  + 26.00 s state R ticks 2490 rchar 346361428 wchar 281704226 report_size 276647598
+  + 27.22 s state R ticks 2612 rchar 346361428 wchar 368935826 report_size 357942398
+  after importer gone: [(27.83, 391797430), (28.45, 391797430), (29.06, 391797430)]
+scratch dir peak 0.383 GB over 56 samples (0.5 s interval)
+importer peak RSS (sampled VmRSS max / VmHWM): 8.66 GB / 8.68 GB
+4096 .;53248 ..;391797430 out.nsys-rep;0 stop;
+gpu after (MiB / compute apps): 0 0 0 0  / 0; importer processes left: 0
+IMPDONE final

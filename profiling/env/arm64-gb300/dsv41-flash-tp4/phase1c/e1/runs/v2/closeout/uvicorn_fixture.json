@@ -1,0 +1,77 @@
+{
+ "uvicorn": "0.54.0",
+ "python": "3.12.13",
+ "cases": {
+  "pending": {
+   "exited_s_after_sigterm": null,
+   "needed_sigkill_after_12_s": true,
+   "returncode": -9,
+   "client": {
+    "error": "RemoteDisconnected: Remote end closed connection without response",
+    "returned_after_sigterm_s": 12.0
+   },
+   "log": [
+    "INFO:     Waiting for application startup.",
+    "[fixture] SIGTERM handled at 1795020707.962",
+    "[fixture] shutting down HTTP server",
+    "INFO:     Shutting down",
+    "INFO:     Waiting for connections to close. (CTRL+C to force quit)"
+   ]
+  },
+  "idle": {
+   "exited_s_after_sigterm": 0.16,
+   "needed_sigkill_after_12_s": false,
+   "returncode": 0,
+   "client": {},
+   "log": [
+    "INFO:     Waiting for application startup.",
+    "[fixture] SIGTERM handled at 1795020720.367",
+    "[fixture] shutting down HTTP server",
+    "INFO:     Shutting down",
+    "INFO:     Waiting for application shutdown.",
+    "INFO:     Application shutdown complete.",
+    "[fixture] serve() returned at 1795020720.468"
+   ]
+  },
+  "pending_bound": {
+   "exited_s_after_sigterm": 3.17,
+   "needed_sigkill_after_12_s": false,
+   "returncode": 0,
+   "client": {
+    "status": 500,
+    "returned_after_sigterm_s": 3.1
+   },
+   "log": [
+    "INFO:     Waiting for application startup.",
+    "[fixture] SIGTERM handled at 1795020721.930",
+    "[fixture] shutting down HTTP server",
+    "INFO:     Shutting down",
+    "INFO:     Waiting for connections to close. (CTRL+C to force quit)",
+    "ERROR:    Cancel 1 running task(s), timeout graceful shutdown exceeded",
+    "INFO:     Waiting for application shutdown.",
+    "  File \"/mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/uvicorn_fixture.py\", line 24, in app",
+    "asyncio.exceptions.CancelledError: Task cancelled, timeout graceful shutdown exceeded",
+    "INFO:     Application shutdown complete.",
+    "[fixture] serve() returned at 1795020725.033"
+   ]
+  },
+  "pending_client_closes": {
+   "exited_s_after_sigterm": null,
+   "needed_sigkill_after_12_s": true,
+   "returncode": -9,
+   "client": {
+    "closed_by_client_s_after_sigterm": 2.0,
+    "error": "RemoteDisconnected: Remote end closed connection without response",
+    "returned_after_sigterm_s": 2.0
+   },
+   "log": [
+    "INFO:     Waiting for application startup.",
+    "[fixture] SIGTERM handled at 1795020726.498",
+    "[fixture] shutting down HTTP server",
+    "INFO:     Shutting down",
+    "INFO:     Waiting for connections to close. (CTRL+C to force quit)",
+    "INFO:     Waiting for background tasks to complete. (CTRL+C to force quit)"
+   ]
+  }
+ }
+}

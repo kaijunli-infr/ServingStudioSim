@@ -1,0 +1,41 @@
+# offline import 'killed' on pod4-gb300-10-tray14-f3 2026-11-18T16:47:13Z; kill own importer after: 10 s; source sha256 4739d6581d1b035bae1f1a0f15a3163bf8e708dc022527fb64228f1143db839c
+gpu before (MiB / compute apps): 0 0 0 0  / 0
+importer child pid 2258327 started 1795020435.164
+SIGKILL sent to own child pid 2258327 at 1795020445.165 (+10.00 s)
+importer rc -9 after 10.05 s
+probe rc=1
+[import-probe] start pid 2258307 importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter report /tmp/v2close-import-killed/out.nsys-rep 2026-11-18T16:47:13Z
+[import-probe] state NOT_FOUND: no process matches the importer criteria and there is no complete report 2026-11-18T16:47:13Z
+[import-probe] importer identified: pid 2258327 (--input-file is the session stream; --output-file is the session report; holds the session stream open) 2026-11-18T16:47:15Z
+[import-probe] state NO_PROGRESS: importer pid 2258327 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2) 2026-11-18T16:47:15Z
+[import-probe] state ACTIVE: importer pid 2258327 alive; 2 consecutive interval(s) of its own CPU/I-O advance 2026-11-18T16:47:16Z
+[import-probe] state SETTLING: importer pid 2258327 no longer present; waiting 3 samples for the report to settle 2026-11-18T16:47:25Z
+[import-probe] state TERMINATED: importer pid 2258327 is gone or replaced and the report is missing or empty 2026-11-18T16:47:26Z
+[import-probe] TERMINATED: importer pid 2258327 is gone or replaced and the report is missing or empty 2026-11-18T16:47:26Z
+result: TERMINATED: importer pid 2258327 is gone or replaced and the report is missing or empty
+importer: {'pid': 2258327, 'starttime': 301503784, 'exe': '/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter', 'matched_by': ['--input-file is the session stream', '--output-file is the session report', 'holds the session stream open'], 'first_seen_at': 1795020435.5641336}
+agent/parent: {'pid': 2258321, 'found': True, 'is_agent': False, 'session_name': None, 'ppid': 2258290, 'sid': 2257617, 'starttime': 301503782, 'linked_to_recorded_cli': None}
+transitions: [(0.0, 'NOT_FOUND'), (1.89, 'NO_PROGRESS'), (3.12, 'ACTIVE'), (11.76, 'SETTLING'), (13.04, 'TERMINATED')]
+  +  1.89 s state S ticks 55 rchar 117595732 wchar 1458 report_size None
+  +  2.51 s state S ticks 117 rchar 308444756 wchar 1458 report_size None
+  +  3.12 s state S ticks 186 rchar 346361428 wchar 1944 report_size None
+  +  3.74 s state S ticks 247 rchar 346361428 wchar 2268 report_size None
+  +  4.35 s state S ticks 309 rchar 346361428 wchar 2511 report_size None
+  +  4.97 s state S ticks 370 rchar 346361428 wchar 2754 report_size None
+  +  5.58 s state S ticks 432 rchar 346361428 wchar 2997 report_size None
+  +  6.19 s state S ticks 493 rchar 346361428 wchar 3240 report_size None
+  +  6.81 s state S ticks 557 rchar 346361428 wchar 3483 report_size None
+  +  7.43 s state S ticks 618 rchar 346361428 wchar 3726 report_size None
+  +  8.04 s state S ticks 680 rchar 346361428 wchar 3969 report_size None
+  +  8.67 s state S ticks 743 rchar 346361428 wchar 4212 report_size None
+  +  9.29 s state S ticks 806 rchar 346361428 wchar 4455 report_size None
+  +  9.92 s state S ticks 868 rchar 346361428 wchar 4698 report_size None
+  + 10.53 s state S ticks 930 rchar 346361428 wchar 5022 report_size None
+  + 11.15 s state S ticks 991 rchar 346361428 wchar 5265 report_size None
+  + 11.15 s state S ticks 991 rchar 346361428 wchar 5265 report_size None
+  after importer gone: [(11.76, None), (12.39, None), (13.04, None)]
+scratch dir peak 0.000 GB over 25 samples (0.5 s interval)
+importer peak RSS (sampled VmRSS max / VmHWM): 8.50 GB / 8.50 GB
+4096 .;53248 ..;0 stop;
+gpu after (MiB / compute apps): 0 0 0 0  / 0; importer processes left: 0
+IMPDONE killed

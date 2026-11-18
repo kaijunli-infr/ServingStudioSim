@@ -1,0 +1,8 @@
+[import-probe] start pid 2258307 importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter report /tmp/v2close-import-killed/out.nsys-rep 2026-11-18T16:47:13Z
+[import-probe] state NOT_FOUND: no process matches the importer criteria and there is no complete report 2026-11-18T16:47:13Z
+[import-probe] importer identified: pid 2258327 (--input-file is the session stream; --output-file is the session report; holds the session stream open) 2026-11-18T16:47:15Z
+[import-probe] state NO_PROGRESS: importer pid 2258327 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2) 2026-11-18T16:47:15Z
+[import-probe] state ACTIVE: importer pid 2258327 alive; 2 consecutive interval(s) of its own CPU/I-O advance 2026-11-18T16:47:16Z
+[import-probe] state SETTLING: importer pid 2258327 no longer present; waiting 3 samples for the report to settle 2026-11-18T16:47:25Z
+[import-probe] state TERMINATED: importer pid 2258327 is gone or replaced and the report is missing or empty 2026-11-18T16:47:26Z
+[import-probe] TERMINATED: importer pid 2258327 is gone or replaced and the report is missing or empty 2026-11-18T16:47:26Z

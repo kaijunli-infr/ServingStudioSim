@@ -1,0 +1,83 @@
+{
+ "probe": "e1_import_probe.py",
+ "provenance": {
+  "importer.state/ticks/starttime/ppid": "/proc/<importer pid>/stat, read by this probe",
+  "importer.io": "/proc/<importer pid>/io, read by this probe",
+  "importer.exe": "readlink /proc/<importer pid>/exe",
+  "importer.argv": "/proc/<importer pid>/cmdline",
+  "importer.fds": "readlink /proc/<importer pid>/fd/*",
+  "agent": "/proc/<importer ppid>/{stat,cmdline,exe}",
+  "report_size": "stat() of the report path (file-level, NOT counted as importer progress)",
+  "reported_progress_pct": "lifecycle.json: the controller's reading of the Nsight log (NOT counted as importer progress)",
+  "phase": "lifecycle.json"
+ },
+ "importer_exe": "/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter",
+ "stream": "/mnt/shared/home/dc/workspace/serving-studio/artifacts/phase1c-e1-v2fr-dsv41-flash-gb300-tp4-20261118/preserved/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm",
+ "report": "/tmp/v2close-import-final/out.nsys-rep",
+ "recorded_nsys_cli_pid": null,
+ "min_progress": 2,
+ "interval_s": 0.5,
+ "started_at": 1795021241.5308294,
+ "transitions": [
+  {
+   "at": 1795021241.5308928,
+   "state": "NOT_FOUND",
+   "reason": "no process matches the importer criteria and there is no complete report"
+  },
+  {
+   "at": 1795021243.449429,
+   "state": "NO_PROGRESS",
+   "reason": "importer pid 2262247 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2)"
+  },
+  {
+   "at": 1795021244.6840258,
+   "state": "ACTIVE",
+   "reason": "importer pid 2262247 alive; 2 consecutive interval(s) of its own CPU/I-O advance"
+  },
+  {
+   "at": 1795021269.3629777,
+   "state": "SETTLING",
+   "reason": "importer pid 2262247 no longer present; waiting 3 samples for the report to settle"
+  },
+  {
+   "at": 1795021270.5941281,
+   "state": "COMPLETED",
+   "reason": "importer pid 2262247 is gone; report 391797430 B, stable; no Nsight log given; exit status not observable from /proc"
+  }
+ ],
+ "trigger": {
+  "requested": false,
+  "written": false
+ },
+ "importer": {
+  "pid": 2262247,
+  "starttime": 301584570,
+  "exe": "/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter",
+  "matched_by": [
+   "--input-file is the session stream",
+   "--output-file is the session report",
+   "holds the session stream open"
+  ],
+  "first_seen_at": 1795021243.449429,
+  "agent": {
+   "pid": 2262241,
+   "found": true,
+   "is_agent": false,
+   "session_name": null,
+   "ppid": 2262217,
+   "sid": 2262216,
+   "starttime": 301584569,
+   "linked_to_recorded_cli": null
+  }
+ },
+ "result": "COMPLETED: importer pid 2262247 is gone; report 391797430 B, stable; no Nsight log given; exit status not observable from /proc",
+ "ended_at": 1795021270.7096713,
+ "samples_file": "/mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v2close/import_probe_final.jsonl",
+ "samples": 48,
+ "final": {
+  "state": "COMPLETED",
+  "reason": "importer pid 2262247 is gone; report 391797430 B, stable; no Nsight log given; exit status not observable from /proc",
+  "importer_seen": true,
+  "nsight_generated_marker": null
+ }
+}
