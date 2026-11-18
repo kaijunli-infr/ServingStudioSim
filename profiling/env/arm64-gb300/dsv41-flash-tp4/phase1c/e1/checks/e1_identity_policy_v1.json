@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "purpose": "Field-by-field normalization policy for comparing a V1 launch record / profile config with the accepted e1_nsys_val run. A differing field passes only if it is listed here AND its rule's condition holds. Everything else that differs is a FAIL. Fields matching `protected` can never be normalized: a rule on such a field is rejected when the policy is loaded.",
+ "pinned": {
+  "fork_head": "0ab18711335780e062d65994a3243da0281d2081",
+  "trace_sha256": "c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158"
+ },
+ "worktree_roots": [
+  "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1",
+  "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle"
+ ],
+ "launch_rules": [
+  {"field": "name", "category": "output_path", "kind": "run_name", "doc": "run name; names the output files only. Must be dsv41_flash_1017_gb300_tp4_<pass> on both sides."},
+  {"field": "argv:-o", "category": "output_path", "kind": "output_stem", "doc": "Nsight -o output stem: <run dir>/profile/nsys/<name>. Equal after replacing the run directory and the record's own name."},
+  {"field": "env.PYTHONPATH", "category": "worktree_source_path", "kind": "worktree_path", "doc": "vLLM fork checkout inside the launching worktree. Equal after replacing the worktree root; requires fork_git.head equal on both sides and equal to the pinned fork head, and a clean fork status on both sides."},
+  {"field": "fork_git.path", "category": "worktree_source_path", "kind": "worktree_path", "doc": "same as env.PYTHONPATH"},
+  {"field": "nsys_config.capture_start_delay_seconds", "category": "approved_lifecycle_control", "kind": "approved_value", "a": 10.0, "b": null, "doc": "no-delay start, approved for e1_b8_recovery, e1_main_v3 and V1 (profiler armed before the first request). Changes when the capture starts, not how it is recorded."},
+  {"field": "nsys_config.finalize_soft_deadline_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 300.0, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.finalize_hard_deadline_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 600.0, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.finalize_stall_timeout_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 300.0, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.finalize_on_hard_deadline", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": "release_gpus", "doc": "V1 packet section 4"},
+  {"field": "nsys_config.finalize_session_close_timeout_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 300.0, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.finalize_max_extension_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 120.0, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.gpu_held_ceiling_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 2700.0, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.preserve_raw_stream", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": true, "doc": "V1 packet section 4"},
+  {"field": "nsys_config.raw_preserve_dir", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": null, "doc": "lifecycle-controller field at its default (preserve next to the stream)"},
+  {"field": "nsys_config.min_free_bytes_stream", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 53687091200, "doc": "lifecycle-controller disk floor at its default (50 GiB); a pre-stop check only"},
+  {"field": "nsys_config.min_free_bytes_report", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 21474836480, "doc": "lifecycle-controller disk floor at its default (20 GiB); a pre-stop check only"},
+  {"field": "nsys_config.tmp_dir", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": null, "doc": "must stay unset: no TMPDIR is added to the server environment"},
+  {"field": "nsys_config.qdstrm_importer", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": null, "doc": "must stay unset: the importer of the pinned Nsight install is used"}
+ ],
+ "profile_rules": [
+  {"field": "name", "category": "output_path", "kind": "run_name", "doc": "run name"},
+  {"field": "log_dir", "category": "output_path", "kind": "output_dir", "doc": "run output directory under ServingStudioSim/logs/"},
+  {"field": "workload.frontend.path", "category": "worktree_source_path", "kind": "same_content_file", "sha256_pin": "trace_sha256", "doc": "trace file path inside each tree; both files must exist and have the pinned e1_dry.csv sha256, so the request schedule is byte-identical"},
+  {"field": "nsys.capture_start_delay_seconds", "category": "approved_lifecycle_control", "kind": "approved_value", "a": 10.0, "b": "<absent>", "doc": "no-delay start (see launch rule)"},
+  {"field": "nsys.finalize_soft_deadline_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 300.0, "doc": "V1 packet section 4"},
+  {"field": "nsys.finalize_hard_deadline_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 600.0, "doc": "V1 packet section 4"},
+  {"field": "nsys.finalize_stall_timeout_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 300.0, "doc": "V1 packet section 4"},
+  {"field": "nsys.finalize_on_hard_deadline", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": "release_gpus", "doc": "V1 packet section 4"},
+  {"field": "nsys.finalize_session_close_timeout_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 300.0, "doc": "V1 packet section 4"},
+  {"field": "nsys.finalize_max_extension_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 120.0, "doc": "V1 packet section 4"},
+  {"field": "nsys.gpu_held_ceiling_s", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": 2700.0, "doc": "V1 packet section 4"},
+  {"field": "nsys.preserve_raw_stream", "category": "approved_lifecycle_control", "kind": "approved_value", "a": "<absent>", "b": true, "doc": "V1 packet section 4"}
+ ],
+ "protected": {
+  "launch": ["^server_argv", "^server_config", "^python_runtime", "^nsys_profiler", "^fork_python", "^fork_git\\.(head|status_short|branch)$", "^env\\.(?!PYTHONPATH$)", "^argv\\[", "^schema_version$",
+             "^nsys_config\\.(executable|capture_mode|nvtx_trigger|analyze_|capture_duration|sample|cpuctxsw|cuda_)"],
+  "profile": ["^server", "^model", "^python_runtime", "^workload\\.(?!frontend\\.path$)", "^nsys\\.(executable|capture_mode|nvtx_trigger|analyze_|capture_duration|sample|cpuctxsw|cuda_)"]
+ }
+}
