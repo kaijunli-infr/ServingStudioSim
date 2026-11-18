@@ -17,7 +17,7 @@ with gates. It is not a forced-release test and not part of the E1 measurement.
 
 | item | value |
 |---|---|
-| branch / code commit | `exp/profiler-lifecycle`, code commit **22422bd2** (`V3S-PIN.json`); launch commit: a descendant with the pinned trees, clean, checked by the preflight and by gate G0 from the driver's `launch_source.json` |
+| branch / code commit | `exp/profiler-lifecycle`, code commit **47425cc6** (`V3S-PIN.json`); launch commit: a descendant with the pinned trees, clean, checked by the preflight and by gate G0 from the driver's `launch_source.json` |
 | pinned trees | `alignment` 7b4df784a5b6daff7c792e81cbc6503ba2c806ec and `launcher` 5acab28980ef9974bf4cb6dcd676481c357e655d (both unchanged since e32fbab7: no controller, launcher or shutdown change), 21 test files, the CPU-only guard and its runner, fixtures |
 | submodules | vLLM fork 0ab18711335780e062d65994a3243da0281d2081, req-frontend 5c20a259618976ecc360bda84abcc3653a04006e (gitlink = checkout, checked) |
 | load-generator executable | `session_runner` sha256 **7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2** (`BINARY-PROVENANCE.json`), launched only through the prebuilt contract with the build-tool guard, as in V2 |
@@ -27,7 +27,7 @@ with gates. It is not a forced-release test and not part of the E1 measurement.
 | config | `configs_v3scale/e1_v3_scale/profile.json` sha256 fc91bddbf0fd6b34966948464c8cf2c3dc4887539edb71a5103d2dbf80de71da = the V2 config with only `name`, `log_dir` and the trace path changed (preflight check): model, server arguments, openai backend, routing hook on, stream false, trace-timed arrivals, Nsight flags, no delayed start, no `tmp_dir`, lifecycle bounds soft 300 / hard 600 / stall 300 / session close 300 / max extension 120 / GPU-held ceiling 2700 s, stream preserved |
 | controller behaviour | unchanged: 60 s API-server grace (controller default; not overridden), identity-verified server-only termination, no signal to Nsight |
 | inputs manifest | `INPUTS_v3scale.sha256` (trace, config, and the V2 config and accepted trace they derive from); `E1-V3-SCALE-INPUTS.json` (expected values, deadlines, limits, ceilings, four-cell plan) |
-| scripts manifest | `SCRIPTS_v3scale.sha256`, 64 files |
+| scripts manifest | `SCRIPTS_v3scale.sha256`, 66 files |
 
 Not used: the Phase 0 recipe; four b=48-only waves.
 
@@ -235,7 +235,7 @@ hard-linked the stream leave it preserved. Either response makes the run a FAIL 
 
 ## 14. Freeze record (proposed)
 
-`FREEZE_v3scale.sha256` pins: this packet, `SCRIPTS_v3scale.sha256` (64 files), `INPUTS_v3scale.sha256`,
+`FREEZE_v3scale.sha256` pins: this packet, `SCRIPTS_v3scale.sha256` (66 files), `INPUTS_v3scale.sha256`,
 `E1-V3-SCALE-INPUTS.json`, `V3S-PIN.json`, `V3S-PIN-identities.json`, `BINARY-PROVENANCE.json`. Any change to one of them needs a new
 review.
 
