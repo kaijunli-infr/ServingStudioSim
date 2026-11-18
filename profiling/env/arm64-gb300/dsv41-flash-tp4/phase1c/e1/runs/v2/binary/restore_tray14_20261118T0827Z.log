@@ -1,0 +1,16 @@
+# session_runner provenance repair 2026-11-18T08:27:09Z on pod4-gb300-10-tray14-f3
+## 1. preserve the rebuilt V1 executable (incident evidence)
+current executable in wt-lifecycle: 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549 (28759968 B, mtime 2026-11-18 02:54:12.375478083 +0000)
+PASS  preserved in /mnt/shared/home/dc/workspace/serving-studio/artifacts/phase1c-e1-v1-dsv41-flash-gb300-tp4-20261118-incident-session-runner: sha256 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549 (= the executable found in the worktree: yes); 249 Compiling lines from the V1 run log
+## 2. restore the pinned executable from the verified reference
+reference /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/load_generator/req-frontend/target/release/session_runner: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (28759968 B, mtime 2026-11-15 08:11:22.465787858 +0000); pinned (BINARY-PROVENANCE.json): 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+PASS  source checkout is the clean pinned commit 5c20a259618976ecc360bda84abcc3653a04006e (not modified by this repair)
+PASS  restored: /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/session_runner sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 == pinned, byte-identical to the reference (cmp)
+## 3. what cargo does with the restored bytes (development command, outside any launch; bytes checked before and after)
+  cargo:     Finished `release` profile [optimized] target(s) in 2.40s
+INFO  cargo REPLACED the executable (95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549): its build state is not compatible with the pinned bytes in this path; restoring again and relying on the prebuilt path only
+restored again: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+## 4. build-state record and the fail-closed contract
+PASS  build state recorded: sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 source 5c20a259618976ecc360bda84abcc3653a04006e
+PASS  prebuilt session_runner /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/session_runner: sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 == pinned; source 5c20a259618976ecc360bda84abcc3653a04006e clean; build state recorded (restored 2026-11-18 by cp -p from /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/load_generator/req-frontend/target/release/session_runner (the executable built 2026-11-15 on tray14 per BINARY-PROVENANCE.json; sha256 verified equal to the pin and cmp-identical); replaces the executable the V1 launcher rebuilt in this path); cargo not consulted
+final: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2  28759968 B mtime 2026-11-15 08:11:22.465787858 +0000; source 5c20a25 status ''; gpu 0 MiB 0 MiB 0 MiB 0 MiB 

@@ -1,0 +1,13 @@
+# cargo build-state reconstruction 2026-11-18T08:28:01Z on pod4-gb300-10-tray14-f3
+1 28759968 session_runner-00da8b5ffaf8ef78
+cargo's artifact: /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/deps/session_runner-00da8b5ffaf8ef78 (1 candidate(s)) sha256 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549; uplifted executable sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+after replacing the artifact: deps 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2, executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2, links 2
+  cargo run 1:    Compiling req-frontend v0.1.0 (/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend)
+  cargo run 1:     Finished `release` profile [optimized] target(s) in 5.35s
+  after cargo run 1: executable sha256 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549 CHANGED
+  cargo run 2:     Finished `release` profile [optimized] target(s) in 0.22s
+  after cargo run 2: executable sha256 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549 CHANGED
+INFO  cargo still replaces the executable; restoring the pinned bytes; the prebuilt path remains the only permitted launch path
+PASS  build state recorded: sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 source 5c20a259618976ecc360bda84abcc3653a04006e
+PASS  prebuilt session_runner /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/session_runner: sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aa
+final: executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2; source 5c20a259618976ecc360bda84abcc3653a04006e status ''

@@ -1,0 +1,26 @@
+{
+ "what": "session_runner executable the V1 run actually used (rebuilt by the V1 launcher's cargo build at launch); incident evidence, NOT a pin",
+ "sha256": "95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549",
+ "size": 28759968,
+ "mtime_ns": 1794970452375478083,
+ "original_path": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/session_runner",
+ "built": "2026-11-18 02:53-02:54Z on pod4-gb300-10-tray16-f3 by `cargo build --release --manifest-path .../req-frontend/Cargo.toml --bin session_runner` (alignment/load_generator/runner.py::build_session_runner, called by run_profile before the server start)",
+ "source_commit": "5c20a259618976ecc360bda84abcc3653a04006e",
+ "source_status": "",
+ "toolchain": {
+  "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+  "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)"
+ },
+ "v1_run_log": {
+  "compiling_lines": 249,
+  "first": [
+   "3:[e1_v1_lifecycle] start 2026-11-18T02:53:23Z on pod4-gb300-10-tray16-f3 launcher_tree=/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle repo=77f410a562167d3f4dcb15e9dfe0e52cb4aadac0 tree_alignment=b2be218bbb09 cfg_sha=5461ff34f0171015 trace_sha=c6d8e13b7229ffd4 session_runner=7f6eb81d45e6b98f",
+   "4:   Compiling proc-macro2 v1.0.106",
+   "5:   Compiling unicode-ident v1.0.24"
+  ],
+  "finished": [
+   "253:    Finished `release` profile [optimized] target(s) in 49.03s"
+  ]
+ },
+ "pinned_sha256_it_replaced": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+}

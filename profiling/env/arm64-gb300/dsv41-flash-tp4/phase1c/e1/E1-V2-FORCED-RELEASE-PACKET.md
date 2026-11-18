@@ -17,13 +17,13 @@ free the GPUs in time is not.
 
 | item | value |
 |---|---|
-| branch / code commit | `exp/profiler-lifecycle` 362e0609 (controller + preflight changes, validators, V2 scripts), pins d3c5c081, driver/post-run rebuild guard 2207cee5 (pinned trees unchanged) |
-| pinned trees (`V2-FR-PIN.json`) | `alignment` 8124376add276be3393ed57a1ebf91f75f4daa12, `launcher` 5a1b662f12e878798eb5c8be04ca445d4c6977b5, test files and fixtures by blob id |
+| branch / code commit | `exp/profiler-lifecycle` **8570b050** (prebuilt load-generator contract, release evidence, strengthened gates; on top of 362e0609 / 2207cee5), pins **aca5bd26** |
+| pinned trees (`V2-FR-PIN.json`) | `alignment` 0317eb4c37d1ebc43e2d06541fde0d84f8b2f7dc, `launcher` cbf35d62368c94b2c07087342d6516dce064db9b, test files and fixtures by blob id |
 | submodules | vLLM fork 0ab18711, req-frontend 5c20a259 |
-| load generator binary `session_runner` | **OPEN, blocks the preflight (§12).** Provenance pin 7f6eb81d…; the binary in the worktree is 95a1526c…, rebuilt from the same source by the V1 launcher |
+| load generator binary `session_runner` | pinned bytes **7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2**, restored in the worktree and verified byte-identical to the reference; launched only through the prebuilt contract (§12) |
 | identities (`V2-FR-PIN-identities.json`, tray16) | Nsight CLI 2025.6.3.541 sha256 2d53d710…, `QdstrmImporter` sha256 b30312a6…, server interpreter and vLLM import as in V1 |
 | inputs (`INPUTS_fr.sha256`) | trace `e1_dry.csv` c6d8e13b…; config `configs_fr/e1_v2_forced_release/profile.json` 7f7e4f66…; source config df949648… |
-| scripts, checks, tests (`SCRIPTS_fr.sha256`) | 43 files |
+| scripts, checks, tests (`SCRIPTS_fr.sha256`) | 46 files |
 | expected values, trigger, limits, outcomes | `E1-V2-FR-INPUTS.json` |
 
 The V2 config is the V1 config byte for byte apart from `name` and `log_dir` (checked at generation). Model, server arguments,
@@ -39,14 +39,20 @@ flush, not the import. V2 therefore uses a phase-based trigger (§3) and leaves 
 
 - One launch, the V1 workload: 56 requests in two waves (b=8 at 0 s, b=48 at 18.6 s), 1024 output tokens each; expected about 2160
   iterations and 12.25 M kernel rows on four ranks. V1 timing: startup about 27 min, stop → import start 64 s, import 27 s.
-- **Trigger.** `v2_release_probe.sh`, a registered background job, polls `lifecycle.json` every 0.5 s. On the **first** observation
-  of phase `importing` it reads `/proc` for the recorded Nsight pid (alive, same start time, child processes), and only if it is
-  alive appends the one pre-registered line to `lifecycle.control`:
-  `release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)`.
-  It records what it saw in `probe.json`. It writes once, signals nothing, and writes nothing if the stop is already terminal.
+- **Trigger and independent observer.** `checks/e1_release_probe.py`, a registered background job, polls `lifecycle.json` every
+  0.5 s. On the **first** observation of phase `importing` it:
+  1. verifies the importer's identity from `/proc`: the recorded Nsight pid is alive with the recorded start time;
+  2. takes samples of that process tree (state, CPU ticks) about 0.4 s apart, for at most 3 s, until the import is **confirmed in
+     progress**: CPU time or reported progress advanced while the phase stayed `importing`;
+  3. appends the one pre-registered line, read from `E1-V2-FR-INPUTS.json`, to `lifecycle.control`:
+     `release-gpus V2 forced release during import (pre-registered trigger: first observation of phase importing)`;
+  4. waits for the controller's recorded API-server SIGTERM time and samples the importer's identity and state about 0.3 s, 2 s and
+     5 s after it.
+  It writes the line once and signals nothing. If the stop is already terminal, the importer is not the recorded process, or the
+  import ends while it is being confirmed, it writes **nothing** and says so in `probe.json`; that run is INCONCLUSIVE.
 - The controller reads the control file once per second and runs its unchanged `release_gpus` action: identity-verified SIGTERM to
   the API server, SIGKILL to recorded server processes still alive after the grace period, never Nsight.
-- Expected latency from import start to release request: at most about 2 s of a 27 s import.
+- Expected latency from import start to release request: about 2 s, at most about 5 s, of a 27 s import.
 
 ## 4. Controller and preflight changes in this commit (item A/B of the GO)
 
@@ -57,6 +63,8 @@ flush, not the import. V2 therefore uses a phase-based trigger (§3) and leaves 
 | final stream record | `lifecycle.py` | once, after the Nsight session has closed and the phase is terminal: `stream.final` = size, mtime, sha256 (stat before and after the read) and whether it changed after the last observation; also written as `RETENTION.json` next to the preserved stream |
 | completeness wording | `lifecycle.py`, gates | every final record and retention record carries: completeness is **not** established by a stable size or a matching checksum |
 | release context | `lifecycle.py` | at a release request: phase, import progress, Nsight alive, report written — evidence only, no decision uses it |
+| exact signal time and importer state | `lifecycle.py` (8570b050) | `gpu.api_server_sigterm` = time taken at delivery, pid, outcome, and the action entry carries the same time; `gpu.importer_after_signal` = Nsight identity and `/proc` state right after the SIGTERM and after the termination pass |
+| prebuilt load-generator contract | `load_generator/runner.py`, `runner.py`, `launcher/alignment.py` (8570b050) | `--frontend-provenance`: exact executable hash, pinned clean source and build-state record verified before any engine start; refusal on any mismatch; no cargo in this path; hash verified again when the launch ends (§12) |
 | retained stream vs active session | `preflight.py` | a `*.raw-preserve` directory passes only as *retained inactive*: retention record present, size and sha256 match now, stream not open in any process, recorded Nsight process gone, session-closed time recorded, and its name is not the planned capture's. Nsight's own `nsys-report-*.qdstrm`, a directory without a record, a mismatch, an open stream or a name collision still FAIL |
 | adoption | `preflight.py --adopt-retained` | writes the retention record for a stream preserved before records existed, after checking the run's lifecycle record; used once for the retained V1 stream (the stream's sha256 was verified unchanged before and after) |
 
@@ -70,18 +78,21 @@ only after the session has closed, so it cannot delay a release.
 |---|---|---|
 | H | host identity agrees | lifecycle `host` / `host_identity` = run log start line = reservation node (`reservation.json`, pod Running) = host of every GPU observation; missing source INCONCLUSIVE, malformed or conflicting FAIL |
 | FR1 | one stop request | `requests_sent == 1`, one `stop_requested` phase, one API-server "Stopping profiler" line; the request may end in an error only at or after the release request |
-| FR2 | the registered trigger | exactly one control line, the registered text, result `release requested`, recorded phase `importing` |
-| FR3 | import active at release | controller: `release_context` (phase `importing`, Nsight alive, no report), release time after `importing` began and before any report; **and** the probe's own `/proc` observation of the live Nsight process |
-| FR4 | no destructive signal to the importer | every signalled pid is a recorded server process; Nsight's pid or process group is signalled only after a report was written, if at all |
+| FR2 | the registered trigger | exactly one control line, the registered text, result `release requested`, recorded phase `importing`. Read only after the import had ended, or never written because the import was already over: INCONCLUSIVE |
+| FR3 | import active when the API server was signalled | (1) phase `importing` observed by the controller (`release_context`) and in at least two probe samples; (2) importer identity verified from `/proc` by the probe (pid and start time equal to the recorded Nsight identity); (3) import **confirmed in progress** immediately before the release (CPU time or progress advanced between probe samples); (4) the exact SIGTERM time lies after the import began and before any report. **If the import completed before the signal, or was not confirmed in progress: INCONCLUSIVE.** A controller record of an earlier phase, or an unverified importer identity: FAIL |
+| FR3b | importer checked after the signal | controller's `importer_after_signal` and the probe's `after_signal` samples, both at or after the SIGTERM time, both for the recorded Nsight pid. Either missing: INCONCLUSIVE. The importer's state itself is evidence for the outcome, not a pass condition |
+| FR4 | no destructive signal to the importer | every signalled pid is a recorded server process; Nsight's pid or process group is signalled only after a report was written, if at all; the API-server SIGTERM is recorded with its exact time, its pid, outcome `signalled`, and a matching action entry |
 | FR5 | GPUs released in time, observed independently | registered sampler `e1_gpu_watch.py` (every 2 s) plus the driver's census: a held observation before the request, the first released observation at most **90 s** after it, none held later; the release is reported as the interval between the last held and first released observation; controller time separately |
 | FR6 | session ended | terminal phase (`report_written` or `stop_failed`), Nsight gone, session-closed time recorded |
 | FR7 | stream durable and unchanged | controller's final record present; durable copy on the shared filesystem stable over two full reads, equal to the final record and to the tray original. Not a completeness statement |
 | FR8, FR8b | recovery and semantic completeness | offline import of the durable copy and sqlite export; recovered trace has iterations in 2100–2250, NVTX = 4 × iterations, kernel rows in 11.64–12.86 M, four processes with kernels, capture boundaries; **where an in-session export exists** it must also equal it in kernel rows, NVTX ranges, iteration indices, capture boundaries, per-process counts, every table's row count and capture metadata |
 | FR9 | bounds | GPU-held ≤ 2700 s; release request → session closed ≤ 300 s; no escalation |
-| S.* | science, identity, binary | configuration identity under the normalization policy; `binary_unchanged` (the launcher compiled nothing and left `session_runner` byte-identical); launcher recovery, completeness v2, extract, Nsight validation exit codes; closeout |
+| S.* | science, identity, binary | configuration identity under the normalization policy; `binary_unchanged` (driver's hash before and after the launcher, no cargo `Compiling` line in the run log, and the launcher's own `frontend_binary.json`: prebuilt mode, cargo not consulted, pinned sha256 before and after); launcher recovery, completeness v2, extract, Nsight validation exit codes; closeout |
 
 Verdict: any FAIL → **FAIL**; no FAIL but a gate not evaluable → **INCONCLUSIVE**; otherwise PASS. FAIL and INCONCLUSIVE are both a
-STOP: no retry, no advance. FR7 can never stand in for FR8b. A successful launcher exit decides nothing.
+STOP: no retry, no advance. FR7 can never stand in for FR8b. A successful launcher exit decides nothing. A run in which no forced
+release took place because the import finished first is INCONCLUSIVE on every forced-release gate and can never be a PASS.
+No threshold was changed in this revision: 90 s release deadline, iteration and kernel-row bands, 2700 s ceiling, 300 s session close.
 
 Outcomes, registered in `E1-V2-FR-INPUTS.json`:
 - **A** — the importer finishes after the server is gone (`report_written`). The in-session profile is assessed and must equal the
@@ -125,39 +136,37 @@ operator decision, and after a failed one it stays.
 | persistent including archive | 10 GB | closeout |
 | cleanup | registry-verified only; closeout must be CLEAN; reservation deleted after GPUs idle | closeout script |
 
-## 9. Preflight and rehearsal results (CPU-only)
+## 9. Preflight, regression and rehearsal results (CPU-only)
 
-**Regression, guarded CPU-only** (`tests/cpu_only.sh`; guard line in every log; GPUs 0 MiB afterwards), at 2207cee5:
-
-| run | result | log (`runs/v2/cpu/`) |
-|---|---|---|
-| targeted suites, tray14 (16 files: launcher-adjacent, pinned lifecycle/preflight/gates, corrected gates, identity, host, retained-stream, forced-release) | 316 passed, 1 skipped | `pytest_targeted_cpu_only_2207cee5_tray14.log` |
-| whole tier, tray14 | 5231 passed, 78 skipped, 6 failed (the same six unrelated tests as before: `cargo`-dependent corpus test, gdn numerical test, four energy tests that fail with CUDA hidden) | `pytest_fullsuite_cpu_only_2207cee5_tray14.log` |
-| lifecycle/preflight/gate suites, tray16 (retained V1 stream present in `/tmp`) | 130 passed, 0 failed | `pytest_targeted_cpu_only_2207cee5_tray16.log` |
-
-The pinned V1 test that failed on tray16 after the V1 run now passes there, with the V1 stream still in place: it carries a
-retention record and is classified as retained inactive. It was not deleted or modified (sha256 verified before and after adoption).
-
-**Read-only driver-context preflight `preflight_e1_fr.sh` on tray16** (tmux `e1v2-ctxtest` + tee; outputs kept in `runs/v2/preflight/`):
+**Exact read-only driver-context preflight `preflight_e1_fr.sh` on tray16** (tmux `e1v2-ctxtest` + tee; every attempt kept in
+`runs/v2/preflight/`):
 
 | time (UTC) | commit | result |
 |---|---|---|
-| 2026-11-18 06:00:54–06:01:48 | d3c5c081 | **45 PASS, 1 FAIL** |
-| 2026-11-18 06:10:43–06:11:35 | 2207cee5 | **45 PASS, 1 FAIL** |
+| 2026-11-18 06:00:54–06:01:48 | d3c5c081 | 45 PASS, **1 FAIL** (`session_runner sha256 95a1526c… != provenance 7f6eb81d…`) |
+| 2026-11-18 06:10:43–06:11:35 | 2207cee5 | 45 PASS, **1 FAIL** (same) |
+| 2026-11-18 08:29:57–08:30:52 | aca5bd26 (code 8570b050) | **53 PASS, 0 FAIL** |
 
-The one FAIL, both times, is inside the Stage 1.5 chain: `session_runner sha256 95a1526c… != provenance 7f6eb81d…` (§12). Everything
-else passes: inputs and trigger line, pinned trees, 43-file manifest, identity preflight 27 checks / 0 FAIL (the retained V1 stream is
-reported as retained inactive, INFO), 130 tests with the CUDA guard line, GPU census (no compute process, 0 MiB), discovery CLEAN,
-registry plan clean, storage. **The preflight is therefore not passing, and V2 is not launchable as packaged until §12 is decided.**
+The passing run includes: Stage 1.5 chain with `session_runner sha256 == provenance`; the prebuilt contract (`verify-prebuilt`: exact
+pinned sha256, clean pinned source, build-state record, cargo not consulted); the launcher dry-run with `--frontend-provenance`;
+inputs and the single-source trigger line; pinned trees; 46-file manifest; identity preflight 27 checks / 0 FAIL (retained V1 stream
+reported as retained inactive); 165 tests with the CUDA guard line; GPU census (no compute process, 0 MiB); discovery CLEAN; registry
+plan clean; storage. The reservation record is reported as not present yet (INFO); the driver refuses to start without it. One
+cosmetic note: three test files are listed twice in the preflight's pinned-tree loop, so three PASS lines repeat.
 
-**Rehearsal of the whole V2 post-run on real data** (`runs/v2/rehearsal/`, CPU-only, tray16, 05:52–05:58Z). A fixture was built from the
-real V1 artifacts with the report, export and parsed outputs removed and the lifecycle record rewritten to outcome B. It is a
-rehearsal fixture, not V2 evidence. Result: every step ran. Durable copy verified; the launcher's `--import-stream` recovery rc 0 and
-the recovered profile has 8640 NVTX ranges and 12 250 832 kernel rows, the V1 values; completeness v2, extract and Nsight validation
-PASS on the recovered profile; gates FR1, FR6, FR7, FR8, FR8b PASS. As expected for V1 data, FR2, FR3, FR4, FR5, FR9 FAIL (no forced
-release, no sampler), H is INCONCLUSIVE (no host in the V1 record, no reservation record), and the identity check FAILs on the
-fixture's scratch `log_dir`, which is the policy correctly rejecting an output outside the run-directory layout. Overall FAIL, as it
-must be. The fixture was removed; the V1 archive re-verified.
+**Regression, guarded CPU-only** (`tests/cpu_only.sh`; guard line in every log; GPUs 0 MiB afterwards), at 8570b050:
+
+| run | result | log (`runs/v2/cpu/`) |
+|---|---|---|
+| targeted suites, tray14 (19 files) | 351 passed, 1 skipped | `pytest_targeted_cpu_only_8570b050_tray14.log` |
+| whole tier, tray14 | 5266 passed, 78 skipped, 6 failed (the same six unrelated tests as before) | `pytest_fullsuite_cpu_only_8570b050_tray14.log` |
+| controller/preflight/gate/contract suites inside the tray16 preflight | 165 passed | `runs/v2/preflight/pytest_20261118T0829*.log` |
+
+After all of these the executable in the worktree is still the pinned 7f6eb81d….
+
+**Rehearsal of the V2 post-run on real data** (`runs/v2/rehearsal/`, 05:52–05:58Z, at 362e0609): unchanged record; the launcher's
+`--import-stream` recovery on a V1-derived fixture gave the V1 counts and the scientific checkers passed. It predates the strengthened
+gates and was not repeated; the recovery steps it exercised did not change.
 
 ## 10. Procedure (only after a GO naming the commit)
 
@@ -174,32 +183,47 @@ must be. The fixture was removed; the V1 archive re-verified.
 V2 and V3 GPU runs, the full E1 retry, the identification partition, fitting, E2–E6, Rust production integration, profiling
 database writes, preset changes. This packet is a request, not an authorization.
 
-## 12. Open blocker found by the preflight: the load-generator binary pin
+## 12. Load-generator binary: incident, repair (option 2) and the launch contract
 
-**Finding.** The V1 launcher rebuilt `session_runner` at launch. `run.log` of the V1 run shows a full `cargo build` (`Compiling …`)
-right after the `start` line, and the binary's mtime is 2026-11-18 02:54:12Z, one second before `launch_started_at`. The lifecycle
-worktree had been provisioned on 2026-11-17 with the binary only, without cargo's fingerprints, so cargo treated it as stale. The V1
-preflight ran before that and saw the pinned binary; the driver's `start` line also recorded the pinned hash.
+**Incident.** The V1 launcher rebuilt `session_runner` at launch (`runs/v1/ADDENDUM-session-runner-rebuild.md`). V1 ran with a
+binary built from the pinned source in the lifecycle worktree (sha256 95a1526c…), not with the pinned bytes (7f6eb81d…).
 
-| binary | sha256 | built |
-|---|---|---|
-| pinned (provenance; used by the accepted `e1_nsys_val` and b=8 captures) | 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 | 2026-11-15, `wt-e1stage1` |
-| what V1 actually ran with; now in `wt-lifecycle` | 95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549 | 2026-11-18 02:53–02:54Z by the V1 launcher |
+**Why the launcher compiled although the preflight passed.** `alignment/runner.py::run_profile` called
+`load_generator.build_session_runner()` before every capture, unconditionally, and that function runs
+`cargo build --release --bin session_runner`. Whether cargo rebuilds depends on its own `target/` state, which no preflight looked at.
+The preflight compared the binary's hash; cargo then replaced the binary one minute later, before the server started.
 
-Both come from the same clean source commit 5c20a259 with the same toolchain (cargo and rustc 1.98.1) and have the same size. The
-build embeds its directory: two scratch builds of the same commit in two paths gave two further hashes, and each binary contains its
-worktree path. So the bytes differ by build path, not by source. This is a **deviation of the V1 run** that was not known when V1 was
-reported: its "all binary hashes match" prerequisite held at preflight time and stopped holding at launch. It is recorded in
-`runs/v1/ADDENDUM-session-runner-rebuild.md`; the original V1 report and verdict are unchanged.
+**Repair, done 2026-11-18 08:27Z on CPU (`runs/v2/binary/`):**
 
-**Why it blocks V2.** `preflight_e1_fr.sh` keeps the provenance check, so it fails on the rebuilt binary. Nothing was re-pinned.
+| step | result |
+|---|---|
+| rebuilt V1 executable preserved as incident evidence | `artifacts/phase1c-e1-v1-dsv41-flash-gb300-tp4-20261118-incident-session-runner/` (read-only): the executable, sha256 **95a1526c3a841eebf84d54eafa254cf24590f847fbba233603dc8f0e158aa549**, cargo's dep-info, the 249 `Compiling` lines of the V1 run log, `PROVENANCE.json`, `SHA256SUMS`. It is evidence, not a pin |
+| pinned executable restored | copied from the reference worktree `wt-e1stage1`; reference sha256 = pin; after the copy the worktree's executable is sha256 **7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2** and `cmp`-identical to the reference |
+| pinned source | req-frontend 5c20a259, clean, not modified |
+| cargo build state | **cannot be made compatible with the pinned bytes in this path.** Shown twice: with the pinned bytes in place, the development command `cargo build` re-links (first test) or recompiles (after cargo's own artifact was replaced by the pinned bytes) and puts 95a1526c… back. The build is deterministic for a given path and differs between paths. The pinned bytes were restored after each test |
+| build-state record | `target/release/session_runner.build-state.json` (copy in `runs/v2/binary/`): sha256, source commit, origin of the bytes, and the statement that cargo's state here is not compatible and only the prebuilt path may be used |
 
-**Decision needed** (either makes the preflight pass; both keep the source commit):
-1. *Re-pin to the rebuilt binary 95a1526c….* It is what V1 ran with, and cargo's state in this worktree is now consistent, so a
-   further launch should not rebuild. Costs: the load generator's bytes differ from the accepted reference captures, although its
-   source does not.
-2. *Restore the pinned binary 7f6eb81d… together with cargo's build state* from `wt-e1stage1`. Keeps byte identity with the reference
-   captures. Risk: cargo's fingerprints include paths, so the launcher may rebuild again; this must be shown on CPU first.
+So requirement "restore or reconstruct compatible Cargo build state" could not be met literally, and nothing was faked to meet it.
+Byte identity is instead guaranteed by never running cargo in an authorized launch.
 
-Whichever is chosen, V2 now detects a rebuild: the driver hashes the binary before and after the launcher and counts cargo
-`Compiling` lines, and gate `S.binary_unchanged` fails the run if anything was compiled or the binary changed.
+**Launch contract (fail-closed).** With `--frontend-provenance BINARY-PROVENANCE.json` the launcher, before any engine or GPU start:
+verifies the executable's full sha256 against the pin; verifies the source checkout is the pinned commit and unmodified; requires the
+build-state record, describing these bytes and this source and not older than any source file; and refuses on any failure. It never
+invokes cargo. It writes `load_generator/frontend_binary.json` (path, sha256, pinned sha256, source commit, build-state record) and
+hashes the executable again when the launch ends; a change makes the launcher exit non-zero. Source equality is never accepted in
+place of the executable's hash. The V2 driver always passes the flag and separately refuses to start on a non-pinned executable; the
+preflight runs the same check; gate `S.binary_unchanged` combines the driver's and the launcher's records after the run.
+Without the flag the launcher behaves as before (development: cargo build). A development build in this worktree therefore replaces
+the executable, and the next preflight or authorized launch refuses until the pinned bytes are restored.
+
+**CPU proof (`tests/test_load_generator_prebuilt.py`, 17 tests, CUDA-isolated; any cargo invocation fails the test):**
+
+| case | result |
+|---|---|
+| valid binary, compatible build state | accepted; record complete; cargo not invoked |
+| missing build state | refused ("build state missing"); binary untouched |
+| stale cargo fingerprints | no effect on the prebuilt path: accepted, cargo not consulted, bytes unchanged. Stale build state in the contract's sense (a source file newer than the record, or a modified source file): refused |
+| incorrect executable hash, identical source | refused ("hash mismatch … not sufficient"); also missing executable, a record for other bytes or another commit, a moved-on checkout, a malformed or truncated pin |
+| binary replaced between preflight and launch | preflight check passes, launch check refuses |
+| no permitted launch path invokes cargo | the real `run_profile` with a provenance file reaches the engine start without cargo and refuses before it on a mismatch; without the flag cargo is reached exactly once (development path); source check: `cargo` appears in one function, called from one branch |
+| complete mocked launch | sha256 before = after = pin, bytes identical, record has both verification times; a binary replaced during the launch is detected and the launcher fails |
