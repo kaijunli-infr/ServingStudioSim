@@ -1,0 +1,13 @@
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: launcher record before the launch: mode None, cargo consulted None, executable = pinned True
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  breach.marker_and_cause: STORAGE-BREACH present False; supervisor causes []
+FAIL  breach.registry_cleanup: supervisor steps [None] because None; cleanup rc None: None; stop requested None; control file written False
+FAIL  breach.identity_verified_registry_only: cleanup signalled [] ⊆ verified owned tree of 0 processes (registered roots []); refused 0; survivors None
+FAIL  breach.bounded_response: first cause seen → cleanup finished None s (grace 30 s + SIGKILL pass)

@@ -1,0 +1,16 @@
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  breach.marker_and_cause: MEMORY-BREACH present False; supervisor causes []
+FAIL  breach.delivered_through_controller: supervisor step None, acknowledged None after None s (bound 10 s)
+FAIL  breach.controller_record: control commands []
+FAIL  breach.bounded_response: breach sample → identity-verified SIGTERM to the API server None s (bound 15 s); SIGTERM → SIGKILL None s (grace 60 s)
+FAIL  breach.importer_isolated: importer None was not signalled and finished: probe final None, lifecycle phase None
+FAIL  breach.run_fails: verdict None; not PASS {}
+# scenario memory_breach: 2 of 15 checks pass → NOT MET

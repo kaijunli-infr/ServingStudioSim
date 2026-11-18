@@ -1,0 +1,48 @@
+# closeout e1_v3_scale on pod4-gb300-10-tray16-f3 at 2026-11-18T19:50:51Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 1833886[bash] 1923936[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+FOUND python monitors/checkers of the experiment: pids 1796090  (candidate; ownership only via the registry)
+      1796090 dc       Wed Nov 18 19:36:57 2026 python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_gpu_watch.py --out /mnt/sh
+FOUND other processes whose cmdline references the experiment dirs: pids 1796090  (candidate; ownership only via the registry)
+      1796090 dc       Wed Nov 18 19:36:57 2026 python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_gpu_watch.py --out /mnt/sh
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T19:51:01Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv (0 records); cleanup pid 1937749, excluded ancestry [1, 1833884, 1833886, 1923936, 1923958, 1937749], own pipeline [1833886, 1923936, 1923958, 1937750]
+  LOOKALIKE pid 1796090 uid 1000 python3: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e (cwd /home/dc) -> NOT owned, not touched; stop-and-report
+  summary: owned 0, stale 0, gone 0, refused 0, lookalikes 1
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-18T19:51:01Z: CANDIDATES FOUND (pids: 1796090  1796090 ) -> review against the registry; nothing was signalled
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T19:51:01Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv (0 records); cleanup pid 1937756, excluded ancestry [1, 1833884, 1833886, 1923936, 1937756], own pipeline [1833886, 1923936]
+LOOKALIKE pid 1796090 uid 1000 python3: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e (cwd /home/dc) -> NOT owned, not touched; stop-and-report
+summary: owned 0, stale 0, gone 0, refused 0, lookalikes 1
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 1 would never be touched
+FAIL  registry plan: owned processes alive or lookalikes present -> review; to terminate ONLY the verified owned tree: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py cleanup --registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv --execute --grace 30 --log /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/cpu/cleanup_20261118T195101Z.jsonl
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-18T19:51:02Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/supervisor.tsv (0 records); cleanup pid 1937758, excluded ancestry [1, 1833884, 1833886, 1923936, 1937758], own pipeline [1833886, 1923936, 1937759]
+  LOOKALIKE pid 1796090 uid 1000 python3: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e (cwd /home/dc) -> NOT owned, not touched; stop-and-report
+  summary: owned 0, stale 0, gone 0, refused 0, lookalikes 1
+FAIL  supervisor registry plan rc 2 (the supervisor is still alive, or a refusal / lookalike; see above)
+PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)
+INFO  no lifecycle.json for e1_v3_scale (nothing ran)
+INFO  supervisor.json not present
+INFO  import_probe.json not present
+INFO  mem_watch.json not present
+INFO  storage_watch.json not present
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve
+INFO  the preserved stream is never removed by a script; postrun_e1_v3scale.sh copies it to durable storage and verifies the copy first
+INFO  no run.log for e1_v3_scale (nothing ran)
+INFO  reservation pod (from the laptop): delete only with the GPUs idle, then write /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/reservation_deleted.json {pod, deleted_observed_at (UTC, %Y-%m-%dT%H:%M:%SZ), gpu_pods_on_node} from kubectl; gate G10/G12 read it
+# closeout result: NOT CLEAN

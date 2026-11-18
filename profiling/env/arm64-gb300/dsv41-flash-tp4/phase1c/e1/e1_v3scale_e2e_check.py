@@ -167,7 +167,8 @@ def main(argv=None) -> int:
               f"cleanup signalled {sorted({x['pid'] for x in acts if x.get('action') in ('SIGTERM', 'SIGKILL')})} ⊆ verified owned tree of {len(plan_owned)} processes (registered roots {sorted(reg_pids)}); refused {len(((log or {}).get('plan') or {}).get('refused', []))}; survivors {(log or {}).get('survivors')}")
         resp = sup.get("response") or {}
         check("breach.bounded_response", resp.get("seconds_from_first_cause_seen") is not None and resp["seconds_from_first_cause_seen"] <= 45, f"first cause seen → cleanup finished {resp.get('seconds_from_first_cause_seen')} s (grace 30 s + SIGKILL pass)")
-        check("driver.did_not_finish", a.driver_rc != 0 and "rc=" not in "".join(ln for ln in (run / "run.log").read_text(errors="replace").splitlines() if ln.startswith("[e1_v3_scale] rc=")), f"driver exit code {a.driver_rc} (terminated by the cleanup); no launcher result line")
+        runlog = (run / "run.log").read_text(errors="replace") if (run / "run.log").exists() else ""
+        check("driver.did_not_finish", a.driver_rc != 0 and "[e1_v3_scale] start " in runlog and "[e1_v3_scale] rc=" not in runlog, f"driver exit code {a.driver_rc} (terminated by the cleanup); launcher started {'[e1_v3_scale] start ' in runlog}; launcher result line present {'[e1_v3_scale] rc=' in runlog}")
         check("closeout.registry_clean_not_clean_overall", a.closeout_rc == 1, f"closeout exit code {a.closeout_rc} (NOT CLEAN is required after an abort: non-terminal phase, breach marker, supervisor response)")
     ok = all(r["ok"] for r in results)
     a.out.mkdir(parents=True, exist_ok=True)

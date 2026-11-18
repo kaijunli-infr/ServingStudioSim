@@ -72,6 +72,14 @@ for sc in $SCENARIOS; do
   for f in profile/nsys/lifecycle.json profile/nsys/lifecycle.control profile/load_generator/frontend_binary.json; do [ -f $R/$PASS/$f ] && cp $R/$PASS/$f $O/records/; done
   cp $R/$PASS/profile/vllm/*_server.log $O/records/mock_server.log 2>/dev/null; cp $R/pids/*.tsv $O/records/ 2>/dev/null; cp $R/cpu/supervisor_cleanup.jsonl $O/records/ 2>/dev/null
   for f in gpu_observations mem_observations storage_observations import_probe; do [ -f $R/$PASS/$f.jsonl ] && { head -c 200000 $R/$PASS/$f.jsonl > $O/records/$f.head.jsonl; wc -l < $R/$PASS/$f.jsonl > $O/records/$f.lines; }; done
+  # never remove the run root while a process registered in it is alive: end it through the pinned verified cleanup of its own registry
+  for reg in $R/pids/owned.tsv $R/pids/supervisor.tsv; do
+    [ -f $reg ] || continue
+    if [ -n "$(awk -F'\t' '$1 ~ /^[0-9]+$/ {print $1}' $reg | while read p; do [ -d /proc/$p ] && echo $p; done)" ]; then
+      bad "scenario $sc: registered process(es) still alive in $(basename $reg) after the scenario; ending them through the verified registry cleanup"
+      python3 -I $E1/checks/e1_pids.py cleanup --registry $reg --execute --grace 10 --kill9 --log $O/records/leftover_cleanup.jsonl 2>&1 | grep -E "ACTION|RESULT" | cut -c1-200
+    fi
+  done
   case "$R" in */logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e) rm -rf $R;; esac
   case "$PRES" in /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale_e2e.raw-preserve) rm -rf $PRES;; esac
   rm -f /tmp/nsys-report-e2e*.qdstrm; rm -rf /tmp/v3scale-recovery-$PASS

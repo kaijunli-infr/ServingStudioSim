@@ -1,0 +1,102 @@
+{
+ "scenario": "success",
+ "ok": false,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": false,
+   "detail": "owned registry labels []; supervisor registry []"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": false,
+   "detail": "mock Nsight CLI / server pids []; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": false,
+   "detail": "launch_source.json mode None (gate G0 fails on it: never V3 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": false,
+   "detail": "lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": false,
+   "detail": "build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": false,
+   "detail": "0 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals []; recorded server pids []; importer pid None never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": false,
+   "detail": "signals sent by the supervisor itself: None"
+  },
+  {
+   "check": "driver.rc",
+   "ok": false,
+   "detail": "driver exit code 3"
+  },
+  {
+   "check": "lifecycle.phases",
+   "ok": false,
+   "detail": "phases []; control lines 0; escalations 0"
+  },
+  {
+   "check": "closeout.clean",
+   "ok": false,
+   "detail": "closeout exit code 1"
+  },
+  {
+   "check": "supervisor.no_response",
+   "ok": false,
+   "detail": "response None; monitors effective None; complete None; samples None"
+  },
+  {
+   "check": "stream.checksums",
+   "ok": false,
+   "detail": "controller final record None\u2026, preserved original None\u2026, durable copy None\u2026"
+  },
+  {
+   "check": "archive.verified",
+   "ok": false,
+   "detail": "archive script exit code 1"
+  },
+  {
+   "check": "samplers.measured",
+   "ok": false,
+   "detail": "memory samples None, storage samples None, breaches None None"
+  },
+  {
+   "check": "gates.as_registered",
+   "ok": false,
+   "detail": "verdict None (post-run exit 1); not PASS {}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE'}"
+  },
+  {
+   "check": "importer.unique_active_completed",
+   "ok": false,
+   "detail": "probe importer None, matched by None, parent pid None (detached), states []; memory sampler importer samples None"
+  },
+  {
+   "check": "recovery_failure.detected",
+   "ok": false,
+   "detail": "second post-run with a failing importer: verdict None, not PASS {}"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

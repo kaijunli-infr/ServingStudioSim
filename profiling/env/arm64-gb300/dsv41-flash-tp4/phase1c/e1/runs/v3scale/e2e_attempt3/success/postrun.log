@@ -1,0 +1,3 @@
+REHEARSAL MODE: stand-in importer /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt3/tools/QdstrmImporter and exporter /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt3/tools/nsys
+# postrun e1_v3_scale 2026-11-18T19:49:32Z on pod4-gb300-10-tray16-f3; CUDA_VISIBLE_DEVICES=''
+FAIL  no lifecycle.json: nothing to assess → STOP

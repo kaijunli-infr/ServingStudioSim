@@ -1,0 +1,119 @@
+# V3 end-to-end rehearsal 2026-11-18T19:48:00Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at 9f7b46092fbae8f95569dac8e3a9f1e23dd76ee0 (0 modified tracked file(s)); scenarios: success ambiguous memory_breach storage_breach
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+PASS  project interpreter /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12 (no virtual environment created in the worktree)
+PASS  stand-in importer / exporter and rehearsal inputs written (kernel-row band scaled to the stand-in exporter; every other limit is the registered one)
+## scenario success (19:48:00)
+driver exit code 3; 64 PASS / 3 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 1: FAIL  registry plan: owned processes alive or lookalikes present -> review; to terminate ONLY the verified owned tree: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py cleanup --registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv --e
+post-run exit code 1: 
+archive exit code 1: FAIL  tray-preserved stream not found (lifecycle preserved_path directory: '');FAIL  expected the stream twice in the archive (tray original and durable copy), found 0;# archive result: NOT VERIFIED;
+second post-run with a failing importer: exit code 1: 
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  driver.rc: driver exit code 3
+FAIL  lifecycle.phases: phases []; control lines 0; escalations 0
+FAIL  closeout.clean: closeout exit code 1
+FAIL  supervisor.no_response: response None; monitors effective None; complete None; samples None
+FAIL  stream.checksums: controller final record None…, preserved original None…, durable copy None…
+FAIL  archive.verified: archive script exit code 1
+FAIL  samplers.measured: memory samples None, storage samples None, breaches None None
+FAIL  gates.as_registered: verdict None (post-run exit 1); not PASS {}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE'}
+FAIL  importer.unique_active_completed: probe importer None, matched by None, parent pid None (detached), states []; memory sampler importer samples None
+FAIL  recovery_failure.detected: second post-run with a failing importer: verdict None, not PASS {}
+# scenario success: 2 of 19 checks pass → NOT MET
+FAIL  scenario success: expectations not met (see /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt3/success/E2E-CHECK.txt)
+## scenario ambiguous (19:49:33)
+driver exit code 3; 64 PASS / 3 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 1: FAIL  registry plan: owned processes alive or lookalikes present -> review; to terminate ONLY the verified owned tree: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py cleanup --registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv --e
+post-run exit code 1: 
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  driver.rc: driver exit code 3
+FAIL  lifecycle.phases: phases []; control lines 0; escalations 0
+FAIL  closeout.clean: closeout exit code 1
+FAIL  supervisor.no_response: response None; monitors effective None; complete None; samples None
+FAIL  stream.checksums: controller final record None…, preserved original None…, durable copy None…
+FAIL  archive.verified: archive script exit code None
+FAIL  samplers.measured: memory samples None, storage samples None, breaches None None
+FAIL  gates.as_registered: verdict None (post-run exit 1); not PASS {}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G4.phase_deadlines': 'INCONCLUSIVE', 'G5.importer_observed': 'INCONCLUSIVE', 'G11.storage_and_memory': 'INCONCLUSIVE'}
+FAIL  importer.ambiguity_recorded: probe states [], no importer singled out; memory sampler ambiguous samples None, importer samples None
+FAIL  importer.run_continued_under_monitors: final phase None; supervisor response None; monitors effective None
+# scenario ambiguous: 2 of 19 checks pass → NOT MET
+FAIL  scenario ambiguous: expectations not met (see /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt3/ambiguous/E2E-CHECK.txt)
+## scenario memory_breach (19:51:05)
+driver exit code 3; 64 PASS / 3 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 0.0625 GiB 
+closeout exit code 1: FAIL  registry plan: owned processes alive or lookalikes present -> review; to terminate ONLY the verified owned tree: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py cleanup --registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv --e
+post-run exit code 1: 
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  breach.marker_and_cause: MEMORY-BREACH present False; supervisor causes []
+FAIL  breach.delivered_through_controller: supervisor step None, acknowledged None after None s (bound 10 s)
+FAIL  breach.controller_record: control commands []
+FAIL  breach.bounded_response: breach sample → identity-verified SIGTERM to the API server None s (bound 15 s); SIGTERM → SIGKILL None s (grace 60 s)
+FAIL  breach.importer_isolated: importer None was not signalled and finished: probe final None, lifecycle phase None
+FAIL  breach.run_fails: verdict None; not PASS {}
+# scenario memory_breach: 2 of 15 checks pass → NOT MET
+FAIL  scenario memory_breach: expectations not met (see /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt3/memory_breach/E2E-CHECK.txt)
+## scenario storage_breach (19:52:39)
+driver exit code 3; 64 PASS / 3 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 1: FAIL  registry plan: owned processes alive or lookalikes present -> review; to terminate ONLY the verified owned tree: python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py cleanup --registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/pids/owned.tsv --e
+FAIL  registry.records: owned registry labels []; supervisor registry []
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V3 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: launcher record before the launch: mode None, cargo consulted None, executable = pinned True
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+FAIL  breach.marker_and_cause: STORAGE-BREACH present False; supervisor causes []
+FAIL  breach.registry_cleanup: supervisor steps [None] because None; cleanup rc None: None; stop requested None; control file written False
+FAIL  breach.identity_verified_registry_only: cleanup signalled [] ⊆ verified owned tree of 0 processes (registered roots []); refused 0; survivors None
+FAIL  breach.bounded_response: first cause seen → cleanup finished None s (grace 30 s + SIGKILL pass)
+Traceback (most recent call last):
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 180, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v3scale_e2e_check.py", line 170, in main
+    check("driver.did_not_finish", a.driver_rc != 0 and "rc=" not in "".join(ln for ln in (run / "run.log").read_text(errors="replace").splitlines() if ln.startswith("[e1_v3_scale] rc=")), f"driver exit code {a.driver_rc} (terminated by the cleanup); no launcher result line")
+                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1029, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e/e1_v3_scale/run.log'
+FAIL  scenario storage_breach: expectations not met (see /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v3go/e2e_attempt3/storage_breach/E2E-CHECK.txt)
+## state after the rehearsal
+PASS  load-generator executable after the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2, same inode/mtime/size
+PASS  no file under the load generator's build directory was written during the rehearsal (no build tool ran)
+gpu after (MiB / compute processes): 0 0 0 0 / 0
+PASS  no GPU compute process after the rehearsal
+PASS  no mock process left
+PASS  rehearsal run root, mock preserve directory and scratch removed
+# result: E2E REHEARSAL EXPECTATIONS NOT MET
+e2e exit 1 at 9f7b4609
+E2EDONE

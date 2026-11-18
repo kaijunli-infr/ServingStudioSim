@@ -1,0 +1,82 @@
+{
+ "scenario": "memory_breach",
+ "ok": false,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": false,
+   "detail": "owned registry labels []; supervisor registry []"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": false,
+   "detail": "mock Nsight CLI / server pids []; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": false,
+   "detail": "launch_source.json mode None (gate G0 fails on it: never V3 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": false,
+   "detail": "lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": false,
+   "detail": "build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": false,
+   "detail": "0 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals []; recorded server pids []; importer pid None never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": false,
+   "detail": "signals sent by the supervisor itself: None"
+  },
+  {
+   "check": "breach.marker_and_cause",
+   "ok": false,
+   "detail": "MEMORY-BREACH present False; supervisor causes []"
+  },
+  {
+   "check": "breach.delivered_through_controller",
+   "ok": false,
+   "detail": "supervisor step None, acknowledged None after None s (bound 10 s)"
+  },
+  {
+   "check": "breach.controller_record",
+   "ok": false,
+   "detail": "control commands []"
+  },
+  {
+   "check": "breach.bounded_response",
+   "ok": false,
+   "detail": "breach sample \u2192 identity-verified SIGTERM to the API server None s (bound 15 s); SIGTERM \u2192 SIGKILL None s (grace 60 s)"
+  },
+  {
+   "check": "breach.importer_isolated",
+   "ok": false,
+   "detail": "importer None was not signalled and finished: probe final None, lifecycle phase None"
+  },
+  {
+   "check": "breach.run_fails",
+   "ok": false,
+   "detail": "verdict None; not PASS {}"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

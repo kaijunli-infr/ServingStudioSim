@@ -1,0 +1,11 @@
+# archive e1_v3_scale on pod4-gb300-10-tray16-f3 at 2026-11-18T19:49:32Z -> /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_e2e.archive
+PASS  run root copied
+FAIL  tray-preserved stream not found (lifecycle preserved_path directory: '')
+INFO  operator logs: 4 file(s)
+PASS  archive copy of the run root equals the source, file by file (6 files)
+FAIL  expected the stream twice in the archive (tray original and durable copy), found 0
+PASS  SHA256SUMS verifies (10 files; its own sha256 58c9ab90409de670a9968ab7197ccb46be790d35042b5954ab503e65c951469d)
+INFO  run root 0.000 GB + archive 0.000 GB = 0.000 GB (ceiling 16)
+PASS  persistent storage including the archive within 16 GB
+INFO  nothing was removed; the tray original stays in 
+# archive result: NOT VERIFIED
