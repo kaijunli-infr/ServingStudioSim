@@ -19,11 +19,13 @@ nothing about how the server is launched, scheduled or instrumented.
 from __future__ import annotations
 
 import enum
+import hashlib
 import json
 import os
 import re
 import shutil
 import signal
+import socket
 import subprocess
 import threading
 import time
@@ -69,6 +71,52 @@ _ORDER = [
     Phase.REPORT_WRITTEN,
 ]
 TERMINAL = {Phase.REPORT_WRITTEN, Phase.STOP_FAILED}
+
+#: Sidecar written next to a preserved raw stream once the Nsight session has closed. It lets a
+#: later preflight tell a retained, inactive recovery stream from a live profiler session.
+RETENTION_NAME = "RETENTION.json"
+#: Carried in every final-stream record: a stable file and a matching checksum say the bytes did
+#: not change, not that the trace is scientifically complete.
+COMPLETENESS_NOTE = (
+    "NOT established by a stable size or a matching checksum; requires an offline import and a "
+    "semantic comparison (kernel rows, NVTX ranges, iterations, capture boundaries)"
+)
+MAX_STREAM_OBSERVATIONS = 500
+
+
+def launch_host_identity() -> dict:
+    """Host identity of the process that launches the capture (the launcher itself)."""
+    return {
+        "hostname": socket.gethostname(),
+        "boot_id": procident.boot_id(),
+        "launcher_pid": os.getpid(),
+        "source": "launcher process: socket.gethostname() and /proc/sys/kernel/random/boot_id",
+    }
+
+
+def file_fingerprint(path: Path) -> dict:
+    """Size, mtime and sha256 of a file, with a stat before and after the read."""
+    before = path.stat()
+    digest = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(chunk)
+    after = path.stat()
+    return {
+        "size": after.st_size,
+        "mtime_ns": after.st_mtime_ns,
+        "sha256": digest.hexdigest(),
+        "stable_during_read": (before.st_size, before.st_mtime_ns)
+        == (after.st_size, after.st_mtime_ns),
+    }
+
+
+def write_retention_record(preserve_dir: Path, record: dict) -> Path:
+    target = Path(preserve_dir) / RETENTION_NAME
+    tmp = target.with_suffix(".tmp")
+    tmp.write_text(json.dumps(record, indent=1, default=str) + "\n")
+    os.replace(tmp, target)
+    return target
 
 
 class FinalizationError(RuntimeError):
@@ -149,11 +197,14 @@ class _Status:
     stream: dict = field(
         default_factory=lambda: {
             "path": None,
-            "size": None,
+            "size": None,  # latest sample while the session runs; NOT the final size
             "preserved_path": None,
             "preserved_size": None,
+            "observations": [],  # every distinct (size, mtime) sample with its time and phase
+            "final": None,  # size + sha256 taken once, after the Nsight session closed
         }
     )
+    host: dict = field(default_factory=dict)
     import_progress_pct: int | None = None
     last_progress_at: float | None = None
     report: dict = field(default_factory=lambda: {"path": None, "size": None, "written_at": None})
@@ -201,6 +252,7 @@ class ProfilerStopController:
         launch_started_mono: float | None = None,
         launch_started_at: float | None = None,
         stream_scan: Callable[[], list[Path]] | None = None,
+        host_identity: Callable[[], dict] = launch_host_identity,
     ):
         self.name = name
         self.server_log = Path(server_log)
@@ -234,6 +286,7 @@ class ProfilerStopController:
         self.s.launch_started_at = (
             launch_started_at if launch_started_at is not None else wallclock()
         )
+        self.s.host = {**host_identity(), "recorded_at": wallclock()}
         self.nsys: procident.ProcessIdentity | None = None
         self.api_server: procident.ProcessIdentity | None = None
         self.engine_procs: list[procident.ProcessIdentity] = []
@@ -457,6 +510,7 @@ class ProfilerStopController:
             size = None
         if size is not None:
             self.s.stream["size"] = size
+        self._observe_stream(path)
         if self.policy.preserve_raw_stream and self.s.stream.get("preserved_path") is None and size:
             self._preserve_stream(Path(path))
         elif self.s.stream.get("preserved_path"):
@@ -464,6 +518,94 @@ class ProfilerStopController:
                 self.s.stream["preserved_size"] = os.stat(self.s.stream["preserved_path"]).st_size
             except OSError:
                 pass
+
+    def _observe_stream(self, path: str) -> None:
+        """Keep every distinct (size, mtime) sample of the stream; none is overwritten."""
+        target = self.s.stream.get("preserved_path") or path
+        try:
+            st = os.stat(target)
+        except OSError:
+            return
+        observations = self.s.stream.setdefault("observations", [])
+        last = observations[-1] if observations else None
+        if last is not None and (last["size"], last["mtime_ns"]) == (st.st_size, st.st_mtime_ns):
+            return
+        if len(observations) >= MAX_STREAM_OBSERVATIONS:
+            dropped = self.s.stream.get("observations_dropped", 0)
+            self.s.stream["observations_dropped"] = dropped + 1
+            return
+        observations.append(
+            {
+                "at": self._wall(),
+                "phase": self.s.phase.value,
+                "path": str(target),
+                "size": st.st_size,
+                "mtime_ns": st.st_mtime_ns,
+            }
+        )
+
+    def _finalize_stream_record(self) -> None:
+        """Once, after the Nsight session closed: final size and sha256 of the stream.
+
+        The record states what was measured and when. It does not claim the trace
+        is complete (see COMPLETENESS_NOTE); that needs the offline import.
+        """
+        stream = self.s.stream
+        preserved = stream.get("preserved_path")
+        candidates = [p for p in (preserved, stream.get("path")) if p]
+        target = next((Path(p) for p in candidates if Path(p).is_file()), None)
+        final: dict = {
+            "taken_at": self._wall(),
+            "basis": "after the nsys session closed (no writer left)",
+            "session_closed_at": self.s.session_closed_at,
+            "phase": self.s.phase.value,
+            "completeness": COMPLETENESS_NOTE,
+        }
+        if target is None:
+            final.update(available=False, reason="no stream file exists at the recorded paths")
+            if stream.get("path") or preserved:
+                self.warn("final stream record: no stream file available", paths=candidates)
+            stream["final"] = final
+            return
+        try:
+            final.update(available=True, path=str(target), **file_fingerprint(target))
+        except OSError as error:
+            final.update(available=False, reason=f"could not read the stream: {error}")
+            self.warn("final stream record: stream unreadable", path=str(target), error=str(error))
+            stream["final"] = final
+            return
+        earlier = stream.get("observations") or []
+        final["changed_after_last_observation"] = bool(earlier) and (
+            earlier[-1]["size"],
+            earlier[-1]["mtime_ns"],
+        ) != (final["size"], final["mtime_ns"])
+        stream["final"] = final
+        self._emit(
+            f"[lifecycle] final stream record: {final['size']} B sha256 {final['sha256']} "
+            f"(session closed; completeness not implied)"
+        )
+        if preserved and Path(preserved).is_file():
+            try:
+                write_retention_record(
+                    Path(preserved).parent,
+                    {
+                        "schema_version": 1,
+                        "name": self.name,
+                        "stream_file": Path(preserved).name,
+                        "size": final["size"],
+                        "sha256": final["sha256"],
+                        "mtime_ns": final["mtime_ns"],
+                        "session_closed_at": self.s.session_closed_at,
+                        "final_phase": self.s.phase.value,
+                        "host": self.s.host.get("hostname"),
+                        "nsys": self.s.nsys.get("identity"),
+                        "status_path": str(self.status_path),
+                        "written_by": "lifecycle controller",
+                        "completeness": COMPLETENESS_NOTE,
+                    },
+                )
+            except OSError as error:
+                self.warn("could not write the retention record", error=str(error))
 
     def _preserve_stream(self, path: Path) -> None:
         """Hard-link the raw stream so Nsight's own unlink cannot destroy it."""
@@ -585,6 +727,14 @@ class ProfilerStopController:
                 ours = {p.pid for p in [self.api_server, *self.engine_procs]}
                 if not (set(pids) & ours) and not self._server_alive():
                     self._record_gpu_release("no compute process of this server remains")
+        if (
+            self.s.session_closed_at is not None
+            and self.s.phase in TERMINAL
+            and self.s.stream.get("final") is None
+        ):
+            self._track_stream()
+            self._finalize_stream_record()
+            self._write_status()
 
     def _record_gpu_release(self, reason: str) -> None:
         self.s.gpu["released_at"] = self._wall()
@@ -758,6 +908,14 @@ class ProfilerStopController:
         self._gpus_released_action_done = True
         self.s.gpu["release_requested_at"] = self._wall()
         self.s.gpu["release_reason"] = reason
+        # what the capture was doing when the release was requested (evidence, not a decision input)
+        self.s.gpu["release_context"] = {
+            "phase": self.s.phase.value,
+            "import_progress_pct": self.s.import_progress_pct,
+            "nsys_alive": self._nsys_alive() if self.nsys is not None else None,
+            "stream_size": self.s.stream.get("size"),
+            "report_written": self.s.report.get("written_at") is not None,
+        }
         self.discover_server_processes()
         if self.api_server is None:
             self.warn(
@@ -859,8 +1017,11 @@ class ProfilerStopController:
     def status_dict(self) -> dict:
         s = self.s
         return {
-            "schema_version": 1,
+            # 2: host identity, stream observations + final record, release context
+            "schema_version": 2,
             "name": self.name,
+            "host": s.host.get("hostname"),
+            "host_identity": s.host,
             "phase": s.phase.value,
             "phase_history": s.phase_history,
             "launch_started_at": s.launch_started_at,

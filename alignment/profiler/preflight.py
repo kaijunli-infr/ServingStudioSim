@@ -397,6 +397,125 @@ def check_log_parsers(reference_log: Path | None) -> list[Check]:
     return checks
 
 
+def _open_by_a_process(path: Path) -> list[int]:
+    """Pids (readable ones) that hold `path` open. Read-only scan of /proc/<pid>/fd."""
+    holders = []
+    target = str(path)
+    for proc in Path("/proc").iterdir():
+        if not proc.name.isdigit():
+            continue
+        try:
+            for fd in (proc / "fd").iterdir():
+                try:
+                    if os.readlink(fd) == target:
+                        holders.append(int(proc.name))
+                        break
+                except OSError:
+                    continue
+        except OSError:
+            continue
+    return holders
+
+
+def classify_preserve_dir(directory: Path, planned_name: str, identity=procident.identity) -> dict:
+    """Is a `*.raw-preserve` directory a retained, inactive recovery stream or a conflict?
+
+    retained_inactive needs all of: a retention record (written by the controller after the
+    session closed, or by an operator adoption) whose size and sha256 match the stream file
+    now; no process holding the stream open; the recorded nsys process gone; and a name that
+    is not the one the planned capture would use. Anything else is a conflict. A retained
+    stream is never touched, and its checksum says nothing about scientific completeness.
+    """
+    out: dict = {"path": str(directory), "state": "conflict"}
+    if directory.name == f"{planned_name}.raw-preserve":
+        out["reason"] = "artifact collision: the planned capture would preserve into this directory"
+        return out
+    record_path = directory / lifecycle.RETENTION_NAME
+    try:
+        record = json.loads(record_path.read_text())
+    except (OSError, ValueError):
+        out["reason"] = f"no readable {lifecycle.RETENTION_NAME}: origin and state unknown"
+        return out
+    stream = directory / str(record.get("stream_file", ""))
+    if not record.get("stream_file") or not stream.is_file():
+        out["reason"] = "retention record names a stream file that does not exist"
+        return out
+    holders = _open_by_a_process(stream)
+    if holders:
+        out["reason"] = f"stream is open in process(es) {holders}: an active session"
+        return out
+    recorded = record.get("nsys") or {}
+    if recorded.get("pid") is not None:
+        live = identity(int(recorded["pid"]))
+        if live is not None and live.starttime == recorded.get("starttime"):
+            out["reason"] = f"the recorded nsys process {recorded['pid']} is still alive"
+            return out
+    if record.get("session_closed_at") is None:
+        out["reason"] = "retention record has no session-closed time"
+        return out
+    try:
+        now = lifecycle.file_fingerprint(stream)
+    except OSError as error:
+        out["reason"] = f"stream unreadable: {error}"
+        return out
+    if (now["size"], now["sha256"]) != (record.get("size"), record.get("sha256")) or not now[
+        "stable_during_read"
+    ]:
+        out["reason"] = (
+            f"stream does not match its retention record (size {now['size']} vs "
+            f"{record.get('size')}, sha256 {now['sha256'][:12]} vs {str(record.get('sha256'))[:8]})"
+        )
+        return out
+    out.update(
+        state="retained_inactive",
+        reason=f"{record.get('name')}: {now['size']} B, sha256 {now['sha256'][:16]}…, session "
+        f"closed, not open, record by {record.get('written_by')}",
+        size=now["size"],
+        sha256=now["sha256"],
+    )
+    return out
+
+
+def adopt_retained_stream(directory: Path, status_path: Path, identity=procident.identity) -> dict:
+    """Operator adoption of a preserved stream that predates retention records.
+
+    Writes RETENTION.json next to the stream (the stream itself is not touched) after checking
+    the run's lifecycle record: session closed, recorded nsys process gone, stream not open.
+    """
+    status = json.loads(Path(status_path).read_text())
+    preserved = Path(str((status.get("stream") or {}).get("preserved_path") or ""))
+    if preserved.parent != Path(directory) or not preserved.is_file():
+        raise ValueError(f"{status_path} does not record a preserved stream in {directory}")
+    if status.get("session_closed_at") is None:
+        raise ValueError("the lifecycle record has no session-closed time")
+    recorded = (status.get("nsys") or {}).get("identity") or {}
+    if recorded.get("pid") is not None:
+        live = identity(int(recorded["pid"]))
+        if live is not None and live.starttime == recorded.get("starttime"):
+            raise ValueError(f"the recorded nsys process {recorded['pid']} is still alive")
+    holders = _open_by_a_process(preserved)
+    if holders:
+        raise ValueError(f"the stream is open in process(es) {holders}")
+    fp = lifecycle.file_fingerprint(preserved)
+    record = {
+        "schema_version": 1,
+        "name": status.get("name"),
+        "stream_file": preserved.name,
+        "size": fp["size"],
+        "sha256": fp["sha256"],
+        "mtime_ns": fp["mtime_ns"],
+        "session_closed_at": status["session_closed_at"],
+        "final_phase": status.get("phase"),
+        "host": status.get("host"),
+        "nsys": recorded or None,
+        "status_path": str(status_path),
+        "written_by": "operator adoption (alignment.profiler.preflight --adopt-retained)",
+        "completeness": lifecycle.COMPLETENESS_NOTE,
+    }
+    lifecycle.write_retention_record(Path(directory), record)
+    return record
+
+
 def check_locations(cfg: ProfileConfig) -> list[Check]:
     checks: list[Check] = []
     policy = cfg.nsys.finalize_policy()
@@ -457,22 +576,48 @@ def check_locations(cfg: ProfileConfig) -> list[Check]:
             )
         )
         uid = os.getuid()
-        leftovers = []
-        for p in list(stream_dir.glob("nsys-report-*.qdstrm")) + list(
-            stream_dir.glob("*.raw-preserve")
-        ):
+        conflicts, retained = [], []
+        for p in sorted(stream_dir.glob("nsys-report-*.qdstrm")):
             try:
                 if p.stat().st_uid == uid:
-                    leftovers.append(str(p))
+                    # Nsight's own working stream: only exists while a session is running
+                    conflicts.append(f"{p} (live Nsight stream)")
             except OSError:
                 continue
+        for p in sorted(stream_dir.glob("*.raw-preserve")):
+            try:
+                if p.stat().st_uid != uid:
+                    continue
+            except OSError:
+                continue
+            verdict = classify_preserve_dir(p, cfg.name)
+            if verdict["state"] == "retained_inactive":
+                retained.append(f"{p} ({verdict['reason']})")
+            else:
+                conflicts.append(f"{p} ({verdict['reason']})")
         checks.append(
             Check(
                 "locations.stream_leftovers",
-                "FAIL" if leftovers else "PASS",
-                f"own raw streams / preserve dirs in {stream_dir}: {leftovers or 'none'}",
+                "FAIL" if conflicts else "PASS",
+                f"own raw streams / preserve dirs in {stream_dir}: "
+                + (f"conflicting {conflicts}" if conflicts else "no active or conflicting one")
+                + (
+                    f"; retained inactive recovery stream(s), left untouched: {retained}"
+                    if retained
+                    else ""
+                ),
             )
         )
+        if retained:
+            checks.append(
+                Check(
+                    "locations.retained_streams",
+                    "INFO",
+                    f"{len(retained)} retained inactive recovery stream(s) in {stream_dir}; "
+                    "not a profiler session, not deleted, checksum-verified against the "
+                    "retention record (which does not establish trace completeness)",
+                )
+            )
     report_parent = log_dir
     while not report_parent.exists() and report_parent != report_parent.parent:
         report_parent = report_parent.parent
@@ -521,7 +666,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    ap.add_argument("--config", required=True, type=Path)
+    ap.add_argument("--config", type=Path)
     ap.add_argument(
         "--pins", type=Path, help="pins JSON (from --write-pins of an accepted environment)"
     )
@@ -532,8 +677,29 @@ def main(argv: list[str] | None = None) -> int:
         "--reference-server-log", type=Path, help="accepted *_server.log for the parsers"
     )
     ap.add_argument("--json", type=Path, help="write the checks and facts here")
+    ap.add_argument(
+        "--adopt-retained",
+        nargs=2,
+        metavar=("PRESERVE_DIR", "LIFECYCLE_JSON"),
+        help="write a retention record next to an already preserved stream and exit",
+    )
     ap.add_argument("--write-pins", type=Path, help="write the observed identities as a pins file")
     args = ap.parse_args(argv)
+    if args.adopt_retained:
+        try:
+            record = adopt_retained_stream(
+                Path(args.adopt_retained[0]), Path(args.adopt_retained[1])
+            )
+        except (OSError, ValueError) as error:
+            print(f"FAIL  adoption refused: {error}")
+            return 1
+        print(
+            f"PASS  retention record written in {args.adopt_retained[0]}: {record['size']} B, "
+            f"sha256 {record['sha256']} (stream untouched; completeness not implied)"
+        )
+        return 0
+    if args.config is None:
+        ap.error("--config is required")
 
     from launcher.alignment_config import load_profile_config
 
