@@ -17,7 +17,7 @@ with gates. It is not a forced-release test and not part of the E1 measurement.
 
 | item | value |
 |---|---|
-| branch / code commit | `exp/profiler-lifecycle`, code commit **59a11b7a** (`V3S-PIN.json`); launch commit: a descendant with the pinned trees, clean, checked by the preflight and by gate G0 from the driver's `launch_source.json` |
+| branch / code commit | `exp/profiler-lifecycle`, code commit **22422bd2** (`V3S-PIN.json`); launch commit: a descendant with the pinned trees, clean, checked by the preflight and by gate G0 from the driver's `launch_source.json` |
 | pinned trees | `alignment` 7b4df784a5b6daff7c792e81cbc6503ba2c806ec and `launcher` 5acab28980ef9974bf4cb6dcd676481c357e655d (both unchanged since e32fbab7: no controller, launcher or shutdown change), 21 test files, the CPU-only guard and its runner, fixtures |
 | submodules | vLLM fork 0ab18711335780e062d65994a3243da0281d2081, req-frontend 5c20a259618976ecc360bda84abcc3653a04006e (gitlink = checkout, checked) |
 | load-generator executable | `session_runner` sha256 **7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2** (`BINARY-PROVENANCE.json`), launched only through the prebuilt contract with the build-tool guard, as in V2 |
