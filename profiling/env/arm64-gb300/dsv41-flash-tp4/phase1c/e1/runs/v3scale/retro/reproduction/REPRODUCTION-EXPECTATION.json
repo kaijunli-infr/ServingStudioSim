@@ -1,0 +1,12 @@
+{
+ "verdict": "FAIL",
+ "not_pass": {
+  "G9.scientific_completeness": "FAIL"
+ },
+ "expected_verdict": "FAIL",
+ "expected_not_pass": {
+  "G9.scientific_completeness": "FAIL"
+ },
+ "met": true,
+ "problems": []
+}

@@ -1,0 +1,167 @@
+{
+ "ok": true,
+ "fields": {
+  "launch": {
+   "fields": 182,
+   "equal": 164,
+   "differing": [
+    {
+     "field": "argv[10]",
+     "reference": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+     "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale"
+    },
+    {
+     "field": "env.PYTHONPATH",
+     "reference": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
+     "run": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm"
+    },
+    {
+     "field": "fork_git.path",
+     "reference": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
+     "run": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm"
+    },
+    {
+     "field": "name",
+     "reference": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+     "run": "dsv41_flash_1017_gb300_tp4_e1_v3_scale"
+    },
+    {
+     "field": "nsys_config.capture_start_delay_seconds",
+     "reference": 10.0,
+     "run": null
+    },
+    {
+     "field": "nsys_config.finalize_hard_deadline_s",
+     "reference": "<absent>",
+     "run": 600.0
+    },
+    {
+     "field": "nsys_config.finalize_max_extension_s",
+     "reference": "<absent>",
+     "run": 120.0
+    },
+    {
+     "field": "nsys_config.finalize_on_hard_deadline",
+     "reference": "<absent>",
+     "run": "release_gpus"
+    },
+    {
+     "field": "nsys_config.finalize_session_close_timeout_s",
+     "reference": "<absent>",
+     "run": 300.0
+    },
+    {
+     "field": "nsys_config.finalize_soft_deadline_s",
+     "reference": "<absent>",
+     "run": 300.0
+    },
+    {
+     "field": "nsys_config.finalize_stall_timeout_s",
+     "reference": "<absent>",
+     "run": 300.0
+    },
+    {
+     "field": "nsys_config.gpu_held_ceiling_s",
+     "reference": "<absent>",
+     "run": 2700.0
+    },
+    {
+     "field": "nsys_config.min_free_bytes_report",
+     "reference": "<absent>",
+     "run": 21474836480
+    },
+    {
+     "field": "nsys_config.min_free_bytes_stream",
+     "reference": "<absent>",
+     "run": 53687091200
+    },
+    {
+     "field": "nsys_config.preserve_raw_stream",
+     "reference": "<absent>",
+     "run": true
+    },
+    {
+     "field": "nsys_config.qdstrm_importer",
+     "reference": "<absent>",
+     "run": null
+    },
+    {
+     "field": "nsys_config.raw_preserve_dir",
+     "reference": "<absent>",
+     "run": null
+    },
+    {
+     "field": "nsys_config.tmp_dir",
+     "reference": "<absent>",
+     "run": null
+    }
+   ]
+  },
+  "profile": {
+   "fields": 74,
+   "equal": 62,
+   "differing": [
+    {
+     "field": "log_dir",
+     "reference": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile",
+     "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile"
+    },
+    {
+     "field": "name",
+     "reference": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+     "run": "dsv41_flash_1017_gb300_tp4_e1_v3_scale"
+    },
+    {
+     "field": "nsys.capture_start_delay_seconds",
+     "reference": 10.0,
+     "run": "<absent>"
+    },
+    {
+     "field": "nsys.finalize_hard_deadline_s",
+     "reference": "<absent>",
+     "run": 600.0
+    },
+    {
+     "field": "nsys.finalize_max_extension_s",
+     "reference": "<absent>",
+     "run": 120.0
+    },
+    {
+     "field": "nsys.finalize_on_hard_deadline",
+     "reference": "<absent>",
+     "run": "release_gpus"
+    },
+    {
+     "field": "nsys.finalize_session_close_timeout_s",
+     "reference": "<absent>",
+     "run": 300.0
+    },
+    {
+     "field": "nsys.finalize_soft_deadline_s",
+     "reference": "<absent>",
+     "run": 300.0
+    },
+    {
+     "field": "nsys.finalize_stall_timeout_s",
+     "reference": "<absent>",
+     "run": 300.0
+    },
+    {
+     "field": "nsys.gpu_held_ceiling_s",
+     "reference": "<absent>",
+     "run": 2700.0
+    },
+    {
+     "field": "nsys.preserve_raw_stream",
+     "reference": "<absent>",
+     "run": true
+    },
+    {
+     "field": "workload.frontend.path",
+     "reference": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv",
+     "run": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v3_scale.csv"
+    }
+   ]
+  }
+ }
+}

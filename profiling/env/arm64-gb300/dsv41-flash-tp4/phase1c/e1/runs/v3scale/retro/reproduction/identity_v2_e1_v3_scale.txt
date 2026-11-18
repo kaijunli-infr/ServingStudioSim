@@ -1,0 +1,34 @@
+PASS         source.fork_git.head: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True
+NORMALIZED [output_path] launch.argv:-o: a='/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val' b='/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v3_scale' — <run dir>/profile/nsys/<name> under ServingStudioSim/logs/ on both sides
+NORMALIZED [worktree_source_path] launch.env.PYTHONPATH: a='/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm' b='/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm' — equal after replacing the worktree root; pinned source identity: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True
+NORMALIZED [worktree_source_path] launch.fork_git.path: a='/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm' b='/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm' — equal after replacing the worktree root; pinned source identity: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True
+NORMALIZED [output_path] launch.name: a='dsv41_flash_1017_gb300_tp4_e1_nsys_val' b='dsv41_flash_1017_gb300_tp4_e1_v3_scale' — both are dsv41_flash_1017_gb300_tp4_<pass> run names
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.capture_start_delay_seconds: a=10.0 b=None — approved values a=10.0 b=None
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.finalize_hard_deadline_s: a='<absent>' b=600.0 — approved values a='<absent>' b=600.0
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.finalize_max_extension_s: a='<absent>' b=120.0 — approved values a='<absent>' b=120.0
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.finalize_on_hard_deadline: a='<absent>' b='release_gpus' — approved values a='<absent>' b='release_gpus'
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.finalize_session_close_timeout_s: a='<absent>' b=300.0 — approved values a='<absent>' b=300.0
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.finalize_soft_deadline_s: a='<absent>' b=300.0 — approved values a='<absent>' b=300.0
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.finalize_stall_timeout_s: a='<absent>' b=300.0 — approved values a='<absent>' b=300.0
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.gpu_held_ceiling_s: a='<absent>' b=2700.0 — approved values a='<absent>' b=2700.0
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.min_free_bytes_report: a='<absent>' b=21474836480 — approved values a='<absent>' b=21474836480
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.min_free_bytes_stream: a='<absent>' b=53687091200 — approved values a='<absent>' b=53687091200
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.preserve_raw_stream: a='<absent>' b=True — approved values a='<absent>' b=True
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.qdstrm_importer: a='<absent>' b=None — approved values a='<absent>' b=None
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.raw_preserve_dir: a='<absent>' b=None — approved values a='<absent>' b=None
+NORMALIZED [approved_lifecycle_control] launch.nsys_config.tmp_dir: a='<absent>' b=None — approved values a='<absent>' b=None
+INFO         launch.*: 182 fields compared; policy rules not triggered: []
+NORMALIZED [output_path] profile.log_dir: a='/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile' b='/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale/e1_v3_scale/profile' — <run dir>/profile under ServingStudioSim/logs/ on both sides
+NORMALIZED [output_path] profile.name: a='dsv41_flash_1017_gb300_tp4_e1_nsys_val' b='dsv41_flash_1017_gb300_tp4_e1_v3_scale' — both are dsv41_flash_1017_gb300_tp4_<pass> run names
+NORMALIZED [approved_lifecycle_control] profile.nsys.capture_start_delay_seconds: a=10.0 b='<absent>' — approved values a=10.0 b='<absent>'
+NORMALIZED [approved_lifecycle_control] profile.nsys.finalize_hard_deadline_s: a='<absent>' b=600.0 — approved values a='<absent>' b=600.0
+NORMALIZED [approved_lifecycle_control] profile.nsys.finalize_max_extension_s: a='<absent>' b=120.0 — approved values a='<absent>' b=120.0
+NORMALIZED [approved_lifecycle_control] profile.nsys.finalize_on_hard_deadline: a='<absent>' b='release_gpus' — approved values a='<absent>' b='release_gpus'
+NORMALIZED [approved_lifecycle_control] profile.nsys.finalize_session_close_timeout_s: a='<absent>' b=300.0 — approved values a='<absent>' b=300.0
+NORMALIZED [approved_lifecycle_control] profile.nsys.finalize_soft_deadline_s: a='<absent>' b=300.0 — approved values a='<absent>' b=300.0
+NORMALIZED [approved_lifecycle_control] profile.nsys.finalize_stall_timeout_s: a='<absent>' b=300.0 — approved values a='<absent>' b=300.0
+NORMALIZED [approved_lifecycle_control] profile.nsys.gpu_held_ceiling_s: a='<absent>' b=2700.0 — approved values a='<absent>' b=2700.0
+NORMALIZED [approved_lifecycle_control] profile.nsys.preserve_raw_stream: a='<absent>' b=True — approved values a='<absent>' b=True
+FAIL         profile.workload.frontend.path: rule condition not met: sha256 a=c6d8e13b7229ffd4 b=d9d2dc77b316b786 pinned=c6d8e13b7229ffd4 a='/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv' b='/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v3_scale.csv'
+INFO         profile.*: 74 fields compared; policy rules not triggered: []
+# configuration identity v2: FAIL (29 normalized field(s), every one listed above with its original values)

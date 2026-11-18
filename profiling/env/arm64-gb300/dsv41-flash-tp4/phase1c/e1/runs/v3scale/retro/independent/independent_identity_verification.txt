@@ -1,0 +1,15 @@
+PASS  generator.runs: a scratch copy of make_e1_inputs_v3scale.py exit 0
+PASS  trace.generator_output_equals_frozen: regenerated d9d2dc77b316b786… (112 rows) vs frozen d9d2dc77b316b786… (112 rows)
+PASS  trace.run_copy_equals_frozen: the run directory's trace.csv d9d2dc77b316b786… = frozen: True
+PASS  trace.file_at_configured_path_equals_frozen: /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v3_scale.csv: equals frozen True
+PASS  trace.hash_in_frozen_manifest: d9d2dc77b316b7862f12e860a49b84010b385946e04f1b2b2ab80a9746710eb8 is the INPUTS_v3scale.sha256 entry, and that manifest is the one FREEZE_v3scale.sha256 pins
+PASS  trace.hash_in_frozen_inputs: E1-V3-SCALE-INPUTS.json (pinned by the freeze manifest) declares d9d2dc77b316b786…, 112 requests; the regenerated inputs declare the same hash
+PASS  trace.is_the_accepted_rows_twice: 56 accepted rows (sha256 c6d8e13b7229ffd4…), 112 V3 rows: first 56 identical in order, last 56 the same rows with wave index 1 and +80000.0 ms
+PASS  config.generator_output_equals_frozen: regenerated config = frozen config = the run's profile.json in every field except the absolute trace path of the scratch copy
+PASS  launch.field_count: 182 fields in the union of both records (164 equal, 18 differing); the original report says: 182 fields compared
+PASS  launch.differing_fields: differing fields found here 18 fields = the fields the original report normalized or failed: True
+PASS  profile.field_count: 74 fields in the union of both records (62 equal, 12 differing); the original report says: 74 fields compared
+PASS  profile.differing_fields: differing fields found here 12 fields = the fields the original report normalized or failed: True
+PASS  original.only_the_trace_failed: original report: verdict FAIL, 29 normalized, failed fields [('profile', 'workload.frontend.path')]
+PASS  no_model_routing_profiler_cuda_or_performance_field_differs: differing fields under server / model / python_runtime / nsys_profiler / workload settings other than the trace path: []
+# independent verification: ALL AGREE

@@ -1,0 +1,79 @@
+# V3 retrospective replay 2026-11-18T23:02:02Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at 1747d00c7857b6460050bfa075f95362189de819 (0 modified tracked file(s)); CUDA_VISIBLE_DEVICES=''
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+## 1. the incident as preserved
+PASS  archive: all 207 files match SHA256SUMS (its own sha256 44122927ea6c29995a5af63846bdc03e40c40def73eb221f80acd43c05bcda97)
+PASS  the committed ARCHIVE-SHA256SUMS is the archive's SHA256SUMS
+PASS  raw stream sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3 in all three copies (tray original, archive, archived durable copy) = the controller's final record 764d063d951d4c46…
+PASS  original V3 report, evidence (gate outputs, identity report), frozen packet, manifests, gate code, post-run script and the V1/V2 identity checker and policy: unchanged since the run's commit 5a01f642 (only the separate addendum was added)
+PASS  committed original gate outputs and identity report are byte-identical to the archived ones (V3S-GATES.json sha256 1b63ed93485149df…)
+PASS  frozen V3 manifests (freeze, 66 scripts, inputs) and the V2 / V1 manifests verify
+  original gate outputs: FAIL {'G9.scientific_completeness': 'FAIL'} | 13 of 14 PASS
+PASS  original V3 verdict as archived: FAIL, G9 only
+PASS  load-generator executable = pinned
+## 2. independent verification (no code shared with the identity checkers)
+PASS  generator.runs: a scratch copy of make_e1_inputs_v3scale.py exit 0
+PASS  trace.generator_output_equals_frozen: regenerated d9d2dc77b316b786… (112 rows) vs frozen d9d2dc77b316b786… (112 rows)
+PASS  trace.run_copy_equals_frozen: the run directory's trace.csv d9d2dc77b316b786… = frozen: True
+PASS  trace.file_at_configured_path_equals_frozen: /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v3_scale.csv: equals frozen True
+PASS  trace.hash_in_frozen_manifest: d9d2dc77b316b7862f12e860a49b84010b385946e04f1b2b2ab80a9746710eb8 is the INPUTS_v3scale.sha256 entry, and that manifest is the one FREEZE_v3scale.sha256 pins
+PASS  trace.hash_in_frozen_inputs: E1-V3-SCALE-INPUTS.json (pinned by the freeze manifest) declares d9d2dc77b316b786…, 112 requests; the regenerated inputs declare the same hash
+PASS  trace.is_the_accepted_rows_twice: 56 accepted rows (sha256 c6d8e13b7229ffd4…), 112 V3 rows: first 56 identical in order, last 56 the same rows with wave index 1 and +80000.0 ms
+PASS  config.generator_output_equals_frozen: regenerated config = frozen config = the run's profile.json in every field except the absolute trace path of the scratch copy
+PASS  launch.field_count: 182 fields in the union of both records (164 equal, 18 differing); the original report says: 182 fields compared
+PASS  launch.differing_fields: differing fields found here 18 fields = the fields the original report normalized or failed: True
+PASS  profile.field_count: 74 fields in the union of both records (62 equal, 12 differing); the original report says: 74 fields compared
+PASS  profile.differing_fields: differing fields found here 12 fields = the fields the original report normalized or failed: True
+PASS  original.only_the_trace_failed: original report: verdict FAIL, 29 normalized, failed fields [('profile', 'workload.frontend.path')]
+PASS  no_model_routing_profiler_cuda_or_performance_field_differs: differing fields under server / model / python_runtime / nsys_profiler / workload settings other than the trace path: []
+# independent verification: ALL AGREE
+PASS  independent verification: everything agrees
+## 3. reproduction: the frozen post-run, unchanged, on a copy of the archived run directory
+replay root: copy of the archive (5.9G); original closeout exit code 0 (from the archived operator record)
+[e1_v3_scale] rc=0 end 2026-11-18T22:09:53Z
+identity rc=1 (29 normalized fields listed in cpu/identity_v2_e1_v3_scale.txt)
+completeness_v2 (four-wave plan, routing records, checksum) rc=0
+extract rc=0
+nsys_validation rc=0
+# V3 gates e1_v3_scale: 14 results, 1 FAIL, 0 INCONCLUSIVE → FAIL
+post-run storage: 111 samples, max gap 2.7 s; {'temporary': 'peak 5.219 GB', 'persistent': 'peak 6.311 GB'}
+post-run memory: 199 samples; min MemAvailable 849.5 GB; offline importer peak 15.63 GB over 46 samples
+V3 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v3scale_replay/cpu/V3S-GATES.txt). STOP: no retry, no advance; everything stays preserved.
+verdict FAIL; not PASS {'G9.scientific_completeness': 'FAIL'}; expectation MET
+PASS  the original result is reproducible: frozen post-run exit 1, verdict FAIL, exactly G9 not passing, on the same trace-hash rule
+## 4. corrected assessment: the same post-run with the identity step replaced
+PASS  the corrected post-run differs from the frozen one in exactly one line: the identity checker and its policy (postrun_one_line_difference.diff); gate code, checkers, inputs and thresholds are the frozen ones
+identity rc=0 (30 normalized fields listed in cpu/identity_v2_e1_v3_scale.txt)
+completeness_v2 (four-wave plan, routing records, checksum) rc=0
+extract rc=0
+nsys_validation rc=0
+PASS         G0.source_and_executable: launch commit e82c8df90e21, trees alignment 7b4df784a5b6 launcher 5acab28980ef, tracked changes 0; executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2: 16 of 16 binary
+PASS         G1.host_identity: launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 863 GPU observation(s); import probe, memory and storage samplers on pod4-gb300-10-tray16-f3
+PASS         G2.one_stop_request_returned_ok: requests_sent=1, stop_requested phases=1, http='ok' returned 21:59:34.44Z, server SIGTERM 21:59:37.37Z, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=1
+PASS         G3.phases_in_order: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'impo
+PASS         G4.phase_deadlines: stop_accepted 0.003 s (deadline 30); flush_stop_to_importing 111.997 s (deadline 300); import_importer_first_seen_to_gone 53.038 s (deadline 300); stop_to_report_written 166.227 s (deadline 600); s
+PASS         G5.importer_observed: importer 3030970 (--input-file is the session stream; --output-file is the session report; holds the session stream open), parent 3016246 agent=True linked to the recorded CLI=True; states ['NOT_
+PASS         G6.gpu_release_interval: 861 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM 21:59:37.37Z: last 'held' reading within [0.056, 0.399] s, first 'released' reading within [2.399, 2.86] s
+PASS         G7.stream_durable: controller's final record (taken 21:59:40Z, after session close): 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3; durable copy /mnt/shared/home/dc/workspace/serv
+PASS         G8.offline_import: offline import of the durable stream rc 0 in 55 s → 792004439 B
+PASS         G8b.recovered_trace_complete: recovered trace: 4320 iterations (band [4200, 4500]), NVTX forward ranges 17280, kernel rows 24501664 (band [23276580, 25726747]), kernels per process [6124336, 6124336, 6124336, 6128656]
+PASS         G9.scientific_completeness: exit codes {'completeness_v2': 0, 'extract': 0, 'nsys_validation': 0} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity PASS
+PASS         G10.bounds: GPU-held 1833 s by the controller, at most 1833 s by the sampler (ceiling 2700.0); server SIGTERM → session closed 2.7 s (limit 300.0); reservation 60.2 min (limit 90)
+PASS         G11.storage_and_memory: measured peaks {'temporary_peak_gb': 5.219, 'persistent_peak_gb': 6.311, 'min_mem_available_gb': 547.2, 'importer_peak_rss_gb_in_session': 15.61, 'importer_peak_rss_gb_offline': 15.63}; ceiling
+PASS         G12.closeout: closeout exit code 0; reservation deleted record present (GPU pods left on the node: 0)
+# V3 gates e1_v3_scale: 14 results, 0 FAIL, 0 INCONCLUSIVE → PASS
+post-run storage: 113 samples, max gap 2.4 s; {'temporary': 'peak 5.219 GB', 'persistent': 'peak 6.311 GB'}
+post-run memory: 204 samples; min MemAvailable 849.3 GB; offline importer peak 15.63 GB over 49 samples
+# configuration identity v3scale: PASS (30 normalized field(s), every one listed above with its original values; trace rule exercised: True)
+trace checks passing: 18 of 18
+  gates whose status differs between the reproduction and the corrected assessment: {'G9.scientific_completeness': ('FAIL', 'PASS')}
+  corrected assessment: verdict PASS | not PASS {} | 14 of 14 PASS
+RETROSPECTIVE V3 EVIDENCE ASSESSMENT under the corrected identity policy: PASS (post-run exit 0). The original V3 verdict stays FAIL under the frozen gates.
+replay root removed
+## 5. state after the replay
+PASS  no post-run scratch left in /tmp
+PASS  tray stream and archive unchanged after the replay
+PASS  load-generator executable unchanged
+gpu after (MiB / compute processes): 0 0 0 0 / 0
+# result: REPLAY CHECKS MET (retrospective assessment: PASS)
+retro exit 0 at 1747d00c
+RETRODONE
