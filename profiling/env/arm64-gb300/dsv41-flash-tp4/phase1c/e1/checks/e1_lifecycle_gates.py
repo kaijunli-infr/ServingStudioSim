@@ -2,15 +2,19 @@
 """Lifecycle acceptance gates for a patched-launcher capture (V1 packet §7, §9).
 
     python3 -I checks/e1_lifecycle_gates.py --run <run root>/<pass> --inputs E1-V1-INPUTS.json
-        [--importer <QdstrmImporter>] [--extra name=rc ...] [--out gates.json]
+        [--importer <QdstrmImporter> --nsys <nsys>] [--extra name=rc ...] [--out gates.json]
 
-Reads `<run>/profile/nsys/lifecycle.json` (the controller's record), `<run>/profile/profile_result.json`
-and the launch record, and decides PASS/FAIL per gate from the record alone. Every FAIL is a STOP for the
-programme: it is never permission to advance to the next validation step. `--extra name=rc` folds in the
-exit codes of the scientific checkers (completeness v2, nsys validation, config identity, recipe test) so the
-verdict covers both families. `--importer` runs the preserved-stream recovery proof (offline import of the
-preserved `.qdstrm` into a scratch report and size comparison); without it the proof is reported NOT RUN.
-Stdlib only; read-only on the run directory except for the scratch report under --scratch (default: a temp dir).
+Reads `<run>/profile/nsys/lifecycle.json` (the controller's record), `<run>/profile/profile_result.json`,
+the launch record and the independent GPU-release census files `<run>/gpu_release_census_*.json` (written by
+checks/e1_gpu_release_census.py from nvidia-smi, outside the controller), and decides PASS/FAIL per gate.
+Every FAIL is a STOP for the programme: it is never permission to advance to the next validation step.
+`--extra name=rc` folds in the exit codes of the scientific checkers (completeness v2, nsys validation,
+config identity, recipe test) so the verdict covers both families. `--importer` + `--nsys` run the
+preserved-stream recovery proof: offline import of the preserved `.qdstrm` into a scratch report, `nsys export
+--type sqlite` of that report, and the same counts the in-session validation used (NVTX forward ranges →
+iterations, CUPTI kernel rows, kernel span) compared with the in-session values; size is reported, not judged.
+Without them the proof is reported NOT RUN. Stdlib only; read-only on the run directory except for the scratch
+report under --scratch (default: a temp dir).
 """
 
 from __future__ import annotations
@@ -19,8 +23,9 @@ from __future__ import annotations
 
 import argparse
 import glob
+import hashlib
 import json
-import os
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -50,8 +55,51 @@ def load(path: Path) -> dict | None:
         return None
 
 
+# the in-session validation's queries (alignment/profiler/nsys_capture.py::validate_export), repeated here
+# verbatim so the recovery proof measures the recovered report with the same yardstick
+NVTX_FORWARD_SQL = """
+    SELECT COUNT(*) FROM NVTX_EVENTS n
+    LEFT JOIN StringIds s ON n.textId = s.id
+    WHERE COALESCE(n.text, s.value) LIKE 'vllm_iteration(%): forward'
+       OR COALESCE(n.text, s.value) LIKE 'sglang_iteration(%): forward'
+"""
+KERNEL_SQL = "SELECT MIN(start), MAX(end), COUNT(*) FROM CUPTI_ACTIVITY_KIND_KERNEL"
+
+
+def validate_sqlite(sqlite_path: Path) -> dict:
+    con = sqlite3.connect(str(sqlite_path))
+    try:
+        (n_forward,) = con.execute(NVTX_FORWARD_SQL).fetchone()
+        has_kernels = con.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='CUPTI_ACTIVITY_KIND_KERNEL'"
+        ).fetchone()
+        kmin, kmax, krows = con.execute(KERNEL_SQL).fetchone() if has_kernels else (None, None, 0)
+    finally:
+        con.close()
+    return {
+        "nvtx_forward_ranges": int(n_forward or 0),
+        "kernel_rows": int(krows or 0),
+        "kernel_span_ms": ((kmax - kmin) / 1e6) if (kmin and kmax) else 0.0,
+        "ok": bool(n_forward) and bool(krows),
+    }
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
 def evaluate(
-    run: Path, inputs: dict, *, importer: str | None, scratch: Path | None, extras: dict
+    run: Path,
+    inputs: dict,
+    *,
+    importer: str | None,
+    scratch: Path | None,
+    extras: dict,
+    nsys: str | None = None,
 ) -> list:
     res: list = []
     exp = inputs.get("expected", {})
@@ -143,21 +191,26 @@ def evaluate(
         )
     del iters
 
-    # L4 raw stream preserved
+    # L4 raw stream preserved: recorded, present on disk now, and byte-complete (on-disk size == recorded
+    # preserved size == the stream size Nsight finished writing); its sha256 goes on record for the proof
     st = lc.get("stream", {})
     preserved = st.get("preserved_path")
+    pres_path = Path(preserved) if preserved else None
+    on_disk = pres_path.stat().st_size if pres_path and pres_path.is_file() else None
     pres_ok = (
         bool(st.get("path"))
-        and bool(preserved)
-        and st.get("preserved_size") is not None
-        and (st.get("size") is None or st.get("preserved_size") == st.get("size"))
+        and on_disk is not None
+        and on_disk > 0
+        and st.get("preserved_size") == on_disk
+        and (st.get("size") is None or st.get("size") == on_disk)
     )
+    pres_sha = sha256_file(pres_path) if pres_ok else None
     gate(
         res,
         "L4.stream_preserved",
         pres_ok,
         f"path={st.get('path')} discovered_by={st.get('discovered_by')} preserved={preserved} "
-        f"size={st.get('size')} preserved_size={st.get('preserved_size')}",
+        f"size={st.get('size')} preserved_size={st.get('preserved_size')} on_disk={on_disk} sha256={pres_sha}",
     )
 
     # L5 nothing signalled nsys before the report; server stopped by verified identity only
@@ -215,6 +268,33 @@ def evaluate(
         "L6b.finalisation_within_hard_deadline",
         fin is not None and fin <= policy.get("hard_deadline_s", 0),
         f"stop request → report {fin and round(fin)} s; soft {policy.get('soft_deadline_s')} hard {policy.get('hard_deadline_s')}",
+    )
+    # L6c independent release verification: nvidia-smi census files written by the driver after the launcher
+    # exited (checks/e1_gpu_release_census.py); the controller's timestamp alone is not accepted
+    census_files = sorted(glob.glob(str(run / "gpu_release_census_*.json")))
+    samples = [c for c in (load(Path(f)) for f in census_files) if c]
+    released_at = lc.get("gpu", {}).get("released_at")
+    good = [
+        c
+        for c in samples
+        if c.get("verdict", {}).get("released") is True
+        and released_at is not None
+        and c.get("at", 0) >= released_at
+        and (not lc.get("host") or c.get("host") == lc.get("host"))
+    ]
+    last = samples[-1] if samples else None
+    gate(
+        res,
+        "L6c.gpu_release_verified_independently",
+        bool(samples) and last in good,
+        f"{len(samples)} census sample(s) {[Path(f).name for f in census_files]}; last: "
+        + (
+            f"{last.get('at_iso')} released={last.get('verdict', {}).get('released')} compute_pids={[c.get('pid') for c in last.get('compute_apps', [])]} "
+            f"memory.used MiB={[g.get('memory_used_mib') for g in last.get('gpus', [])]} (bound {last.get('max_used_mib')}); "
+            f"after controller release_at={released_at}: {bool(last.get('at', 0) >= (released_at or float('inf')))}"
+            if last
+            else "none (driver did not run the census)"
+        ),
     )
 
     # L7 control-file probe: exactly the two probe lines, each accepted, nothing else
@@ -276,15 +356,15 @@ def evaluate(
         f"nsys alive={(lc.get('nsys') or {}).get('alive')} server alive={(lc.get('server') or {}).get('alive')} closed_at={lc.get('session_closed_at')}",
     )
 
-    # L10 preserved-stream recovery proof (offline import, CPU)
-    if importer and preserved and Path(preserved).is_file():
+    # L10 preserved-stream recovery proof (offline import + export + the in-session counts, CPU)
+    if importer and pres_ok:
         scratch = scratch or Path(tempfile.mkdtemp(prefix="v1-recovery-"))
         scratch.mkdir(parents=True, exist_ok=True)
-        stem = scratch / "recovery"
-        out_rep = stem.with_suffix(".nsys-rep")
+        out_rep = scratch / "recovery.nsys-rep"
+        out_sql = scratch / "recovery.sqlite"
         try:
             subprocess.run(
-                [importer, "-i", preserved, "-o", str(out_rep)],
+                [importer, "-i", str(pres_path), "-o", str(out_rep)],
                 check=True,
                 capture_output=True,
                 text=True,
@@ -295,13 +375,71 @@ def evaluate(
             gate(
                 res,
                 "L10.recovery_proof",
-                0.99 <= ratio <= 1.01,
-                f"offline import of {preserved} → {size} B vs in-session {rep.get('size')} B (ratio {ratio:.4f})",
+                size > 0,
+                f"offline import of {pres_path.name} (sha256 {pres_sha[:16]}) → {size} B vs in-session {rep.get('size')} B (ratio {ratio:.4f}; informational)",
             )
+            if nsys:
+                subprocess.run(
+                    [
+                        nsys,
+                        "export",
+                        "--type",
+                        "sqlite",
+                        "--force-overwrite",
+                        "true",
+                        "-o",
+                        str(out_sql),
+                        str(out_rep),
+                    ],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=3600,
+                )
+                rec = validate_sqlite(out_sql)
+                r_iter = rec["nvtx_forward_ranges"] / exp.get("nvtx_per_iteration", 4)
+                span_in = val.get("kernel_span_ms")
+                span_ok = (
+                    span_in is None
+                    or span_in == 0
+                    or abs(rec["kernel_span_ms"] - span_in) / span_in <= 0.001
+                )
+                same = (
+                    rec["ok"]
+                    and rec["kernel_rows"] == rows
+                    and rec["nvtx_forward_ranges"] == nvtx
+                    and (not it_band or it_band[0] <= r_iter <= it_band[1])
+                    and span_ok
+                )
+                gate(
+                    res,
+                    "L10b.recovery_semantic_completeness",
+                    same,
+                    f"recovered report: kernel_rows {rec['kernel_rows']} (in-session {rows}), NVTX forward ranges {rec['nvtx_forward_ranges']} (in-session {nvtx}) → {r_iter:.0f} iterations (band {it_band}), "
+                    f"kernel span {rec['kernel_span_ms']:.1f} ms (in-session {span_in}); equality required",
+                )
+            else:
+                gate(
+                    res,
+                    "L10b.recovery_semantic_completeness",
+                    False,
+                    "no --nsys for the sqlite export of the recovered report → STOP",
+                )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as error:
-            gate(res, "L10.recovery_proof", False, f"offline import failed: {str(error)[:300]}")
+            detail = getattr(error, "stderr", "") or str(error)
+            gate(
+                res,
+                "L10.recovery_proof",
+                False,
+                f"offline import/export failed: {str(detail)[:300]}",
+            )
     else:
-        gate(res, "L10.recovery_proof", None, "NOT RUN (no --importer or preserved stream absent)")
+        gate(
+            res,
+            "L10.recovery_proof",
+            None,
+            "NOT RUN (no --importer, or L4 failed: no byte-complete preserved stream)",
+        )
 
     # launch record sanity
     if launch is not None:
@@ -329,6 +467,10 @@ def main(argv: list[str] | None = None) -> int:
         "--inputs", required=True, type=Path, help="E1-V1-INPUTS.json (expected bands, probe lines)"
     )
     ap.add_argument("--importer", help="QdstrmImporter for the recovery proof")
+    ap.add_argument(
+        "--nsys",
+        help="nsys CLI for the sqlite export of the recovered report (same install as --importer)",
+    )
     ap.add_argument("--scratch", type=Path, help="where the recovery-proof report goes")
     ap.add_argument("--extra", action="append", default=[], help="name=rc of a scientific checker")
     ap.add_argument("--out", type=Path)
@@ -338,7 +480,14 @@ def main(argv: list[str] | None = None) -> int:
     for e in args.extra:
         name, _, rc = e.partition("=")
         extras[name] = int(rc) if rc.isdigit() else 99
-    res = evaluate(args.run, inputs, importer=args.importer, scratch=args.scratch, extras=extras)
+    res = evaluate(
+        args.run,
+        inputs,
+        importer=args.importer,
+        scratch=args.scratch,
+        extras=extras,
+        nsys=args.nsys,
+    )
     fails = [r for r in res if r["status"] == "FAIL"]
     verdict = (
         "PASS"

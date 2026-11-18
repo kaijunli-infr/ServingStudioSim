@@ -16,7 +16,8 @@ python3 -I - "$REPO" "$E1/V1-PIN.json" "$(hostname)" <<'PY'
 import json, subprocess, sys, hashlib, datetime
 repo, out, host = sys.argv[1:4]
 g = lambda *a: subprocess.run(["git", "-C", repo, *a], capture_output=True, text=True, check=True).stdout.strip()
-keys = ["alignment", "launcher", "tests/test_profiler_lifecycle.py", "tests/test_profiler_preflight.py", "tests/test_e1_lifecycle_gates.py", "tests/fixtures"]
+keys = ["alignment", "launcher", "tests/test_profiler_lifecycle.py", "tests/test_profiler_preflight.py", "tests/test_e1_lifecycle_gates.py", "tests/fixtures",
+        "tests/cpu_only_guard.py", "tests/cpu_only.sh", "tests/test_cpu_only_guard.py"]
 pin = {
   "pass": "e1_v1_lifecycle",
   "pinned_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"), "host": host,

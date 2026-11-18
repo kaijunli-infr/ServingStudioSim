@@ -54,12 +54,12 @@ PY
   && ok "config identity vs accepted e1_nsys_val: only name, log_dir, trace path (same bytes), delayed start and the lifecycle bounds differ" || bad "config identity vs e1_nsys_val (checks/e1_config_identity.py)"
 python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); e=d['expected']; assert d['trace']['requests']==56 and len(d['trace']['waves'])==2 and e['iterations']==2160 and e['kernel_rows_band'][0]<e['kernel_rows']<e['kernel_rows_band'][1] and d['ceilings']['gpu_held_ceiling_s']==d['lifecycle']['gpu_held_ceiling_s']==2700 and len(d['control_probe']['lines'])==2" $E1/E1-V1-INPUTS.json 2>/dev/null \
   && ok "E1-V1-INPUTS.json: 56 requests, 2 waves, 2160 iterations expected, ceilings consistent, 2 probe lines" || bad "E1-V1-INPUTS.json inconsistent"
-( cd $REPO && source $S/scripts/env.sh && source profiling/env/arm64-gb300/gb300.env && unset CUDA_VISIBLE_DEVICES && \
-  uv run --no-sync python -m launcher alignment profile --dry-run $CFG ) >/dev/null 2>&1 && ok "launcher dry-run $PASS" || bad "launcher dry-run $PASS"
+( cd $REPO && source $S/scripts/env.sh && source profiling/env/arm64-gb300/gb300.env && export CUDA_VISIBLE_DEVICES="" && \
+  uv run --no-sync python -m launcher alignment profile --dry-run $CFG ) >/dev/null 2>&1 && ok "launcher dry-run $PASS (CUDA hidden)" || bad "launcher dry-run $PASS"
 [ ! -e "$RUNV1/$PASS/profile" ] && ok "no previous output dir for $PASS" || bad "output dir exists: $RUNV1/$PASS/profile"
 # C. pinned code tree and scripts
 PIN=$E1/V1-PIN.json
-for key in alignment launcher tests/test_profiler_lifecycle.py tests/test_profiler_preflight.py tests/test_e1_lifecycle_gates.py tests/fixtures; do
+for key in alignment launcher tests/test_profiler_lifecycle.py tests/test_profiler_preflight.py tests/test_e1_lifecycle_gates.py tests/fixtures tests/cpu_only_guard.py tests/cpu_only.sh tests/test_cpu_only_guard.py; do
   want=$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['code']['tree'][sys.argv[2]])" $PIN $key 2>/dev/null)
   have=$(git -C $REPO rev-parse "HEAD:$key" 2>/dev/null)
   [ -n "$want" ] && [ "$want" = "$have" ] && ok "pinned tree $key = ${have:0:12}" || bad "tree $key ${have:0:12} != pinned ${want:0:12}"
@@ -72,15 +72,19 @@ info "launcher tree HEAD $(git -C $REPO rev-parse HEAD) ($(git -C $REPO branch -
   uv run --no-sync python -m alignment.profiler.preflight --config $CFG --pins $E1/V1-PIN-identities.json --reference-launch $REF_LAUNCH \
     --reference-server-log $REF_LOG --json $OUT/identity_${TS}.json ) 2>&1 | sed 's/^/  /'
 [ "${PIPESTATUS[0]}" = "0" ] && ok "identity preflight (alignment.profiler.preflight): all checks PASS → $OUT/identity_${TS}.json" || bad "identity preflight reported FAIL (see above)"
-# E. lifecycle, preflight and gate test suites on this tray (CPU)
-( cd $REPO && source $S/scripts/env.sh && source profiling/env/arm64-gb300/gb300.env && unset CUDA_VISIBLE_DEVICES && \
-  uv run --no-sync python -m pytest -q tests/test_profiler_lifecycle.py tests/test_profiler_preflight.py tests/test_e1_lifecycle_gates.py tests/test_e1_pids_cleanup.py ) > $OUT/pytest_${TS}.log 2>&1 \
-  && ok "lifecycle/preflight/gates/cleanup test suites: $(tail -1 $OUT/pytest_${TS}.log)" || bad "test suites: $(tail -1 $OUT/pytest_${TS}.log)"
+# E. lifecycle, preflight, gate, cleanup and guard test suites on this tray, CPU-only: devices hidden, guard fails the run (exit 3) if a device node is opened
+( cd $REPO && source $S/scripts/env.sh && source profiling/env/arm64-gb300/gb300.env && \
+  bash tests/cpu_only.sh -q -p no:cacheprovider tests/test_profiler_lifecycle.py tests/test_profiler_preflight.py tests/test_e1_lifecycle_gates.py tests/test_e1_pids_cleanup.py tests/test_cpu_only_guard.py ) > $OUT/pytest_${TS}.log 2>&1
+tr=$?; guard=$(grep -o "cpu_only_guard: [^(]*" $OUT/pytest_${TS}.log | head -1)
+[ "$tr" = 0 ] && grep -q "cpu_only_guard: CUDA hidden" $OUT/pytest_${TS}.log && ok "lifecycle/preflight/gates/cleanup/guard test suites: $(tail -1 $OUT/pytest_${TS}.log); $guard" || bad "test suites rc $tr: $(tail -1 $OUT/pytest_${TS}.log); ${guard:-guard line missing}"
 # F. discovery clean; registry plan clean
 bash $E1/checks/e1_process_census.sh | sed 's/^/  /'; [ "${PIPESTATUS[0]}" = "0" ] && ok "process discovery: no candidate alive" || bad "process discovery found candidates (see above; review, never kill by pattern)"
 REG=$RUNV1/pids/owned.tsv
 python3 -I $E1/checks/e1_pids.py plan --registry $REG | sed 's/^/  /'; prc=${PIPESTATUS[0]}
 [ "$prc" = 0 ] && ok "registry plan: no owned process alive, no lookalike, no refusal" || bad "registry plan rc $prc (owned/lookalike/refused; see above)"
+# F2. GPU state primitive for gate L6c (nvidia-smi compute-process census + memory state; the controller's timestamps are not accepted alone)
+python3 -I $E1/checks/e1_gpu_release_census.py --label preflight --out $OUT/gpu_census_${TS}.json | sed 's/^/  /'; grc=${PIPESTATUS[0]}
+[ "$grc" = 0 ] && ok "GPU state: no compute process, memory.used within the idle bound on every GPU (census primitive works)" || bad "GPU state census rc $grc (compute process present or GPU memory held; see above)"
 # G. storage and ceilings
 fs=$(df -BG --output=avail /mnt/shared | tail -1 | tr -dc 0-9); [ "$fs" -gt 1000 ] && ok "CephFS free ${fs} GB (> 1000)" || bad "CephFS free ${fs} GB"
 fr=$(df -BG --output=avail /tmp | tail -1 | tr -dc 0-9); [ "$fr" -gt 100 ] && ok "/tmp (stream directory, tray root NVMe) free ${fr} GB (> 100)" || bad "/tmp free ${fr} GB"

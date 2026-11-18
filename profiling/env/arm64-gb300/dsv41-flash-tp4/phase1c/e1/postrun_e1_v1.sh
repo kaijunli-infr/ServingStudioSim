@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Post-run CPU acceptance for the V1 pass (packet §7, §9): scientific checkers (completeness v2, Phase 1A extract, nsys validation,
 # configuration identity of the launch record vs the accepted e1_nsys_val run) and the lifecycle gates (idempotence, phase order,
-# report completeness, preserved stream + offline recovery proof, no signal to the importer, GPU-held within the ceiling, control
-# probe recorded). ANY FAIL → STOP (exit 1): no advance to V2. Read-only on the run directory except the derived files it writes
+# report completeness, byte-complete preserved stream + offline recovery proof with the in-session counts, no signal to the importer,
+# GPU-held within the ceiling and released per an independent nvidia-smi census, control probe recorded). ANY FAIL → STOP (exit 1): no advance to V2. Read-only on the run directory except the derived files it writes
 # under <run root>/cpu. Run on any rack-10 tray as dc:
 #   E1_REPO=$S/wt-lifecycle bash $E1/postrun_e1_v1.sh
 set -u
@@ -15,6 +15,7 @@ TAB=$S/phase1a-tables/$PASS
 PY=$S/gb300/venv/bin/python
 AR15=$S/artifacts/phase1c-e1-stage15-dsv41-flash-gb300-tp4-20261115/run/e1_nsys_val
 IMPORTER=$(ls /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter 2>/dev/null | head -1)
+NSYS=$(ls /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys 2>/dev/null | head -1)   # same install as the importer (pinned)
 cd $REPO && source $S/scripts/env.sh && source profiling/env/arm64-gb300/gb300.env
 echo "# postrun $PASS $(date -u +%FT%TZ) on $(hostname)"
 grep -a "rc=\|EngineDeadError-family\|stop timeline" $RUN/$PASS/run.log | tail -3
@@ -49,8 +50,10 @@ uv run --no-sync python -m alignment.profiler.preflight --config $RUN/$PASS/prof
 rp=$(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print(0 if all(c['status']!='FAIL' for c in d['checks'] if c['name'].startswith('recipe.')) else 1)" $CPU/identity_postrun_$PASS.json 2>/dev/null || echo 1)
 grep -E "recipe\." $CPU/identity_postrun_$PASS.txt; echo "recipe rc=$rp"
 
-echo "## 6. lifecycle gates (+ offline recovery proof from the preserved stream)"
-python3 -I $E1/checks/e1_lifecycle_gates.py --run $RUN/$PASS --inputs $E1/E1-V1-INPUTS.json ${IMPORTER:+--importer $IMPORTER} --scratch $CPU/recovery_$PASS \
+echo "## 6. lifecycle gates (+ offline recovery proof: import, sqlite export, in-session counts; + independent GPU-release census)"
+[ "$(hostname)" = "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1])).get('host',''))" $PROF/nsys/lifecycle.json 2>/dev/null)" ] \
+  && python3 -I $E1/checks/e1_gpu_release_census.py --label postrun --out $RUN/$PASS/gpu_release_census_postrun.json
+python3 -I $E1/checks/e1_lifecycle_gates.py --run $RUN/$PASS --inputs $E1/E1-V1-INPUTS.json ${IMPORTER:+--importer $IMPORTER} ${NSYS:+--nsys $NSYS} --scratch $CPU/recovery_$PASS \
   --extra completeness_v2=$v2 --extra extract=$ex --extra nsys_validation=$nv --extra config_identity=$ci --extra recipe=$rp --out $CPU/V1-GATES.json | tee $CPU/V1-GATES.txt; lg=${PIPESTATUS[0]}
 echo "## verdict"
 if [ $lg = 0 ]; then

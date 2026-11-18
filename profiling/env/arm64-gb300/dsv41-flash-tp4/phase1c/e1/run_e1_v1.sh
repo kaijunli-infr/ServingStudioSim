@@ -30,6 +30,8 @@ echo "[$PASS] start $(date -u +%FT%TZ) on $(hostname) launcher_tree=$REPO repo=$
 uv run --no-sync python -m launcher alignment profile "$RUN/$PASS/profile.json" 2>&1 | tee -a $RUN/$PASS/run.log
 rc=${PIPESTATUS[0]}
 echo "[$PASS] rc=$rc end $(date -u +%FT%TZ)" | tee -a $RUN/$PASS/run.log
+# independent GPU-release verification (gate L6c): nvidia-smi compute-process census + memory state, outside the controller
+python3 -I $E1/checks/e1_gpu_release_census.py --registry $REG --label t0 --out $RUN/$PASS/gpu_release_census_t0.json | tee -a $RUN/$PASS/run.log
 LC=$RUN/$PASS/profile/nsys/lifecycle.json
 [ -f $LC ] && python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print('[lifecycle] phase', d['phase'], '| http', d['http'], '| stream', d['stream'], '| report', d['report'], '| gpu', d['gpu'], '| escalations', len(d['escalations']), '| control', [(c['command'],c['result']) for c in d['control_commands']], '| actions', [(a.get('pid'),a.get('action'),a.get('reason')) for a in d['actions']], '| warnings', [w['message'] for w in d['warnings']])" $LC | tee -a $RUN/$PASS/run.log
 for f in $(grep -ao "Using FlashInfer autotune cache file: [^ ]*" $RUN/$PASS/profile/vllm/*_server.log 2>/dev/null | awk '{print $NF}' | sort -u); do
@@ -44,5 +46,6 @@ if [ -n "$SL" ]; then
   echo "[$PASS] stop timeline: $(grep -ao "[0-9:]* \[api_router.py:31\] Stopping profiler" "$SL" | head -1) → $(grep -ao "[0-9:]* \[api_router.py:33\] Profiler stopped" "$SL" | head -1); $(grep -ao "Generating '[^']*'" "$SL" | head -1)" | tee -a $RUN/$PASS/run.log
 fi
 sleep 20
+python3 -I $E1/checks/e1_gpu_release_census.py --registry $REG --label t20 --out $RUN/$PASS/gpu_release_census_t20.json | tee -a $RUN/$PASS/run.log
 E1_PID_REGISTRY=$REG bash $E1/checks/e1_process_census.sh 2>&1 | grep -v "tmux sessions" | tee -a $RUN/$PASS/run.log
 exit $rc
