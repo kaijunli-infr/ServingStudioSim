@@ -1,0 +1,748 @@
+.......................................................................s [  1%]
+s..................................................................ss... [  2%]
+...............................................................ss....... [  4%]
+...........................................................ss........... [  5%]
+.......................................................ss............... [  6%]
+...................................................ss................... [  8%]
+...............................................ss....................... [  9%]
+...........................................ss........................... [ 11%]
+.......................................ss.sss........................... [ 12%]
+...................................ss................................... [ 13%]
+...............................ss....................................... [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+.....................................................................s.. [ 20%]
+........................................................................ [ 22%]
+.......................................s................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+........................................................................ [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+.........................................................s.............. [ 46%]
+..................................s..................................... [ 48%]
+........................................................................ [ 49%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 53%]
+..........F............................................................. [ 55%]
+........................................................................ [ 56%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+...................................................................ss... [ 64%]
+.....................................ssssss............................. [ 66%]
+....s............................................................F..FFF. [ 67%]
+...................s.........s.......................................... [ 68%]
+........................................................................ [ 70%]
+..................................................s...................s. [ 71%]
+....s...........s......................................F........s....... [ 72%]
+........................................................................ [ 74%]
+..ss.................................................................... [ 75%]
+........................................................................ [ 77%]
+...................................................s.................... [ 78%]
+.....s..............................................................s... [ 79%]
+........................................................................ [ 81%]
+........................................................................ [ 82%]
+........................................................................ [ 83%]
+........................................................................ [ 85%]
+........................................................................ [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 89%]
+........................................................................ [ 90%]
+..........................................s............................. [ 92%]
+..................................................................sssss. [ 93%]
+..............................ssssss.................................... [ 94%]
+sssssssss......ss....................................................... [ 96%]
+........................................................................ [ 97%]
+........................................................................ [ 99%]
+..................sssss............................                      [100%]
+=================================== FAILURES ===================================
+_ test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint __
+
+    def test_recurrent_verify_matches_sequential_decode_and_writes_every_checkpoint() -> None:
+        # Catches reading the wrong source checkpoint or skipping per-token writes.
+        batch, per_request = 3, 4
+        ops = _recurrence(batch, per_request)
+        query, key, value = ops.semantic_qkv()
+        a, b = ops.a.contiguous(), ops.b.contiguous()
+        pool = ops.state.clone()
+        output, pool = gdn_recurrent_spec_decode_reference(
+            query, key, value, a, b, ops.A_log, ops.dt_bias, pool, ops.state_indices, ops.num_accepted
+        )
+        for request in range(batch):
+            source = int(ops.state_indices[request, int(ops.num_accepted[request]) - 1])
+            running = ops.state[source].transpose(-1, -2).unsqueeze(0).contiguous()
+            for token in range(per_request):
+                row = slice(request * per_request + token, request * per_request + token + 1)
+                expected, running = gdn_recurrent_decode_reference(
+                    query[row], key[row], value[row], a[row], b[row], ops.A_log, ops.dt_bias, running
+                )
+                assert torch.equal(output[row], expected)
+                slot = int(ops.state_indices[request, token])
+>               assert torch.equal(pool[slot], running[0].transpose(-1, -2))
+E               assert False
+E                +  where False = <built-in method equal of type object at 0xf60dd8afc420>(tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]), tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]))
+E                +    where <built-in method equal of type object at 0xf60dd8afc420> = torch.equal
+E                +    and   tensor([[[ 7.7035e-03, -6.9082e-03,  3.4742e-03, -9.4850e-03,  1.7973e-03,\n          -1.4208e-03,  2.3898e-03, -1.1553...  [-6.6395e-02, -7.0079e-02,  1.1342e-01,  2.7417e-02, -4.0250e-02,\n          -2.5633e-02, -1.0778e-02, -8.2713e-02]]]) = <built-in method transpose of Tensor object at 0xf60d51482cb0>(-1, -2)
+E                +      where <built-in method transpose of Tensor object at 0xf60d51482cb0> = tensor([[[ 7.7035e-03, -4.7921e-03, -1.4167e-02,  1.3195e-01,  2.8875e-02,\n          -3.8556e-02,  1.0848e-02,  3.5974...  [-8.4845e-02,  2.1933e-03, -1.7471e-03,  7.5049e-02,  9.0758e-03,\n           7.6630e-03, -4.8364e-02, -8.2713e-02]]]).transpose
+
+tests/test_gdn_spec_decode.py:117: AssertionError
+__________________ test_energy_perf_uses_total_energy_counter __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf60d51854ec0>
+
+    def test_energy_perf_uses_total_energy_counter(monkeypatch: pytest.MonkeyPatch):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        class FakeCuda:
+            sync_calls = 0
+    
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                FakeCuda.sync_calls += 1
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_reads = [777, 1000, 1300]
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-counter"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                return self.total_energy_reads.pop(0)
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(lambda *_, **__: 3))
+        monkeypatch.setattr(energy_mod.time, "perf_counter", iter([0.0, 1.0]).__next__)
+    
+>       assert Energy.perf(fn, warmup=0, min_duration_ms=1000) == pytest.approx(0.1)
+E       assert 0.0 == 0.1 ± 1.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 0.1 ± 1.0e-07
+
+tests/test_l1_single_gemm.py:333: AssertionError
+___________ test_energy_perf_uses_passed_timing_for_iteration_count ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf60d51855760>
+
+    def test_energy_perf_uses_passed_timing_for_iteration_count(
+        monkeypatch: pytest.MonkeyPatch,
+    ):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        class FakeCuda:
+            sync_calls = 0
+    
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                FakeCuda.sync_calls += 1
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_reads = [777, 1000, 1400]
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-passed-timing"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                return self.total_energy_reads.pop(0)
+    
+        def unexpected_estimate(*args: object, **kwargs: object) -> int:
+            del args, kwargs
+            raise AssertionError("passed timing must bypass Energy._estimate_iters")
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(unexpected_estimate))
+        monkeypatch.setattr(energy_mod.time, "perf_counter", iter([0.0, 1.0]).__next__)
+    
+>       assert Energy.perf(
+            fn,
+            warmup=0,
+            min_duration_ms=1000,
+            per_iter_time_ms=250.0,
+        ) == pytest.approx(0.1)
+E       assert 0.0 == 0.1 ± 1.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 0.1 ± 1.0e-07
+
+tests/test_l1_single_gemm.py:532: AssertionError
+_______ test_energy_window_restarts_cleanly_when_planned_iters_are_short _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf60d518568a0>
+
+    def test_energy_window_restarts_cleanly_when_planned_iters_are_short(
+        monkeypatch: pytest.MonkeyPatch,
+    ):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        perf_counter_values = iter([0.0, 0.4, 10.0, 11.1])
+        monkeypatch.setattr(energy_mod.time, "perf_counter", lambda: next(perf_counter_values))
+    
+        class FakeCuda:
+            sync_calls = 0
+    
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                FakeCuda.sync_calls += 1
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_reads = [777, 1000, 1040, 2000, 3000]
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-clean-restart"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                return self.total_energy_reads.pop(0)
+    
+        def unexpected_estimate(*args: object, **kwargs: object) -> int:
+            del args, kwargs
+            raise AssertionError("passed timing must bypass Energy._estimate_iters")
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(unexpected_estimate))
+    
+>       assert Energy.perf(
+            fn,
+            warmup=0,
+            min_duration_ms=1000,
+            per_iter_time_ms=250.0,
+        ) == pytest.approx(0.1)
+E       assert 0.0 == 0.1 ± 1.0e-07
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 0.1 ± 1.0e-07
+
+tests/test_l1_single_gemm.py:615: AssertionError
+_________________ test_energy_perf_falls_back_to_power_polling _________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf60d51854590>
+
+    def test_energy_perf_falls_back_to_power_polling(monkeypatch: pytest.MonkeyPatch):
+        from profiling.profilers import energy as energy_mod
+        from profiling.profilers.energy import Energy
+    
+        # The window is opt-in; this test is about what it does once opened.
+        monkeypatch.setenv(energy_mod.ENERGY_ENV, "1")
+        energy_mod._TOTAL_ENERGY_SUPPORTED_BY_GPU.clear()
+    
+        class FakeCuda:
+            @staticmethod
+            def is_available() -> bool:
+                return True
+    
+            @staticmethod
+            def current_device() -> int:
+                return 0
+    
+            @staticmethod
+            def synchronize() -> None:
+                pass
+    
+        class FakeTorch:
+            cuda = FakeCuda
+    
+        class FakeNVMLError(Exception):
+            def __init__(self, value: int):
+                super().__init__(value)
+                self.value = value
+    
+        class FakePynvml:
+            NVML_ERROR_NOT_SUPPORTED = 999
+            NVMLError = FakeNVMLError
+    
+            def __init__(self) -> None:
+                self.total_energy_calls = 0
+    
+            def nvmlInit(self) -> None:
+                pass
+    
+            def nvmlDeviceGetHandleByIndex(self, device_idx: int) -> str:
+                assert device_idx == 0
+                return "handle"
+    
+            def nvmlDeviceGetUUID(self, handle: str) -> str:
+                assert handle == "handle"
+                return "GPU-polling"
+    
+            def nvmlDeviceGetTotalEnergyConsumption(self, handle: str) -> int:
+                assert handle == "handle"
+                self.total_energy_calls += 1
+                raise FakeNVMLError(self.NVML_ERROR_NOT_SUPPORTED)
+    
+        class FakePoller:
+            def __init__(self, pynvml: object, handle: object, *, poll_hz: int) -> None:
+                assert pynvml is fake_pynvml
+                assert handle == "handle"
+                assert poll_hz == 100
+                self.avg_watts = 50.0
+                self.elapsed_s = 2.0
+                self.error = None
+    
+            def __enter__(self) -> FakePoller:
+                return self
+    
+            def __exit__(self, *args: object) -> None:
+                pass
+    
+        fake_pynvml = FakePynvml()
+        fn_calls = 0
+    
+        def fn() -> None:
+            nonlocal fn_calls
+            fn_calls += 1
+    
+        monkeypatch.setitem(sys.modules, "pynvml", fake_pynvml)
+        monkeypatch.setitem(sys.modules, "torch", FakeTorch)
+        monkeypatch.setattr(Energy, "_estimate_iters", staticmethod(lambda *_, **__: 4))
+        monkeypatch.setattr(energy_mod, "_NvmlPoller", FakePoller)
+    
+>       assert Energy.perf(fn, warmup=0, min_duration_ms=1000) == pytest.approx(25.0)
+E       assert 0.0 == 25.0 ± 2.5e-05
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 25.0 ± 2.5e-05
+
+tests/test_l1_single_gemm.py:706: AssertionError
+_________ test_emit_backends_hands_the_builder_a_path_not_a_reference __________
+
+hub = []
+tmp_path = PosixPath('/tmp/pytest-of-dc/pytest-66/test_emit_backends_hands_the_b0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xf60d42057140>
+
+    def test_emit_backends_hands_the_builder_a_path_not_a_reference(hub, tmp_path, monkeypatch):
+        """Every entry that reaches the binary resolves references, not only a run."""
+        import launcher.backends as backends_module
+        from launcher.__main__ import main as launcher_main
+    
+        seen = []
+    
+        def fake_emit_roles(configs, _build_type):
+            seen.extend(configs)
+            return {}
+    
+        monkeypatch.setattr(backends_module, "emit_roles", fake_emit_roles)
+        monkeypatch.setattr(backends_module, "render_skeleton", lambda *_: "")
+    
+>       assert launcher_main(["--emit-backends", "-", str(_corpus_preset(tmp_path))]) == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_launcher_corpus.py:157: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+launcher/__main__.py:555: in main
+    return dispatch(list(sys.argv[1:] if argv is None else argv), simulation=run_simulation)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/cli.py:239: in dispatch
+    return simulation(rest)
+           ^^^^^^^^^^^^^^^^
+launcher/__main__.py:713: in run_simulation
+    return _emit_backends(args, _built_schema(args))
+                                ^^^^^^^^^^^^^^^^^^^
+launcher/__main__.py:577: in _built_schema
+    if not cargo_build(args.build_type, build_analyzer=not args.no_analyze):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/exec.py:244: in cargo_build
+    build_result = _PROCESS_SUPERVISOR.run_sync(
+launcher/process/supervisor.py:78: in run_sync
+    process = self._spawn(spec, stdin_stream, stdout_stream, stderr_stream)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+launcher/process/supervisor.py:148: in _spawn
+    return subprocess.Popen(
+../../../.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['cargo', 'build', '--release']>
+args = ['cargo', 'build', '--release'], executable = b'cargo', preexec_fn = None
+close_fds = True, pass_fds = ()
+cwd = PosixPath('/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle')
+env = {'CUDA_CACHE_PATH': '/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute', 'CUDA_HOME': '/usr/local/cuda-13.1', 'CUDA_VISIBLE_DEVICES': '', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', ...}
+startupinfo = None, creationflags = 0, shell = False, p2cread = 43
+p2cwrite = -1, c2pread = -1, c2pwrite = -1, errread = -1, errwrite = -1
+restore_signals = True, gid = None, gids = None, uid = None, umask = -1
+start_new_session = True, process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                if err_msg == "noexec:chdir":
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                elif err_msg == "noexec":
+                    err_msg = ""
+                    err_filename = None
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+                if err_filename is not None:
+>                   raise child_exception_type(errno_num, err_msg, err_filename)
+E                   FileNotFoundError: [Errno 2] No such file or directory: 'cargo'
+
+../../../.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/lib/python3.12/subprocess.py:1955: FileNotFoundError
+=============================== warnings summary ===============================
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/blockscaled_contiguous_gather_grouped_gemm_swiglu_fusion.py:3032: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2060: DeprecationWarning: tcgen05.OperandMajorMode is deprecated, use cute.nvgpu.OperandMajorMode instead
+    a_major_mode: tcgen05.OperandMajorMode,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2062: DeprecationWarning: tcgen05.OperandMajorMode is deprecated, use cute.nvgpu.OperandMajorMode instead
+    b_major_mode: tcgen05.OperandMajorMode,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2065: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:95: DeprecationWarning: cutlass.utils.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils import TensorMapManager, TensorMapUpdateMode
+
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+tests/test_autotune_cache.py::test_cache_path_separates_devices_and_library_versions
+  /mnt/shared/home/dc/workspace/serving-studio/gb300/venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:99: DeprecationWarning: tcgen05.OperandMajorMode is deprecated, use cute.nvgpu.OperandMajorMode instead
+    from cutlass.cute.nvgpu.tcgen05 import OperandMajorMode
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+cpu_only_guard: CUDA hidden (CUDA_VISIBLE_DEVICES='' set by the caller); no /dev/nvidia<N> opened; torch.cuda not initialised
+=========================== short test summary info ============================
+SKIPPED [11] tests/test_alignment_campaign.py:1393: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [11] tests/test_alignment_campaign.py:1411: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [3] tests/test_alignment_campaign.py:111: qwen38_27b_nvfp4_b200_tp1: no measured routing artifact (dense arch)
+SKIPPED [1] tests/test_alignment_v1.py:1256: build analyzer first
+SKIPPED [1] tests/test_backend_selection.py:449: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_flashinfer_trtllm_blockscale_grouped_gemm.py:184: no CUDA device
+SKIPPED [1] tests/test_fp8_per_token_group_quant.py:222: CUDA is unavailable
+SKIPPED [2] tests/test_kernel_docs.py:124: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [6] tests/test_l1_cupti.py: no CUDA device
+SKIPPED [1] tests/test_l1_measure.py:621: no CUDA device
+SKIPPED [1] tests/test_l1_single_gemm.py:1329: no CUDA device
+SKIPPED [1] tests/test_l1_single_gemm.py:1615: no CUDA device
+SKIPPED [1] tests/test_l7_launcher.py:1519: simulator not built
+SKIPPED [1] tests/test_l7_launcher.py:1791: simulator not built
+SKIPPED [1] tests/test_l7_launcher.py:1901: simulator not built
+SKIPPED [1] tests/test_l7_launcher.py:2083: simulator not built; run `uv run cargo build` + list-params first
+SKIPPED [1] tests/test_launcher_kv_report.py:108: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [2] tests/test_logits_topk.py:53: no CUDA device
+SKIPPED [1] tests/test_model_work.py:2354: GLM-5.3-Flash checkpoint not present
+SKIPPED [1] tests/test_model_work.py:2991: GLM-5.3-DFlash2 checkpoint not present
+SKIPPED [1] tests/test_model_work.py:4513: Qwen3.8-Flash-Next checkpoint not present
+SKIPPED [1] tests/test_public_api.py:333: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_presets.py:86: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_presets.py:100: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_presets.py:125: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_presets.py:138: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_presets.py:154: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_sim_presets.py:78: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_sim_presets.py:91: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_sim_presets.py:110: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_sim_presets.py:129: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_sim_presets.py:172: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_sim_presets.py:190: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_simulate.py:861: tracegen not built
+SKIPPED [2] tests/test_public_simulate.py:873: tracegen not built
+SKIPPED [6] tests/test_public_simulate.py:903: tracegen not built
+SKIPPED [1] tests/test_public_simulate.py:1015: release simulator not built (uv run cargo build --release -p simulator)
+SKIPPED [1] tests/test_public_simulate.py:1033: tracegen not built
+SKIPPED [4] tests/test_throughput_regression.py: no CUDA device
+SKIPPED [1] tests/test_throughput_regression.py:200: no CUDA device
+6 failed, 5151 passed, 78 skipped, 8 warnings in 99.18s (0:01:39)
+rc=1

@@ -4,7 +4,10 @@ Prepared 2026-11-17 under the GO "CPU-only preparation of a final V1 authorizati
 `phase1c-e1-audit` 9a28358c and `exp/profiler-lifecycle` 56c28ce3). It asks for **one** GPU launch, `e1_v1_lifecycle`, and nothing
 else. Supersedes packet v3 §7 and §10 where they differ (GPU-held limits, V1 recipe details); v3 §1–6, §8–9 and §11–12 stand.
 Companion documents on the audit branch: `E1-AUTHORIZATION-PACKET-v3.md`, `runs/e1_main_v3/E1-MAIN-V3-FAILURE-ANALYSIS.md`.
-Everything below was produced on CPU; the tray's GPUs were read (`nvidia-smi`), never used.
+Everything below was produced on CPU; the tray's GPUs were read (`nvidia-smi`), never used by any V1 script. One
+**unintended** allocation did happen outside the V1 work: the whole test tier, run on tray14 without hiding CUDA, let torch take
+684 MiB on GPU 0 for part of a 2-minute test run (§13 and `runs/v1/cpu/INCIDENT-tray14-fulltier-gpu-allocation.md`). It was not
+a profiling experiment and nothing in this packet derives from it; the CPU-only guard of §13 prevents a repeat.
 
 ## 1. Isolation (GO item 1)
 
@@ -98,9 +101,9 @@ import_progress → stop_returned found in order); the policy (`validate()`, cei
 `lifecycle.control`, the run's `log_dir` absent; `/tmp` free and without own `nsys-report-*.qdstrm` / `*.raw-preserve` leftovers;
 report-dir free space).
 
-CPU preflight result on **pod4-gb300-10-tray16-f3** at **2026-11-17 22:36:33–22:37:25Z** (driver context: tmux `e1v1-*` + tee into the run root, the
-same way the driver runs it): **32 PASS, 0 FAIL (Stage 1/1.5 chain PASS; identity preflight 26 checks, 0 FAIL; 43 tests passed on the tray; discovery CLEAN; registry plan clean)** — log `runs/v1/preflight/preflight_v1_tray16_driver_context_20261117T223725Z.log`, identity record
-`runs/v1/preflight/identity_20261117T223633Z.json`, pytest log `runs/v1/preflight/pytest_20261117T223633Z.log`. Two earlier attempts the same evening are recorded in the final report, not kept as files: 22:30Z 1 FAIL (`config trace path`: the generated config still pointed at the main clone's copy of the trace; fixed by pointing it at this tree's `traces/e1_dry.csv`, same bytes) and 22:34Z 2 FAIL (`launcher tree has uncommitted tracked changes` from that fix before it was committed; the code commit was amended, the pins regenerated). The passing run is on the committed tree ece6dacf.
+CPU preflight results on **pod4-gb300-10-tray16-f3** (driver context: tmux `e1v1-*` + tee into the run root, the same way the driver
+runs it). First packet, 2026-11-17 22:36:33–22:37:25Z: 32 PASS, 0 FAIL — `runs/v1/preflight/preflight_v1_tray16_driver_context_20261117T223725Z.log`, identity record
+`runs/v1/preflight/identity_20261117T223633Z.json`, pytest log `runs/v1/preflight/pytest_20261117T223633Z.log`. **Corrections re-run, 2026-11-18 01:48:03–01:48:59Z, on 9d4abd3f: 36 PASS, 0 FAIL (identity preflight 26 checks, 0 FAIL; 50 tests passed CPU-only with the guard line; GPU census: no compute process, 0 MiB on every GPU; discovery CLEAN; registry plan clean)** — `runs/v1/preflight/preflight_v1_tray16_driver_context_20261118T014859Z.log`, identity record `runs/v1/preflight/identity_20261118T014803Z.json`, pytest log `runs/v1/preflight/pytest_20261118T014803Z.log` (the test step runs through `tests/cpu_only.sh`: CUDA hidden, guard line required), GPU state census `runs/v1/preflight/gpu_census_20261118T014803Z.json`. Two earlier attempts the same evening are recorded in the final report, not kept as files: 22:30Z 1 FAIL (`config trace path`: the generated config still pointed at the main clone's copy of the trace; fixed by pointing it at this tree's `traces/e1_dry.csv`, same bytes) and 22:34Z 2 FAIL (`launcher tree has uncommitted tracked changes` from that fix before it was committed; the code commit was amended, the pins regenerated). The passing run is on the committed tree ece6dacf.
 
 ## 7. Proof requirements (GO item 7) — evaluated by `checks/e1_lifecycle_gates.py` from `lifecycle.json`, any FAIL = STOP
 
@@ -109,9 +112,10 @@ same way the driver runs it): **32 PASS, 0 FAIL (Stage 1/1.5 chain PASS; identit
 | stop-request idempotence | L1 | `http.requests_sent`, `http.duplicate_requests_suppressed`, `http.status` | exactly one POST left the launcher (`requests_sent == 1`); the runner's `finally` path re-requested and was suppressed (`≥ 1`); `status == ok` |
 | phase ordering | L2, L2b | `phase_history[]` (`phase`, `at`), `stop_requested_at` | phases strictly increasing in `stop_requested → stop_accepted → capture_ended → stream_written → importing → report_written`, timestamps monotone, final `report_written` |
 | report completeness | L3, L3b | `report.path/size`, `profile_result.validation.ok/kernel_rows/nvtx_forward_ranges` | non-empty `.nsys-rep`; validation ok; rows in 11.64–12.86 M; NVTX/4 in 2100–2250 (both waves) |
-| preserved-stream recovery | L4, **L10** | `stream.path/size/preserved_path/preserved_size/discovered_by`; offline `QdstrmImporter -i <preserved> -o <scratch>` | hard link made and its size equals the stream's; the offline import of the preserved stream (run by `postrun_e1_v1.sh` **before** anything is deleted) produces a report within ± 1 % of the in-session report's size |
+| preserved-stream recovery | L4, **L10, L10b** | `stream.path/size/preserved_path/preserved_size/discovered_by`, the preserved file on disk (size, sha256); offline `QdstrmImporter -i <preserved> -o <scratch>`, then `nsys export --type sqlite` of the recovered report and the in-session validation queries (`validate_export`) on it | L4: the preserved file exists now, is non-empty, and its on-disk size equals the recorded preserved size and the stream size Nsight finished writing. L10: the offline import (run by `postrun_e1_v1.sh` **before** anything is deleted) produces a non-empty report (its size is recorded, not judged). **L10b**: the recovered report, exported to sqlite with the pinned `nsys`, has **exactly** the in-session kernel-row count and NVTX forward-range count, NVTX/4 inside the iteration band, and a kernel span within 0.1 % of the in-session value. A stream that is not byte-complete fails L4 and the proof is not attempted (STOP). |
 | no destructive signal to the importer | L5, L5b | `actions[]` (pid, action, reason, at), `nsys.pid`, `server.api_server` | the only signals are `SIGTERM` (reason `shutdown`) to the identity-verified API server after `report_written`; none to the nsys pid before the report |
 | GPU-held / finalisation bounds | L6, L6b | `launch_started_at`, `gpu.released_at`, `stop_requested_at`, `report.written_at`, `policy` | held ≤ 2700 s; stop → report ≤ 600 s |
+| GPU release verified independently | **L6c** | `<run>/gpu_release_census_t0.json`, `_t20.json` (and `_postrun.json`): `nvidia-smi --query-compute-apps` and `--query-gpu=memory.used` taken by the driver (`checks/e1_gpu_release_census.py`) right after the launcher exits and 20 s later, each compute pid resolved against `/proc` | the latest census says released: **no compute process on any GPU and memory.used ≤ 64 MiB on every GPU**, its own timestamp is at or after the controller's `gpu.released_at`, and its host is the run's host. The controller's timestamp alone never passes this gate. |
 | control file | L7, L8c | `control_commands[]`, `deadlines.hard_extension_s` | exactly the two probe lines, both accepted; `hard_extension_s` equals the sum of accepted `extend`s (60) |
 | no escalation, clean warnings, session closed | L8, L8b, L9 | `escalations[]`, `warnings[]`, `nsys.alive`, `server.alive`, `session_closed_at` | empty; no hard-link or descendant warning; nsys and server gone |
 | scientific gates (unchanged thresholds) | S.* | exit codes of `e1_completeness_v2.py --plan dry`, `costmodel.extract`, `e1_nsys_validation.py`, `e1_config_identity.py` (launch record vs accepted run), recipe check on the launch record | all 0 |
@@ -188,7 +192,7 @@ Decision for this packet and for any future full retry (not requested here):
    controller acts on its own bounds; the operator intervenes only through `lifecycle.control` (`release-gpus <reason>`) or, outside
    the controller, through the registry (`e1_pids.py cleanup --execute`), never by pattern.
 5. **Closeout** (tray16): `bash $E1/closeout_e1_v1.sh` → CLEAN; then delete the pod (laptop).
-6. **Post-run** (any tray, CPU): `E1_REPO=$S/wt-lifecycle bash $E1/postrun_e1_v1.sh` → PASS or STOP (§9); only after PASS the
+6. **Post-run** (any tray, CPU; on the capture tray it also takes a `_postrun` GPU census): `E1_REPO=$S/wt-lifecycle bash $E1/postrun_e1_v1.sh` → PASS or STOP (§9); only after PASS the
    operator removes `/tmp/<name>.raw-preserve/`; archive the run directory with `SHA256SUMS` (≤ 5 GB) and record the result on the
    branch.
 7. **Recovery** (`stop_failed`, dead launcher, or a preserved stream without a report): `python -m launcher alignment profile
@@ -202,3 +206,32 @@ integration, profiling-database writes, preset changes. Open until V1/V2 run: hy
 blocked in `cudaProfilerStop` until the import completes; Nsight's target in its own process group; the 09:58:47 SIGTERM source).
 V1 proves the controller's observable behaviour, the probe path and the recipe invariance on a small capture; it does not prove
 what a release during `importing` does to a large trace (that is V2, with its own GO and packet addendum).
+
+## 13. Corrections of the review of 2026-11-17 (GO "Final CPU-only V1 readiness corrections"; code commit 9d4abd3f)
+
+1. **Unintended GPU allocation documented** — `runs/v1/cpu/INCIDENT-tray14-fulltier-gpu-allocation.md`: during the whole-tier test
+   run on tray14 (20:41–20:43Z, pid 1736374 = the pytest process, 684 MiB on GPU 0) torch used a GPU because the tier logic un-skips
+   the `gpu` tier when a device is visible and the run did not hide the devices. It was a test run, not a profiling experiment
+   (no Nsight, no server, no trace, no V1 script), it was not authorized, and nothing in this packet derives from it.
+2. **CPU-only execution cannot initialise CUDA** — `tests/cpu_only_guard.py` (pytest plugin: hides the devices before torch is
+   imported; fails the session with exit 3 if the pytest process opened a `/dev/nvidia<N>` node or `torch.cuda` is initialised; one
+   summary line always) and `tests/cpu_only.sh` (the isolated command). `preflight_e1_v1.sh` E runs the suites only through it and
+   requires the guard line; the launcher dry-run in B runs with `CUDA_VISIBLE_DEVICES=""`. `tests/test_cpu_only_guard.py` (4 tests).
+   Whole tier re-run through the guard: `runs/v1/cpu/pytest_fullsuite_cpu_only_tray14_20261118T0137Z.log` — 5151 passed, 78 skipped, 6 failed; guard: no device node opened, 0 MiB on every GPU; the failures are the cargo-dependent launcher_corpus test, the gdn numerical test and four test_l1_single_gemm energy tests that fail the same way CPU-only on the untouched audit worktree 9a28358c.
+3. **L4/L10 semantic** — L4 now requires the preserved stream to be on disk, non-empty and byte-complete (on-disk size = recorded
+   preserved size = stream size) and records its sha256; L10 imports it offline and **L10b** exports the recovered report to sqlite
+   with the pinned `nsys` and requires exactly the in-session kernel-row and NVTX forward-range counts, NVTX/4 in the iteration band
+   and the kernel span within 0.1 %. Size is informational. Missing `--nsys` is a FAIL, not a pass. Tests: fake importer + fake
+   `nsys export` with scaled-down row counts (equal → PASS; 25 fewer kernels or 4 fewer ranges → FAIL; truncated stream → L4 FAIL and
+   no proof).
+4. **Independent GPU-release verification** — `checks/e1_gpu_release_census.py` (stdlib; `nvidia-smi` compute-apps + per-GPU
+   memory.used, each pid resolved against `/proc`, verdict `released`), run by the driver right after the launcher exits (`t0`) and
+   20 s later (`t20`), by the post-run on the capture tray (`postrun`), and by the preflight as a primitive check (F2). Gate **L6c**
+   fails without a census, with a compute process or held memory, with a sample older than the controller's `gpu.released_at`, or
+   from another host.
+5. **Pins** — executable code and gates changed, so the code commit is new (9d4abd3f; `alignment` and `launcher` trees unchanged:
+   b2be218b, 5a1b662f), `SCRIPTS_v1.sha256` re-generated (30 files), `V1-PIN.json` re-pinned on tray16 with the three new test-tree
+   keys, `preflight_e1_v1.sh` C compares them. The frozen workload and the profiling recipe are untouched (`configs_v1/…/profile.json`
+   sha 5461ff34…, INPUTS_v1.sha256 unchanged).
+6. **Re-runs** — targeted suites CPU-only: 50 passed in 26.65s (guard: no device node opened); driver-context preflight on tray16: see §6.
+7. Committed and pushed on `exp/profiler-lifecycle` only. No GPU execution.
