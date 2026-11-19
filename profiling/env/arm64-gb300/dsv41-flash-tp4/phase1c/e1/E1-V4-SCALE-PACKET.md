@@ -1,10 +1,11 @@
 # E1 V4 — intermediate lifecycle-scale validation (≈ 49 M kernel rows): PROPOSED packet
 
-**Status: PROPOSED. Prepared CPU-only under the review decision of 2026-11-19 on `598d4a2d`. Not approved, not frozen,
-not launched. V4 GPU execution: NO GO.** The manifests named here (`SCRIPTS_v4scale.sha256`, `INPUTS_v4scale.sha256`,
+**Status: PROPOSED, revision 2. Prepared CPU-only under the review decisions of 2026-11-19 on `598d4a2d` and on `39561325`
+(two required corrections: preflight memory, reservation budget; §13). Not approved, not frozen, not launched. V4 GPU
+execution: NO GO.** The manifests named here (`SCRIPTS_v4scale.sha256`, `INPUTS_v4scale.sha256`,
 `V4S-PIN.json`, `V4S-PIN-identities.json`, `FREEZE_v4scale.sha256`) exist so that a review can see exactly what would be
 frozen; the freeze takes effect only if a review approves it, and any change after that needs a new one. Preparation evidence:
-`runs/v4scale/prep/E1-V4-PREP-REPORT.md`.
+`runs/v4scale/prep/E1-V4-PREP-REPORT.md` (revision 1) and `runs/v4scale/prep2/E1-V4-CORRECTION-REPORT.md` (revision 2).
 
 Standing record, unchanged: original V3 verdict FAIL / STOP under its frozen gates; retrospective V3 evidence assessment PASS,
 qualified, post hoc.
@@ -56,15 +57,16 @@ points, stress case in brackets. Two controlled points are not a validated scali
 | session close after the server SIGTERM | ≈ 3 s | 300 s | controller; G4, G10 |
 | GPU release, upper edge after the server SIGTERM | ≤ 3 s | 90 s | G6 |
 | GPU-held from the launcher start | 2092 – 2275 s (2311) | 2700 s | supervisor before the stop request, controller after it; G10 |
-| reservation | 72 – 81 min | 90 min | driver (launch ≤ 600 s after creation), supervisor guard at 4680 s, operator budget 720 s; G10 |
+| reservation | 70 – 80 min | 90 min | driver launch rule (4680 s − age ≥ run budget 4210 s, so age ≤ 470 s), supervisor guard at 4680 s, operator budget 720 s; G10 |
+| CPU-only processing under the reservation (release → stop file) | 1241 – 1247 s (1381) | 1400 s in the run budget; absolute end at reservation age 4680 s | launch rule; supervisor guard |
 | importer peak memory | 28 – 31 GiB (35) | 128 GiB | memory sampler → supervisor; G11 |
-| host MemAvailable | ≈ 530 GiB minimum | preflight ≥ 448 GiB (retained); floor 64 GiB | preflight; memory sampler → supervisor; G11 |
+| host MemAvailable | ≈ 530 GiB minimum | preflight ≥ 488 GiB = 128 + 64 + 296 (exact, in kB); runtime floor 64 GiB | preflight (`checks/e1_preflight_memory.py`); memory sampler → supervisor; G11 |
 | temporary storage | 10.4 – 10.5 GB (11.4) | 15 GB | storage sampler → supervisor (run), post-run sampler; G11 |
 | run directory | 12.6 GB (14.0) | 18 GB | storage sampler → supervisor; G11 |
 | run directory + archive | 26.5 GB (29.5) | 38 GB | `checks/e1_archive_size.py` in the archive script |
 
 Timeline, worst case, behaviour without a stop request and with a failed monitor, and the compatibility of these limits:
-`E1-V4-TIMELINE.md`. Two findings there need a decision (§12).
+`E1-V4-TIMELINE.md` (revision 2: clock definitions, launch rule, remaining findings).
 
 ## 5. Observers and supervisor (existing mechanisms; one addition)
 
@@ -122,9 +124,10 @@ No retry, no advance, on anything but PASS. A run with a supervisor response or 
 
 ## 8. Reservation lifecycle
 
-Default and only authorized sequence: reservation pod created and Running → operator pre-launch checks → driver (launch refused
-later than 600 s after the pod's creation) → run → closeout CLEAN → reservation deleted immediately → post-run → archive. The
-supervisor ends a run that has not ended 4680 s after the pod's creation. Early deletion after a verified GPU release is
+Default and only authorized sequence: reservation pod created and Running → operator pre-launch checks → driver (launch refused,
+before anything is started, unless 4680 s minus the pod's age is at least the run budget of 4210 s) → run → closeout CLEAN →
+reservation deleted immediately, at the latest 5400 s after its creation (closeout and monitor print the deadline) → post-run →
+archive. The supervisor ends a run that has not ended 4680 s after the pod's creation. Early deletion after a verified GPU release is
 designed and CPU-tested but **not enabled** (`E1-V4-RESERVATION-RELEASE-DESIGN.md`).
 
 ## 9. STOP rules (as V3)
@@ -140,28 +143,45 @@ removed on any path.
 Each was produced from its V3 counterpart by a fixed renaming plus listed edits; the directory holds one diff per file showing
 only those edits. The V3 files are not modified (their manifests verify). Differences that are not renamings or new limits:
 
-1. the driver refuses a launch later than 600 s after the reservation's creation;
+1. the driver applies the launch rule of `E1-V4-TIMELINE.md` §2 before it starts anything (exit 7 on refusal);
 2. the supervisor is the V4 wrapper with the reservation guard;
 3. the memory and storage samplers and the supervisor run for up to 5400 s instead of 3400 s (the export after the release
    takes about 20 min at this size; with 3400 s the samplers would end first and the supervisor would abort a healthy run);
 4. the post-run's identity step is the V4 checker and policy, and the gates receive the completeness record;
-5. the preflight regenerates the inputs (`--check`), runs the identity rehearsal on the actual V4 config, and checks the
-   reservation budget's arithmetic;
-6. the archive script measures run root + archive with `checks/e1_archive_size.py` (38 GB).
+5. the preflight regenerates the inputs (`--check`), runs the identity rehearsal on the actual V4 config, checks the
+   reservation budget's arithmetic, and checks host memory exactly (kB) against 488 GiB with five boundary fixtures;
+6. the archive script measures run root + archive with `checks/e1_archive_size.py` (38 GB);
+7. closeout and monitor print the reservation's deletion deadline (information only; closeout's result is not affected).
+
+Revision 2 derivation: `runs/v4scale/prep2/derivation/` (one diff per file against the frozen V3 original, all edits of both
+revisions).
 
 ## 11. Preparation evidence required before a freeze could be approved (`runs/v4scale/prep/`)
 
 Guarded CPU-only tests; the identity rehearsal on the actual V4 config; the complete V4 post-run on the V4-shaped run directory
-with registered expectations; the synthetic fixture matrix (117 fixtures: 3 positive, 6 boundary, 108 negative; every ceiling
-and deadline at its boundary); the eight-wave completeness fixtures; the mocked end-to-end rehearsal (five scenarios, including
-the reservation guard); the preflight on the capture tray. Every attempt, including failed ones, is kept.
+with registered expectations; the synthetic fixture matrix (118 fixtures: 3 positive, 6 boundary, 109 negative; every ceiling
+and deadline at its boundary); the eight-wave completeness fixtures; the mocked end-to-end rehearsal (thirteen scenarios: the
+five of revision 1 and eight for the launch rule, the GPU-held ceiling, the guard near completion and during the export, a
+simultaneous breach, and a lost sampler or supervisor); the preflight on the capture tray. Every attempt, including failed ones,
+is kept (`runs/v4scale/prep/`, `runs/v4scale/prep2/`).
 
 ## 12. Open decisions for review
 
-1. Approval of the freeze as proposed, or changes.
-2. Preflight host-memory minimum: retained at 448 GiB; with the server footprint measured in V3 (285 – 295 GiB) the consistent
-   value would be 488 GiB (`E1-V4-TIMELINE.md` §6). Not changed.
-3. The reservation corner: latest launch and a ceiling-long GPU hold together cannot finish inside 90 min under the existing
-   lifecycle; the guard ends the export. Accept, tighten the launch limit, or enable early release.
-4. The reservation guard itself (new enforcement) and its value, 4680 s.
-5. Whether the early reservation release should be developed further (it needs gate changes; not part of this packet).
+1. Approval of the freeze as proposed in revision 2, or changes.
+2. The remaining findings of `E1-V4-TIMELINE.md` §7: the 0.8 GiB margin of the 488 GiB minimum over the V3 measurement and the
+   unmeasured growth over V4's longer capture; the supervisor's single response; the 470 s launch window; the operator-dependent
+   closeout budget.
+3. Whether the early reservation release should be developed further (it needs gate changes; not part of this packet; not
+   enabled).
+
+## 13. Revision 2 (review decision of 2026-11-19 on `39561325`)
+
+| item | revision 1 | revision 2 |
+|---|---|---|
+| preflight host MemAvailable | ≥ 448 GiB, whole GiB | ≥ 488 GiB = importer ceiling 128 + runtime floor 64 + 296 for the run (V3 measured 295.2 at the stop request); exact in kB; fixtures at 487, 488 − 1 kB, 488, 488 + 1 kB, 489 GiB |
+| runtime floor, importer ceiling, breach responses | 64 GiB, 128 GiB, sampler → supervisor | unchanged |
+| launch rule | age ≤ 600 s | 4680 − age ≥ 4210 = 20 + 2700 + 90 + 1400 (age ≤ 470 s); refusal before anything is started |
+| CPU-only processing before the deletion | not bounded explicitly | 1400 s in the run budget (stress prediction 1360 + 40 s tail); absolute end at the guard |
+| reservation limit, guard, closeout budget | 90 min, 4680 s, 720 s | unchanged |
+| trace, config, expected size, controller, deadlines, GPU-held and storage ceilings, identity policy rules, gates | — | unchanged (trace and config byte-identical; the identity policy file changes only in the pinned hash of `E1-V4-SCALE-INPUTS.json`) |
+| early reservation deletion | not enabled | not enabled |
