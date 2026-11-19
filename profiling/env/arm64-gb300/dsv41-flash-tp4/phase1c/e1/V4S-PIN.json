@@ -1,9 +1,9 @@
 {
  "pass": "e1_v4_scale",
- "pinned_at": "2026-11-19T16:40:10Z",
+ "pinned_at": "2026-11-19T18:35:36Z",
  "host": "pod4-gb300-10-tray16-f3",
  "code": {
-  "commit": "1027270438fd3d3a98b58508487fd8c458ccf5c3",
+  "commit": "35ddd280e51bb1b788c5430db6746524ae4b6930",
   "branch": "exp/profiler-lifecycle",
   "tree": {
    "alignment": "7b4df784a5b6daff7c792e81cbc6503ba2c806ec",

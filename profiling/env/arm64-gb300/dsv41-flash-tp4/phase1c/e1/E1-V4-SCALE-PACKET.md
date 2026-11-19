@@ -209,7 +209,7 @@ deletion); the preflight on the capture tray. Every attempt, including failed on
 2. The remaining findings of `E1-V4-TIMELINE.md` §7: the deleting side runs on the operator's laptop; the live cluster's
    handling of the UID precondition is proven only by the dry run of step 1 at launch time; a reservation that disappears
    during the run is reported, not acted on; a stalled release is left to the controller until the guard; before a stop request
-   a lost supervisor is covered by the monitor only.
+   a lost supervisor is covered by the monitor only; the driver needs 161 – 167 s of the 470 s launch window.
 3. Whether the early reservation release should be developed further (it needs gate changes; not part of this packet; not
    enabled).
 
