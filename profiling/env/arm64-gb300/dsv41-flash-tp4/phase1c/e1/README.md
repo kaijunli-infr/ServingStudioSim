@@ -139,3 +139,9 @@ Four exact copies of the accepted 56-request trace (224 requests, 8 waves, b=8 a
 reservation budget (launch only while 4680 s − reservation age ≥ 4210 s, age ≤ 470 s); eight further rehearsal scenarios.
 `E1-V4-TIMELINE.md` (revision 2), `feasibility/E1-V4-MEMORY-BUDGET.md`, `runs/v4scale/prep2/E1-V4-CORRECTION-REPORT.md`.
 Still PROPOSED: not frozen, not launched.
+
+**Revision 3 (2026-11-19, review decision on `76d95289`, final CPU-only safety closure):** preflight host memory 512 GiB;
+supervisor latch (the reservation guard is acted on in every state); registered, bounded closeout and deletion of the
+reservation (`checks/e1_reservation_closeout.py`, `arm_closeout_e1_v4scale.sh`, gate G16); separate closeout statements
+(`checks/e1_closeout_verdict.py`: a lost supervisor is never CLEAN). `E1-V4-SCALE-PACKET.md` §8 and §14, `E1-V4-TIMELINE.md`
+(revision 3), `runs/v4scale/prep3/E1-V4-FREEZE-READINESS-REPORT.md`. Still PROPOSED: not frozen, not launched.
