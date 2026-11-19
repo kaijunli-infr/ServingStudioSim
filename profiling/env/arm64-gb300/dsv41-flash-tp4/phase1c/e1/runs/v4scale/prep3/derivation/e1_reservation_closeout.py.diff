@@ -1,0 +1,580 @@
+diff --git a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_reservation_closeout.py b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_reservation_closeout.py
+new file mode 100644
+index 00000000..ea5461aa
+--- /dev/null
++++ b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_reservation_closeout.py
+@@ -0,0 +1,574 @@
++#!/usr/bin/env python3
++"""Bounded, registered closeout and deletion of the V4 GPU reservation pod. Two processes, because two credentials exist:
++the capture tray (dc) can read pods but not delete them; the operator's laptop can delete them.
++
++    record  (laptop, before the launch)  kubectl get -> exact description of the reservation pod -> dry-run proof that a
++            deletion with a UID precondition is honoured -> writes reservation.json (copied to <run>/reservation.json)
++    verify  (tray, read-only)            the live pod is the one in reservation.json; the driver refuses to start otherwise
++    watch   (tray, registered in pids/closeout.tsv, started before the driver)  waits for the END OF THE RUN, takes the
++            evidence, PERMITS the deletion, observes it with its own read-only credential, writes the verdict
++    armed   (tray, read-only)            the watcher is alive, waiting, and the deleter's heartbeat is fresh
++    delete  (laptop, registered in its own registry, started before the driver)  waits for the watcher's permit, verifies
++            the pod's ownership itself, sends ONE delete with the recorded UID as precondition, observes the deletion
++
++watch: decision per evaluation (every --interval seconds; the record --out is rewritten each time with a sequence number)
++  WAIT    no driver is registered and a launch is still possible (reservation age <= --launch-latest-age-s +
++          --never-launched-margin-s), or a registered process of the run is alive. Nothing is ended here: ending the run is
++          the supervisor's task (GPU-held ceiling, reservation guard). There is no early release: no permit before the
++          registered tree of the run is gone.
++  PERMIT  all of: (D1) the registry of the run has no live owned process and no refusal; (D2) no process on the host looks
++          like the experiment without being registered in one of the given registries (Nsight's own processes, identified by
++          executable path, excepted: see below); (D3) the pinned GPU census, now and
++          in the previous evaluation: no compute process on any GPU, memory within the idle bound on every GPU; (D4) the
++          live pod is exactly the recorded reservation (name, namespace, UID, creation time, this node, labels, pause
++          containers only, GPU request).
++  REFUSE  the run has ended and one of D1-D4 does not hold or cannot be evaluated (the reason is recorded; re-evaluated).
++The importer and the Nsight agent are recorded, never signalled, and do not block the permit: they hold no GPU.
++Verdict (exit code): DELETED_IN_TIME (0) the pod was observed gone at or before creation + --ceiling-s after a permit;
++DELETED_LATE (1); GONE_WITHOUT_PERMIT (1) it disappeared before any permit; NOT_DELETED (1) still there --tail-s after the
++ceiling; UNVERIFIED (1) its state could not be read at the end. The watcher never deletes and never signals.
++
++delete: deletes only when two consecutive, different evaluations of the watcher say PERMIT for the recorded UID on the
++recorded node, and its own `kubectl get` shows exactly the recorded pod. The request is
++`kubectl delete --raw /api/v1/namespaces/<ns>/pods/<name>` with DeleteOptions {preconditions: {uid}}: a pod of the same
++name with another UID is not deleted (Conflict -> REFUSED_FOREIGN, stop). At most one accepted request. No permit, no
++deletion: after creation + --ceiling-s + --tail-s it stops with NOT_DELETED. It signals nothing.
++
++Clock origin everywhere: the pod's creation time. Exit codes: 0 as stated, 1 failure, 3 cannot be evaluated. Stdlib only.
++"""
++
++from __future__ import annotations
++
++# ruff: noqa: E501
++
++import argparse
++import calendar
++import importlib.util
++import json
++import os
++import shlex
++import socket
++import subprocess
++import sys
++import tempfile
++import time
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++PAUSE_PREFIX = "registry.k8s.io/pause:"
++LABELS = {"app": "dsv41-gb300-reserve", "owner": "kevin"}
++GPU_KEY = "nvidia.com/gpu"
++ZERO_UID = "00000000-0000-0000-0000-000000000000"
++
++
++def _mod(name: str):
++    spec = importlib.util.spec_from_file_location(f"{name}_for_closeout", HERE / f"{name}.py")
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod
++
++
++def load(path):
++    try:
++        return json.loads(Path(path).read_text())
++    except (OSError, ValueError, TypeError):
++        return None
++
++
++def write_json(path: Path, obj: dict) -> None:
++    tmp = path.with_suffix(path.suffix + f".tmp{os.getpid()}")
++    tmp.write_text(json.dumps(obj, indent=1, default=str) + "\n")
++    os.replace(tmp, path)
++
++
++def iso(t: float | None) -> str | None:
++    return None if t is None else time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t))
++
++
++def epoch(text) -> float | None:
++    try:
++        return float(calendar.timegm(time.strptime(text, "%Y-%m-%dT%H:%M:%SZ")))
++    except (TypeError, ValueError):
++        return None
++
++
++def boot_id() -> str:
++    try:
++        return Path("/proc/sys/kernel/random/boot_id").read_text().strip()
++    except OSError:
++        return "unknown"
++
++
++# ---- kubectl
++
++
++def kubectl(prefix: list[str], args: list[str], timeout: float = 30.0, runner=subprocess.run) -> tuple[int | None, str, str]:
++    try:
++        p = runner([*prefix, *args], capture_output=True, text=True, timeout=timeout, stdin=subprocess.DEVNULL)
++        return p.returncode, p.stdout, p.stderr
++    except (OSError, subprocess.TimeoutExpired) as error:
++        return None, "", f"kubectl could not be run: {error}"
++
++
++def get_pod(prefix: list[str], namespace: str, name: str, **kw) -> tuple[str, dict | None, str]:
++    """('found', pod, '') | ('absent', None, message) | ('unknown', None, message). Absent only on the server's NotFound."""
++    rc, out, err = kubectl(prefix, ["get", "pod", name, "-n", namespace, "-o", "json"], **kw)
++    if rc == 0:
++        try:
++            pod = json.loads(out)
++            if pod.get("kind") == "Pod" and pod.get("metadata", {}).get("name") == name:
++                return "found", pod, ""
++        except ValueError:
++            pass
++        return "unknown", None, "kubectl get returned no pod object"
++    if rc is not None and "(NotFound)" in err:
++        return "absent", None, err.strip()[:200]
++    return "unknown", None, (err.strip() or f"kubectl get exit code {rc}")[:200]
++
++
++def gpu_request(pod: dict) -> int:
++    total = 0
++    for c in pod.get("spec", {}).get("containers", []):
++        try:
++            total += int(((c.get("resources") or {}).get("requests") or {}).get(GPU_KEY, 0))
++        except (TypeError, ValueError):
++            return -1
++    return total
++
++
++def pods_on_node(prefix: list[str], node: str, **kw) -> dict | None:
++    rc, out, err = kubectl(prefix, ["get", "pods", "--all-namespaces", "--field-selector", f"spec.nodeName={node}", "-o", "json"], **kw)
++    if rc != 0:
++        return None
++    try:
++        items = json.loads(out)["items"]
++    except (ValueError, KeyError, TypeError):
++        return None
++    gpu = [f"{i['metadata'].get('namespace')}/{i['metadata'].get('name')}" for i in items if gpu_request(i) != 0 and i.get("status", {}).get("phase") in ("Pending", "Running", None)]
++    return {"pods_on_node": len(items), "gpu_pods_on_node": len(gpu), "gpu_pod_names": gpu}
++
++
++def describe(pod: dict) -> dict:
++    m, s = pod.get("metadata", {}), pod.get("spec", {})
++    return {"pod": m.get("name"), "namespace": m.get("namespace"), "uid": m.get("uid"), "node": s.get("nodeName"), "phase": pod.get("status", {}).get("phase"), "gpu_request": str(gpu_request(pod)),
++            "creation_timestamp": m.get("creationTimestamp"), "start_time": pod.get("status", {}).get("startTime"), "labels": m.get("labels") or {}, "images": [c.get("image") for c in s.get("containers", [])]}
++
++
++def shape_problems(pod: dict, *, node: str | None, gpus: int = 4, labels: dict | None = None) -> list[str]:
++    """What makes a pod something other than a V4 reservation placeholder on `node`."""
++    d, s, out = describe(pod), pod.get("spec", {}), []
++    if node is not None and d["node"] != node:
++        out.append(f"node {d['node']!r}, expected {node!r}")
++    if not d["images"] or not all(str(i).startswith(PAUSE_PREFIX) for i in d["images"]):
++        out.append(f"containers {d['images']} are not pause containers only")
++    if gpu_request(pod) != gpus:
++        out.append(f"GPU request {d['gpu_request']}, expected {gpus}")
++    for k, v in (LABELS if labels is None else labels).items():
++        if d["labels"].get(k) != v:
++            out.append(f"label {k}={d['labels'].get(k)!r}, expected {v!r}")
++    if any(s.get(k) for k in ("hostPID", "hostNetwork", "hostIPC")):
++        out.append("host namespaces requested")
++    if pod.get("metadata", {}).get("ownerReferences"):
++        out.append("the pod has an owner (controller-managed); a reservation placeholder has none")
++    return out
++
++
++def ownership_problems(pod: dict, res: dict, *, node: str | None = None) -> list[str]:
++    """The live pod is exactly the recorded reservation."""
++    d = describe(pod)
++    out = [f"{k} {d[k]!r}, recorded {res.get(k)!r}" for k in ("pod", "namespace", "uid", "creation_timestamp", "node") if not res.get(k) or d[k] != res.get(k)]
++    return out + shape_problems(pod, node=res.get("node") if node is None else node, labels=res.get("labels") or LABELS)
++
++
++def record_problems(res: dict | None) -> list[str]:
++    if not isinstance(res, dict):
++        return ["reservation record missing or unreadable"]
++    out = [f"{k} missing" for k in ("pod", "namespace", "uid", "node", "creation_timestamp") if not res.get(k)]
++    if res.get("creation_timestamp") and epoch(res["creation_timestamp"]) is None:
++        out.append("creation_timestamp unreadable")
++    return out
++
++
++def delete_with_uid(prefix: list[str], namespace: str, name: str, uid: str, *, dry_run: bool, **kw) -> tuple[str, str]:
++    """One DELETE with the UID as precondition. ('accepted' | 'conflict' | 'absent' | 'failed', server message)."""
++    body = {"kind": "DeleteOptions", "apiVersion": "v1", "preconditions": {"uid": uid}}
++    if dry_run:
++        body["dryRun"] = ["All"]
++    with tempfile.NamedTemporaryFile("w", suffix=".json", prefix="e1-delete-options-", delete=False) as fh:
++        json.dump(body, fh)
++    try:
++        rc, out, err = kubectl(prefix, ["delete", "--raw", f"/api/v1/namespaces/{namespace}/pods/{name}", "-f", fh.name], **kw)
++    finally:
++        os.unlink(fh.name)
++    text = (err.strip() or out.strip())[:300]
++    if rc == 0:
++        return "accepted", text
++    if rc is not None and ("(Conflict)" in err or "Precondition failed" in err):
++        return "conflict", text
++    if rc is not None and "(NotFound)" in err:
++        return "absent", text
++    return "failed", text or f"exit code {rc}"
++
++
++# ---- record (laptop) and verify (tray)
++
++
++def record(prefix: list[str], namespace: str, name: str, node: str, out: Path, *, gpus: int = 4, now=time.time) -> tuple[int, list[str]]:
++    lines = []
++    state, pod, msg = get_pod(prefix, namespace, name)
++    if state != "found":
++        return 1, [f"FAIL  reservation record: pod {namespace}/{name} {state}: {msg}"]
++    d = describe(pod)
++    problems = shape_problems(pod, node=node, gpus=gpus) + ([f"phase {d['phase']!r}, expected 'Running'"] if d["phase"] != "Running" else []) + (["the pod is terminating"] if pod["metadata"].get("deletionTimestamp") else [])
++    problems += record_problems(d)
++    if problems:
++        return 1, [f"FAIL  reservation record: {namespace}/{name} is not a V4 reservation placeholder on {node}: {problems}"]
++    lines.append(f"PASS  reservation pod {namespace}/{name} uid {d['uid']} on {d['node']}, created {d['creation_timestamp']}, {d['gpu_request']} GPUs, pause containers only, labels {d['labels']}")
++    right, m1 = delete_with_uid(prefix, namespace, name, d["uid"], dry_run=True)
++    wrong, m2 = delete_with_uid(prefix, namespace, name, ZERO_UID, dry_run=True)
++    state2, pod2, msg2 = get_pod(prefix, namespace, name)
++    unchanged = state2 == "found" and pod2["metadata"].get("uid") == d["uid"] and not pod2["metadata"].get("deletionTimestamp")
++    proof = {"dry_run_with_recorded_uid": right, "dry_run_with_other_uid": wrong, "pod_unchanged_afterwards": unchanged, "at": iso(now()), "ok": right == "accepted" and wrong == "conflict" and unchanged}
++    if not proof["ok"]:
++        return 1, lines + [f"FAIL  deletion path proof: dry run with the recorded UID {right} ({m1[:120]}), with another UID {wrong} ({m2[:120]}; must be a Conflict), pod unchanged afterwards {unchanged} ({state2} {msg2}): no reservation record written"]
++    lines.append(f"PASS  deletion path proof: dry run with the recorded UID accepted, with another UID refused by the server (Conflict), pod unchanged (uid {d['uid']}, not terminating)")
++    write_json(out, {**d, "observed_at": iso(now()), "deletion_path_proof": proof, "source": "checks/e1_reservation_closeout.py record (kubectl get pod -o json with the deleting credential)"})
++    return 0, lines + [f"PASS  wrote {out}"]
++
++
++def verify(prefix: list[str], reservation: Path, host: str) -> tuple[int, str]:
++    res = load(reservation)
++    problems = record_problems(res)
++    if problems:
++        return 1, f"FAIL  reservation ownership: {reservation}: {problems}"
++    if (res.get("deletion_path_proof") or {}).get("ok") is not True:
++        return 1, f"FAIL  reservation ownership: {reservation} has no deletion path proof (written by `record`)"
++    state, pod, msg = get_pod(prefix, res["namespace"], res["pod"])
++    if state == "unknown":
++        return 3, f"INCONCLUSIVE reservation ownership: the pod's state could not be read ({msg})"
++    if state == "absent":
++        return 1, f"FAIL  reservation ownership: pod {res['namespace']}/{res['pod']} does not exist"
++    problems = ownership_problems(pod, res, node=host) + (["the pod is terminating"] if pod["metadata"].get("deletionTimestamp") else []) + ([f"phase {pod.get('status', {}).get('phase')!r}"] if pod.get("status", {}).get("phase") != "Running" else [])
++    if problems:
++        return 1, f"FAIL  reservation ownership: the live pod is not the recorded reservation on this node: {problems}"
++    return 0, f"PASS  reservation ownership: live pod {res['namespace']}/{res['pod']} uid {res['uid']} on {host}, created {res['creation_timestamp']}, Running, = reservation.json (read with this host's read-only credential)"
++
++
++# ---- watch (tray)
++
++
++def run_state(pids, registry: Path, attribute: list[Path]) -> dict:
++    """D1 and D2 from the pinned registry tool: live owned processes, refusals, lookalikes not registered anywhere."""
++    plan = pids.plan(str(registry))
++    attributed: set[int] = set()
++    for reg in attribute:
++        attributed |= {o["pid"] for o in pids.plan(str(reg))["owned"]}
++    labels = [r.get("label", "") for r in pids.read_registry(str(registry))]
++    return {"driver_registered": any(lb.startswith("driver:") for lb in labels), "records": len(labels), "owned_alive": [{"pid": o["pid"], "label": o["label"]} for o in plan["owned"]], "refused": [{"pid": r.get("pid"), "reason": r.get("reason")} for r in plan["refused"]],
++            "stale": len(plan["stale"]), "unattributed_lookalikes": [{"pid": x["pid"], "cmd": x["cmd"][:160]} for x in plan["lookalikes"] if x["pid"] not in attributed], "attributed_lookalikes": sum(x["pid"] in attributed for x in plan["lookalikes"])}
++
++
++def nsight_processes() -> list[dict]:
++    """Nsight CLI, agent or importer of this user, by executable path (recorded only)."""
++    out = []
++    for d in Path("/proc").iterdir():
++        if not d.name.isdigit():
++            continue
++        try:
++            if d.stat().st_uid == os.getuid() and "/nsight-systems/" in os.readlink(d / "exe"):
++                out.append({"pid": int(d.name), "exe": os.readlink(d / "exe")})
++        except OSError:
++            continue
++    return out
++
++
++def watch(run: Path, registry: Path, out: Path, prefix: list[str], *, ceiling_s: float, launch_latest_age_s: float, never_launched_margin_s: float = 60.0, tail_s: float = 600.0, interval: float = 5.0, attribute: list[Path] | None = None,
++          deleter_heartbeat: Path | None = None, host: str | None = None, pod_check_while_waiting_s: float = 60.0, now=time.time, sleep=time.sleep, census=None, state_of_run=None, nsight=nsight_processes, max_s: float = 7200.0) -> int:
++    host = host or socket.gethostname()
++    if census is None:
++        census = lambda: _mod("e1_gpu_release_census").census(64, registry)  # noqa: E731  (the pinned census, in process)
++    if state_of_run is None:
++        pids = _mod("e1_pids")
++        state_of_run = lambda: run_state(pids, registry, attribute or [])  # noqa: E731
++    started = now()
++    rec: dict = {"tool": "e1_reservation_closeout.py watch", "host": host, "boot_id": boot_id(), "pid": os.getpid(), "started_at": started, "run": str(run), "registry": str(registry), "sequence": 0,
++                 "limits": {"ceiling_s": ceiling_s, "launch_latest_age_s": launch_latest_age_s, "never_launched_margin_s": never_launched_margin_s, "tail_s": tail_s, "interval_s": interval}, "decision": "WAIT", "reasons": ["not evaluated yet"],
++                 "first_permit": None, "permits": 0, "deleted_observed_at": None, "verdict": None, "signals_sent": 0, "delete_requests_sent": 0, "complete": False}
++    previous_census_released, last_pod = False, None
++
++    def finish(verdict: str, t: float, why: str) -> int:
++        rec.update({"verdict": verdict, "verdict_reason": why, "complete": True, "ended_at": t, "updated_at": t})
++        write_json(out, rec)
++        return 0 if verdict == "DELETED_IN_TIME" else 1
++
++    while True:
++        t = now()
++        res = load(run / "reservation.json")
++        problems = record_problems(res)
++        if not problems and res["node"] != host:
++            problems = [f"the record's node {res['node']!r} is not this host {host!r}"]
++        rec.update({"sequence": rec["sequence"] + 1, "updated_at": t, "updated": iso(t)})
++        if deleter_heartbeat is not None:
++            try:
++                rec["deleter_heartbeat_age_s"] = round(t - deleter_heartbeat.stat().st_mtime, 1)
++            except OSError:
++                rec["deleter_heartbeat_age_s"] = None
++        if problems:
++            rec.update({"decision": "REFUSE", "reasons": problems})
++            write_json(out, rec)
++            if t - started > max_s:
++                return finish("UNVERIFIED", t, f"no usable reservation record: {problems}")
++            sleep(interval)
++            continue
++        created = epoch(res["creation_timestamp"])
++        deadline = created + ceiling_s
++        rec.update({"reservation": {k: res.get(k) for k in ("pod", "namespace", "uid", "node", "creation_timestamp")}, "created_epoch": created, "deadline_epoch": deadline, "deadline": iso(deadline), "reservation_age_s": round(t - created, 1), "seconds_to_deadline": round(deadline - t, 1)})
++        st = state_of_run()
++        waiting = bool(st["owned_alive"]) or (not st["driver_registered"] and t - created <= launch_latest_age_s + never_launched_margin_s)
++        if not waiting or last_pod is None or t - last_pod[0] >= pod_check_while_waiting_s:  # while the run is active the pod is read once a minute
++            last_pod = (t, *get_pod(prefix, res["namespace"], res["pod"]))
++        state, pod, msg = last_pod[1:]
++        gone = state == "absent" or (state == "found" and pod["metadata"].get("uid") != res["uid"])
++        tools = nsight()
++        # the importer and the Nsight agent (identified by executable path) hold no GPU and are never signalled: recorded, not a refusal
++        st = {**st, "unattributed_lookalikes": [x for x in st["unattributed_lookalikes"] if x["pid"] not in {p["pid"] for p in tools}]}
++        evidence: dict = {"at": t, "run": st, "pod_read_at": last_pod[0], "pod_state": state if not gone else "absent" if state == "absent" else f"replaced by uid {pod['metadata'].get('uid')}", "nsight_processes_alive": tools}
++        rec["evidence"] = evidence
++        if gone:
++            after = pods_on_node(prefix, res["node"]) or {}
++            rec.update({"deleted_observed_at": t, "deleted_observed": iso(t), "after_deletion": after or "the node's pods could not be listed"})
++            if rec["first_permit"] is None:
++                return finish("GONE_WITHOUT_PERMIT", t, "the reservation pod disappeared before the watcher permitted its deletion (deleted or expired outside the registered mechanism)")
++            return finish("DELETED_IN_TIME" if t <= deadline else "DELETED_LATE", t, f"observed gone {t - created:.1f} s after its creation (ceiling {ceiling_s:.0f} s); first permit at {rec['first_permit']['at'] - created:.1f} s")
++        reasons, decision = [], "REFUSE"
++        if not st["driver_registered"] and t - created <= launch_latest_age_s + never_launched_margin_s:
++            decision, reasons = "WAIT", [f"no driver registered; a launch is possible until reservation age {launch_latest_age_s:.0f} s (waiting until {launch_latest_age_s + never_launched_margin_s:.0f} s)"]
++        elif st["owned_alive"]:
++            decision, reasons = "WAIT", [f"the run has not ended: {len(st['owned_alive'])} registered process(es) alive ({sorted({o['label'].split(':')[0] for o in st['owned_alive']})}); no early release"]
++        else:
++            evidence["run_ended"] = "registered tree gone" if st["driver_registered"] else "never launched (no driver registered inside the launch window)"
++            c = census()
++            released = bool((c.get("verdict") or {}).get("released"))
++            evidence["gpu_census"] = {"at": c.get("at"), "released": released, "reason": (c.get("verdict") or {}).get("reason"), "compute_pids": [a.get("pid") for a in c.get("compute_apps", [])], "memory_used_mib": [g.get("memory_used_mib") for g in c.get("gpus", [])], "previous_evaluation_released": previous_census_released}
++            if st["refused"]:
++                reasons.append(f"D1 registry refusal: {st['refused']}")
++            if st["unattributed_lookalikes"]:
++                reasons.append(f"D2 process(es) that look like the experiment and are in no registry: {st['unattributed_lookalikes'][:4]}")
++            if not released:
++                reasons.append(f"D3 GPU census: {(c.get('verdict') or {}).get('reason')}")
++            elif not previous_census_released:
++                reasons.append("D3 GPU census released now; a second consecutive census is required")
++            if state == "unknown":
++                reasons.append(f"D4 the pod's state could not be read: {msg}")
++            else:
++                own = ownership_problems(pod, res, node=host)
++                evidence["ownership"] = {"verified": not own, "uid": pod["metadata"].get("uid"), "terminating": bool(pod["metadata"].get("deletionTimestamp"))}
++                if own:
++                    reasons.append(f"D4 the live pod is not the recorded reservation: {own}")
++                elif pod["metadata"].get("deletionTimestamp") and rec["first_permit"] is None:
++                    reasons.append("D4 the pod is terminating although no permit was given")
++            previous_census_released = released
++            if not reasons:
++                decision, reasons = "PERMIT", ["D1 registered tree gone, D2 no unregistered lookalike, D3 two consecutive clean GPU censuses, D4 pod ownership verified"]
++                rec["permits"] += 1
++                if rec["first_permit"] is None:
++                    rec["first_permit"] = {"at": t, "at_iso": iso(t), "sequence": rec["sequence"], "reservation_age_s": round(t - created, 1), "evidence": evidence}
++        if decision == "WAIT":
++            previous_census_released = False
++        rec.update({"decision": decision, "reasons": reasons})
++        if t > deadline + tail_s or t - started > max_s:
++            return finish("UNVERIFIED" if state == "unknown" else "NOT_DELETED", t, f"the reservation pod was {'not readable' if state == 'unknown' else 'still present'} {t - deadline:.0f} s after the ceiling; last decision {decision}: {reasons}")
++        write_json(out, rec)
++        sleep(interval)
++
++
++def armed(record_path: Path, registry: Path | None, *, max_age_s: float = 30.0, deleter_max_age_s: float = 60.0, now: float | None = None) -> tuple[int, str]:
++    now = time.time() if now is None else now
++    rec = load(record_path)
++    if not rec:
++        return 1, f"FAIL  closeout watcher: no record {record_path} (the watcher is not armed)"
++    problems = []
++    if rec.get("complete") or rec.get("verdict"):
++        problems.append(f"the watcher has ended (verdict {rec.get('verdict')})")
++    if now - (rec.get("updated_at") or 0) > max_age_s:
++        problems.append(f"last evaluation {now - (rec.get('updated_at') or 0):.0f} s ago (limit {max_age_s:.0f} s)")
++    if rec.get("decision") != "WAIT" or rec.get("first_permit"):
++        problems.append(f"decision {rec.get('decision')} (a permit was {'already' if rec.get('first_permit') else 'not'} given): {rec.get('reasons')}")
++    age = rec.get("deleter_heartbeat_age_s")
++    if age is None or age > deleter_max_age_s:
++        problems.append(f"deleter heartbeat {'missing' if age is None else f'{age:.0f} s old'} (limit {deleter_max_age_s:.0f} s): the deleting side is not armed")
++    if registry is not None:
++        pids = _mod("e1_pids")
++        live = [r for r in pids.read_registry(str(registry)) if pids.same_identity(r, pids.identity(int(r["pid"])))]
++        if [int(r["pid"]) for r in live] != [rec.get("pid")]:
++            problems.append(f"the registered live watcher {[r['pid'] for r in live]} is not the record's writer {rec.get('pid')}")
++    if problems:
++        return 1, f"FAIL  closeout watcher not armed: {problems}"
++    return 0, f"PASS  closeout watcher armed: pid {rec.get('pid')} (registered, identity verified), evaluation {rec.get('sequence')} {now - rec['updated_at']:.0f} s ago, decision WAIT, deleter heartbeat {age:.0f} s old, deletion deadline {rec.get('deadline')}"
++
++
++# ---- delete (laptop)
++
++
++def fetch(cmd: list[str], timeout: float, runner=subprocess.run) -> dict | None:
++    try:
++        p = runner(cmd, capture_output=True, text=True, timeout=timeout, stdin=subprocess.DEVNULL)
++        return json.loads(p.stdout) if p.returncode == 0 else None
++    except (OSError, subprocess.TimeoutExpired, ValueError):
++        return None
++
++
++def delete(reservation: Path, permit_cmd: list[str], out: Path, prefix: list[str], *, ceiling_s: float, tail_s: float = 600.0, interval: float = 5.0, fetch_timeout: float = 20.0, publish_cmd: list[str] | None = None,
++           now=time.time, sleep=time.sleep, runner=subprocess.run) -> int:
++    res = load(reservation)
++    problems = record_problems(res)
++    rec: dict = {"tool": "e1_reservation_closeout.py delete", "host": socket.gethostname(), "pid": os.getpid(), "started_at": now(), "started": iso(now()), "permit_fetches": 0, "permit_fetch_failures": 0, "delete_requests_sent": 0, "delete_requests_accepted": 0,
++                 "attempts": [], "verdict": None, "signals_sent": 0, "source": "checks/e1_reservation_closeout.py delete (kubectl with the deleting credential; DELETE with the recorded UID as precondition)"}
++
++    def publish() -> None:
++        write_json(out, rec)
++        if publish_cmd:
++            try:
++                p = runner(publish_cmd, input=json.dumps(rec, indent=1, default=str) + "\n", capture_output=True, text=True, timeout=fetch_timeout)
++                rec["published"] = p.returncode == 0
++            except (OSError, subprocess.TimeoutExpired):
++                rec["published"] = False
++            write_json(out, rec)
++
++    def finish(verdict: str, why: str) -> int:
++        rec.update({"verdict": verdict, "verdict_reason": why, "ended": iso(now())})
++        publish()
++        return 0 if verdict == "DELETED_IN_TIME" else 1
++
++    if problems:
++        return finish("REFUSED", f"reservation record: {problems}")
++    created = epoch(res["creation_timestamp"])
++    deadline = created + ceiling_s
++    rec.update({"pod": res["pod"], "namespace": res["namespace"], "uid": res["uid"], "node": res["node"], "creation_timestamp": res["creation_timestamp"], "deadline": iso(deadline), "precondition_uid": res["uid"]})
++    write_json(out, rec)
++    last: dict | None = None
++    while True:
++        t = now()
++        if t > deadline + tail_s:
++            return finish("NOT_DELETED", f"no deletion {tail_s:.0f} s after the ceiling: {'no permit from the watcher' if not rec.get('permit') else 'the delete request was not accepted or the pod did not go'}; nothing was deleted without a permit")
++        if rec["delete_requests_accepted"]:
++            state, pod, msg = get_pod(prefix, res["namespace"], res["pod"], runner=runner)
++            if state == "absent" or (state == "found" and pod["metadata"].get("uid") != res["uid"]):
++                after = pods_on_node(prefix, res["node"], runner=runner) or {}
++                rec.update({"deleted_observed_at": iso(t), "deleted_observed_epoch": t, "reservation_pod_still_listed": False, "reservation_s": round(t - created, 1), **({"gpu_pods_on_node": None, "gpu_pod_names": None, "pods_on_node": None} | after)})
++                return finish("DELETED_IN_TIME" if t <= deadline else "DELETED_LATE", f"observed gone {t - created:.1f} s after the pod's creation (ceiling {ceiling_s:.0f} s)")
++            sleep(interval)
++            continue
++        permit = fetch(permit_cmd, fetch_timeout, runner)
++        rec["permit_fetches"] += 1
++        if permit is None:
++            rec["permit_fetch_failures"] += 1
++            last = None
++        ok = bool(permit) and permit.get("decision") == "PERMIT" and not permit.get("complete") and (permit.get("reservation") or {}).get("uid") == res["uid"] and permit.get("host") == res["node"]
++        second = ok and last is not None and last.get("pid") == permit.get("pid") and last.get("started_at") == permit.get("started_at") and (permit.get("sequence") or 0) > (last.get("sequence") or 0)
++        rec["last_fetch"] = {"at": iso(t), "decision": (permit or {}).get("decision"), "sequence": (permit or {}).get("sequence"), "watcher_verdict": (permit or {}).get("verdict")}
++        last = permit if ok else None
++        if permit and permit.get("complete") and permit.get("verdict"):  # the watcher saw the pod go although this process deleted nothing
++            state, pod, msg = get_pod(prefix, res["namespace"], res["pod"], runner=runner)
++            if state != "found" or pod["metadata"].get("uid") != res["uid"]:
++                return finish("GONE_NOT_BY_DELETER", f"the watcher ended with {permit.get('verdict')} and the recorded pod is {'absent' if state != 'found' else 'replaced by a pod with another UID (not touched)'}; this process sent no delete request")
++        if not second:
++            write_json(out, rec)
++            sleep(interval)
++            continue
++        state, pod, msg = get_pod(prefix, res["namespace"], res["pod"], runner=runner)
++        attempt = {"at": iso(t), "permit_sequence": permit.get("sequence"), "pod_state": state}
++        rec["attempts"].append(attempt)
++        if state == "absent":
++            return finish("GONE_NOT_BY_DELETER", "the pod was already gone when the permit arrived; this process sent no delete request")
++        if state == "unknown":
++            attempt["result"] = f"ownership not readable: {msg}"
++            write_json(out, rec)
++            sleep(interval)
++            continue
++        own = ownership_problems(pod, res)
++        if own:
++            attempt["result"] = f"not the recorded reservation: {own}"
++            return finish("REFUSED_FOREIGN", f"the live pod {res['namespace']}/{res['pod']} is not the recorded reservation: {own}; nothing was deleted")
++        rec.update({"permit": {"sequence": permit.get("sequence"), "evaluated_at": permit.get("updated_at"), "first_permit_at": (permit.get("first_permit") or {}).get("at"), "watcher_pid": permit.get("pid"), "watcher_host": permit.get("host")}, "ownership_verified_at": iso(now())})
++        rec["delete_requests_sent"] += 1
++        requested = now()
++        result, text = delete_with_uid(prefix, res["namespace"], res["pod"], res["uid"], dry_run=False, runner=runner)
++        attempt.update({"result": result, "server": text})
++        if result == "conflict":
++            return finish("REFUSED_FOREIGN", f"the server refused the delete: the UID precondition failed ({text}); nothing was deleted")
++        if result == "absent":
++            return finish("GONE_NOT_BY_DELETER", "the pod vanished between the ownership check and the delete request")
++        if result == "accepted":
++            rec["delete_requests_accepted"] += 1
++            rec.update({"delete_requested_at": iso(requested), "delete_requested_epoch": requested})
++            publish()
++            continue
++        write_json(out, rec)
++        sleep(interval)
++
++
++# ---- command line
++
++
++def main(argv: list[str] | None = None) -> int:
++    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    sub = ap.add_subparsers(dest="cmd", required=True)
++    r = sub.add_parser("record")
++    r.add_argument("--pod", required=True)
++    r.add_argument("--namespace", required=True)
++    r.add_argument("--node", required=True)
++    r.add_argument("--gpus", type=int, default=4)
++    r.add_argument("--out", required=True, type=Path)
++    v = sub.add_parser("verify")
++    v.add_argument("--reservation", required=True, type=Path)
++    v.add_argument("--host", default=socket.gethostname())
++    w = sub.add_parser("watch")
++    w.add_argument("--run", required=True, type=Path)
++    w.add_argument("--registry", required=True, type=Path)
++    w.add_argument("--attribute-registry", action="append", default=[], type=Path)
++    w.add_argument("--out", required=True, type=Path)
++    w.add_argument("--launch-latest-age-s", required=True, type=float)
++    w.add_argument("--never-launched-margin-s", type=float, default=60.0)
++    w.add_argument("--deleter-heartbeat", type=Path)
++    a = sub.add_parser("armed")
++    a.add_argument("--record", required=True, type=Path)
++    a.add_argument("--registry", type=Path)
++    a.add_argument("--max-age-s", type=float, default=30.0)
++    a.add_argument("--deleter-max-age-s", type=float, default=60.0)
++    d = sub.add_parser("delete")
++    d.add_argument("--reservation", required=True, type=Path)
++    d.add_argument("--permit-cmd", required=True, help="command that prints the watcher's record (run without a shell)")
++    d.add_argument("--publish-cmd", help="command that receives this process's record on stdin (run without a shell)")
++    d.add_argument("--out", required=True, type=Path)
++    d.add_argument("--fetch-timeout", type=float, default=20.0)
++    for p in (w, d):
++        p.add_argument("--ceiling-s", required=True, type=float)
++        p.add_argument("--tail-s", type=float, default=600.0)
++        p.add_argument("--interval", type=float, default=5.0)
++    for p in (r, v, w, d):
++        p.add_argument("--kubectl", default="kubectl --request-timeout=15s", help="kubectl command prefix (run without a shell)")
++    args = ap.parse_args(argv)
++    if args.cmd == "armed":
++        rc, text = armed(args.record, args.registry, max_age_s=args.max_age_s, deleter_max_age_s=args.deleter_max_age_s)
++        print(text)
++        return rc
++    prefix = shlex.split(args.kubectl)
++    if args.cmd == "record":
++        rc, lines = record(prefix, args.namespace, args.pod, args.node, args.out, gpus=args.gpus)
++        print("\n".join(lines))
++        return rc
++    if args.cmd == "verify":
++        rc, text = verify(prefix, args.reservation, args.host)
++        print(text)
++        return rc
++    if args.ceiling_s <= 0 or args.interval <= 0:
++        ap.error("--ceiling-s and --interval must be positive")
++    if args.cmd == "watch":
++        return watch(args.run, args.registry, args.out, prefix, ceiling_s=args.ceiling_s, launch_latest_age_s=args.launch_latest_age_s, never_launched_margin_s=args.never_launched_margin_s, tail_s=args.tail_s, interval=args.interval,
++                     attribute=args.attribute_registry, deleter_heartbeat=args.deleter_heartbeat)
++    return delete(args.reservation, shlex.split(args.permit_cmd), args.out, prefix, ceiling_s=args.ceiling_s, tail_s=args.tail_s, interval=args.interval, fetch_timeout=args.fetch_timeout, publish_cmd=shlex.split(args.publish_cmd) if args.publish_cmd else None)
++
++
++if __name__ == "__main__":
++    sys.exit(main())

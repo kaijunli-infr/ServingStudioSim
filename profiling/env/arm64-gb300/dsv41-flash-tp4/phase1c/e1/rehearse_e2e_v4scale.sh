@@ -121,6 +121,12 @@ print('replaced', old, '->', st['pods'][0]['metadata']['uid'])" $O/kube_state.js
   [ -n "$hp" ] && wait $hp
   echo "driver exit code $drc; $(grep -c '^PASS' $R/$PASS/preflight.log 2>/dev/null) PASS / $(grep -c '^FAIL' $R/$PASS/preflight.log 2>/dev/null) FAIL in the driver's preflight; $(grep -a 'REHEARSAL MODE\|\[mock\] stop ended\|rc=' $O/driver.log | tr '\n' ';' | cut -c1-300)"
   for i in $(seq 1 45); do [ -z "$(awk -F'\t' '$1 ~ /^[0-9]+$/ {print $1}' $R/pids/owned.tsv $R/pids/supervisor.tsv 2>/dev/null | while read p; do [ -d /proc/$p ] && echo $p; done)" ] && break; sleep 2; done
+  # a driver that stopped before it armed the watcher (its preflight or the ownership check failed) leaves a deleter that can never get a
+  # permit: end it through the pinned verified cleanup of its own registry instead of waiting for its ceiling
+  if [ ! -f $R/pids/closeout.tsv ] && [ -f $O/deleter.tsv ]; then
+    echo "no closeout watcher was armed (driver exit code $drc): ending the deleter through the verified cleanup of its registry"
+    python3 -I $E1/checks/e1_pids.py cleanup --registry $O/deleter.tsv --execute --grace 5 --kill9 --log $O/deleter_end_no_watcher.jsonl 2>&1 | grep -E "RESULT" | cut -c1-200
+  fi
   # the watcher and the deleter end by themselves (deletion observed, or the ceiling and its tail passed); bounded wait, nothing is signalled here
   for i in $(seq 1 480); do [ -z "$(awk -F'\t' '$1 ~ /^[0-9]+$/ {print $1}' $R/pids/closeout.tsv $O/deleter.tsv 2>/dev/null | while read p; do [ -d /proc/$p ] && echo $p; done)" ] && break; sleep 2; done
   echo "closeout watcher: $(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print(d.get('verdict'), '|', str(d.get('verdict_reason'))[:160], '| permits', d.get('permits'), 'evaluations', d.get('sequence'))" $R/$PASS/reservation_closeout.json 2>/dev/null || echo "no record"); deleter: $(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print(d.get('verdict'), '|', str(d.get('verdict_reason'))[:160], '| requests sent/accepted', d.get('delete_requests_sent'), d.get('delete_requests_accepted'))" $O/reservation_deleted.deleter.json 2>/dev/null || echo "no record")"

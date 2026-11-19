@@ -1,0 +1,165 @@
+diff --git a/tests/test_e1_closeout_verdict.py b/tests/test_e1_closeout_verdict.py
+new file mode 100644
+index 00000000..e819383d
+--- /dev/null
++++ b/tests/test_e1_closeout_verdict.py
+@@ -0,0 +1,159 @@
++"""V4 closeout statements (checks/e1_closeout_verdict.py): resource cleanup, supervision validity, run response, reservation
++deletion and the frozen scientific gates are stated separately; a lost supervisor can never give an unqualified CLEAN."""
++
++from __future__ import annotations
++
++# ruff: noqa: E501
++
++import importlib.util
++import json
++import os
++import subprocess
++import sys
++import time
++from pathlib import Path
++
++import pytest
++
++REPO = Path(__file__).resolve().parents[1]
++E1 = REPO / "profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1"
++SCRIPT = E1 / "checks" / "e1_closeout_verdict.py"
++T0 = 1_800_000_000.0
++UID = "6f1d2c3e-0000-4000-8000-0000000e1a40"
++
++
++def _load():
++    spec = importlib.util.spec_from_file_location("e1_closeout_verdict_t", SCRIPT)
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    return mod
++
++
++V = _load()
++
++
++def stamp(t: float) -> str:
++    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t))
++
++
++def make(tmp: Path, **change) -> Path:
++    """A run directory after a normal, complete run whose reservation was deleted in time; `change` replaces or removes records."""
++    run = tmp / "root" / "e1_v4_scale"
++    run.mkdir(parents=True)
++    end = T0 + 4000
++    files = {
++        "run.log": "[e1_v4_scale] start 2026-11-19T00:05:00Z on host\n[e1_v4_scale] rc=0 end\n",
++        "samplers.stop": "",
++        "supervisor.json": {"samples": 3700, "causes": [], "response": None, "monitors_effective": True, "signals_sent_by_supervisor": 0, "complete": True, "last_check_at": end, "ended_at": end},
++        "mem_watch.json": {"samples": 3700, "complete": True, "breaches": []},
++        "storage_watch.json": {"samples": 1850, "complete": True, "breaches": []},
++        "reservation.json": {"pod": "p", "namespace": "inference-bench", "uid": UID, "node": "n", "creation_timestamp": stamp(T0)},
++        "reservation_closeout.json": {"reservation": {"uid": UID}, "verdict": "DELETED_IN_TIME", "complete": True, "deleted_observed": stamp(T0 + 4100), "deleted_observed_at": T0 + 4100, "decision": "PERMIT", "sequence": 800, "updated_at": T0 + 4100},
++        "reservation_deleted.json": {"uid": UID, "verdict": "DELETED_IN_TIME", "deleted_observed_at": stamp(T0 + 4101), "gpu_pods_on_node": 0},
++    }
++    for name, value in change.items():
++        name = name.replace("__", ".")
++        if value is None:
++            files.pop(name)
++        elif isinstance(value, dict) and isinstance(files.get(name), dict):
++            files[name] = {**files[name], **value}
++        else:
++            files[name] = value
++    for name, value in files.items():
++        (run / name).write_text(value if isinstance(value, str) else json.dumps(value))
++    if (run / "samplers.stop").exists():
++        os.utime(run / "samplers.stop", (end, end))
++    return run
++
++
++def statements(run: Path, failures: int = 0, now: float = T0 + 4200, gates: Path | None = None) -> tuple[dict, dict]:
++    v = V.evaluate(run, failures, gates, 5400.0, now)
++    return {k: s["status"] for k, s in v["statements"].items()}, v
++
++
++def test_complete_run_is_clean_and_every_statement_is_separate(tmp_path):
++    st, v = statements(make(tmp_path))
++    assert st == {"resource_cleanup": "CLEAN", "supervision": "VALID", "run_response": "none", "reservation_deletion": "DELETED IN TIME", "frozen_scientific_gates": "NOT EVALUATED"} and v["result"] == "CLEAN" and v["not_clean_because"] == []
++
++
++def test_lost_supervisor_is_never_an_unqualified_clean(tmp_path):
++    """The supervisor was ended mid-run (record incomplete, last check long before the end); every resource is clean and the reservation was deleted in time."""
++    run = make(tmp_path, supervisor__json={"complete": False, "last_check_at": T0 + 900, "samples": 600, "ended_at": None})
++    st, v = statements(run)
++    assert st["resource_cleanup"] == "CLEAN" and st["reservation_deletion"] == "DELETED IN TIME" and st["run_response"] == "none"
++    assert st["supervision"] == "INVALID" and "supervisor lost" in v["statements"]["supervision"]["detail"][0] and v["result"] == "NOT CLEAN" and v["not_clean_because"] == ["supervision"]
++    p = subprocess.run([sys.executable, "-I", str(SCRIPT), "--run", str(run), "--resource-failures", "0"], capture_output=True, text=True)
++    lines = p.stdout.splitlines()
++    assert p.returncode == 1 and lines[-1].startswith("# closeout result: NOT CLEAN (supervision)") and "STATUS resource cleanup: CLEAN" in lines[0] and "STATUS supervision: INVALID" in lines[1] and not any(ln.endswith("closeout result: CLEAN") for ln in lines)
++
++
++@pytest.mark.parametrize(("change", "word"), [
++    ({"supervisor__json": None}, "no supervisor record"),
++    ({"supervisor__json": {"last_check_at": T0 + 3000}}, "before the run ended"),
++    ({"supervisor__json": {"monitors_effective": False, "causes": [{"cause": "monitor_lost", "source": "storage sampler", "kind": "last sample too old"}], "response": {"outcome": "registry cleanup rc 0", "steps": [{"kind": "R2 registry cleanup"}]}}}, "a monitor was lost"),
++    ({"mem_watch__json": {"complete": False}}, "mem_watch.json"),
++    ({"storage_watch__json": None}, "storage_watch.json: missing"),
++    ({"samplers__stop": None}, "never wrote the stop file"),
++    ({"supervisor__json": {"signals_sent_by_supervisor": 1}}, "signal(s) of its own"),
++])
++def test_supervision_invalid(tmp_path, change, word):
++    st, v = statements(make(tmp_path, **change))
++    assert st["supervision"] == "INVALID" and word in " ".join(v["statements"]["supervision"]["detail"]) and v["result"] == "NOT CLEAN" and st["resource_cleanup"] == "CLEAN"
++
++
++def test_abort_response_is_a_valid_supervision_and_a_separate_statement(tmp_path):
++    resp = {"outcome": "registry cleanup rc 0 at the reservation guard, after the release requested through the controller", "steps": [{"kind": "R1 control line"}, {"kind": "R2 registry cleanup"}], "escalation": {"causes": [{"cause": "reservation_guard"}]}}
++    run = make(tmp_path, supervisor__json={"response": resp, "causes": [{"cause": "breach", "source": "MEMORY-BREACH", "kind": "importer_rss_above_ceiling"}]}, samplers__stop=None, mem_watch__json={"complete": False})
++    (run / "MEMORY-BREACH").write_text('{"kind": "importer_rss_above_ceiling"}\n')
++    st, v = statements(run)
++    assert st["supervision"] == "VALID" and st["run_response"] == "ABORTED" and v["result"] == "NOT CLEAN" and v["not_clean_because"] == ["run response"]
++    detail = " ".join(v["statements"]["run_response"]["detail"])
++    assert "R1 control line" in detail and "R2 registry cleanup" in detail and "escalated at the reservation guard" in detail and "MEMORY-BREACH was written" in detail
++
++
++def test_nothing_started_is_not_applicable_and_can_be_clean(tmp_path):
++    run = make(tmp_path, supervisor__json=None, mem_watch__json=None, storage_watch__json=None, samplers__stop=None, run__log="LAUNCH REFUSED: the remaining reservation budget is insufficient\n")
++    os.utime(run / "run.log", None)
++    st, v = statements(run)
++    assert st["supervision"] == "NOT APPLICABLE" and v["result"] == "CLEAN"
++
++
++def test_resource_failures_are_their_own_statement(tmp_path):
++    st, v = statements(make(tmp_path), failures=2)
++    assert st["resource_cleanup"] == "NOT CLEAN" and st["supervision"] == "VALID" and v["result"] == "NOT CLEAN" and v["not_clean_because"] == ["resource cleanup"]
++
++
++@pytest.mark.parametrize(("change", "now", "status", "word"), [
++    ({"reservation_closeout__json": {"verdict": None, "complete": False}, "reservation_deleted__json": None}, T0 + 4200, "PENDING", "DELETE BY"),
++    ({"reservation_closeout__json": {"verdict": None, "complete": False}, "reservation_deleted__json": None}, T0 + 5401, "FAIL", "the ceiling has passed"),
++    ({"reservation_closeout__json": {"verdict": "DELETED_LATE"}, "reservation_deleted__json": {"verdict": "DELETED_LATE"}}, T0 + 5500, "FAIL", "DELETED_LATE"),
++    ({"reservation_closeout__json": {"verdict": "NOT_DELETED"}, "reservation_deleted__json": None}, T0 + 6100, "FAIL", "NOT_DELETED"),
++    ({"reservation_closeout__json": {"verdict": "UNVERIFIED"}}, T0 + 6100, "FAIL", "UNVERIFIED"),
++    ({"reservation_closeout__json": {"verdict": "GONE_WITHOUT_PERMIT"}, "reservation_deleted__json": {"verdict": "GONE_NOT_BY_DELETER"}}, T0 + 4200, "FAIL", "GONE_WITHOUT_PERMIT"),
++    ({"reservation_closeout__json": None}, T0 + 4200, "FAIL", "NOT VERIFIABLE: no watcher record"),
++    ({"reservation_deleted__json": None}, T0 + 4200, "FAIL", "NOT VERIFIABLE: no deleter record"),
++    ({"reservation_deleted__json": {"uid": "11111111-0000-4000-8000-000000000000"}}, T0 + 4200, "FAIL", "UIDs differ"),
++    ({"reservation__json": {"creation_timestamp": "yesterday"}}, T0 + 4200, "FAIL", "NOT VERIFIABLE"),
++])
++def test_reservation_deletion_statement(tmp_path, change, now, status, word):
++    st, v = statements(make(tmp_path, **change), now=now)
++    assert st["reservation_deletion"] == status and word in " ".join(v["statements"]["reservation_deletion"]["detail"])
++    assert v["result"] == ("CLEAN" if status == "PENDING" else "NOT CLEAN") and st["resource_cleanup"] == "CLEAN" and st["supervision"] == "VALID"
++
++
++def test_gates_are_reported_and_never_evaluated_here(tmp_path):
++    run = make(tmp_path)
++    g = tmp_path / "V4S-GATES.json"
++    g.write_text(json.dumps({"verdict": "FAIL", "counts": {"PASS": 16, "FAIL": 1, "INCONCLUSIVE": 0}, "gates": [{"gate": "G9.scientific_completeness", "status": "FAIL"}]}))
++    st, v = statements(run, gates=g)
++    assert st["frozen_scientific_gates"] == "FAIL" and "G9.scientific_completeness" in v["statements"]["frozen_scientific_gates"]["detail"][0] and v["result"] == "CLEAN"  # a gate verdict is not a closeout statement
++    code = SCRIPT.read_text().split('"""', 2)[2]
++    assert "e1_v4scale_gates" not in code and "subprocess" not in code
++
++
++def test_closeout_script_delegates_the_result(tmp_path):
++    text = (E1 / "closeout_e1_v4scale.sh").read_text()
++    assert "python3 -I $E1/checks/e1_closeout_verdict.py --run $RUN/$PASS --resource-failures $fail --gates $RUN/cpu/V4S-GATES.json --ceiling-s 5400" in text and text.rstrip().endswith("exit $?")
++    assert 'echo "# closeout result' not in text and "kubectl" not in text and "--execute" not in [w for ln in text.splitlines() if not ln.lstrip().startswith(("#", "case", 'echo')) for w in ln.split()]
++    v3 = (E1 / "closeout_e1_v3scale.sh").read_text()
++    assert 'echo "# closeout result: $([ $fail = 0 ] && echo CLEAN || echo NOT CLEAN)"' in v3  # the V3 closeout is not rewritten

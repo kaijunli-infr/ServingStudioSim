@@ -1,0 +1,122 @@
+diff --git a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_kubectl.py b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_kubectl.py
+new file mode 100644
+index 00000000..4daed7cc
+--- /dev/null
++++ b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_kubectl.py
+@@ -0,0 +1,116 @@
++#!/usr/bin/env python3
++"""Stand-in for kubectl in the CPU-only tests and rehearsals of the V4 reservation closeout (never talks to a cluster).
++
++    E1_MOCK_KUBE_STATE=<state.json> [E1_MOCK_KUBE_ROLE=reader|deleter] python3 -I e1_v4scale_mock_kubectl.py [--request-timeout=..] <kubectl arguments>
++    (or, instead of the environment: leading arguments --mock-state=<state.json> --mock-role=reader|deleter)
++
++Implements exactly what checks/e1_reservation_closeout.py uses, with the API server's messages:
++  get pod NAME -n NS -o json                                              a pod, or `Error from server (NotFound)`
++  get pods --all-namespaces --field-selector spec.nodeName=NODE -o json   a pod list
++  delete --raw /api/v1/namespaces/NS/pods/NAME -f OPTIONS.json            DeleteOptions with preconditions.uid and dryRun
++The state file holds {"pods": [...], "unreachable": false, "delete_delay_s": 2, "requests": [...]}: a deleted pod gets a
++deletionTimestamp and disappears delete_delay_s later. Role `reader` (the capture tray's credential) gets Forbidden on
++delete. Every request is appended to "requests". Fault switches in the state, for negative controls: "unreachable",
++"ignore_preconditions" (a server that does not honour the UID precondition), "swap_uid_on_delete" (the pod is replaced
++between a caller's check and its delete request), "fail_next_delete" (one transport failure). `init` writes a state with one reservation pod:
++    python3 -I e1_v4scale_mock_kubectl.py init --state F --node NODE [--name N] [--namespace NS] [--uid U] [--age-s S] [--delete-delay-s 2]
++Stdlib only.
++"""
++
++from __future__ import annotations
++
++# ruff: noqa: E501
++
++import fcntl
++import json
++import os
++import sys
++import time
++import uuid
++
++NAME, NAMESPACE = "dsv41-gb300-reserve-e2e", "inference-bench"
++
++
++def iso(t: float) -> str:
++    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t))
++
++
++def reservation_pod(node: str, *, name: str = NAME, namespace: str = NAMESPACE, uid: str | None = None, created: float | None = None, labels: dict | None = None, image: str = "registry.k8s.io/pause:3.9", gpus: str = "4") -> dict:
++    created = time.time() if created is None else created
++    return {"apiVersion": "v1", "kind": "Pod", "metadata": {"name": name, "namespace": namespace, "uid": uid or str(uuid.uuid4()), "creationTimestamp": iso(created), "labels": {"app": "dsv41-gb300-reserve", "owner": "kevin"} if labels is None else labels},
++            "spec": {"restartPolicy": "Never", "nodeName": node, "containers": [{"name": "hold", "image": image, "resources": {"requests": {"nvidia.com/gpu": gpus}, "limits": {"nvidia.com/gpu": gpus}}}]},
++            "status": {"phase": "Running", "startTime": iso(created)}}
++
++
++def main(argv: list[str]) -> int:
++    if argv and argv[0] == "init":
++        opt = dict(zip(argv[1::2], argv[2::2]))
++        pod = reservation_pod(opt["--node"], name=opt.get("--name", NAME), namespace=opt.get("--namespace", NAMESPACE), uid=opt.get("--uid"), created=time.time() - float(opt.get("--age-s", 0)))
++        with open(opt["--state"], "w") as fh:
++            json.dump({"pods": [pod], "unreachable": False, "delete_delay_s": float(opt.get("--delete-delay-s", 2)), "requests": []}, fh, indent=1)
++        print(json.dumps({"pod": pod["metadata"]["name"], "namespace": pod["metadata"]["namespace"], "uid": pod["metadata"]["uid"], "node": opt["--node"], "creation_timestamp": pod["metadata"]["creationTimestamp"]}))
++        return 0
++    args = [a for a in argv if not a.startswith(("--request-timeout", "--mock-"))]
++    over = dict(a[7:].split("=", 1) for a in argv if a.startswith("--mock-"))
++    role, path = over.get("role") or os.environ.get("E1_MOCK_KUBE_ROLE", "reader"), over.get("state") or os.environ["E1_MOCK_KUBE_STATE"]
++    with open(path, "r+") as fh:
++        fcntl.flock(fh, fcntl.LOCK_EX)
++        st, now = json.load(fh), time.time()
++        st["pods"] = [p for p in st["pods"] if not (p.get("_gone_at") is not None and now >= p["_gone_at"])]
++        rc, out, err = handle(st, args, role, now)
++        extra = {}
++        if args[:2] == ["delete", "--raw"] and len(args) >= 5:
++            try:
++                opts = json.load(open(args[4]))
++                extra = {"dry_run": bool(opts.get("dryRun")), "precondition_uid": (opts.get("preconditions") or {}).get("uid")}
++            except (OSError, ValueError):
++                extra = {"options_unreadable": True}
++        st.setdefault("requests", []).append({"at": now, "role": role, "args": args[:4], "rc": rc, "message": err.strip()[:160], **extra})
++        fh.seek(0)
++        fh.truncate()
++        json.dump(st, fh, indent=1)
++    sys.stdout.write(out)
++    sys.stderr.write(err)
++    return rc
++
++
++def public(pod: dict) -> dict:
++    return {k: v for k, v in pod.items() if not k.startswith("_")}
++
++
++def handle(st: dict, args: list[str], role: str, now: float) -> tuple[int, str, str]:
++    if st.get("unreachable"):
++        return 1, "", "Unable to connect to the server: dial tcp: i/o timeout (mock)\n"
++    if args[:2] == ["get", "pod"] and len(args) >= 5 and args[3] == "-n":
++        pod = next((p for p in st["pods"] if p["metadata"]["name"] == args[2] and p["metadata"]["namespace"] == args[4]), None)
++        return (0, json.dumps(public(pod)) + "\n", "") if pod else (1, "", f'Error from server (NotFound): pods "{args[2]}" not found\n')
++    if args[:3] == ["get", "pods", "--all-namespaces"] and "--field-selector" in args:
++        node = args[args.index("--field-selector") + 1].split("=", 1)[1]
++        return 0, json.dumps({"apiVersion": "v1", "kind": "List", "items": [public(p) for p in st["pods"] if p["spec"].get("nodeName") == node]}) + "\n", ""
++    if args[:2] == ["delete", "--raw"] and len(args) >= 5 and args[3] == "-f":
++        parts = args[2].split("/")
++        if len(parts) != 7 or parts[:4] != ["", "api", "v1", "namespaces"] or parts[5] != "pods":
++            return 1, "", "Error from server (BadRequest): unsupported raw path (mock)\n"
++        ns, name = parts[4], parts[6]
++        if role != "deleter":
++            return 1, "", f'Error from server (Forbidden): pods "{name}" is forbidden: User "system:serviceaccount:mock:reader" cannot delete resource "pods" in API group "" in the namespace "{ns}"\n'
++        if st.pop("fail_next_delete", None):
++            return 1, "", "Unable to connect to the server: dial tcp: i/o timeout (mock, once)\n"
++        opts = json.load(open(args[4]))
++        pod = next((p for p in st["pods"] if p["metadata"]["name"] == name and p["metadata"]["namespace"] == ns), None)
++        if pod is None:
++            return 1, "", f'Error from server (NotFound): pods "{name}" not found\n'
++        want = (opts.get("preconditions") or {}).get("uid")
++        if st.get("swap_uid_on_delete") and not opts.get("dryRun"):
++            pod["metadata"]["uid"] = str(uuid.uuid4())  # somebody replaced the pod after the caller looked at it
++        if want is not None and want != pod["metadata"]["uid"] and not st.get("ignore_preconditions"):
++            return 1, "", f"Error from server (Conflict): Operation cannot be fulfilled on pods \"{name}\": Precondition failed: UID in precondition: {want}, UID in object meta: {pod['metadata']['uid']}\n"
++        if not opts.get("dryRun"):
++            pod["metadata"].setdefault("deletionTimestamp", iso(now))
++            pod.setdefault("_gone_at", now + float(st.get("delete_delay_s", 2)))
++        return 0, json.dumps(public(pod)) + "\n", ""
++    return 1, "", f"error: mock kubectl does not implement {args[:4]}\n"
++
++
++if __name__ == "__main__":
++    sys.exit(main(sys.argv[1:]))

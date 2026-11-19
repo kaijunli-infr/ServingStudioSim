@@ -1,0 +1,146 @@
+diff --git a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_closeout_verdict.py b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_closeout_verdict.py
+new file mode 100644
+index 00000000..9de6bef9
+--- /dev/null
++++ b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_closeout_verdict.py
+@@ -0,0 +1,140 @@
++#!/usr/bin/env python3
++"""The four separate statements of the V4 closeout, and the one combined result (read-only; signals nothing).
++
++    python3 -I checks/e1_closeout_verdict.py --run <run root>/<pass> --resource-failures N [--gates <run root>/cpu/V4S-GATES.json]
++        [--ceiling-s 5400] [--json OUT]
++
++  resource cleanup        CLEAN iff closeout_e1_v4scale.sh found no failing resource item (N = 0): GPUs idle, no owned process,
++                          no refusal or lookalike, supervisor and watcher processes gone, no Nsight process, terminal phase
++  supervision             VALID iff the supervisor's record is complete, it kept checking until the run ended (or it gave
++                          an abort response), no monitor was lost, and both samplers left complete summaries. A lost supervisor, a
++                          lost monitor or a missing record is INVALID. NOT APPLICABLE if nothing was started.
++  run response            none, or the supervisor's abort response / a breach marker (a FAIL of the run, stated separately
++                          from the validity of the supervision that produced it)
++  reservation deletion    DELETED IN TIME iff the watcher (tray, read-only credential) and the deleter (operator credential)
++                          both recorded DELETED_IN_TIME for the recorded UID; PENDING before the ceiling while neither has a
++                          verdict; every other state is a FAIL (late, refused, gone without a permit, not verifiable)
++  frozen scientific gates the verdict of postrun_e1_v4scale.sh if it has run; this script never evaluates a gate
++
++Combined result: CLEAN only if resource cleanup is CLEAN, supervision is VALID or NOT APPLICABLE, there was no abort response
++and no breach marker, and the reservation deletion has not failed. Anything else is NOT CLEAN (exit 1). Stdlib only.
++"""
++
++from __future__ import annotations
++
++# ruff: noqa: E501
++
++import argparse
++import calendar
++import json
++import sys
++import time
++from pathlib import Path
++
++
++def load(path):
++    try:
++        return json.loads(Path(path).read_text())
++    except (OSError, ValueError, TypeError):
++        return None
++
++
++def supervision(run: Path) -> tuple[str, list[str]]:
++    sup, log = load(run / "supervisor.json"), run / "run.log"
++    started = log.exists() and "] start " in log.read_text(errors="replace")
++    if sup is None:
++        return ("INVALID", ["the launcher was started and there is no supervisor record"]) if started else ("NOT APPLICABLE", ["nothing was started (no launcher start line, no supervisor record)"])
++    why = []
++    if sup.get("complete") is not True:
++        why.append(f"the supervisor's record is not complete: it did not end by itself (last check {time.strftime('%H:%M:%SZ', time.gmtime(sup.get('last_check_at') or 0))}, {sup.get('samples')} samples): supervisor lost")
++    if sup.get("monitors_effective") is not True:
++        why.append(f"a monitor was lost: {[(c.get('source'), c.get('kind')) for c in sup.get('causes', []) + sup.get('later_causes', []) if c.get('cause') == 'monitor_lost']}")
++    if sup.get("response") is None and sup.get("complete") is True:
++        stop = run / "samplers.stop"
++        if not stop.exists():
++            why.append("the supervisor ended without a response although the driver never wrote the stop file")
++        elif (sup.get("last_check_at") or 0) < stop.stat().st_mtime - 5:
++            why.append(f"the supervisor's last check was {stop.stat().st_mtime - (sup.get('last_check_at') or 0):.0f} s before the run ended")
++        for name in ("mem_watch.json", "storage_watch.json"):
++            s = load(run / name)
++            if not s or not s.get("samples") or s.get("complete") is not True:
++                why.append(f"{name}: {'missing' if not s else 'samples %s, complete %s' % (s.get('samples'), s.get('complete'))}")
++    if sup.get("signals_sent_by_supervisor") not in (0, None):
++        why.append(f"the supervisor recorded {sup.get('signals_sent_by_supervisor')} signal(s) of its own")
++    return ("INVALID", why) if why else ("VALID", [f"record complete, {sup.get('samples')} samples, monitors effective" + ("" if sup.get("response") is None else "; it gave an abort response (see run response)")])
++
++
++def response(run: Path) -> tuple[str, list[str]]:
++    sup, out = load(run / "supervisor.json") or {}, []
++    if sup.get("response"):
++        r = sup["response"]
++        out.append(f"ABORT RESPONSE {r.get('outcome')} (steps {[s.get('kind') for s in r.get('steps', [])]}) for {[(c.get('cause'), c.get('source'), c.get('kind')) for c in sup.get('causes', [])]}" + ("; escalated at the reservation guard" if r.get("escalation") else ""))
++    for b in ("MEMORY-BREACH", "STORAGE-BREACH"):
++        if (run / b).exists():
++            out.append(f"{b} was written: {(run / b).read_text(errors='replace')[:200].strip()}")
++    return ("ABORTED", out) if out else ("none", [])
++
++
++def reservation(run: Path, ceiling_s: float, now: float) -> tuple[str, list[str]]:
++    res, c, d = load(run / "reservation.json"), load(run / "reservation_closeout.json"), load(run / "reservation_deleted.json")
++    if res is None and c is None and d is None:
++        return "NOT APPLICABLE", ["no reservation record in the run directory"]
++    try:
++        deadline = calendar.timegm(time.strptime((res or {})["creation_timestamp"], "%Y-%m-%dT%H:%M:%SZ")) + ceiling_s
++    except (KeyError, ValueError, TypeError):
++        return "FAIL", ["NOT VERIFIABLE: the reservation record has no readable creation time"]
++    by = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(deadline))
++    cv, dv, uid = (c or {}).get("verdict"), (d or {}).get("verdict"), res.get("uid")
++    if cv == "DELETED_IN_TIME" and dv == "DELETED_IN_TIME" and uid and (c.get("reservation") or {}).get("uid") == uid == d.get("uid"):
++        return "DELETED IN TIME", [f"uid {uid}: watcher observed it gone {c.get('deleted_observed')}, deleter {d.get('deleted_observed_at')} (deadline {by}); GPU pods on the node afterwards {d.get('gpu_pods_on_node')}"]
++    if cv is None and dv is None and now <= deadline and c is not None:
++        return "PENDING", [f"watcher decision {c.get('decision')} (evaluation {c.get('sequence')}, {now - (c.get('updated_at') or 0):.0f} s ago): {c.get('reasons')}; DELETE BY {by} ({deadline - now:.0f} s left)"]
++    why = []
++    if c is None:
++        why.append("NOT VERIFIABLE: no watcher record (reservation_closeout.json)")
++    elif cv != "DELETED_IN_TIME":
++        why.append(f"watcher: {cv or 'no verdict'}{'' if cv else ' and the ceiling has passed' if now > deadline else ''}: {c.get('verdict_reason') or c.get('reasons')}")
++    if d is None:
++        why.append("NOT VERIFIABLE: no deleter record (reservation_deleted.json)")
++    elif dv != "DELETED_IN_TIME":
++        why.append(f"deleter: {dv or 'no verdict'}: {d.get('verdict_reason')}")
++    if c and d and not ((c.get("reservation") or {}).get("uid") == uid == d.get("uid")):
++        why.append(f"UIDs differ: record {uid}, watcher {(c.get('reservation') or {}).get('uid')}, deleter {d.get('uid')}")
++    return "FAIL", why + [f"deadline {by}"]
++
++
++def gates(path: Path | None) -> tuple[str, list[str]]:
++    g = load(path) if path else None
++    if not g:
++        return "NOT EVALUATED", ["postrun_e1_v4scale.sh decides acceptance; no gate record yet"]
++    return str(g.get("verdict")), [f"{path}: {g.get('counts')}; not PASS: {[(x['gate'], x['status']) for x in g.get('gates', []) if x.get('status') != 'PASS']}"]
++
++
++def evaluate(run: Path, resource_failures: int, gates_path: Path | None, ceiling_s: float, now: float) -> dict:
++    out = {"resource_cleanup": ("CLEAN", ["no failing resource item"]) if resource_failures == 0 else ("NOT CLEAN", [f"{resource_failures} failing resource item(s) above"]), "supervision": supervision(run), "run_response": response(run),
++           "reservation_deletion": reservation(run, ceiling_s, now), "frozen_scientific_gates": gates(gates_path)}
++    not_clean = [k for k, ok in (("resource cleanup", out["resource_cleanup"][0] == "CLEAN"), ("supervision", out["supervision"][0] in ("VALID", "NOT APPLICABLE")), ("run response", out["run_response"][0] == "none"),
++                                 ("reservation deletion", out["reservation_deletion"][0] in ("DELETED IN TIME", "PENDING", "NOT APPLICABLE"))) if not ok]
++    return {"statements": {k: {"status": v[0], "detail": v[1]} for k, v in out.items()}, "not_clean_because": not_clean, "result": "NOT CLEAN" if not_clean else "CLEAN"}
++
++
++def main(argv: list[str] | None = None) -> int:
++    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
++    ap.add_argument("--run", required=True, type=Path)
++    ap.add_argument("--resource-failures", required=True, type=int)
++    ap.add_argument("--gates", type=Path)
++    ap.add_argument("--ceiling-s", type=float, default=5400.0)
++    ap.add_argument("--json", type=Path)
++    args = ap.parse_args(argv)
++    v = evaluate(args.run, args.resource_failures, args.gates, args.ceiling_s, time.time())
++    for name, s in v["statements"].items():
++        print(f"STATUS {name.replace('_', ' ')}: {s['status']} | {'; '.join(s['detail'])[:700]}")
++    pending = v["statements"]["reservation_deletion"]["status"] == "PENDING"
++    print(f"# closeout result: {v['result']}" + (f" ({', '.join(v['not_clean_because'])})" if v["not_clean_because"] else "") + (" [reservation deletion PENDING: the watcher's verdict follows]" if pending else ""))
++    if args.json:
++        args.json.write_text(json.dumps(v, indent=1) + "\n")
++    return 0 if v["result"] == "CLEAN" else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
