@@ -1,0 +1,13 @@
+# feasibility checks 2026-11-19T00:08:52Z on pod4-gb300-10-tray16-f3, CPU-only (CUDA_VISIBLE_DEVICES='')
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+cpu_only_guard: CUDA hidden (CUDA_VISIBLE_DEVICES='' set by the caller); no /dev/nvidia<N> opened; torch.cuda not initialised
+62 passed in 2.03s
+PASS  frozen V3 / V2 / V1 manifests verify
+PASS  V3 archive: all 207 files match SHA256SUMS (44122927ea6c29995a5af63846bdc03e40c40def73eb221f80acd43c05bcda97)
+tray-preserved streams:
+8f5905d95c61c8e07cf9d557fad97749191146f97c0e1b1a11dc23edb097057f  dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.qdstrm
+4739d6581d1b035bae1f1a0f15a3163bf8e708dc022527fb64228f1143db839c  dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.qdstrm
+764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3  dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm
+PASS  no tracked file differs from dbe4310f (V3 report, evidence, retro, packets, identity policies, gate code, controller unchanged); new files only: 2 path(s)
+session_runner 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+gpu after (MiB / compute processes): 0 0 0 0 / 0
