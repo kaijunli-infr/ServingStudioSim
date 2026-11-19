@@ -51,7 +51,8 @@ r=load(run+"/reservation.json") or {}
 try:
     import calendar
     res_age = time.time() - calendar.timegm(time.strptime(r["creation_timestamp"], "%Y-%m-%dT%H:%M:%SZ"))
-    print(f"reservation: age {res_age / 60:.1f} min (supervisor guard 78 min, ceiling 90 min)")
+    print(f"reservation: age {res_age:.0f} s = {res_age / 60:.1f} min (launch permitted to 470 s; supervisor guard 4680 s; DELETE BY {f(time.time() - res_age + 5400)} = 90 min, {5400 - res_age:.0f} s left)")
+    if res_age > 5400 and not load(run+"/reservation_deleted.json"): print("ABORT-CONDITION the reservation is older than 90 min and no deletion record exists (gate G10 will FAIL): delete it now if the GPUs are idle")
     if res_age > 4680 and not (u or {}).get("complete"): print("ABORT-CONDITION the reservation is older than 78 min and the run has not ended (the supervisor's reservation guard should have responded)")
 except (KeyError, ValueError, TypeError): print("reservation: age unknown (record missing or unreadable)")
 s=load(run+"/storage_watch.json")

@@ -25,14 +25,14 @@ E1=$REPO/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1
 RUN=$S/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale
 CFG=$E1/configs_v4scale/$PASS/profile.json; TRACE=$E1/traces/e1_v4_scale.csv; INP=$E1/E1-V4-SCALE-INPUTS.json
 IMPORTER=/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter
-NAME=dsv41_flash_1017_gb300_tp4_$PASS; RSS_CEIL=128; TMP_CEIL=15; PERS_CEIL=18; RES_AGE=600; RES_GUARD=4680
+NAME=dsv41_flash_1017_gb300_tp4_$PASS; RSS_CEIL=128; TMP_CEIL=15; PERS_CEIL=18; RES_GUARD=4680; RES_RUN=4210; GPU_CEIL=2700
 if [ "$MODE" = rehearsal ]; then
   RUN=$S/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e; NAME=${NAME}_e2e; export CUDA_VISIBLE_DEVICES=""
   # the mock importer is the interpreter the mock launcher runs under: resolve it inside the project environment (uv must not create a venv)
   IMPORTER=$(cd $REPO && source profiling/env/arm64-gb300/gb300.env >/dev/null 2>&1 && uv run --no-sync python -c "import os,sys; print(os.path.realpath(sys.executable))")
   [ -x "$IMPORTER" ] && [ ! -e "$REPO/.venv" ] || { echo "rehearsal: could not resolve the project interpreter cleanly (got '$IMPORTER'; $REPO/.venv exists: $([ -e $REPO/.venv ] && echo yes || echo no))"; exit 2; }
-  RSS_CEIL=${E1_V4S_REHEARSAL_IMPORTER_RSS_GB:-$RSS_CEIL}; TMP_CEIL=${E1_V4S_REHEARSAL_TEMPORARY_GB:-$TMP_CEIL}; PERS_CEIL=${E1_V4S_REHEARSAL_PERSISTENT_GB:-$PERS_CEIL}; RES_GUARD=${E1_V4S_REHEARSAL_RESERVATION_GUARD_S:-$RES_GUARD}
-  echo "REHEARSAL MODE: run root $RUN, CUDA hidden, mock launcher, importer executable $IMPORTER, ceilings importer $RSS_CEIL GiB / temporary $TMP_CEIL GB / persistent $PERS_CEIL GB; reservation guard $RES_GUARD s"
+  RSS_CEIL=${E1_V4S_REHEARSAL_IMPORTER_RSS_GB:-$RSS_CEIL}; TMP_CEIL=${E1_V4S_REHEARSAL_TEMPORARY_GB:-$TMP_CEIL}; PERS_CEIL=${E1_V4S_REHEARSAL_PERSISTENT_GB:-$PERS_CEIL}; RES_GUARD=${E1_V4S_REHEARSAL_RESERVATION_GUARD_S:-$RES_GUARD}; RES_RUN=${E1_V4S_REHEARSAL_RUN_BUDGET_S:-$RES_RUN}; GPU_CEIL=${E1_V4S_REHEARSAL_SUPERVISOR_CEILING_S:-$GPU_CEIL}
+  echo "REHEARSAL MODE: run root $RUN, CUDA hidden, mock launcher, importer executable $IMPORTER, ceilings importer $RSS_CEIL GiB / temporary $TMP_CEIL GB / persistent $PERS_CEIL GB; reservation guard $RES_GUARD s, run budget $RES_RUN s, supervisor GPU-held ceiling $GPU_CEIL s"
 fi
 [ -f "$CFG" ] || { echo "no config $CFG"; exit 2; }
 mkdir -p $RUN/$PASS
@@ -46,9 +46,11 @@ cp $CFG $RUN/$PASS/profile.json; cp $TRACE $RUN/$PASS/trace.csv
 REG=$RUN/pids/owned.tsv; python3 -I $E1/checks/e1_pids.py register --registry $REG --label driver:$PASS $$ | tee -a $RUN/$PASS/run.log
 # reservation record (written by the operator from kubectl before the launch): node must be THIS host and the pod Running
 python3 -I -c "import json,sys,socket; r=json.load(open(sys.argv[1])); sys.exit(0 if r.get('node')==socket.gethostname() and r.get('phase')=='Running' and r.get('creation_timestamp') else 1)" $RUN/$PASS/reservation.json 2>/dev/null || { echo "reservation.json missing, not Running, without a creation time, or for another node; not starting"; exit 5; }
-# reservation budget, first part: no launch later than $RES_AGE s after the reservation's creation (the end of the run would not fit the 90 min ceiling)
-python3 -I $E1/checks/e1_reservation_guard.py age --reservation $RUN/$PASS/reservation.json --max-age-s $RES_AGE | tee -a $RUN/$PASS/run.log
-[ "${PIPESTATUS[0]}" = 0 ] || { echo "reservation too old (or its age unknown) for a launch; not starting"; exit 7; }
+# reservation budget, launch rule (E1-V4-TIMELINE.md): start nothing unless the time left until the supervisor's reservation guard
+# ($RES_GUARD s after the reservation's creation) is at least the registered run budget ($RES_RUN s = this check to the launcher's start
+# + GPU-held ceiling + release + CPU-only processing after the release). No observer and no launcher has been started at this point.
+python3 -I $E1/checks/e1_reservation_guard.py eligible --reservation $RUN/$PASS/reservation.json --guard-s $RES_GUARD --run-budget-s $RES_RUN | tee -a $RUN/$PASS/run.log
+[ "${PIPESTATUS[0]}" = 0 ] || { echo "LAUNCH REFUSED: the remaining reservation budget is insufficient (or the reservation's age is unknown); nothing was started" | tee -a $RUN/$PASS/run.log; exit 7; }
 # launch source record (gate G0): commit, pinned trees, gitlinks, tracked changes, descent from the pinned code commit
 python3 -I - "$REPO" "$E1/V4S-PIN.json" "$MODE" > $RUN/$PASS/launch_source.json <<'PY'
 import json, subprocess, sys
@@ -76,7 +78,7 @@ spawn storagewatch:$PASS python3 -I $E1/checks/e1_storage_watch.py --out $RUN/$P
 # MEMORY-BREACH / STORAGE-BREACH and the samplers' heartbeats, and enforces the GPU-held ceiling before the stop request and the
 # reservation guard ($RES_GUARD s after the reservation's creation); one response; sends no signal itself
 SREG=$RUN/pids/supervisor.tsv
-python3 -I $E1/checks/e1_pids.py spawn --registry $SREG --label supervisor:$PASS -- python3 -I $E1/checks/e1_supervisor_v4.py --run $RUN/$PASS --registry $REG --out $RUN/$PASS/supervisor.json --reservation $RUN/$PASS/reservation.json --reservation-guard-s $RES_GUARD --control-line "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['supervisor']['control_line'])" $INP)" --gpu-held-ceiling-s 2700 --ack-s 10 --stale-s 60 --cleanup-grace 30 --interval 1 --max-s 5400 --stop-file $STOPF | tee -a $RUN/$PASS/run.log; UPID=$(lastpid)
+python3 -I $E1/checks/e1_pids.py spawn --registry $SREG --label supervisor:$PASS -- python3 -I $E1/checks/e1_supervisor_v4.py --run $RUN/$PASS --registry $REG --out $RUN/$PASS/supervisor.json --reservation $RUN/$PASS/reservation.json --reservation-guard-s $RES_GUARD --control-line "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['supervisor']['control_line'])" $INP)" --gpu-held-ceiling-s $GPU_CEIL --ack-s 10 --stale-s 60 --cleanup-grace 30 --interval 1 --max-s 5400 --stop-file $STOPF | tee -a $RUN/$PASS/run.log; UPID=$(lastpid)
 cd $REPO
 source profiling/env/arm64-gb300/gb300.env
 if [ "$MODE" = real ]; then unset CUDA_VISIBLE_DEVICES; else export CUDA_VISIBLE_DEVICES=""; fi

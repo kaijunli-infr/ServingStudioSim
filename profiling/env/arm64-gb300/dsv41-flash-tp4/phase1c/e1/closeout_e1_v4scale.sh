@@ -41,6 +41,7 @@ if [ -f $RUN/$PASS/run.log ]; then
   echo "INFO  $(grep -a 'rc=' $RUN/$PASS/run.log | tail -1)"; echo "INFO  $(grep -a 'EngineDeadError-family' $RUN/$PASS/run.log | tail -1 | cut -c1-200)"
   echo "INFO  run root size $(du -sh $RUN 2>/dev/null | cut -f1); nsys files: $(ls -l $RUN/$PASS/profile/nsys/ 2>/dev/null | awk 'NR>1{printf "%s %s  ", $5, $9}')"
 else echo "INFO  no run.log for $PASS (nothing ran)"; fi
+[ -f $RUN/$PASS/reservation.json ] && python3 -I $E1/checks/e1_reservation_guard.py deadline --reservation $RUN/$PASS/reservation.json --ceiling-s 5400 | sed "s/^PASS  /INFO  /; s/^FAIL  /INFO  RESERVATION CEILING PASSED (gate G10 will FAIL): /; s/^INCONCLUSIVE/INFO /"
 echo "INFO  reservation pod (from the laptop): delete immediately after a CLEAN closeout and only with the GPUs idle (budget: 12 min from the supervisor guard at 78 min to the 90 min ceiling), then write $RUN/$PASS/reservation_deleted.json {pod, deleted_observed_at (UTC, %Y-%m-%dT%H:%M:%SZ), gpu_pods_on_node} from kubectl; gate G10/G12 read it"
 echo "# closeout result: $([ $fail = 0 ] && echo CLEAN || echo NOT CLEAN)"
 exit $fail

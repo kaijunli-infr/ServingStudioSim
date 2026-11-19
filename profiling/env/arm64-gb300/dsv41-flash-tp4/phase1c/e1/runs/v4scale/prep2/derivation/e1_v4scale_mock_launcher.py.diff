@@ -1,0 +1,29 @@
+--- e1_v3scale_mock_launcher.py (V3, names changed to V4 only)
++++ e1_v4scale_mock_launcher.py
+@@ -22 +22,3 @@
+-the capture). Timings: E1_V4S_MOCK_{STARTUP,CAPTURE,FLUSH,IMPORT}_S.
++the capture; with E1_V4S_MOCK_STORAGE_BALLAST_AT_RESERVATION_AGE_S not before the reservation record is that old).
++Timings: E1_V4S_MOCK_{STARTUP,CAPTURE,FLUSH,IMPORT}_S. E1_V4S_MOCK_EXPORT_UNTIL_RESERVATION_AGE_S: after the report, the launcher
++stays in its CPU-only export phase until the reservation record is that old (a long export and parse after the GPU release).
+@@ -28,0 +31 @@
++import calendar
+@@ -184,0 +188,5 @@
++def reservation_created(config: Path) -> float:
++    """Creation time in the reservation record next to the rehearsal copy of the profile config."""
++    return float(calendar.timegm(time.strptime(json.loads((config.parent / "reservation.json").read_text())["creation_timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
++
++
+@@ -239,0 +248,2 @@
++        ballast_age = env_f("STORAGE_BALLAST_AT_RESERVATION_AGE_S", 0)
++        ballast_from = reservation_created(config) + ballast_age if ballast_age > 0 else 0.0
+@@ -242 +252 @@
+-            if SCENARIO == "storage_ballast" and time.time() - t_cap > 3 and not (work / "ballast.bin").exists():
++            if SCENARIO == "storage_ballast" and time.time() - t_cap > 3 and time.time() >= ballast_from and not (work / "ballast.bin").exists():
+@@ -254,0 +265,7 @@
++    until = env_f("EXPORT_UNTIL_RESERVATION_AGE_S", 0)
++    if rc == 0 and until > 0:
++        created = reservation_created(config)
++        print(f"[mock] export and parse (CPU only) continue until the reservation record is {until:.0f} s old", flush=True)
++        while time.time() - created < until:
++            time.sleep(0.5)
++        print("[mock] export and parse ended", flush=True)

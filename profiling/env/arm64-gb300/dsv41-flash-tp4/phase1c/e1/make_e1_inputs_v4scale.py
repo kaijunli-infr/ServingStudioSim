@@ -40,6 +40,10 @@ SRC_TRACE = E1 / "traces" / "e1_dry.csv"
 POLICY_V1 = E1 / "checks" / "e1_identity_policy_v1.json"
 GENERATED = ("traces/e1_v4_scale.csv", f"configs_v4scale/{PASS}/profile.json", "E1-V4-SCALE-INPUTS.json", "INPUTS_v4scale.sha256", "checks/e1_identity_policy_v4scale.json")
 COPIES = 4
+# reservation budget and preflight memory (review decision of 2026-11-19 on 39561325)
+RES_CEILING_S, RES_GUARD_S = 5400, 4680
+RUN_BUDGET = {"eligibility_check_to_launcher_start": 20, "gpu_held_ceiling": 2700, "gpu_release_after_ceiling": 90, "cpu_only_after_release": 1400}
+SERVER_ALLOWANCE_GIB = 296
 COPY_OFFSET_MS = 80000.0  # as V3: V2 replayed the two waves in 51.19 s; each further copy starts 80 s after the previous one
 
 # measured (feasibility/E1-ROWS-PER-ITERATION.md): kernel rows of one b=8 wave and one b=48 wave of this trace. The two numbers
@@ -125,11 +129,25 @@ def generate(root: Path) -> str:
                    "supervisor_interval_s": 1, "supervisor_ack_s": 10, "supervisor_stale_s": 60, "supervisor_cleanup_grace_s": 30, "observer_max_s": {"gpu_sampler": 3300, "import_probe": 3300, "memory_sampler": 5400, "storage_sampler": 5400, "supervisor": 5400}},
         # the one line the registered supervisor may write; any accepted control line fails gate G3, so an abort is always a FAIL
         "supervisor": {"control_line": "release-gpus V4 resource-limit abort (registered supervisor response)", "registry": "pids/supervisor.tsv", "acts_on_registry": "pids/owned.tsv"},
-        # reservation budget (E1-V4-TIMELINE.md): the three parts add up to the 90 min ceiling
-        "reservation": {"prelaunch_max_age_s": 600, "supervisor_guard_s": 4680, "closeout_and_deletion_budget_s": 720, "early_release_after_verified_gpu_release": {"enabled": False, "note": "designed and CPU-tested only (checks/e1_reservation_release.py); not authorized"}},
+        # reservation budget (E1-V4-TIMELINE.md, revision 2). Clock origin: the reservation pod's creation time. Launch rule: the driver
+        # starts nothing unless supervisor_guard_s - age >= run_budget_total_s (so age <= launch_max_age_s). Each part of the run budget
+        # is counted once: the ceiling is a trigger on the launch clock, the release follows it (a run that passes G10 has released
+        # within the ceiling and has those 90 s to spare).
+        "reservation": {"clock_origin": "reservation.json creation_timestamp (pod creation, from kubectl)", "hard_ceiling_s": RES_CEILING_S, "supervisor_guard_s": RES_GUARD_S, "closeout_and_deletion_budget_s": RES_CEILING_S - RES_GUARD_S,
+                        "run_budget_s": RUN_BUDGET, "run_budget_total_s": sum(RUN_BUDGET.values()), "launch_max_age_s": RES_GUARD_S - sum(RUN_BUDGET.values()),
+                        "cpu_only_after_release_s": {"export_and_parse_stress_prediction": 1360, "driver_tail_to_stop_file": 40},
+                        "launch_rule": "eligible iff supervisor_guard_s - age >= run_budget_total_s, evaluated by the driver (checks/e1_reservation_guard.py eligible) before any observer or the launcher is started; refusal exit 7",
+                        "closeout_and_deletion_parts_s": {"supervisor_cleanup_response": 45, "observers_drain_and_driver_end": 60, "closeout_script": 120, "deletion_request_to_observed": 120, "operator_slack": 375},
+                        "measured_v3": {"age_at_launcher_start_s": 316, "driver_preflight_s": 78, "check_point_to_launcher_start_s": 1, "gpu_held_s": 1833, "export_and_parse_after_release_s": 613, "launcher_end_to_stop_file_s": 21, "stop_file_to_driver_end_s": 12,
+                                        "deletion_request_to_observed_s": 62, "stop_file_to_deletion_observed_s": 832, "note": "the 832 s were operator time without a deadline (closeout 5.6 min after the stop file, deletion requested 7.2 min after the closeout); V4 has a 720 s budget and a printed deadline"},
+                        "early_release_after_verified_gpu_release": {"enabled": False, "note": "designed and CPU-tested only (checks/e1_reservation_release.py); not authorized"}},
+        # host memory at the preflight (feasibility/E1-V4-MEMORY-BUDGET.md): minimum = importer ceiling + runtime floor + allowance for the run
+        "memory_budget": {"unit": "GiB (1024^3 B)", "server_allowance_gib": SERVER_ALLOWANCE_GIB,
+                          "server_allowance_basis": "everything the run holds when the importer starts (server, engine, workers, launcher, Nsight CLI and agent): MemAvailable before the launch minus MemAvailable at the stop request, measured in V3 as 858.0 - 562.8 = 295.2 GiB (285 GiB steady after load; 306 GiB transient during load, when no importer exists), rounded up",
+                          "review": "review decision of 2026-11-19 on 39561325: preflight minimum 448 -> 488 GiB; runtime floor 64 GiB, importer ceiling 128 GiB and every breach response unchanged"},
         "ceilings": {"reservation_hard_min": 90, "gpu_held_ceiling_s": cfg["nsys"]["gpu_held_ceiling_s"], "gpu_held_nominal_s": 2300, "temporary_storage_gb": 15, "persistent_storage_gb": 18, "persistent_storage_with_archive_gb": 38,
-                     "host_mem_available_preflight_min_gb": 448, "host_mem_available_floor_gb": 64, "importer_rss_ceiling_gb": 128,
-                     "memory_basis": "GiB (1024^3 B). Unchanged from V3: importer ceiling 128 GiB, floor 64 GiB, preflight 448 GiB = ceiling + floor + 256 GiB for the server (measured server footprint in V3: 285 GiB below idle; MemAvailable minimum 547.2 GiB)",
+                     "host_mem_available_preflight_min_gb": 128 + 64 + SERVER_ALLOWANCE_GIB, "host_mem_available_floor_gb": 64, "importer_rss_ceiling_gb": 128,
+                     "memory_basis": "GiB (1024^3 B). Importer ceiling 128 GiB and runtime floor 64 GiB unchanged from V3; preflight minimum 488 GiB = ceiling + floor + 296 GiB for the run (V3 measured 295.2 GiB at the stop request; the previous 448 GiB assumed 256 GiB)",
                      "storage_basis": "review decision of 2026-11-19 on 598d4a2d: temporary 15 GB, run directory 18 GB, run directory plus archive 38 GB", "startup_limit_min": 30, "capture_limit_min": 10},
         "identity": {"policy": "checks/e1_identity_policy_v4scale.json", "policy_version": "v4scale-1", "checker": "e1_launch_identity_v4scale.py", "reference_run": "e1_nsys_val (accepted, a62e40bd)"},
         # read by checks/e1_completeness_v2.py (--plan dry) and checks/e1_nsys_validation.py: the eight waves of this trace

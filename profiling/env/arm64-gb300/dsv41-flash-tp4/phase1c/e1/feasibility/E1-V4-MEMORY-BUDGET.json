@@ -1,0 +1,119 @@
+{
+ "measured_v3": {
+  "run": "e1_v3_scale",
+  "samples": 2200,
+  "interval_s": 1.0,
+  "max_gap_s": 1.4905688762664795,
+  "mem_total_gib": 958.1,
+  "idle_before_launch_gib": 858.0,
+  "load_transient_min_gib": 552.0,
+  "load_transient_below_idle_gib": 306.0,
+  "steady_after_load_gib": [
+   572.1,
+   573.2
+  ],
+  "steady_below_idle_gib": 285.9,
+  "decline_onset_s_after_launch": 1367,
+  "stop_requested_s_after_launch": 1662,
+  "at_stop_request_gib": 562.8,
+  "at_stop_request_below_idle_gib": 295.2,
+  "growth_onset_to_stop_gib": 9.3,
+  "during_import_min_gib": 547.2,
+  "importer_peak_rss_gib": 15.6,
+  "run_minimum_gib": 547.2,
+  "run_minimum_s_after_launch": 1793,
+  "after_release_min_gib": 843.2,
+  "sampler_covers_export_and_parse_s": 635,
+  "workload_lines_in_run_log": [
+   "[replay] warmup.serial started",
+   "[replay] warmup started",
+   "[replay] warmup drained; prefix cache reset",
+   "[profile] frontend ready; measurement begins",
+   "[profile] workload done: {'source_trace': '/mnt/shared/home/"
+  ]
+ },
+ "budget": {
+  "importer_ceiling_gib": 128,
+  "runtime_floor_gib": 64,
+  "server_allowance_gib": 296,
+  "preflight_minimum_gib": 488,
+  "sum_gib": 488,
+  "minimum_equals_sum": true,
+  "allowance_covers_measured_v3_footprint": true,
+  "allowance_margin_over_measured_gib": 0.8,
+  "cases": [
+   {
+    "case": "registered minimum, measured V3 footprint at the stop request, importer at its ceiling",
+    "preflight": 488,
+    "footprint": 295.2,
+    "importer": 128,
+    "available_left_gib": 64.8,
+    "at_or_above_floor": true
+   },
+   {
+    "case": "previous minimum (448), same",
+    "preflight": 448,
+    "footprint": 295.2,
+    "importer": 128,
+    "available_left_gib": 24.8,
+    "at_or_above_floor": false
+   },
+   {
+    "case": "registered minimum, load transient (no importer exists then)",
+    "preflight": 488,
+    "footprint": 306.0,
+    "importer": 0,
+    "available_left_gib": 182.0,
+    "at_or_above_floor": true
+   },
+   {
+    "case": "registered minimum, measured footprint, importer as predicted for V4 (stress 35)",
+    "preflight": 488,
+    "footprint": 295.2,
+    "importer": 35,
+    "available_left_gib": 157.8,
+    "at_or_above_floor": true
+   },
+   {
+    "case": "tray idle as measured before V3, measured footprint, importer at its ceiling",
+    "preflight": 858.0,
+    "footprint": 295.2,
+    "importer": 128,
+    "available_left_gib": 434.8,
+    "at_or_above_floor": true
+   }
+  ]
+ },
+ "not_covered_by_the_v3_measurement": [
+  {
+   "consumer": "growth of the run's footprint during the four additional waves of V4",
+   "status": "NOT MEASURED",
+   "note": "in V3 the footprint grew by 9.3 GiB between 1367 s and the stop request at 1662 s after the launch (warm-up and capture). If growth continued at the same mean rate over the additional 160 s of V4 capture, that would be about 5.0 GiB more: a projection from one run, not a measurement, and not used in the registered minimum"
+  },
+  {
+   "consumer": "importer at the V4 size",
+   "status": "bounded, not measured at this size",
+   "note": "V3 peak 15.6 GiB; predicted 28 \u2013 31 (35) GiB; bounded by the 128 GiB ceiling (sampler \u2192 supervisor), which is the value in the budget"
+  },
+  {
+   "consumer": "dirty page cache of the stream and its preserved copy in /tmp (ext4 on the tray's NVMe, not memory-backed)",
+   "status": "inside the V3 measurement at half the size",
+   "note": "0.70 GB in V3, about 1.4 GB predicted for V4; reclaimable after writeback"
+  },
+  {
+   "consumer": "other tenants of the node: DaemonSet pods, other sessions of the shared account, CPU-only pods the scheduler may place",
+   "status": "NOT CONTROLLED",
+   "note": "the preflight is one sample; during the run the 64 GiB floor (memory sampler \u2192 supervisor) is the protection, not the preflight"
+  },
+  {
+   "consumer": "launcher export and parse, post-run offline import and export",
+   "status": "not concurrent with the server",
+   "note": "they run after the GPU release; MemAvailable minimum after the release in V3 843.2 GiB (sampler covered 635 s after the release)"
+  },
+  {
+   "consumer": "samplers, supervisor, driver",
+   "status": "inside the V3 measurement",
+   "note": "a few MiB each"
+  }
+ ]
+}

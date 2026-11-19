@@ -19,13 +19,16 @@ engine at once on SIGTERM and then stays alive while a stop request is still ope
 
 Scenario (E1_V4S_MOCK_SCENARIO): success | ambiguous (two importers) | importer_ballast (the importer holds
 E1_V4S_MOCK_BALLAST_MB of memory) | storage_ballast (a file of E1_V4S_MOCK_STORAGE_BALLAST_MB appears in the run root during
-the capture). Timings: E1_V4S_MOCK_{STARTUP,CAPTURE,FLUSH,IMPORT}_S.
+the capture; with E1_V4S_MOCK_STORAGE_BALLAST_AT_RESERVATION_AGE_S not before the reservation record is that old).
+Timings: E1_V4S_MOCK_{STARTUP,CAPTURE,FLUSH,IMPORT}_S. E1_V4S_MOCK_EXPORT_UNTIL_RESERVATION_AGE_S: after the report, the launcher
+stays in its CPU-only export phase until the reservation record is that old (a long export and parse after the GPU release).
 """
 
 from __future__ import annotations
 
 # ruff: noqa: E501
 
+import calendar
 import json
 import os
 import signal
@@ -182,6 +185,11 @@ def role_nsys(work: str, report: str) -> int:
 
 
 # ---------------------------------------------------------------- the mock launcher itself
+def reservation_created(config: Path) -> float:
+    """Creation time in the reservation record next to the rehearsal copy of the profile config."""
+    return float(calendar.timegm(time.strptime(json.loads((config.parent / "reservation.json").read_text())["creation_timestamp"], "%Y-%m-%dT%H:%M:%SZ")))
+
+
 def launch(config: Path, provenance: Path) -> int:
     if os.environ.get("E1_V4S_MODE") != "rehearsal" or os.environ.get("CUDA_VISIBLE_DEVICES", "unset") != "":
         print("mock launcher refuses: it runs only with E1_V4S_MODE=rehearsal and CUDA_VISIBLE_DEVICES=''")
@@ -237,9 +245,11 @@ def launch(config: Path, provenance: Path) -> int:
         controller.discover_server_processes()
         print("[profile] frontend ready; measurement begins", flush=True)
         t_cap, end = time.time(), time.time() + CAPTURE_S
+        ballast_age = env_f("STORAGE_BALLAST_AT_RESERVATION_AGE_S", 0)
+        ballast_from = reservation_created(config) + ballast_age if ballast_age > 0 else 0.0
         while time.time() < end:
             controller.poll()  # the capture phase: the launcher only polls (no control file, no deadline)
-            if SCENARIO == "storage_ballast" and time.time() - t_cap > 3 and not (work / "ballast.bin").exists():
+            if SCENARIO == "storage_ballast" and time.time() - t_cap > 3 and time.time() >= ballast_from and not (work / "ballast.bin").exists():
                 (work / "ballast.bin").write_bytes(os.urandom(int(env_f("STORAGE_BALLAST_MB", 8)) << 20))  # pushes the run root over the rehearsal ceiling
             time.sleep(1.0)
         print("[profile] workload done: {'mock': true}", flush=True)
@@ -252,6 +262,13 @@ def launch(config: Path, provenance: Path) -> int:
     exporter = os.environ.get("E1_V4S_MOCK_NSYS")
     if rc == 0 and exporter:
         subprocess.run([exporter, "export", "--type", "sqlite", "--force-overwrite", "true", "-o", str(stem.with_suffix(".sqlite")), report], check=True)
+    until = env_f("EXPORT_UNTIL_RESERVATION_AGE_S", 0)
+    if rc == 0 and until > 0:
+        created = reservation_created(config)
+        print(f"[mock] export and parse (CPU only) continue until the reservation record is {until:.0f} s old", flush=True)
+        while time.time() - created < until:
+            time.sleep(0.5)
+        print("[mock] export and parse ended", flush=True)
     after = frontend.verify_after_launch(log_dir)
     print(f"[mock] executable after the launch unchanged={after and after.get('unchanged')}; build-tool guard {after and after.get('build_tool_guard')}", flush=True)
     if after and (after.get("build_tool_guard") or {}).get("blocked"):

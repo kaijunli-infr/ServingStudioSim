@@ -557,6 +557,7 @@ def fixtures() -> list[Fixture]:
         Fixture("closeout_not_run", "negative", "closeout exit code not supplied", INC, np(G12=INC), mutate=lambda w: w.extras.pop("closeout")),
         # V4: boundaries of the reservation and the GPU-held ceiling
         Fixture("reservation_exactly_90_min", "boundary", "reservation held exactly 90.0 min", "PASS", {}, mutate=_set("deleted.deleted_observed_at", "2026-11-19T01:30:00Z")),
+        Fixture("reservation_deleted_1s_late", "negative", "deletion observed 1 s after the 90 min ceiling (delayed closeout or deletion)", F, np(G10=F), mutate=_set("deleted.deleted_observed_at", "2026-11-19T01:30:01Z")),
         Fixture("gpu_held_exactly_2700s", "boundary", "GPUs released exactly 2700.0 s after the launch (controller record); sampler upper edge 2699.5 s", "PASS", {}, clocks={"t_stop": 2535.5}),
         # V4: workload and recipe identity (G13)
         Fixture("identity_report_from_the_v1_policy", "negative", "a PASS identity report written by the V1/V2 checker and policy (the V3 defect)", F, np(G13=F), mutate=_both(_set("identity.checker", "e1_launch_identity_v2.py"), _set("identity.policy_version", "v1"))),

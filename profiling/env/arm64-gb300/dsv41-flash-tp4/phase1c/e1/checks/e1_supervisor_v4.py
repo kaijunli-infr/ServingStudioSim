@@ -9,9 +9,9 @@ Reservation guard: if the run has not ended (the driver has not written the stop
 --reservation-guard-s seconds have passed since the reservation's creation time (reservation.json, written from kubectl
 before the launch), that is a cause. It is handled like every other cause of the unchanged supervisor: one response;
 during finalisation the registered release line through the controller, otherwise the pinned, identity-verified registry
-cleanup of pids/owned.tsv. With the launch refused later than 600 s after the reservation's creation and the controller's
-GPU-held ceiling of 2700 s, the guard at 4680 s can only fall into the CPU-only phase after the GPU release, where the
-response is the registry cleanup: the driver and the launcher's export are ended, the preserved stream stays, the run is a
+cleanup of pids/owned.tsv. With the driver's launch rule (no launch unless guard - reservation age >= the run budget of
+4210 s, so age <= 470 s; E1-V4-TIMELINE.md) and the GPU-held ceiling of 2700 s, the guard at 4680 s can only fall into the
+CPU-only phase after the GPU release, where the response is the registry cleanup: the driver and the launcher's export are ended, the preserved stream stays, the run is a
 FAIL, and closeout and the deletion of the reservation fit into the remaining 720 s.
 
 An unreadable reservation record or one without a creation time is itself a cause (the guard cannot work without it).

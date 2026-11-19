@@ -1,96 +1,124 @@
-# V4 worst-case timeline and compatibility of the retained limits (CPU-only analysis, 2026-11-19)
+# V4 worst-case timeline, reservation budget and compatibility of the limits (CPU-only analysis; revision 2, 2026-11-19)
 
-All times in seconds from the creation of the reservation pod (`reservation.json` `creation_timestamp`) unless stated.
+Revision 2 follows the review decision on `39561325`: preflight host memory 448 → 488 GiB; a launch eligibility rule derived
+from the clock definitions; an explicit bound on CPU-only processing before the reservation is deleted. The 90-minute
+reservation limit, the 4680 s supervisor guard, every deadline, every other ceiling, the controller and its 60 s server grace
+are unchanged. Revision 1 is in the history at `39561325`.
+
 **M** measured (V2 / V3), **E** predicted (`feasibility/E1-SCALING-MODEL.md`; range, then stress case), **L** a limit with the
-mechanism that enforces it. Nothing here changes a limit, the controller or the 60 s server grace.
+mechanism that enforces it.
 
-## 1. One timeline
+## 1. Clock definitions
+
+| clock | starts | ends | limit | read from | enforced by |
+|---|---|---|---|---|---|
+| reservation | pod creation (`reservation.json` `creation_timestamp`) | deletion observed (`reservation_deleted.json`) | 5400 s | kubectl records | launch rule + supervisor guard + operator budget; gate G10 |
+| launch age | pod creation | the driver's eligibility check (before any observer or the launcher exists) | 470 s (derived, §2) | `run.log` | driver, exit 7 |
+| check → launcher start | eligibility check | `lifecycle.json` `launch_started_at` | 20 s allowance (M: 1 s in V3) | records | not enforced; inside the budget |
+| GPU-held | `launch_started_at` | GPUs released (`gpu.released_at`; sampler upper edge) | 2700 s | controller and GPU sampler | trigger at 2700 s: supervisor before a stop request (registry cleanup), controller after it (server stop). Gate G10 judges launch → **released** ≤ 2700 s |
+| release | server SIGTERM (or cleanup SIGTERM) | GPUs observed free | 90 s | GPU sampler | controller: 60 s grace, then SIGKILL; cleanup: 30 s grace, then SIGKILL; gate G6 |
+| CPU-only processing under the reservation | GPUs released | the driver's stop file (launcher ended, first census, 20 s) | 1400 s budget (E stress 1360 s export and parse + 40 s tail; M tail 21 s) | records | the reservation guard: age 4680 s is the absolute end |
+| guard | pod creation | — | 4680 s | supervisor record | supervisor: one response |
+| closeout and deletion | guard (latest end of the run) | deletion observed | 720 s | records | operator, with the deadline printed by closeout and monitor; gate G10 |
+
+Release time and the GPU-held ceiling. Gate G10 measures GPU-held up to the release, so in a run that passes, the release is
+inside the 2700 s. Enforcement is different: the ceiling is a trigger at 2700 s on the launch clock and the release follows it
+by up to 90 s. The run budget therefore contains 2700 + 90 once, as the enforced bound on launch → GPUs free. It is not added
+a second time anywhere: the 1400 s of CPU-only processing start at the release.
+
+## 2. Launch eligibility rule
+
+```
+run budget  B = 20 (check → launcher start) + 2700 (GPU-held ceiling) + 90 (release after the ceiling) + 1400 (CPU-only) = 4210 s
+eligible    iff  4680 - age >= 4210        (age <= 470 s; equality is permitted; a negative or unreadable age refuses)
+```
+
+Evaluated by the driver (`checks/e1_reservation_guard.py eligible --guard-s 4680 --run-budget-s 4210`) after its preflight and
+before it starts any observer, the supervisor or the launcher. Refusal: exit 7, `LAUNCH REFUSED` in `run.log`, nothing started,
+no GPU touched; the operator deletes the reservation. The values are constants of the driver, asserted against
+`E1-V4-SCALE-INPUTS.json` by the preflight; only rehearsal mode can override them.
+
+| check | arithmetic | result |
+|---|---|---|
+| required worst-case path with an immediate launch | 0 + 4210 = 4210 ≤ 4680 | fits, 470 s to spare |
+| launch window | 0 ≤ age ≤ 470 s | exists |
+| measured launch age | V3: 316 s (operator 236 s + driver preflight 78 s + 1 s). V4 driver preflight in rehearsal: 110 – 116 s → about 350 s at V3's operator speed | inside the window, margin about 120 s; a slower operator is refused, not launched |
+| latest launch, ceiling and release against the guard | 470 + 20 + 2700 + 90 = 3280 < 4680 | the guard can only fall into the CPU-only phase |
+| guard + closeout budget against the reservation limit | 4680 + 720 = 5400 | equal by construction |
+| predicted run at the latest launch | 470 + 20 + 2311 (E stress GPU-held) + 1360 + 40 = 4201 | ends 479 s before the guard |
+| **all extremes together** (the corner of revision 1) | 470 + 20 + 2700 + 90 + 1400 = 4680 | **ends at the guard, not after it** |
+
+The corner that revision 1 reported as not completable (latest launch + ceiling-long GPU hold + stress export) now fits: the
+launch window was reduced from 600 s to 470 s instead of any ceiling being changed.
+
+## 3. One timeline
 
 | # | step | nominal | worst case allowed | enforced by |
 |---|---|---|---|---|
-| 1 | reservation acquisition: pod created → Running → operator pre-launch checks → driver and its preflight → launcher start | ≈ 320 s (M, V3: 236 s operator checks + 80 s driver preflight) | **launcher start ≤ 600 s** | L: the driver refuses to start later (`e1_reservation_guard.py age`, exit 7); the operator then deletes the reservation |
-| 2 | GPU acquisition and model startup (launcher start → measurement begins, warm-up included) | 1487 – 1640 s (M: V2 1487, V3 ≈ 1523; 1640 kept as upper bound) | inside the GPU-held ceiling; operator abort condition at 30 min | monitor (operator); supervisor at the ceiling |
-| 3 | measurement: 8 waves, 224 requests | ≈ 300 – 313 s (E: 3 × 80 s + 59 s; trace span 312.7 s) | inside the GPU-held ceiling; operator abort condition "no stop request 40 min after the launch" | monitor (operator); supervisor at the ceiling |
-| 4 | profiler stop request | accepted in 0.003 s (M) | **≤ 30 s** | L: gate G4 |
-| 5 | flush | 203 – 224 s (249) (E) | **≤ 300 s** | L: gate G4 |
-| 5 | import | 97 – 106 s (118) (E) | **≤ 300 s** | L: gate G4 |
-| 5 | stop → report | 301 – 331 s (367) (E) | **≤ 600 s** | L: controller hard deadline (releases the GPUs at 600 s, importer untouched); gates G3, G4 |
-| 6 | GPU release after the server SIGTERM | ≤ 2.9 s (M, normal stop); ≤ 1.0 s (M, forced) | **≤ 90 s** | L: gate G6; the controller's SIGKILL after the unchanged 60 s grace |
-| 6 | **GPU-held, from the launcher start** | 2092 – 2275 s (2311) (E) | **≤ 2700 s** (+ ≤ 90 s for the release) | L: supervisor before the stop request (registry cleanup), controller after it; gate G10 |
-| 7 | launcher's export and parse after the release (CPU only) | 1220 – 1226 s (1360) (E) | until the reservation guard | L: supervisor reservation guard |
-| 8 | driver tail (observers stop, census) and closeout | ≈ 360 s (M, V3, with operator latency) | part of the closeout budget | operator; gate G12 |
-| 9 | reservation deletion | — | **≤ 5400 s** | L: supervisor guard at 4680 s (run ended or cleaned up), then 720 s operator budget; gate G10 |
-| — | post-run (durable copy, identity, checkers, offline recovery, gates) and archive | ≈ 8 min + ≈ 10 min (E, twice V3's 3.7 and 5 min) | after the deletion, CPU only | not under the reservation |
+| 1 | reservation acquisition → operator checks → driver preflight → eligibility check | ≈ 350 s (M V3 operator 236 s; M V4 rehearsal preflight 110 – 116 s) | **age ≤ 470 s** | L: launch rule, exit 7 |
+| 2 | launcher start; GPU acquisition, model startup, warm-up | 1487 – 1640 s (M: V2 1487, V3 ≈ 1523) | inside the GPU-held ceiling; operator abort condition at 30 min | monitor; supervisor at the ceiling |
+| 3 | measurement: 8 waves, 224 requests | ≈ 313 s (E) | inside the ceiling | monitor; supervisor at the ceiling |
+| 4 | stop request accepted | 0.003 s (M) | ≤ 30 s | L: G4 |
+| 5 | flush / import / stop → report | 203 – 224 (249) / 97 – 106 (118) / 301 – 331 (367) s (E) | ≤ 300 / 300 / 600 s | L: controller hard deadline; G3, G4 |
+| 6 | GPU release | ≤ 2.9 s (M) | ≤ 90 s | L: controller grace + SIGKILL; G6 |
+| 6 | GPU-held, launcher start → released | 2092 – 2275 s (2311) (E) | 2700 s for a PASS; 2700 + 90 s enforced | L: supervisor / controller; G10 |
+| 7 | export and parse after the release, tail to the stop file (CPU only) | 1220 – 1226 s (1360) + 21 s (E, M) | 1400 s in the budget; absolute end at age 4680 s | L: reservation guard |
+| 8 | observers drain, driver end, closeout | 12 s + closeout (M V3) | inside the 720 s | operator; G12 |
+| 9 | reservation deletion observed | 62 s after the request (M V3) | **age ≤ 5400 s** | operator with the printed deadline; G10 |
+| — | post-run and archive | ≈ 8 + ≈ 10 min (E) | after the deletion; CPU only | not under the reservation |
 
-## 2. The three durations asked for
+Durations: GPU-held 35 – 39 min predicted (bound 2700 s, enforced 2790 s). Reservation occupancy about 70 – 80 min predicted
+with V3's operator timings (bound 90 min). CPU-only processing under the reservation: 21 – 23 min predicted (budget 1400 s,
+absolute end at the guard). CPU-only post-processing after the deletion: about 18 min.
 
-| duration | nominal | bound |
-|---|---|---|
-| **GPU-held** (launcher start → GPUs released) | 2092 – 2311 s, 35 – 39 min (E) | 2700 s ceiling + 90 s release = 2790 s |
-| **Reservation occupancy** (pod created → deleted) | 4490 – 4850 s, 75 – 81 min with V3's operator timings (E); 72 – 78 min if the deletion follows the closeout within 5 min | 5400 s |
-| **CPU-only post-processing** | under the reservation: export and parse 1220 – 1360 s plus tail ≈ 120 s. After the deletion: post-run ≈ 8 min (offline import 112 – 124 s, offline export 260 – 288 s, checkers), archive ≈ 10 min (E) | under the reservation: ends at the guard (4680 s) at the latest. After it: no reservation, no GPU; post-run samplers run up to 7200 s |
+Closeout and deletion budget (720 s): supervisor cleanup response ≤ 45 s (only if the guard acted) + observers drain and driver
+end 60 s (M 12 s) + closeout script 120 s + deletion request → observed 120 s (M 62 s) = 345 s, leaving 375 s of operator
+slack. In V3 the operator took 832 s from the stop file to the observed deletion, without a deadline (closeout 5.6 min after
+the stop file, deletion requested 7.2 min after the closeout). That pace would not fit 720 s if the run ended at the guard. V4
+prints the deletion deadline in the closeout and in every monitor pass. Nothing automatic deletes the reservation.
 
-Reservation budget: 600 (latest launch) + 4080 (run) + 720 (closeout and deletion) = 5400 s.
+## 4. If the stop request never occurs
 
-## 3. If the stop request never occurs
+1. 30 min after the launch: monitor `ABORT-CONDITION startup exceeds 30 min`; 40 min: `no stop request` (operator actions).
+2. 2700 s after the launch: supervisor cause `gpu_held_ceiling_before_stop` → pinned registry cleanup (SIGTERM, 30 s grace,
+   SIGKILL). GPUs free within 90 s. No stream exists; the run is a FAIL; closeout NOT CLEAN; the operator deletes the reservation.
+3. Latest GPU release on this path: 470 + 20 + 2700 + 90 = 3280 s after the pod's creation; 2120 s remain for the deletion.
 
-The launcher sends the stop request when the workload ends. If it never does (startup hangs, a request never returns):
-
-1. 30 min after the launch: monitor line `ABORT-CONDITION startup exceeds 30 min`; 40 min: `no stop request`. These are operator
-   actions (verified registry cleanup), not automatic.
-2. 2700 s after the launch: the supervisor's cause `gpu_held_ceiling_before_stop`. The controller is not yet watching (it
-   evaluates its ceiling only after a stop request), so the response is the pinned registry cleanup: SIGTERM to the registered
-   tree, 30 s grace, SIGKILL. GPUs free about 45 s later (bound observed in the mock rehearsal). No stream exists (the capture
-   was never stopped), so the trace is lost; the run is a FAIL; closeout is NOT CLEAN; the operator deletes the reservation.
-3. 4680 s after the reservation's creation: the reservation guard, same response, if anything is still running.
-
-Latest GPU release on this path: 600 + 2700 + 45 ≈ 3345 s after the reservation's creation.
-
-## 4. If the supervisor or a monitor fails
+## 5. If the supervisor or a monitor fails
 
 | failure | what still acts | consequence |
 |---|---|---|
-| memory, storage or GPU sampler stops producing samples | supervisor: `monitor_lost` after 60 s → one response (release line through the controller during finalisation, registry cleanup otherwise) | FAIL; stream preserved if the flush had completed |
-| import probe stops | nothing aborts (the probe is an observer without a heartbeat rule) | G4 / G5 INCONCLUSIVE; no PASS |
-| supervisor stops | after the stop request: the controller still enforces the 600 s hard deadline and the ceiling. Before it: nothing automatic. The monitor prints `ABORT-CONDITION the supervisor has not checked for 30 s` (operator: registry cleanup) | G11 not PASS (record incomplete); operator-dependent before the stop request |
-| launcher (controller) dies | the driver reaches its end; the census and the closeout show held GPUs or a non-terminal phase → NOT CLEAN; operator: verified registry cleanup | FAIL; operator-dependent |
-| supervisor stops and no operator is watching, before the stop request | nothing | **unbounded GPU hold: residual risk**, as in V3. Not solved here; a tray-side watchdog would need its own design and review |
-| laptop offline (no monitor, no kubectl) | supervisor and controller act on the tray as above; the reservation cannot be deleted until the laptop is back | the reservation may exceed 90 min → G10 FAIL; the GPUs are released regardless |
+| memory, storage or GPU sampler stops | supervisor: `monitor_lost` after 60 s → one response | FAIL; stream preserved if the flush had completed |
+| import probe stops | nothing aborts | G4 / G5 INCONCLUSIVE |
+| supervisor stops | after the stop request the controller still enforces the 600 s deadline and the ceiling. Before it, and for the reservation guard: nothing automatic. Monitor: `ABORT-CONDITION the supervisor has not checked for 30 s`, and at 78 min `the reservation is older than 78 min and the run has not ended` | G11 INCONCLUSIVE; operator-dependent |
+| supervisor already used its one response through the controller (a breach during the import), and the run is still going at the guard | the guard is recorded as a later cause; **no second response** (frozen supervisor semantics) | operator-dependent for the reservation; the GPUs were released by the first response |
+| launcher dies | driver ends; census and closeout NOT CLEAN | FAIL; operator: verified registry cleanup |
+| closeout or deletion delayed past 5400 s | nothing automatic; closeout and monitor print the deadline and `ABORT-CONDITION` after it | G10 FAIL; the GPUs are idle but still allocated to the pod |
+| laptop offline | supervisor and controller act on the tray; the reservation cannot be deleted | G10 FAIL possible; GPUs released regardless |
 
-Rehearsed on mock processes: breach → release line through the controller; breach → registry cleanup; reservation guard →
-registry cleanup (new). Unit-tested: lost monitor, ceiling before stop, guard boundary. Never yet triggered on a real server.
-
-## 5. Are the retained limits mutually compatible?
+## 6. Compatibility of the limits
 
 | relation | check | result |
 |---|---|---|
-| flush + import against stop → report | 300 + 300 = 600 | compatible (a run at both phase limits is exactly at the total) |
-| forced release against the server grace | 60 s grace + SIGKILL < 90 s | compatible |
-| phases at their limits against the GPU-held ceiling | startup + 313 + 600 + 60 ≤ 2700 requires startup ≤ 1727 s; measured 1487 – 1640 s | compatible at every measured startup (margin ≥ 87 s). With the predicted finalisation (≤ 367 s) startup may be up to 1960 s |
-| operator limits against the ceiling | 30 min startup + 10 min capture + 600 s = 3000 s > 2700 s | the ceiling binds first; the operator limits are not additional allowances |
-| latest launch + ceiling + release against the reservation guard | 600 + 2700 + 90 = 3390 < 4680 | compatible: the guard can only fall into the CPU-only phase |
-| guard + closeout budget against the reservation ceiling | 4680 + 720 = 5400 | compatible by construction |
-| predicted run against the guard | launch 320 + GPU-held 2311 + export 1360 + tail 120 = 4111 < 4680 | compatible, margin 569 s in the stress case |
-| one extreme against the guard | latest launch (600) with a predicted run: 4391; measured launch (320) with a ceiling-long GPU hold (2790): 4590 | compatible, margins 289 s and 90 s |
-| **both extremes together** | 600 + 2790 + 1360 + 120 = 4870 > 4680 | **not completable**: the guard would end the export. The run would already be a FAIL (the ceiling acted). The limits stay enforced; what is lost is the in-session export, not the stream |
-| sampler lifetimes against the run | memory, storage, supervisor 5400 s from the launch ≥ 4680 s from the creation; GPU sampler 3300 s ≥ 2700 + 90 + 300 | compatible. **The V3 values (3400 s) would not have been**: with a 20-minute export the samplers would have ended before the launcher and the supervisor would have aborted a healthy run. Changed in the V4 driver; listed in the packet |
-| storage ceilings among themselves | run root at 18 GB plus its archive (1.105 ×) = 37.9 GB ≤ 38 GB | compatible |
-| storage predictions against ceilings | temporary 10.4 – 11.4 ≤ 15; run root 12.6 – 14.0 ≤ 18; with archive 26.5 – 29.5 ≤ 38 | compatible |
-| importer ceiling + floor + server against the preflight minimum | 128 + 64 + **285** (server footprint measured in V3) = 477 GiB > 448 GiB | **not compatible at the extremes**: see §6 |
+| flush + import against stop → report | 300 + 300 = 600 | compatible |
+| forced release against the server grace | 60 s + SIGKILL < 90 s | compatible |
+| phases at their limits against the GPU-held ceiling | startup + 313 + 600 + 60 ≤ 2700 → startup ≤ 1727 s; measured 1487 – 1640 s | compatible (margin ≥ 87 s) |
+| launch rule, ceiling, release, CPU budget against the guard | §2 | compatible, including all extremes together |
+| guard + closeout against the reservation | 4680 + 720 = 5400 | compatible; operator-dependent |
+| sampler lifetimes | memory sampler, storage sampler and supervisor run 5400 s from their start (shortly before the launcher), so past the guard at every permitted launch age; GPU sampler 3300 s ≥ 2700 + 90 + 300 | compatible |
+| storage | 18 GB + archive (1.105 ×) = 37.9 ≤ 38 GB; predictions 10.4 – 11.4 / 12.6 – 14.0 / 26.5 – 29.5 GB | compatible |
+| importer ceiling + floor + run footprint against the preflight minimum | 128 + 64 + 295.2 (M, V3 at the stop request) = 487.2 ≤ 488 | compatible with the V3 measurement, margin 0.8 GiB; see §7.1 |
 
-## 6. Findings that need a decision (nothing was changed)
+## 7. Remaining findings
 
-1. **Preflight host memory.** The retained minimum, 448 GiB, was built as 128 (importer ceiling) + 64 (floor) + 256 (server,
-   then unmeasured). V3 measured the server's footprint at 285 GiB below idle (295 GiB at the stop request). A host that
-   passes the preflight with exactly 448 GiB available and an importer at its 128 GiB ceiling would end at 35 GiB, below the
-   64 GiB floor; the sampler and supervisor would abort. With the measured footprint the consistent minimum is 128 + 64 + 295
-   = 487 GiB. In practice the tray has 858 GiB available when idle and the predicted minimum is about 530 GiB, so V4 is not
-   affected; the inconsistency is between two limits at their extremes. The 448 GiB requirement is retained as instructed; a
-   change to 488 GiB is proposed for separate review.
-2. **Both reservation extremes together** (§5) cannot be completed inside 90 min under the existing reservation lifecycle. The
-   options are: accept it (the run is a FAIL in that corner anyway), tighten the latest launch (for example 450 s), or enable the
-   early reservation release after review (`E1-V4-RESERVATION-RELEASE-DESIGN.md`). The draft keeps 600 s and the existing
-   lifecycle.
-3. **The reservation guard is new enforcement.** In V3 the 90-minute ceiling was only measured afterwards. In V4 the supervisor
-   ends a run that is still going 78 min after the reservation's creation. A healthy but slow export could be ended by it.
-4. **Operator-dependent paths** remain where §4 says so.
+1. **The 488 GiB minimum is consistent with what V3 measured, by 0.8 GiB, and V4 runs twice as long.** In V3 the footprint grew
+   9.3 GiB between warm-up and the stop request. Whether it keeps growing over V4's four additional waves was not measured; at
+   the same mean rate it would be about 5 GiB more, and a host at exactly 488 GiB with an importer at exactly 128 GiB would
+   then reach about 60 GiB, below the floor (the sampler and supervisor would abort; a safe outcome, but a FAIL). In practice
+   the tray has about 860 GiB available when idle and the predicted minimum is about 530 GiB. Details:
+   `feasibility/E1-V4-MEMORY-BUDGET.md`. The value is 488 as decided; no further change was made.
+2. **One response.** After a response through the controller, the supervisor does not act on the reservation guard (§5).
+3. **The launch window is 470 s** and the expected launch age is about 350 s. A refusal is safe and costs one reservation
+   cycle; it is more likely than under revision 1.
+4. **The closeout budget depends on the operator** (§3). V3's unhurried pace would exceed it in the worst case.
+5. Before a stop request, a failed supervisor is covered only by the operator's monitor (unchanged from V3).
