@@ -1,4 +1,4 @@
-"""V4 preflight host-memory minimum: 488 GiB = importer ceiling 128 + runtime floor 64 + 296 for the run. Exact boundary in kB;
+"""V4 preflight host-memory minimum: 512 GiB = importer ceiling 128 + runtime floor 64 + 320 for the run (review decision on 76d95289; 488 GiB before). Exact boundary in kB;
 the runtime floor, the importer ceiling and the breach responses are not touched by the change."""
 
 from __future__ import annotations
@@ -37,31 +37,37 @@ def meminfo(kb: int) -> str:
 
 
 @pytest.mark.parametrize(("fixture", "kb", "rc"), [
+    ("meminfo_511GiB.txt", 511 * GIB, 1),
+    ("meminfo_512GiB_minus_1kB.txt", 512 * GIB - 1, 1),
+    ("meminfo_512GiB.txt", 512 * GIB, 0),  # at the minimum counts as within
+    ("meminfo_512GiB_plus_1kB.txt", 512 * GIB + 1, 0),  # immediately above
+    ("meminfo_513GiB.txt", 513 * GIB, 0),
+    # the boundary fixtures of the earlier 488 GiB proposal: every one is below the registered minimum now
     ("meminfo_487GiB.txt", 487 * GIB, 1),
     ("meminfo_488GiB_minus_1kB.txt", 488 * GIB - 1, 1),
-    ("meminfo_488GiB.txt", 488 * GIB, 0),  # at the minimum counts as within
-    ("meminfo_488GiB_plus_1kB.txt", 488 * GIB + 1, 0),  # immediately above
-    ("meminfo_489GiB.txt", 489 * GIB, 0),
+    ("meminfo_488GiB.txt", 488 * GIB, 1),
+    ("meminfo_488GiB_plus_1kB.txt", 488 * GIB + 1, 1),
+    ("meminfo_489GiB.txt", 489 * GIB, 1),
 ])
 def test_boundary_fixtures(fixture, kb, rc):
     text = (FIX / fixture).read_text()
     assert M.mem_available_kb(text) == kb
     got, lines = M.check(text, D)
     assert got == rc and len(lines) == 2 and lines[0].startswith("PASS  " if rc == 0 else "FAIL  ") and lines[1].startswith("PASS  ")
-    assert "488 GiB" in lines[0] and "importer ceiling 128 + runtime floor 64 + allowance for the run 296" in lines[0]
+    assert "512 GiB" in lines[0] and "importer ceiling 128 + runtime floor 64 + allowance for the run 320" in lines[0]
     p = subprocess.run([sys.executable, "-I", str(SCRIPT), "--meminfo", str(FIX / fixture), "--inputs", str(INPUTS)], capture_output=True, text=True)
     assert p.returncode == rc and p.stdout.splitlines() == lines
 
 
 def test_the_old_minimum_would_have_accepted_what_is_now_refused():
-    for kb in (448 * GIB, 477 * GIB, 487 * GIB):
+    for kb in (448 * GIB, 477 * GIB, 488 * GIB, 511 * GIB):
         assert M.check(meminfo(kb), D)[0] == 1
 
 
 def test_registered_values_and_what_did_not_change():
     c, mb = D["ceilings"], D["memory_budget"]
-    assert c["host_mem_available_preflight_min_gb"] == 488 == c["importer_rss_ceiling_gb"] + c["host_mem_available_floor_gb"] + mb["server_allowance_gib"]
-    assert c["host_mem_available_floor_gb"] == 64 and c["importer_rss_ceiling_gb"] == 128 and mb["server_allowance_gib"] == 296
+    assert c["host_mem_available_preflight_min_gb"] == 512 == c["importer_rss_ceiling_gb"] + c["host_mem_available_floor_gb"] + mb["server_allowance_gib"]
+    assert c["host_mem_available_floor_gb"] == 64 and c["importer_rss_ceiling_gb"] == 128 and mb["server_allowance_gib"] == 320
     driver = (E1 / "run_e1_v4scale.sh").read_text()
     assert "--min-available-gb 64 --max-importer-rss-gb $RSS_CEIL --breach-file $RUN/$PASS/MEMORY-BREACH" in driver and "RSS_CEIL=128;" in driver
     v3 = json.loads((E1 / "E1-V3-SCALE-INPUTS.json").read_text())["ceilings"]
@@ -82,7 +88,7 @@ def test_inconsistent_registration_fails_and_unreadable_is_inconclusive():
     assert M.check("MemTotal: 5 kB\n", D)[0] == 3 and M.check("MemAvailable: lots kB\n", D)[0] == 3 and M.check("MemAvailable: 5 MB\n", D)[0] == 3
 
 
-@pytest.mark.parametrize(("cg", "rc", "word"), [("max", 0, "PASS"), (str(488 * 1024**3), 0, "PASS"), (str(488 * 1024**3 - 1), 1, "FAIL"), (str(64 * 1024**3), 1, "FAIL"), ("unknown", 3, "INCONCLUSIVE")])
+@pytest.mark.parametrize(("cg", "rc", "word"), [("max", 0, "PASS"), (str(512 * 1024**3), 0, "PASS"), (str(512 * 1024**3 - 1), 1, "FAIL"), (str(64 * 1024**3), 1, "FAIL"), ("unknown", 3, "INCONCLUSIVE")])
 def test_cgroup_limit(cg, rc, word):
     got, lines = M.check(meminfo(600 * GIB), D, cg)
     assert got == rc and lines[1].startswith(word)

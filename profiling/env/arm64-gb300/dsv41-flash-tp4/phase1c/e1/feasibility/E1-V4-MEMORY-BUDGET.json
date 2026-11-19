@@ -35,15 +35,41 @@
  "budget": {
   "importer_ceiling_gib": 128,
   "runtime_floor_gib": 64,
-  "server_allowance_gib": 296,
-  "preflight_minimum_gib": 488,
-  "sum_gib": 488,
+  "server_allowance_gib": 320,
+  "preflight_minimum_gib": 512,
+  "sum_gib": 512,
   "minimum_equals_sum": true,
   "allowance_covers_measured_v3_footprint": true,
-  "allowance_margin_over_measured_gib": 0.8,
+  "allowance_margin_over_measured_gib": 24.8,
+  "projected_growth_gib": 5.0,
+  "allowance_margin_over_measured_plus_projected_growth_gib": 19.8,
   "cases": [
    {
     "case": "registered minimum, measured V3 footprint at the stop request, importer at its ceiling",
+    "preflight": 512,
+    "footprint": 295.2,
+    "importer": 128,
+    "available_left_gib": 88.8,
+    "at_or_above_floor": true
+   },
+   {
+    "case": "registered minimum, measured footprint plus the growth projected for the longer V4 capture, importer at its ceiling",
+    "preflight": 512,
+    "footprint": 300.2,
+    "importer": 128,
+    "available_left_gib": 83.8,
+    "at_or_above_floor": true
+   },
+   {
+    "case": "registered minimum, measured footprint plus twice the projected growth, importer at its ceiling",
+    "preflight": 512,
+    "footprint": 305.2,
+    "importer": 128,
+    "available_left_gib": 78.8,
+    "at_or_above_floor": true
+   },
+   {
+    "case": "earlier proposal (488), measured footprint, importer at its ceiling",
     "preflight": 488,
     "footprint": 295.2,
     "importer": 128,
@@ -51,7 +77,15 @@
     "at_or_above_floor": true
    },
    {
-    "case": "previous minimum (448), same",
+    "case": "earlier proposal (488), measured footprint plus the projected growth, importer at its ceiling",
+    "preflight": 488,
+    "footprint": 300.2,
+    "importer": 128,
+    "available_left_gib": 59.8,
+    "at_or_above_floor": false
+   },
+   {
+    "case": "first proposal (448), measured footprint, importer at its ceiling",
     "preflight": 448,
     "footprint": 295.2,
     "importer": 128,
@@ -60,18 +94,18 @@
    },
    {
     "case": "registered minimum, load transient (no importer exists then)",
-    "preflight": 488,
+    "preflight": 512,
     "footprint": 306.0,
     "importer": 0,
-    "available_left_gib": 182.0,
+    "available_left_gib": 206.0,
     "at_or_above_floor": true
    },
    {
     "case": "registered minimum, measured footprint, importer as predicted for V4 (stress 35)",
-    "preflight": 488,
+    "preflight": 512,
     "footprint": 295.2,
     "importer": 35,
-    "available_left_gib": 157.8,
+    "available_left_gib": 181.8,
     "at_or_above_floor": true
    },
    {
@@ -88,7 +122,7 @@
   {
    "consumer": "growth of the run's footprint during the four additional waves of V4",
    "status": "NOT MEASURED",
-   "note": "in V3 the footprint grew by 9.3 GiB between 1367 s and the stop request at 1662 s after the launch (warm-up and capture). If growth continued at the same mean rate over the additional 160 s of V4 capture, that would be about 5.0 GiB more: a projection from one run, not a measurement, and not used in the registered minimum"
+   "note": "in V3 the footprint grew by 9.3 GiB between 1367 s and the stop request at 1662 s after the launch (warm-up and capture). If growth continued at the same mean rate over the additional 160 s of V4 capture, that would be about 5.0 GiB more: a projection from one run, not a measurement; the registered allowance exceeds the V3 measurement by more than that projection (table above), but the growth itself stays unmeasured until V4 runs"
   },
   {
    "consumer": "importer at the V4 size",

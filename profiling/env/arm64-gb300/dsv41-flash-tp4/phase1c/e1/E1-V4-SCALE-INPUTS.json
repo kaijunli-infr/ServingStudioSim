@@ -223,7 +223,9 @@
  "supervisor": {
   "control_line": "release-gpus V4 resource-limit abort (registered supervisor response)",
   "registry": "pids/supervisor.tsv",
-  "acts_on_registry": "pids/owned.tsv"
+  "acts_on_registry": "pids/owned.tsv",
+  "release_s": 150,
+  "latch": "release line at most once; registry cleanup at most once and final; never concurrent; the reservation guard is acted on in every state (directly, or as an escalation after an earlier release request)"
  },
  "reservation": {
   "clock_origin": "reservation.json creation_timestamp (pod creation, from kubectl)",
@@ -246,9 +248,38 @@
   "closeout_and_deletion_parts_s": {
    "supervisor_cleanup_response": 45,
    "observers_drain_and_driver_end": 60,
-   "closeout_script": 120,
+   "watcher_evidence_and_permit": 30,
+   "deleter_permit_to_request": 45,
    "deletion_request_to_observed": 120,
-   "operator_slack": 375
+   "slack": 420
+  },
+  "closeout": {
+   "tool": "checks/e1_reservation_closeout.py",
+   "armed_by": "arm_closeout_e1_v4scale.sh (tray, before the driver)",
+   "interval_s": 5,
+   "watcher_tail_s": 600,
+   "never_launched_margin_s": 60,
+   "watcher": "watch: on the capture tray, registry pids/closeout.tsv, this host's read-only credential; permits the deletion, observes it, writes reservation_closeout.json; never deletes, never signals",
+   "deleter": "delete: on the operator's laptop, own registry, the deleting credential; one DELETE with the recorded UID as precondition after two consecutive permits and its own ownership check; writes reservation_deleted.json",
+   "record": "record: reservation.json from kubectl with the deleting credential, with a dry-run proof that the UID precondition is honoured; the driver refuses to start without it, without the live pod matching it, or without the watcher and the deleter armed (exit 5, 8)",
+   "permit_conditions": [
+    "D1 the run's registry has no live owned process and no refusal (the run has ENDED: no early release)",
+    "D2 no process that looks like the experiment is outside every registry",
+    "D3 two consecutive pinned GPU censuses: no compute process, memory within the idle bound on every GPU",
+    "D4 the live pod is exactly the recorded reservation: name, namespace, UID, creation time, this node, labels, pause containers only, GPU request"
+   ],
+   "not_a_condition": "a live importer or Nsight agent (recorded; they hold no GPU and are never signalled)",
+   "verdicts": {
+    "DELETED_IN_TIME": "PASS",
+    "DELETED_LATE": "FAIL",
+    "NOT_DELETED": "FAIL",
+    "GONE_WITHOUT_PERMIT": "FAIL",
+    "UNVERIFIED": "FAIL",
+    "REFUSED_FOREIGN": "FAIL",
+    "GONE_NOT_BY_DELETER": "FAIL",
+    "REFUSED": "FAIL"
+   },
+   "gate": "G16.reservation_deletion (checks/e1_v4scale_gates.py): FAIL unless both records say DELETED_IN_TIME for the recorded UID, the permit precedes the delete request and both observations are within the ceiling"
   },
   "measured_v3": {
    "age_at_launcher_start_s": 316,
@@ -260,7 +291,7 @@
    "stop_file_to_driver_end_s": 12,
    "deletion_request_to_observed_s": 62,
    "stop_file_to_deletion_observed_s": 832,
-   "note": "the 832 s were operator time without a deadline (closeout 5.6 min after the stop file, deletion requested 7.2 min after the closeout); V4 has a 720 s budget and a printed deadline"
+   "note": "the 832 s were operator time without a deadline (closeout 5.6 min after the stop file, deletion requested 7.2 min after the closeout); in V4 the watcher and the deleter act without an operator inside the 720 s budget"
   },
   "early_release_after_verified_gpu_release": {
    "enabled": false,
@@ -269,9 +300,10 @@
  },
  "memory_budget": {
   "unit": "GiB (1024^3 B)",
-  "server_allowance_gib": 296,
-  "server_allowance_basis": "everything the run holds when the importer starts (server, engine, workers, launcher, Nsight CLI and agent): MemAvailable before the launch minus MemAvailable at the stop request, measured in V3 as 858.0 - 562.8 = 295.2 GiB (285 GiB steady after load; 306 GiB transient during load, when no importer exists), rounded up",
-  "review": "review decision of 2026-11-19 on 39561325: preflight minimum 448 -> 488 GiB; runtime floor 64 GiB, importer ceiling 128 GiB and every breach response unchanged"
+  "server_allowance_gib": 320,
+  "server_allowance_basis": "everything the run holds when the importer starts (server, engine, workers, launcher, Nsight CLI and agent): MemAvailable before the launch minus MemAvailable at the stop request, measured in V3 as 858.0 - 562.8 = 295.2 GiB (285 GiB steady after load; 306 GiB transient during load, when no importer exists); 320 GiB leaves 24.8 GiB above that measurement for growth over the longer V4 capture (V3 grew 9.3 GiB between warm-up and the stop request; about 5 GiB more is projected for V4's further 160 s) and for other consumers on the node",
+  "margin_over_v3_measurement_gib": 24.8,
+  "review": "review decisions of 2026-11-19: on 39561325 preflight minimum 448 -> 488 GiB; on 76d95289 488 -> 512 GiB. Runtime floor 64 GiB, importer ceiling 128 GiB and every breach response unchanged"
  },
  "ceilings": {
   "reservation_hard_min": 90,
@@ -280,10 +312,10 @@
   "temporary_storage_gb": 15,
   "persistent_storage_gb": 18,
   "persistent_storage_with_archive_gb": 38,
-  "host_mem_available_preflight_min_gb": 488,
+  "host_mem_available_preflight_min_gb": 512,
   "host_mem_available_floor_gb": 64,
   "importer_rss_ceiling_gb": 128,
-  "memory_basis": "GiB (1024^3 B). Importer ceiling 128 GiB and runtime floor 64 GiB unchanged from V3; preflight minimum 488 GiB = ceiling + floor + 296 GiB for the run (V3 measured 295.2 GiB at the stop request; the previous 448 GiB assumed 256 GiB)",
+  "memory_basis": "GiB (1024^3 B). Importer ceiling 128 GiB and runtime floor 64 GiB unchanged from V3; preflight minimum 512 GiB = ceiling + floor + 320 GiB for the run (V3 measured 295.2 GiB at the stop request; earlier proposals: 448 GiB assumed 256 GiB, 488 GiB assumed 296 GiB)",
   "storage_basis": "review decision of 2026-11-19 on 598d4a2d: temporary 15 GB, run directory 18 GB, run directory plus archive 38 GB",
   "startup_limit_min": 30,
   "capture_limit_min": 10

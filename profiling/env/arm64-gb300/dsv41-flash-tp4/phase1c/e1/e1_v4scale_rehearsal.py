@@ -44,7 +44,9 @@ API, ENGINE, NSYS, AGENT, IMPORTER = 4100, 4101, 4000, 4990, 5000
 KB = 1024 * 1024
 ALL = ["G0.source_and_executable", "G1.host_identity", "G2.one_stop_request_returned_ok", "G3.phases_in_order", "G4.phase_deadlines", "G5.importer_observed", "G6.gpu_release_interval", "G7.stream_durable",
        "G8.offline_import", "G8b.recovered_trace_complete", "G9.scientific_completeness", "G10.bounds", "G11.storage_and_memory", "G12.closeout",
-       "G13.workload_and_recipe_identity", "G14.four_copy_trace_in_run", "G15.request_iteration_routing_rank_coverage"]
+       "G13.workload_and_recipe_identity", "G14.four_copy_trace_in_run", "G15.request_iteration_routing_rank_coverage", "G16.reservation_deletion"]
+RES_UID = "6f1d2c3e-0000-4000-8000-0000000e1a40"
+RES_CREATED = 1795046400.0  # 2026-11-19T00:00:00Z, the fixtures' reservation creation time
 
 
 TRACE_BYTES = (E1 / "traces" / "e1_v4_scale.csv").read_bytes()
@@ -133,6 +135,7 @@ class World:
     launcher_bin: dict | None = field(default_factory=dict)
     reservation: dict | None = field(default_factory=dict)
     supervisor: dict | None = field(default_factory=dict)
+    closeout: dict | None = field(default_factory=dict)
     deleted: dict | None = field(default_factory=dict)
     identity: dict | None = field(default_factory=identity_ok)
     completeness: dict | None = field(default_factory=completeness_ok)
@@ -209,8 +212,14 @@ class World:
         self.supervisor = {"supervisor": "e1_supervisor.py", "host": HOST, "samples": int(tc) + 30, "causes": [], "response": None, "monitors_effective": True, "signals_sent_by_supervisor": 0, "complete": True}
         self.driver_bin = {"sha256_before_launcher": PIN_SHA, "sha256_after_launcher": PIN_SHA, "unchanged": True, "cargo_compiling_lines_in_run_log": 0, "stat_before": "1 2 3", "stat_after": "1 2 3"}
         self.launcher_bin = {"mode": "prebuilt (no compilation in this launch path)", "sha256": PIN_SHA, "pinned_sha256": PIN_SHA, "sha256_after_launch": PIN_SHA, "unchanged": True, "cargo_consulted": False, "build_tool_guard": {"installed": True, "active": True, "blocked": []}}
-        self.reservation = {"pod": "dsv41-gb300-reserve-tray16", "node": HOST, "phase": "Running", "creation_timestamp": "2026-11-19T00:00:00Z"}
-        self.deleted = {"pod": "dsv41-gb300-reserve-tray16", "deleted_observed_at": "2026-11-19T00:50:00Z", "gpu_pods_on_node": 0}
+        self.reservation = {"pod": "dsv41-gb300-reserve-tray16", "namespace": "inference-bench", "uid": RES_UID, "node": HOST, "phase": "Running", "creation_timestamp": "2026-11-19T00:00:00Z", "deletion_path_proof": {"ok": True}}
+        # deletion observed 50 min after the pod's creation; the watcher's permit at 48 min, the delete request 20 s later
+        self.deleted = {"pod": "dsv41-gb300-reserve-tray16", "namespace": "inference-bench", "uid": RES_UID, "precondition_uid": RES_UID, "verdict": "DELETED_IN_TIME", "delete_requests_sent": 1, "delete_requests_accepted": 1,
+                        "delete_requested_at": "2026-11-19T00:48:20Z", "delete_requested_epoch": RES_CREATED + 2900.0, "deleted_observed_at": "2026-11-19T00:50:00Z", "deleted_observed_epoch": RES_CREATED + 3000.0, "gpu_pods_on_node": 0}
+        evidence = {"run": {"driver_registered": True, "owned_alive": [], "refused": [], "unattributed_lookalikes": []}, "run_ended": "registered tree gone", "gpu_census": {"released": True, "previous_evaluation_released": True, "compute_pids": [], "memory_used_mib": [0, 0, 0, 0]},
+                    "ownership": {"verified": True, "uid": RES_UID, "terminating": False}}
+        self.closeout = {"tool": "e1_reservation_closeout.py watch", "host": HOST, "reservation": {"pod": "dsv41-gb300-reserve-tray16", "namespace": "inference-bench", "uid": RES_UID, "node": HOST, "creation_timestamp": "2026-11-19T00:00:00Z"},
+                         "first_permit": {"at": RES_CREATED + 2880.0, "sequence": 570, "evidence": evidence}, "permits": 20, "deleted_observed_at": RES_CREATED + 2998.0, "verdict": "DELETED_IN_TIME", "signals_sent": 0, "delete_requests_sent": 0, "complete": True}
         self.pin = {"pass": "e1_v4_scale", "code": {"commit": "b" * 40, "tree": dict(TREES), "gitlinks": dict(GITLINKS)}, "session_runner_sha256": PIN_SHA}
 
     def retime(self) -> None:
@@ -260,7 +269,7 @@ def write_world(w: World, root: Path) -> dict:
             (run / name).write_bytes(data)
     if w.server_log is not None:
         (vllm / "x_server.log").write_text(w.server_log)
-    for name, obj in (("import_probe.json", w.probe), ("launch_source.json", w.source), ("binary_check.json", w.driver_bin), ("reservation.json", w.reservation), ("supervisor.json", w.supervisor)):
+    for name, obj in (("import_probe.json", w.probe), ("launch_source.json", w.source), ("binary_check.json", w.driver_bin), ("reservation.json", w.reservation), ("supervisor.json", w.supervisor), ("reservation_closeout.json", w.closeout)):
         if obj is not None:
             (run / name).write_text(json.dumps(obj))
     if w.launcher_bin is not None:
@@ -325,6 +334,15 @@ def _set(path: str, value):
 def _attr(name: str, value):
     def m(w: World):
         setattr(w, name, value)
+
+    return m
+
+
+def _deleted_at(seconds: float, iso_text: str, verdict: str = "DELETED_IN_TIME"):
+    """Both observers saw the reservation pod gone `seconds` after its creation."""
+    def m(w: World):
+        w.deleted.update({"deleted_observed_at": iso_text, "deleted_observed_epoch": RES_CREATED + seconds, "verdict": verdict})
+        w.closeout.update({"deleted_observed_at": RES_CREATED + seconds, "verdict": verdict})
 
     return m
 
@@ -550,14 +568,31 @@ def fixtures() -> list[Fixture]:
         Fixture("offline_importer_memory_unmeasured", "negative", "the post-run memory sampler never identified the importer", INC, np(G11=INC), mutate=_no_importer_in("post_memory")),
         # bounds, closeout
         Fixture("gpu_held_over_ceiling", "negative", "GPUs held 2 704 s from the launch", F, np(G10=F), clocks={"t_stop": 2540.0}),
-        Fixture("reservation_over_90_min", "negative", "reservation held 91 min", F, np(G10=F), mutate=_set("deleted.deleted_observed_at", "2026-11-19T01:31:00Z")),
-        Fixture("reservation_deleted_record_missing", "negative", "no record of the reservation's deletion", INC, np(G10=INC, G12=INC), mutate=_attr("deleted", None)),
+        Fixture("reservation_over_90_min", "negative", "reservation held 91 min (both observers)", F, np(G10=F, G16=F), mutate=_deleted_at(5460.0, "2026-11-19T01:31:00Z", verdict="DELETED_LATE")),
+        Fixture("reservation_deleted_record_missing", "negative", "no deleter record of the reservation's deletion", F, np(G10=INC, G12=INC, G16=F), mutate=_attr("deleted", None)),
         Fixture("gpu_pod_left_on_node", "negative", "a GPU pod is still on the node after the deletion", F, np(G12=F), mutate=_set("deleted.gpu_pods_on_node", 1)),
         Fixture("closeout_not_clean", "negative", "closeout exit 1", F, np(G12=F), mutate=_set("extras.closeout", 1)),
         Fixture("closeout_not_run", "negative", "closeout exit code not supplied", INC, np(G12=INC), mutate=lambda w: w.extras.pop("closeout")),
         # V4: boundaries of the reservation and the GPU-held ceiling
-        Fixture("reservation_exactly_90_min", "boundary", "reservation held exactly 90.0 min", "PASS", {}, mutate=_set("deleted.deleted_observed_at", "2026-11-19T01:30:00Z")),
-        Fixture("reservation_deleted_1s_late", "negative", "deletion observed 1 s after the 90 min ceiling (delayed closeout or deletion)", F, np(G10=F), mutate=_set("deleted.deleted_observed_at", "2026-11-19T01:30:01Z")),
+        Fixture("reservation_exactly_90_min", "boundary", "reservation held exactly 90.0 min (deletion observed by the watcher and the deleter exactly at the ceiling)", "PASS", {}, mutate=_deleted_at(5400.0, "2026-11-19T01:30:00Z")),
+        Fixture("reservation_deleted_1s_late", "negative", "deletion observed 1 s after the 90 min ceiling (delayed closeout or deletion)", F, np(G10=F, G16=F), mutate=_deleted_at(5401.0, "2026-11-19T01:30:01Z", verdict="DELETED_LATE")),
+        # V4: bounded closeout and deletion of the reservation (G16); a deletion that is late or cannot be verified is a FAIL, never INCONCLUSIVE
+        Fixture("deletion_watcher_record_missing", "negative", "the deleter says deleted in time but there is no watcher record", F, np(G16=F), mutate=_attr("closeout", None)),
+        Fixture("deletion_watcher_late_deleter_in_time", "negative", "the watcher observed the pod gone 0.5 s after the ceiling; the deleter's own observation is in time", F, np(G16=F), mutate=_both(_set("closeout.deleted_observed_at", RES_CREATED + 5400.5), _set("closeout.verdict", "DELETED_LATE"))),
+        Fixture("deletion_not_deleted", "negative", "the pod was still there 600 s after the ceiling (no deleter acted)", F, np(G10=INC, G12=INC, G16=F), mutate=_both(_set("closeout.verdict", "NOT_DELETED"), _set("closeout.deleted_observed_at", None), _attr("deleted", None))),
+        Fixture("deletion_unverified", "negative", "the watcher could not read the pod's state at the end", F, np(G16=F), mutate=_both(_set("closeout.verdict", "UNVERIFIED"), _set("closeout.deleted_observed_at", None))),
+        Fixture("deletion_gone_without_permit", "negative", "the pod disappeared before any permit (deleted or expired outside the mechanism: an early release)", F, np(G16=F), mutate=_both(_set("closeout.verdict", "GONE_WITHOUT_PERMIT"), _set("closeout.first_permit", None))),
+        Fixture("deletion_requested_before_the_permit", "negative", "the delete request precedes the watcher's first permit by 5 s", F, np(G16=F), mutate=_set("deleted.delete_requested_epoch", RES_CREATED + 2875.0)),
+        Fixture("deletion_foreign_uid_refused", "negative", "the deleter found a pod of the same name with another UID and deleted nothing", F, np(G10=INC, G12=INC, G16=F),
+                mutate=_both(_set("deleted.verdict", "REFUSED_FOREIGN"), _set("deleted.delete_requests_accepted", 0), lambda w: [w.deleted.pop(k) for k in ("deleted_observed_at", "deleted_observed_epoch", "gpu_pods_on_node")], _set("closeout.verdict", "GONE_WITHOUT_PERMIT"))),
+        Fixture("deletion_of_another_uid", "negative", "the deleter's record names another UID than the reservation record", F, np(G16=F), mutate=_both(_set("deleted.uid", "11111111-0000-4000-8000-000000000000"), _set("deleted.precondition_uid", "11111111-0000-4000-8000-000000000000"))),
+        Fixture("deletion_without_uid_precondition", "negative", "the delete request carried no UID precondition", F, np(G16=F), mutate=_set("deleted.precondition_uid", None)),
+        Fixture("deletion_two_requests_accepted", "negative", "two delete requests were accepted", F, np(G16=F), mutate=_set("deleted.delete_requests_accepted", 2)),
+        Fixture("deletion_permit_without_second_census", "negative", "the first permit rests on one GPU census only", F, np(G16=F), mutate=_set("closeout.first_permit.evidence.gpu_census.previous_evaluation_released", False)),
+        Fixture("deletion_permit_with_live_registered_process", "negative", "the first permit's evidence lists a live registered process (early release)", F, np(G16=F), mutate=_set("closeout.first_permit.evidence.run.owned_alive", [{"pid": 4242, "label": "driver:e1_v4_scale"}])),
+        Fixture("deletion_permit_ownership_unverified", "negative", "the first permit's evidence has no ownership verification", F, np(G16=F), mutate=_set("closeout.first_permit.evidence.ownership.verified", False)),
+        Fixture("deletion_reservation_record_without_uid", "negative", "the reservation record has no UID (written by hand, not by `record`)", F, np(G16=F), mutate=lambda w: w.reservation.pop("uid")),
+        Fixture("deletion_watcher_incomplete", "negative", "the watcher's record has the verdict but is not complete", F, np(G16=F), mutate=_set("closeout.complete", False)),
         Fixture("gpu_held_exactly_2700s", "boundary", "GPUs released exactly 2700.0 s after the launch (controller record); sampler upper edge 2699.5 s", "PASS", {}, clocks={"t_stop": 2535.5}),
         # V4: workload and recipe identity (G13)
         Fixture("identity_report_from_the_v1_policy", "negative", "a PASS identity report written by the V1/V2 checker and policy (the V3 defect)", F, np(G13=F), mutate=_both(_set("identity.checker", "e1_launch_identity_v2.py"), _set("identity.policy_version", "v1"))),

@@ -1,0 +1,31 @@
+diff --git a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/monitor_e1_v4scale.sh b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/monitor_e1_v4scale.sh
+index 0e6cf870..758556b1 100755
+--- a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/monitor_e1_v4scale.sh
++++ b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/monitor_e1_v4scale.sh
+@@ -46,7 +46,8 @@ if u:
+     age = time.time() - (u.get("last_check_at") or 0)
+     print(f"supervisor: samples {u['samples']} last check {f(u.get('last_check_at'))} ({age:.0f} s ago) monitors effective {u.get('monitors_effective')} heartbeats {({k: v['age_s'] for k, v in (u.get('heartbeats') or {}).items()})} response {(u.get('response') or {}).get('outcome')}")
+     if u.get("response"): print(f"ABORT-CONDITION the supervisor responded: {u['response'].get('outcome')} for {[(c.get('cause'), c.get('source'), c.get('kind')) for c in u.get('causes', [])]}")
+-    elif not u.get("complete") and age > 30: print(f"ABORT-CONDITION the supervisor has not checked for {age:.0f} s (breach markers have no consumer; operator: registry cleanup)")
++    if (u.get("release_after_response") or {}).get("stalled") and not u.get("complete"): print(f"ABORT-CONDITION the release requested by the supervisor has not completed after {u['release_after_response'].get('seconds_since_acknowledgement')} s (limit {u['release_after_response'].get('limit_s')} s): the controller's deadlines and the reservation guard remain; operator reviews")
++    if not u.get("complete") and age > 30: print(f"ABORT-CONDITION the supervisor has not checked for {age:.0f} s (breach markers have no consumer; operator: registry cleanup)")
+ r=load(run+"/reservation.json") or {}
+ try:
+     import calendar
+@@ -55,6 +56,16 @@ try:
+     if res_age > 5400 and not load(run+"/reservation_deleted.json"): print("ABORT-CONDITION the reservation is older than 90 min and no deletion record exists (gate G10 will FAIL): delete it now if the GPUs are idle")
+     if res_age > 4680 and not (u or {}).get("complete"): print("ABORT-CONDITION the reservation is older than 78 min and the run has not ended (the supervisor's reservation guard should have responded)")
+ except (KeyError, ValueError, TypeError): print("reservation: age unknown (record missing or unreadable)")
++w=load(run+"/reservation_closeout.json"); dl=load(run+"/reservation_deleted.json")
++if w:
++    wage = time.time() - (w.get("updated_at") or 0)
++    print(f"closeout watcher: evaluation {w.get('sequence')} ({wage:.0f} s ago) decision {w.get('decision')} permits {w.get('permits')} verdict {w.get('verdict')} deleter heartbeat {w.get('deleter_heartbeat_age_s')} s | {str(w.get('reasons'))[:160]}")
++    if not w.get("complete") and wage > 60: print(f"ABORT-CONDITION the closeout watcher has not evaluated for {wage:.0f} s: nothing will permit the reservation's deletion (operator: closeout, then deletion by hand with the recorded UID, inside the 90 min)")
++    if not w.get("complete") and (w.get("deleter_heartbeat_age_s") is None or w["deleter_heartbeat_age_s"] > 120): print(f"ABORT-CONDITION the deleter's heartbeat is {w.get('deleter_heartbeat_age_s')} s old: the deleting side is not polling (restart it on the laptop)")
++    if w.get("verdict") and w["verdict"] != "DELETED_IN_TIME": print(f"ABORT-CONDITION reservation closeout verdict {w['verdict']}: {w.get('verdict_reason')}")
++    if w.get("verdict") == "GONE_WITHOUT_PERMIT" and not (u or {}).get("complete"): print("ABORT-CONDITION the reservation pod is gone while the run is active: the GPUs are no longer reserved (operator: registry cleanup)")
++else: print("closeout watcher: no record (not armed)")
++if dl: print(f"deleter: verdict {dl.get('verdict')} requested {dl.get('delete_requested_at')} observed gone {dl.get('deleted_observed_at')} GPU pods on the node {dl.get('gpu_pods_on_node')}")
+ s=load(run+"/storage_watch.json")
+ if s: print("storage: samples", s["samples"], "last", f(s["last_at"]), {g: f"peak {round((v['peak_bytes'] or 0)/1e9,3)} GB (ceiling {v['ceiling_gb']})" for g, v in s["groups"].items()}, "breaches", len(s["breaches"]))
+ PY

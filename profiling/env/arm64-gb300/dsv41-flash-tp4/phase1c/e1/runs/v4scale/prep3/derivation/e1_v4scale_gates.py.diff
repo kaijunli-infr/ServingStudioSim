@@ -1,0 +1,104 @@
+diff --git a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_v4scale_gates.py b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_v4scale_gates.py
+index a81ada54..a1703b64 100644
+--- a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_v4scale_gates.py
++++ b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_v4scale_gates.py
+@@ -14,7 +14,7 @@ from the V4 inputs: stop accepted 30 s, flush 300 s, import 300 s, stop to repor
+ unextended), session close 300 s, GPU release upper edge 90 s, GPU-held 2700 s, reservation 90 min, temporary storage
+ 15 GB, run directory 18 GB, MemAvailable floor 64 GiB, importer 128 GiB, sampling gaps 30 s.
+ 
+-Three further gates, V4-specific:
++Four further gates, V4-specific:
+   G13  workload and recipe identity: the identity report must come from the V4 checker under the V4 policy (version
+        v4scale-1), with the trace rule exercised and every one of its checks holding, and verdict PASS. A PASS report
+        produced by another checker or policy is a FAIL (this is the V3 defect made a gate).
+@@ -25,6 +25,13 @@ Three further gates, V4-specific:
+        and no other, each with at least the pure-decode floor; 224 request timings = token-accounting requests = routing
+        corpus segments; four ranks; NVTX forward ranges = 4 per iteration with the iteration count in its band; no
+        duplicate, missing or non-monotone join; no routing-array defect; no failed check.
++  G16  reservation deletion (checks/e1_reservation_closeout.py): the watcher's record (<run>/reservation_closeout.json, the
++       capture tray's read-only credential) and the deleter's record (--reservation-deleted, the operator's credential)
++       both say DELETED_IN_TIME for the UID in reservation.json; the watcher's first permit carries its evidence (run
++       ended, two clean GPU censuses, ownership verified) and precedes the delete request (no early release); exactly one
++       delete request was accepted, with that UID as precondition; both observations of the deletion are at or before the
++       reservation ceiling. Anything else, including a missing record, is a FAIL: a deletion that is late or cannot be
++       verified never passes and is never INCONCLUSIVE.
+ 
+ Verdict: FAIL if any gate FAILs; INCONCLUSIVE if none fails but one could not be evaluated; PASS otherwise.
+ Exit 0 / 1 / 3. Stdlib only; read-only on the run directory (scratch under --scratch).
+@@ -35,14 +42,16 @@ from __future__ import annotations
+ # ruff: noqa: E501
+ 
+ import argparse
++import calendar
+ import hashlib
+ import importlib.util
+ import json
+ import sys
++import time
+ from pathlib import Path
+ 
+ HERE = Path(__file__).resolve().parent
+-NEW = ("G13.workload_and_recipe_identity", "G14.four_copy_trace_in_run", "G15.request_iteration_routing_rank_coverage")
++NEW = ("G13.workload_and_recipe_identity", "G14.four_copy_trace_in_run", "G15.request_iteration_routing_rank_coverage", "G16.reservation_deletion")
+ 
+ 
+ def _mod(name: str):
+@@ -173,11 +182,58 @@ def gate_coverage(res: list, comp: dict | None, inputs: dict) -> None:
+     add(res, NEW[2], "FAIL" if wrong else "PASS", f"cells {len(cells)} (pure-decode iterations {({k: v.get('pure') for k, v in sorted(cells.items())})}, floor {floor}); requests {counts}; ranks {ranks}; NVTX forward ranges {nvtx} = {None if not isinstance(nvtx, int) or not per else nvtx // per} iterations x {per}; join {join}; failed checks {comp.get('fails')}" + (f"; {wrong}" if wrong else ""))
+ 
+ 
++def gate_reservation_deletion(res: list, run: Path, deleted: dict | None, inputs: dict) -> None:
++    reservation, watch = load(run / "reservation.json") or {}, load(run / "reservation_closeout.json")
++    ceiling, uid, wrong = (inputs.get("reservation") or {}).get("hard_ceiling_s"), reservation.get("uid"), []
++    try:
++        created = calendar.timegm(time.strptime(reservation["creation_timestamp"], "%Y-%m-%dT%H:%M:%SZ"))
++    except (KeyError, ValueError, TypeError):
++        created = None
++    if not uid or created is None or ceiling is None:
++        wrong.append(f"reservation record without a UID or creation time, or no registered ceiling (uid {uid!r}, ceiling {ceiling})")
++    if watch is None:
++        wrong.append("no watcher record (reservation_closeout.json): the deletion cannot be verified")
++    if deleted is None:
++        wrong.append("no deleter record (reservation_deleted.json): the deletion cannot be verified")
++    w, d = watch or {}, deleted or {}
++    permit = w.get("first_permit") or {}
++    ev = permit.get("evidence") or {}
++    if watch is not None:
++        if w.get("verdict") != "DELETED_IN_TIME" or w.get("complete") is not True:
++            wrong.append(f"watcher verdict {w.get('verdict')} (complete {w.get('complete')}): {w.get('verdict_reason')}")
++        if (w.get("reservation") or {}).get("uid") != uid:
++            wrong.append(f"watcher UID {(w.get('reservation') or {}).get('uid')!r} is not the recorded {uid!r}")
++        census, runst = ev.get("gpu_census") or {}, ev.get("run") or {}
++        if not permit or runst.get("owned_alive") != [] or runst.get("refused") != [] or runst.get("unattributed_lookalikes") != [] or census.get("released") is not True or census.get("previous_evaluation_released") is not True or (ev.get("ownership") or {}).get("verified") is not True:
++            wrong.append(f"the first permit does not carry complete evidence (run ended {runst.get('owned_alive') == []}, no refusal {runst.get('refused') == []}, no unregistered lookalike {runst.get('unattributed_lookalikes') == []}, GPU census {census.get('released')} / previous {census.get('previous_evaluation_released')}, ownership {(ev.get('ownership') or {}).get('verified')})")
++        if w.get("delete_requests_sent") != 0 or w.get("signals_sent") != 0:
++            wrong.append("the watcher records a delete request or a signal of its own")
++    if deleted is not None:
++        if d.get("verdict") != "DELETED_IN_TIME":
++            wrong.append(f"deleter verdict {d.get('verdict')}: {d.get('verdict_reason')}")
++        if d.get("uid") != uid or d.get("precondition_uid") != uid:
++            wrong.append(f"deleter UID {d.get('uid')!r} / precondition {d.get('precondition_uid')!r} is not the recorded {uid!r}")
++        if d.get("delete_requests_accepted") != 1:
++            wrong.append(f"{d.get('delete_requests_accepted')} accepted delete request(s), exactly one is required")
++    t_permit, t_req, t_watch, t_del = permit.get("at"), d.get("delete_requested_epoch"), w.get("deleted_observed_at"), d.get("deleted_observed_epoch")
++    if watch is not None and deleted is not None:
++        if t_permit is None or t_req is None or t_req < t_permit:
++            wrong.append(f"the delete request ({t_req}) does not follow the watcher's first permit ({t_permit}): early or unpermitted release")
++        if created is not None and ceiling is not None:
++            late = {n: None if t is None else round(t - created, 1) for n, t in (("watcher", t_watch), ("deleter", t_del)) if t is None or t - created > ceiling}
++            if late:
++                wrong.append(f"deletion not observed within {ceiling} s of the pod's creation: {late}")
++    held = None if created is None or t_watch is None else round((t_watch - created) / 60, 2)
++    add(res, NEW[3], "FAIL" if wrong else "PASS", f"reservation uid {uid}: watcher {w.get('verdict')}, deleter {d.get('verdict')}; first permit {None if created is None or t_permit is None else round(t_permit - created, 1)} s, delete request {None if created is None or t_req is None else round(t_req - created, 1)} s, "
++        f"observed gone {None if created is None or t_watch is None else round(t_watch - created, 1)} s (watcher) / {None if created is None or t_del is None else round(t_del - created, 1)} s (deleter) after the pod's creation = {held} min (ceiling {ceiling} s)" + (f"; {wrong}" if wrong else ""))
++
++
+ def evaluate(run: Path, inputs: dict, *, identity=None, completeness=None, e1: Path | None = None, **kw) -> list:
+     res = V3.evaluate(run, inputs, identity=identity, **kw)
+     gate_identity(res, load(identity) if identity else None, inputs)
+     gate_trace(res, run, inputs, e1 or HERE.parent)
+     gate_coverage(res, load(completeness) if completeness else None, inputs)
++    gate_reservation_deletion(res, run, load(kw["reservation_deleted"]) if kw.get("reservation_deleted") else None, inputs)
+     return res
+ 
+ 

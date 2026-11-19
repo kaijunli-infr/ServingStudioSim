@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # Closeout gate after the V4 pass, ON the capture tray as dc (read-only; prints the verified termination plan, signals nothing):
-#   bash closeout_e1_v4scale.sh     -> PASS/FAIL per item, exit 1 on any FAIL
-# As closeout_e1_fr.sh, plus: no Nsight CLI, agent or importer of this user left (found by executable path, never by name pattern), every
-# registered observer gone, and the observers' records complete.
+#   bash closeout_e1_v4scale.sh     -> PASS/FAIL per resource item, then four separate statements and one combined result
+# Resource items as closeout_e1_fr.sh, plus: no Nsight CLI, agent or importer of this user left (found by executable path, never by name
+# pattern), every registered observer, the supervisor and (once it has a verdict) the closeout watcher gone.
+# Statements (checks/e1_closeout_verdict.py): resource cleanup; supervision validity; run response; reservation deletion; frozen scientific
+# gates (reported from the post-run record if there is one; never evaluated here). The combined result is CLEAN (exit 0) only if the resources
+# are clean, the supervision was valid (a lost supervisor or monitor is INVALID), no abort response or breach marker exists and the
+# reservation deletion has not failed. It never deletes anything and never signals anything.
 set -u
 S=/mnt/shared/home/dc/workspace/serving-studio
 export HOME=/mnt/shared/home/dc
@@ -26,15 +30,16 @@ if [ -f $LC ]; then
   python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print('INFO  lifecycle final phase', d['phase'], 'nsys alive', (d.get('nsys') or {}).get('alive'), 'server alive', (d.get('server') or {}).get('alive'), 'gpu released', (d.get('gpu') or {}).get('released_at'), 'preserved', (d.get('stream') or {}).get('preserved_path'))" $LC
   ph=$(python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print(d['phase'])" $LC); case "$ph" in report_written|stop_failed) echo "PASS  lifecycle phase $ph is terminal (acceptance is decided by postrun_e1_v4scale.sh; V4 requires report_written)";; *) echo "FAIL  lifecycle phase $ph is not terminal (importer running or hung: stream stays preserved; verified registry cleanup only)"; fail=1;; esac
 else echo "INFO  no lifecycle.json for $PASS (nothing ran)"; fi
-if [ -f $RUN/$PASS/supervisor.json ]; then python3 -I -c "
-import json,sys
-d=json.load(open(sys.argv[1])); r=d.get('response')
-print(('FAIL  ' if r else 'PASS  ') + 'supervisor: ' + ('ABORT RESPONSE ' + str(r.get('outcome')) + ' for ' + str([(c.get('cause'), c.get('source'), c.get('kind')) for c in d.get('causes', [])]) if r else 'no abort response') + '; monitors effective=%s; complete=%s; samples=%s; signals sent by the supervisor itself=%s' % (d.get('monitors_effective'), d.get('complete'), d.get('samples'), d.get('signals_sent_by_supervisor')))
-sys.exit(1 if r or d.get('monitors_effective') is not True else 0)" $RUN/$PASS/supervisor.json || fail=1; else echo "INFO  supervisor.json not present"; fi
+CREG=$RUN/pids/closeout.tsv
+if [ -f $CREG ]; then
+  python3 -I $E1/checks/e1_pids.py plan --registry $CREG | grep -E "summary|OWNED|GONE|REFUSED|STALE" | sed 's/^/  /'
+  walive=$(awk -F'\t' '$1 ~ /^[0-9]+$/ {print $1}' $CREG | while read p; do [ -d /proc/$p ] && echo $p; done | wc -l)
+  wdone=$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1])).get('complete'))" $RUN/$PASS/reservation_closeout.json 2>/dev/null)
+  if [ "$walive" = 0 ]; then echo "PASS  closeout watcher registry: the watcher is gone"; elif [ "$wdone" = True ]; then echo "FAIL  closeout watcher: its record is complete but $walive registered process(es) are alive"; fail=1; else echo "INFO  closeout watcher alive (pid in $CREG): it is waiting for the reservation's deletion; its verdict follows"; fi
+else echo "INFO  no closeout watcher registry"; fi
 for f in import_probe.json mem_watch.json storage_watch.json; do
   if [ -f $RUN/$PASS/$f ]; then python3 -I -c "import json,sys; d=json.load(open(sys.argv[1])); print('INFO  ' + sys.argv[2] + ':', d.get('result') or ('complete=%s samples=%s breaches=%s' % (d.get('complete'), d.get('samples'), len(d.get('breaches', [])))))" $RUN/$PASS/$f $f; else echo "INFO  $f not present"; fi
 done
-for b in MEMORY-BREACH STORAGE-BREACH; do [ -f $RUN/$PASS/$b ] && { echo "FAIL  $b was written during the run: $(head -c 300 $RUN/$PASS/$b | tr '\n' ' ')"; fail=1; }; done
 ls -d /tmp/*.raw-preserve /tmp/nsys-report-*.qdstrm /tmp/v4scale-recovery-* 2>/dev/null | sed 's/^/INFO  stream artefact in \/tmp: /'
 echo "INFO  the preserved stream is never removed by a script; postrun_e1_v4scale.sh copies it to durable storage and verifies the copy first"
 if [ -f $RUN/$PASS/run.log ]; then
@@ -42,6 +47,7 @@ if [ -f $RUN/$PASS/run.log ]; then
   echo "INFO  run root size $(du -sh $RUN 2>/dev/null | cut -f1); nsys files: $(ls -l $RUN/$PASS/profile/nsys/ 2>/dev/null | awk 'NR>1{printf "%s %s  ", $5, $9}')"
 else echo "INFO  no run.log for $PASS (nothing ran)"; fi
 [ -f $RUN/$PASS/reservation.json ] && python3 -I $E1/checks/e1_reservation_guard.py deadline --reservation $RUN/$PASS/reservation.json --ceiling-s 5400 | sed "s/^PASS  /INFO  /; s/^FAIL  /INFO  RESERVATION CEILING PASSED (gate G10 will FAIL): /; s/^INCONCLUSIVE/INFO /"
-echo "INFO  reservation pod (from the laptop): delete immediately after a CLEAN closeout and only with the GPUs idle (budget: 12 min from the supervisor guard at 78 min to the 90 min ceiling), then write $RUN/$PASS/reservation_deleted.json {pod, deleted_observed_at (UTC, %Y-%m-%dT%H:%M:%SZ), gpu_pods_on_node} from kubectl; gate G10/G12 read it"
-echo "# closeout result: $([ $fail = 0 ] && echo CLEAN || echo NOT CLEAN)"
-exit $fail
+echo "INFO  the reservation pod is deleted only by the registered deleter (the deleting mode of checks/e1_reservation_closeout.py, on the operator's laptop) after the watcher's permit; never by hand before a permit, never early"
+echo "## statements"
+python3 -I $E1/checks/e1_closeout_verdict.py --run $RUN/$PASS --resource-failures $fail --gates $RUN/cpu/V4S-GATES.json --ceiling-s 5400
+exit $?

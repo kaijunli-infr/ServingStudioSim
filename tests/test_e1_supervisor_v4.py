@@ -1,5 +1,6 @@
-"""V4 run supervisor: the unchanged V3 supervisor plus the reservation guard. The guard is a cause like the others (one
-response, registry cleanup outside finalisation); the V3 behaviour is untouched; the wrapper signals nothing."""
+"""V4 run supervisor: the causes, release line and registry cleanup of the unchanged V3 supervisor, the reservation guard, and
+the response latch: release line at most once, registry cleanup at most once and final, never concurrent, and the guard is
+acted on in every state. The V3 module is untouched; the V4 supervisor signals nothing."""
 
 from __future__ import annotations
 
@@ -20,6 +21,7 @@ CHECKS = REPO / "profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks"
 SCRIPT = CHECKS / "e1_supervisor_v4.py"
 LINE = "release-gpus V4 resource-limit abort (registered supervisor response)"
 GUARD = 4680.0
+D_RELEASE_S = json.loads((CHECKS.parent / "E1-V4-SCALE-INPUTS.json").read_text())["supervisor"]["release_s"]
 
 
 def _load():
@@ -46,7 +48,7 @@ class World:
         (tmp / "root" / "pids").mkdir()
         self.registry, self.out, self.res = tmp / "root" / "pids" / "owned.tsv", self.run / "supervisor.json", self.run / "reservation.json"
         self.created = 1_800_000_000.0
-        self.t, self.cleanups, self.steps = self.created + age, [], []
+        self.t, self.cleanups, self.steps, self.ack = self.created + age, [], [], True
         if reservation == "default":
             reservation = {"pod": "p", "node": "n", "phase": "Running", "creation_timestamp": stamp(self.created)}
         if reservation is not None:
@@ -65,7 +67,7 @@ class World:
         self.t += s
         self.lc["updated_at"] = self.t
         control = self.nsys / "lifecycle.control"
-        if control.exists() and not self.lc["gpu"].get("release_requested_at"):
+        if control.exists() and self.ack and not self.lc["gpu"].get("release_requested_at"):
             self.lc["gpu"] = {"release_requested_at": self.t, "release_reason": f"operator: {control.read_text().strip()}"}
         (self.nsys / "lifecycle.json").write_text(json.dumps(self.lc))
         self.beat()
@@ -74,6 +76,7 @@ class World:
 
     def cleanup(self, registry, grace, log):
         self.cleanups.append((registry, grace))
+        self.during_cleanup = json.loads(self.out.read_text())  # what the record says while the cleanup is running
         return {"command": ["cleanup"], "rc": 0, "result_line": "RESULT survivors 0", "log": str(log), "started_at": self.t, "ended_at": self.t}
 
     def go(self, max_s=6.0, guard=GUARD):
@@ -112,12 +115,91 @@ def test_guard_before_any_stop_request_runs_the_registry_cleanup(tmp_path):
     assert rc == 5 and [s["kind"] for s in rec["response"]["steps"]] == ["R2 registry cleanup"] and "not in its finalisation loop" in rec["response"]["steps"][0]["why"]
 
 
-def test_guard_during_finalisation_goes_through_the_controller(tmp_path):
+def test_guard_during_finalisation_ends_the_run_through_the_registry_cleanup(tmp_path):
+    """The release line would release the GPUs only; the guard requires the run to end."""
     w = World(tmp_path, age=GUARD + 1, phase="importing", stop_requested=True)
     rc, rec = w.go()
     steps = rec["response"]["steps"]
-    assert rc == 5 and [s["kind"] for s in steps] == ["R1 control line"] and steps[0]["acknowledged"] is True and w.cleanups == []
-    assert (w.nsys / "lifecycle.control").read_text() == LINE + "\n"
+    assert rc == 5 and [s["kind"] for s in steps] == ["R2 registry cleanup"] and len(w.cleanups) == 1 and "the release line would release the GPUs only" in steps[0]["why"]
+    assert not (w.nsys / "lifecycle.control").exists() and rec["latch"] == {"release_lines_written": 0, "registry_cleanups_started": 1}
+
+
+def _breach(w, kind="importer_rss_above_ceiling"):
+    (w.run / "MEMORY-BREACH").write_text(json.dumps({"kind": kind, "value_gb": 129.0, "limit_gb": 128, "at": w.t}) + "\n")
+
+
+def test_guard_after_an_acknowledged_release_is_enforced_once(tmp_path):
+    """The defect of the first latch: after the release line, the guard was only recorded."""
+    w = World(tmp_path, age=GUARD - 20, phase="importing", stop_requested=True)
+    _breach(w)
+    rc, rec = w.go(max_s=60.0)
+    resp = rec["response"]
+    assert rc == 5 and [s["kind"] for s in resp["steps"]] == ["R1 control line", "R2 registry cleanup"] and resp["steps"][0]["acknowledged"] is True and len(w.cleanups) == 1
+    assert [c["cause"] for c in rec["causes"]] == ["breach"] and [c["cause"] for c in resp["escalation"]["causes"]] == ["reservation_guard"] and "reservation_guard" in [c["cause"] for c in rec["later_causes"]]
+    assert GUARD < resp["escalation"]["causes"][0]["reservation_age_s"] <= GUARD + 1 and resp["escalation"]["earlier_step"] == "R1 control line" and "reservation guard" in resp["outcome"]
+    assert rec["latch"] == {"release_lines_written": 1, "registry_cleanups_started": 1} and (w.nsys / "lifecycle.control").read_text() == LINE + "\n" and rec["complete"] is True
+    # the supervisor ends with the cleanup: nothing can run a second one
+    assert rec["ended_at"] == resp["escalation"]["completed_at"] and rec["signals_sent_by_supervisor"] == 0
+
+
+def test_cleanup_is_recorded_as_running_before_it_starts(tmp_path):
+    w = World(tmp_path, age=GUARD + 1)
+    rc, rec = w.go()
+    during = w.during_cleanup["response"]["steps"]
+    assert [(s["kind"], s["state"]) for s in during] == [("R2 registry cleanup", "running")] and w.during_cleanup["latch"]["registry_cleanups_started"] == 1 and w.during_cleanup["complete"] is False
+    assert rec["response"]["steps"][0]["state"] == "finished"
+
+
+def test_release_line_and_cleanup_are_never_concurrent(tmp_path):
+    """The guard passes while the release line is waiting for its acknowledgement: the cleanup starts only after that wait is over."""
+    w = World(tmp_path, age=GUARD - 3, phase="importing", stop_requested=True)
+    w.ack = False
+    _breach(w)
+    rc, rec = w.go(max_s=60.0)
+    steps = rec["response"]["steps"]
+    assert [s["kind"] for s in steps] == ["R1 control line", "R2 registry cleanup"] and steps[0]["acknowledged"] is False and "not acknowledged within 10.0 s" in steps[1]["why"]
+    assert steps[1]["decided_at"] - steps[0]["written_at"] > 10.0 and len(w.cleanups) == 1 and "escalation" not in rec["response"]
+    assert rec["latch"] == {"release_lines_written": 1, "registry_cleanups_started": 1}
+
+
+def test_other_causes_after_a_release_are_recorded_and_do_not_act(tmp_path):
+    w = World(tmp_path, age=1000, phase="importing", stop_requested=True)
+    _breach(w)
+    w.steps = [lambda: None] * 3 + [lambda: (w.run / "STORAGE-BREACH").write_text(json.dumps({"kind": "persistent_storage_above_ceiling", "value_gb": 18.2, "limit_gb": 18, "at": w.t}) + "\n")]
+    rc, rec = w.go(max_s=20.0)
+    assert rc == 5 and [s["kind"] for s in rec["response"]["steps"]] == ["R1 control line"] and w.cleanups == [] and "escalation" not in rec["response"]
+    assert [c["kind"] for c in rec["later_causes"]] == ["persistent_storage_above_ceiling"] and (w.nsys / "lifecycle.control").read_text() == LINE + "\n"
+    assert rec["release_after_response"]["stalled"] is False and rec["release_after_response"]["limit_s"] == 150.0 == D_RELEASE_S
+
+
+def test_release_that_does_not_complete_is_reported_as_stalled_and_left_to_the_controller_until_the_guard(tmp_path):
+    w = World(tmp_path, age=1000, phase="importing", stop_requested=True)
+    _breach(w)
+    rc, rec = w.go(max_s=140.0)
+    assert rc == 5 and w.cleanups == [] and rec["release_after_response"]["stalled"] is False and rec["release_after_response"]["seconds_since_acknowledgement"] > 130  # the controller's 60 s grace and the release bound are not over yet
+    w = World(tmp_path / "stalled", age=1000, phase="importing", stop_requested=True)
+    _breach(w)
+    rc, rec = w.go(max_s=200.0)
+    assert rc == 5 and w.cleanups == [] and rec["release_after_response"]["stalled"] is True and rec["release_after_response"]["gpu_released_at"] is None and rec["release_after_response"]["seconds_since_acknowledgement"] > 150
+    w2 = World(tmp_path / "released", age=1000, phase="importing", stop_requested=True)
+    _breach(w2)
+    w2.steps = [lambda: None] * 4 + [lambda: w2.lc["gpu"].update(released_at=w2.t)]
+    rc, rec = w2.go(max_s=120.0)
+    assert rec["release_after_response"]["stalled"] is False and rec["release_after_response"]["gpu_released_at"] is not None and w2.cleanups == []
+
+
+def test_monitor_lost_after_a_release_is_recorded(tmp_path):
+    w = World(tmp_path, age=1000, phase="importing", stop_requested=True)
+    _breach(w)
+    real_beat = w.beat
+
+    def beat_without_storage():
+        real_beat()
+        os.utime(w.run / "storage_observations.jsonl", (w.created, w.created))
+
+    w.steps = [lambda: setattr(w, "beat", beat_without_storage)]
+    rc, rec = w.go(max_s=10.0)
+    assert rec["monitors_effective"] is False and ("monitor_lost", "storage sampler") in [(c["cause"], c["source"]) for c in rec["later_causes"]] and w.cleanups == []
 
 
 @pytest.mark.parametrize("reservation", [None, "not json", {"pod": "p"}, {"creation_timestamp": "yesterday"}])

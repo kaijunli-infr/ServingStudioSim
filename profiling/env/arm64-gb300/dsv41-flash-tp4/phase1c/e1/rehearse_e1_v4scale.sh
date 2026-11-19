@@ -5,11 +5,12 @@
 # 1. the V4 identity policy on the ACTUAL generated V4 config and trace with the predicted V4 launch record
 #    (e1_v4scale_identity_rehearsal.py): PASS with the full four-copy trace proof; the V1/V2 policy FAILs on the same records.
 # 2. the COMPLETE V4 post-run (postrun_e1_v4scale.sh: durable copy, V4 identity step, scientific checkers, real importer and exporter,
-#    its own storage and memory samplers, the V4 gates G0-G15) on a V4-shaped run directory: a copy of the archived V3 run in which
+#    its own storage and memory samplers, the V4 gates G0-G16) on a V4-shaped run directory: a copy of the archived V3 run in which
 #    the profile config is the actual V4 config byte for byte, the trace is the actual V4 trace and the launch record is the predicted
 #    V4 launch record. The capture data are V3's (four waves, 24.5 M rows), so the registered expectation is FAIL with exactly:
 #    G8b FAIL (4320 iterations and 24.5 M rows against the V4 bands), G9 FAIL (four of the eight planned cells), G15 FAIL (four of
-#    eight cells, 112 of 224 requests). Every other gate PASS, in particular G13 (V4 identity policy, trace proof complete), G14
+#    eight cells, 112 of 224 requests), G16 FAIL (the V3 run has no watcher and no deleter record: its reservation was deleted by hand,
+#    which V4 does not accept). Every other gate PASS, in particular G13 (V4 identity policy, trace proof complete), G14
 #    (four-copy trace and V4 config in the run directory), G11 (storage and memory within the V4 ceilings) and G0-G7, G10, G12.
 #    This is the step whose absence produced the V3 failure: the V4 post-run, including configuration identity, run against the V4
 #    configuration.
@@ -28,7 +29,7 @@ V3Q=/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve; V3SHA=764d063d951d
 OUT=${1:-$E1/runs/v4scale/rehearsal}; mkdir -p $OUT/identity $OUT/v4_config_postrun $OUT/synthetic $OUT/eightwave
 BIN=$REPO/alignment/load_generator/req-frontend/target/release/session_runner
 PINSHA=$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['sha256'])" $E1/BINARY-PROVENANCE.json)
-EXPECT="G8b.recovered_trace_complete=FAIL,G9.scientific_completeness=FAIL,G15.request_iteration_routing_rank_coverage=FAIL"
+EXPECT="G8b.recovered_trace_complete=FAIL,G9.scientific_completeness=FAIL,G15.request_iteration_routing_rank_coverage=FAIL,G16.reservation_deletion=FAIL"
 fail=0
 ok()  { echo "PASS  $*"; }
 bad() { echo "FAIL  $*"; fail=1; }

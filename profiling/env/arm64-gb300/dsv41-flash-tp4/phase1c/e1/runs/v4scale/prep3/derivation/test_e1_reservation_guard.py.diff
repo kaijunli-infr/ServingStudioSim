@@ -1,0 +1,31 @@
+diff --git a/tests/test_e1_reservation_guard.py b/tests/test_e1_reservation_guard.py
+index c206951d..0dc947d7 100644
+--- a/tests/test_e1_reservation_guard.py
++++ b/tests/test_e1_reservation_guard.py
+@@ -74,9 +74,14 @@ def test_registered_budget_adds_up_to_the_reservation_ceiling():
+         assert lim["observer_max_s"][k] >= r["hard_ceiling_s"]
+     assert lim["observer_max_s"]["gpu_sampler"] >= c["gpu_held_ceiling_s"] + lim["gpu_release_deadline_s"] + d["phase_deadlines_s"]["session_close_after_server_sigterm"]
+     assert r["early_release_after_verified_gpu_release"]["enabled"] is False
+-    for name in ("run_e1_v4scale.sh", "postrun_e1_v4scale.sh", "closeout_e1_v4scale.sh", "archive_e1_v4scale.sh", "monitor_e1_v4scale.sh", "preflight_e1_v4scale.sh"):
+-        text = (E1 / name).read_text()
+-        assert "checks/e1_reservation_release.py" not in text and "kubectl delete" not in text and "delete pod" not in text, name  # no V4 script deletes the reservation or calls the early-release check
++    for name in ("run_e1_v4scale.sh", "postrun_e1_v4scale.sh", "closeout_e1_v4scale.sh", "archive_e1_v4scale.sh", "monitor_e1_v4scale.sh", "preflight_e1_v4scale.sh", "arm_closeout_e1_v4scale.sh"):
++        text = "\n".join(ln for ln in (E1 / name).read_text().splitlines() if "arm_closeout_e1_v4scale.sh | grep -q" not in ln)  # (the preflight's own check that the arming script contains no delete request names the patterns)
++        # no V4 script on the tray deletes the reservation or calls the early-release check (the preflight only ASKS whether this host may delete: it may not)
++        assert "checks/e1_reservation_release.py" not in text and "kubectl delete" not in text and "delete --raw" not in text and "e1_reservation_closeout.py delete" not in text, name
++        assert [ln for ln in text.splitlines() if "delete pod" in ln and "auth can-i delete pods" not in ln] == [], name
++    # the one place a delete request is built: the deleter of the closeout tool, with the UID precondition
++    tool = (E1 / "checks" / "e1_reservation_closeout.py").read_text()
++    assert tool.count('["delete", "--raw"') == 1 and '"preconditions": {"uid": uid}' in tool
+ 
+ 
+ def test_what_the_correction_did_not_change():
+@@ -142,7 +147,7 @@ def _run_driver_rule(tmp_path: Path, age: float) -> subprocess.CompletedProcess:
+ 
+ def test_the_drivers_own_lines_permit_late_and_refuse_too_late(tmp_path):
+     name, rule = _driver_lines()
+-    assert name.endswith("RSS_CEIL=128; TMP_CEIL=15; PERS_CEIL=18; RES_GUARD=4680; RES_RUN=4210; GPU_CEIL=2700")
++    assert name.endswith('RSS_CEIL=128; TMP_CEIL=15; PERS_CEIL=18; RES_GUARD=4680; RES_RUN=4210; GPU_CEIL=2700; KUBECTL="kubectl --request-timeout=15s"')
+     assert "--guard-s $RES_GUARD --run-budget-s $RES_RUN" in rule[0] and "exit 7" in rule[1] and '"${PIPESTATUS[0]}" = 0' in rule[1]
+     ok = _run_driver_rule(tmp_path / "a", LATEST - 8)  # a few seconds before the latest permitted instant
+     assert ok.returncode == 0 and "PASS  launch eligibility" in ok.stdout and "SENTINEL-OBSERVERS-AND-LAUNCHER-WOULD-START" in ok.stdout

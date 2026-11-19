@@ -1,0 +1,4 @@
+new file in revision 3 (no predecessor): arm_closeout_e1_v4scale.sh, 55 lines, sha256 fa0d8fc7b7ddb8eea8cd49496f0165721255cea3ea3e5247f1db2394ebfbacac
+new file in revision 3 (no predecessor): e1_v4scale_mock_kubectl.py, 116 lines, sha256 3357577a5db336a1be623590aac94b60992780f9827fc09c777d205bd09cdb18
+new file in revision 3 (no predecessor): checks/e1_reservation_closeout.py, 574 lines, sha256 9599c00b3dec1bf14a9795eee17eb16e54d55e30237298ed9f046c0d7c255625
+new file in revision 3 (no predecessor): checks/e1_closeout_verdict.py, 140 lines, sha256 35245e47eeb13412e7a9875923cd60eac68ab45f104156e9e5e3ed24b86c0c0a

@@ -67,9 +67,15 @@ def budget(m: dict, inputs: dict) -> dict:
         return round(preflight - footprint - importer, 1)
 
     v3_stop, v3_load = m["at_stop_request_below_idle_gib"], m["load_transient_below_idle_gib"]
+    span = (m["stop_requested_s_after_launch"] - m["decline_onset_s_after_launch"]) if m["decline_onset_s_after_launch"] is not None else 0
+    projected = round(m["growth_onset_to_stop_gib"] / span * 160, 1) if span > 0 else 0.0  # a projection from one run (see `unmeasured`), shown as a case, not part of the sum
     cases = [
         {"case": "registered minimum, measured V3 footprint at the stop request, importer at its ceiling", "preflight": minimum, "footprint": v3_stop, "importer": imp},
-        {"case": "previous minimum (448), same", "preflight": 448, "footprint": v3_stop, "importer": imp},
+        {"case": "registered minimum, measured footprint plus the growth projected for the longer V4 capture, importer at its ceiling", "preflight": minimum, "footprint": round(v3_stop + projected, 1), "importer": imp},
+        {"case": "registered minimum, measured footprint plus twice the projected growth, importer at its ceiling", "preflight": minimum, "footprint": round(v3_stop + 2 * projected, 1), "importer": imp},
+        {"case": "earlier proposal (488), measured footprint, importer at its ceiling", "preflight": 488, "footprint": v3_stop, "importer": imp},
+        {"case": "earlier proposal (488), measured footprint plus the projected growth, importer at its ceiling", "preflight": 488, "footprint": round(v3_stop + projected, 1), "importer": imp},
+        {"case": "first proposal (448), measured footprint, importer at its ceiling", "preflight": 448, "footprint": v3_stop, "importer": imp},
         {"case": "registered minimum, load transient (no importer exists then)", "preflight": minimum, "footprint": v3_load, "importer": 0},
         {"case": "registered minimum, measured footprint, importer as predicted for V4 (stress 35)", "preflight": minimum, "footprint": v3_stop, "importer": 35},
         {"case": "tray idle as measured before V3, measured footprint, importer at its ceiling", "preflight": m["idle_before_launch_gib"], "footprint": v3_stop, "importer": imp},
@@ -78,7 +84,7 @@ def budget(m: dict, inputs: dict) -> dict:
         x["available_left_gib"] = left(x["preflight"], x["footprint"], x["importer"])
         x["at_or_above_floor"] = x["available_left_gib"] >= floor
     return {"importer_ceiling_gib": imp, "runtime_floor_gib": floor, "server_allowance_gib": server, "preflight_minimum_gib": minimum, "sum_gib": imp + floor + server, "minimum_equals_sum": minimum == imp + floor + server,
-            "allowance_covers_measured_v3_footprint": server >= v3_stop, "allowance_margin_over_measured_gib": round(server - v3_stop, 1), "cases": cases}
+            "allowance_covers_measured_v3_footprint": server >= v3_stop, "allowance_margin_over_measured_gib": round(server - v3_stop, 1), "projected_growth_gib": projected, "allowance_margin_over_measured_plus_projected_growth_gib": round(server - v3_stop - projected, 1), "cases": cases}
 
 
 def unmeasured(m: dict) -> list[dict]:
@@ -88,7 +94,7 @@ def unmeasured(m: dict) -> list[dict]:
     extra_s = 160  # two more copies of the trace: 2 x 80 s
     return [
         {"consumer": "growth of the run's footprint during the four additional waves of V4", "status": "NOT MEASURED",
-         "note": f"in V3 the footprint grew by {m['growth_onset_to_stop_gib']} GiB between {m['decline_onset_s_after_launch']} s and the stop request at {m['stop_requested_s_after_launch']} s after the launch (warm-up and capture). If growth continued at the same mean rate over the additional {extra_s} s of V4 capture, that would be about {None if rate is None else round(rate * extra_s, 1)} GiB more: a projection from one run, not a measurement, and not used in the registered minimum"},
+         "note": f"in V3 the footprint grew by {m['growth_onset_to_stop_gib']} GiB between {m['decline_onset_s_after_launch']} s and the stop request at {m['stop_requested_s_after_launch']} s after the launch (warm-up and capture). If growth continued at the same mean rate over the additional {extra_s} s of V4 capture, that would be about {None if rate is None else round(rate * extra_s, 1)} GiB more: a projection from one run, not a measurement; the registered allowance exceeds the V3 measurement by more than that projection (table above), but the growth itself stays unmeasured until V4 runs"},
         {"consumer": "importer at the V4 size", "status": "bounded, not measured at this size", "note": f"V3 peak {m['importer_peak_rss_gib']} GiB; predicted 28 – 31 (35) GiB; bounded by the 128 GiB ceiling (sampler → supervisor), which is the value in the budget"},
         {"consumer": "dirty page cache of the stream and its preserved copy in /tmp (ext4 on the tray's NVMe, not memory-backed)", "status": "inside the V3 measurement at half the size", "note": "0.70 GB in V3, about 1.4 GB predicted for V4; reclaimable after writeback"},
         {"consumer": "other tenants of the node: DaemonSet pods, other sessions of the shared account, CPU-only pods the scheduler may place", "status": "NOT CONTROLLED", "note": "the preflight is one sample; during the run the 64 GiB floor (memory sampler → supervisor) is the protection, not the preflight"},
