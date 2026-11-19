@@ -1,8 +1,24 @@
 diff --git a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v4scale.sh b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v4scale.sh
-index 3e6e98c4..3ac3e5db 100755
+index 3e6e98c4..cf9e5c8e 100755
 --- a/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v4scale.sh
 +++ b/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v4scale.sh
-@@ -29,18 +29,35 @@
+@@ -13,10 +13,11 @@
+ #   storage_breach  the run root exceeds the (rehearsal) ceiling during the capture: marker → supervisor → pinned registry cleanup
+ #   reservation_guard  the (rehearsal) reservation guard, 420 s after the reservation record's creation, passes during a 900 s mock
+ #                   capture: supervisor → pinned registry cleanup (the driver's preflight must have finished within those 420 s)
+-# Revision 2 (reservation budget; the rehearsal guard is 420 s and the rehearsal run budget 200 s unless stated):
+-#   launch_late_permitted  the reservation record is 320 s old when the driver starts; with the REGISTERED guard and run budget the
+-#                   launch rule still permits the launch (age at the check 400 – 470 s); the run then completes as in `success`
+-#   launch_refused  the record is 380 s old when the driver starts; with the registered values the rule refuses (age > 470 s):
++# Revision 2 (reservation budget; the rehearsal guard is 420 s and the rehearsal run budget 150 s unless stated; 200 s before revision 3, whose longer driver preflight left too little margin):
++#   launch_late_permitted  the reservation pod is 275 s old when the driver starts (its preflight and the arming take about 165 s in
++#                   revision 3); with the REGISTERED guard and run budget the launch rule still permits the launch (age at the check
++#                   400 – 470 s); the run then completes as in `success`
++#   launch_refused  the pod is 365 s old when the driver starts; with the registered values the rule refuses (age > 470 s):
+ #                   exit 7 before any observer, supervisor or launcher exists
+ #   ceiling_before_stop  the supervisor's GPU-held ceiling (rehearsal value 45 s) passes during a 900 s mock capture: registry cleanup
+ #   complete_near_guard  the mock launcher's CPU-only export phase lasts until the record is 375 s old; the run ends through its stop
+@@ -29,18 +30,35 @@
  #                   the supervisor's heartbeat rule → registry cleanup
  #   supervisor_lost the supervisor is ended 8 s after its start (verified cleanup of its own registry): the run completes under the
  #                   controller; the incomplete supervisor record makes gate G11 INCONCLUSIVE
@@ -41,7 +57,7 @@ index 3e6e98c4..3ac3e5db 100755
  mkdir -p $OUT; fail=0
  ok()  { echo "PASS  $*"; }
  bad() { echo "FAIL  $*"; fail=1; }
-@@ -48,45 +65,75 @@ echo "# V4 end-to-end rehearsal $(date -u +%FT%TZ) on $(hostname); tree $REPO at
+@@ -48,45 +66,75 @@ echo "# V4 end-to-end rehearsal $(date -u +%FT%TZ) on $(hostname); tree $REPO at
  echo "gpu before (MiB / compute processes): $(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | tr '\n' ' ')/ $(nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l)"
  b0=$(sha256sum $BIN | cut -d' ' -f1); st0=$(stat -c '%i %Y %s' $BIN); [ "$b0" = "$PINSHA" ] && ok "load-generator executable before the rehearsal = pinned $PINSHA" || bad "load-generator executable is $b0, pinned $PINSHA"
  touch $OUT/.e2e_started
@@ -65,7 +81,7 @@ index 3e6e98c4..3ac3e5db 100755
 -  backdate() { python3 -I -c "import json,sys,time; p=sys.argv[1]; d=json.load(open(p)); d['creation_timestamp']=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime(time.time()-float(sys.argv[2]))); json.dump(d, open(p,'w'), indent=1)" $R/$PASS/reservation.json $1; }
 -  # end ONE registered process, 8 s after its record appears: a registry holding only that record, through the pinned verified cleanup
 -  end_one() { for i in $(seq 1 300); do grep -q "$2" $R/pids/$1 2>/dev/null && break; sleep 1; done; sleep 8; { grep '^#' $R/pids/$1; grep "$2" $R/pids/$1; } > $3.tsv; python3 -I $E1/checks/e1_pids.py cleanup --registry $3.tsv --execute --grace 5 --kill9 --log $3.jsonl > $3.log 2>&1; }
-+  RG="E1_V4S_REHEARSAL_RESERVATION_GUARD_S=420 E1_V4S_REHEARSAL_RUN_BUDGET_S=200"; hp=""; age=0; delay=3; CEIL=5400; TAIL=600; arm=yes
++  RG="E1_V4S_REHEARSAL_RESERVATION_GUARD_S=420 E1_V4S_REHEARSAL_RUN_BUDGET_S=150"; hp=""; age=0; delay=3; CEIL=5400; TAIL=600; arm=yes
 +  # end ONE registered process, 8 s after the record $2 has appeared in registry $1: a registry holding only the record $4 of registry $3,
 +  # through the pinned verified cleanup
 +  end_one() { for i in $(seq 1 400); do grep -q "$2" $1 2>/dev/null && break; sleep 1; done; sleep 8; { grep '^#' $3; grep "$4" $3; } > $5.tsv; python3 -I $E1/checks/e1_pids.py cleanup --registry $5.tsv --execute --grace 5 --kill9 --log $5.jsonl > $5.log 2>&1; }
@@ -84,8 +100,8 @@ index 3e6e98c4..3ac3e5db 100755
      reservation_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_CAPTURE_S=900 $RG";;
 -    launch_late_permitted) envs="E1_V4S_MOCK_SCENARIO=success"; backdate 320;;
 -    launch_refused) envs="E1_V4S_MOCK_SCENARIO=success"; backdate 380;;
-+    launch_late_permitted) envs="E1_V4S_MOCK_SCENARIO=success"; age=320;;
-+    launch_refused) envs="E1_V4S_MOCK_SCENARIO=success"; age=380;;
++    launch_late_permitted) envs="E1_V4S_MOCK_SCENARIO=success"; age=275;;
++    launch_refused) envs="E1_V4S_MOCK_SCENARIO=success"; age=365;;
      ceiling_before_stop) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_CAPTURE_S=900 E1_V4S_REHEARSAL_SUPERVISOR_CEILING_S=45";;
      complete_near_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_EXPORT_UNTIL_RESERVATION_AGE_S=375 $RG";;
      export_near_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_EXPORT_UNTIL_RESERVATION_AGE_S=900 $RG";;
@@ -132,7 +148,7 @@ index 3e6e98c4..3ac3e5db 100755
      E1_V4S_MODE=rehearsal E1_REPO=$REPO E1_V4S_RUN=$R E1_V4S_TABLES=$R/tables E1_V4S_INPUTS=$T/inputs.json E1_CLOSEOUT_RC=$crc E1_V4S_MOCK_IMPORTER=$T/QdstrmImporter E1_V4S_MOCK_NSYS=$T/nsys E1_V4S_MOCK_IMPORTER_EXE=$PYEXE bash $E1/postrun_e1_v4scale.sh > $O/postrun.log 2>&1; prc=$?
      echo "post-run exit code $prc: $(grep '^# V4 gates\|V4 ACCEPTANCE' $O/postrun.log | tr '\n' ';' | cut -c1-300)"
      cp $R/cpu/V4S-GATES.json $O/V4S-GATES.json 2>/dev/null; cp $R/cpu/V4S-GATES.txt $O/V4S-GATES.txt 2>/dev/null
-@@ -100,15 +147,15 @@ for sc in $SCENARIOS; do
+@@ -100,15 +148,15 @@ for sc in $SCENARIOS; do
      echo "second post-run with a failing importer: exit code $frc: $(grep '^# V4 gates' $O/postrun_failing_importer.log | cut -c1-200)"
      cp $R/cpu/V4S-GATES.json $O/V4S-GATES-failing-importer.json 2>/dev/null; extra="--gates-failed-recovery $O/V4S-GATES-failing-importer.json --archive-rc $arc"
    fi
@@ -151,7 +167,7 @@ index 3e6e98c4..3ac3e5db 100755
      [ -f $reg ] || continue
      if [ -n "$(awk -F'\t' '$1 ~ /^[0-9]+$/ {print $1}' $reg | while read p; do [ -d /proc/$p ] && echo $p; done)" ]; then
        bad "scenario $sc: registered process(es) still alive in $(basename $reg) after the scenario; ending them through the verified registry cleanup"
-@@ -116,6 +163,7 @@ for sc in $SCENARIOS; do
+@@ -116,6 +164,7 @@ for sc in $SCENARIOS; do
      fi
    done
    case "$R" in */logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e) rm -rf $R;; esac
@@ -159,7 +175,7 @@ index 3e6e98c4..3ac3e5db 100755
    case "$PRES" in /tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve) rm -rf $PRES;; esac
    rm -f /tmp/nsys-report-e2e*.qdstrm; rm -rf /tmp/v4scale-recovery-$PASS
  done
-@@ -125,7 +173,10 @@ nf=$(find $REPO/alignment/load_generator/req-frontend/target -newer $OUT/.e2e_st
+@@ -125,7 +174,10 @@ nf=$(find $REPO/alignment/load_generator/req-frontend/target -newer $OUT/.e2e_st
  g=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | tr '\n' ' '); c=$(nvidia-smi --query-compute-apps=pid --format=csv,noheader | wc -l); echo "gpu after (MiB / compute processes): $g/ $c"
  [ "$c" = 0 ] && ok "no GPU compute process after the rehearsal" || bad "GPU compute processes present after the rehearsal"
  lo=$(ps -u $(id -u) -o pid,args | grep "[e]1_v4scale_mock_launcher.py" | wc -l); [ "$lo" = 0 ] && ok "no mock process left" || bad "$lo mock process(es) left: $(ps -u $(id -u) -o pid,args | grep '[e]1_v4scale_mock_launcher.py' | cut -c1-200)"

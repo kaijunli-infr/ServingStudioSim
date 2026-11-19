@@ -13,10 +13,11 @@
 #   storage_breach  the run root exceeds the (rehearsal) ceiling during the capture: marker → supervisor → pinned registry cleanup
 #   reservation_guard  the (rehearsal) reservation guard, 420 s after the reservation record's creation, passes during a 900 s mock
 #                   capture: supervisor → pinned registry cleanup (the driver's preflight must have finished within those 420 s)
-# Revision 2 (reservation budget; the rehearsal guard is 420 s and the rehearsal run budget 200 s unless stated):
-#   launch_late_permitted  the reservation record is 320 s old when the driver starts; with the REGISTERED guard and run budget the
-#                   launch rule still permits the launch (age at the check 400 – 470 s); the run then completes as in `success`
-#   launch_refused  the record is 380 s old when the driver starts; with the registered values the rule refuses (age > 470 s):
+# Revision 2 (reservation budget; the rehearsal guard is 420 s and the rehearsal run budget 150 s unless stated; 200 s before revision 3, whose longer driver preflight left too little margin):
+#   launch_late_permitted  the reservation pod is 275 s old when the driver starts (its preflight and the arming take about 165 s in
+#                   revision 3); with the REGISTERED guard and run budget the launch rule still permits the launch (age at the check
+#                   400 – 470 s); the run then completes as in `success`
+#   launch_refused  the pod is 365 s old when the driver starts; with the registered values the rule refuses (age > 470 s):
 #                   exit 7 before any observer, supervisor or launcher exists
 #   ceiling_before_stop  the supervisor's GPU-held ceiling (rehearsal value 45 s) passes during a 900 s mock capture: registry cleanup
 #   complete_near_guard  the mock launcher's CPU-only export phase lasts until the record is 375 s old; the run ends through its stop
@@ -76,7 +77,7 @@ for sc in $SCENARIOS; do
   O=$OUT/$sc; [ -e $O ] && { bad "scenario directory $O exists: not overwriting an earlier attempt"; continue; }; mkdir -p $O
   echo "## scenario $sc ($(date -u +%T))"
   mkdir -p $R/$PASS
-  RG="E1_V4S_REHEARSAL_RESERVATION_GUARD_S=420 E1_V4S_REHEARSAL_RUN_BUDGET_S=200"; hp=""; age=0; delay=3; CEIL=5400; TAIL=600; arm=yes
+  RG="E1_V4S_REHEARSAL_RESERVATION_GUARD_S=420 E1_V4S_REHEARSAL_RUN_BUDGET_S=150"; hp=""; age=0; delay=3; CEIL=5400; TAIL=600; arm=yes
   # end ONE registered process, 8 s after the record $2 has appeared in registry $1: a registry holding only the record $4 of registry $3,
   # through the pinned verified cleanup
   end_one() { for i in $(seq 1 400); do grep -q "$2" $1 2>/dev/null && break; sleep 1; done; sleep 8; { grep '^#' $3; grep "$4" $3; } > $5.tsv; python3 -I $E1/checks/e1_pids.py cleanup --registry $5.tsv --execute --grace 5 --kill9 --log $5.jsonl > $5.log 2>&1; }
@@ -93,8 +94,8 @@ print('replaced', old, '->', st['pods'][0]['metadata']['uid'])" $O/kube_state.js
     memory_breach)  envs="E1_V4S_MOCK_SCENARIO=importer_ballast E1_V4S_MOCK_BALLAST_MB=160 E1_V4S_MOCK_IMPORT_S=20 E1_V4S_REHEARSAL_IMPORTER_RSS_GB=0.0625";;
     storage_breach) envs="E1_V4S_MOCK_SCENARIO=storage_ballast E1_V4S_MOCK_STORAGE_BALLAST_MB=64 E1_V4S_MOCK_CAPTURE_S=40 E1_V4S_REHEARSAL_PERSISTENT_GB=0.032";;
     reservation_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_CAPTURE_S=900 $RG";;
-    launch_late_permitted) envs="E1_V4S_MOCK_SCENARIO=success"; age=320;;
-    launch_refused) envs="E1_V4S_MOCK_SCENARIO=success"; age=380;;
+    launch_late_permitted) envs="E1_V4S_MOCK_SCENARIO=success"; age=275;;
+    launch_refused) envs="E1_V4S_MOCK_SCENARIO=success"; age=365;;
     ceiling_before_stop) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_CAPTURE_S=900 E1_V4S_REHEARSAL_SUPERVISOR_CEILING_S=45";;
     complete_near_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_EXPORT_UNTIL_RESERVATION_AGE_S=375 $RG";;
     export_near_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_EXPORT_UNTIL_RESERVATION_AGE_S=900 $RG";;

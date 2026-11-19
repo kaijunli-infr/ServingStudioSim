@@ -44,7 +44,7 @@ the driver is gone. The values are constants of the driver, asserted against
 |---|---|---|
 | required worst-case path with an immediate launch | 0 + 4210 = 4210 ≤ 4680 | fits, 470 s to spare |
 | launch window | 0 ≤ age ≤ 470 s | exists |
-| measured launch age | V3: 316 s (operator 236 s + driver preflight 78 s + 1 s). V4 driver preflight in rehearsal: 110 – 120 s, then ownership check, arming and the armed check (seconds; bounded at 45 s) → about 360 s at V3's operator speed, plus the `record` step on the laptop | inside the window, margin about 100 s; a slower start is refused, not launched |
+| measured launch age | V3: 316 s (operator 236 s + driver preflight 78 s + 1 s). V4 revision 3, 16 rehearsal launches: 161 – 167 s from the driver's start to the eligibility check (preflight about 150 s, its test suites having grown to 795 tests; then ownership check, arming and the armed check, about 10 s, bounded at 45 s) → about 400 s at V3's manual operator pace, plus the `record` step; about 200 s if the operator's steps before the driver are scripted | inside the window; **margin only about 60 s at V3's manual pace** (§7.7); a slower start is refused, not launched |
 | latest launch, ceiling and release against the guard | 470 + 20 + 2700 + 90 = 3280 < 4680 | the guard can only fall into the CPU-only phase |
 | guard + closeout budget against the reservation limit | 4680 + 720 = 5400 | equal by construction |
 | predicted run at the latest launch | 470 + 20 + 2311 (E stress GPU-held) + 1360 + 40 = 4201 | ends 479 s before the guard |
@@ -57,7 +57,7 @@ launch window was reduced from 600 s to 470 s instead of any ceiling being chang
 
 | # | step | nominal | worst case allowed | enforced by |
 |---|---|---|---|---|
-| 1 | reservation acquisition → operator checks → driver preflight → eligibility check | ≈ 350 s (M V3 operator 236 s; M V4 rehearsal preflight 110 – 116 s) | **age ≤ 470 s** | L: launch rule, exit 7 |
+| 1 | reservation acquisition → `record` → deleter start → driver preflight → ownership check, arming → eligibility check | ≈ 200 – 400 s (M V3 operator 236 s, manual; M V4 rehearsal driver start → check 161 – 167 s) | **age ≤ 470 s** | L: launch rule, exit 7 |
 | 2 | launcher start; GPU acquisition, model startup, warm-up | 1487 – 1640 s (M: V2 1487, V3 ≈ 1523) | inside the GPU-held ceiling; operator abort condition at 30 min | monitor; supervisor at the ceiling |
 | 3 | measurement: 8 waves, 224 requests | ≈ 313 s (E) | inside the ceiling | monitor; supervisor at the ceiling |
 | 4 | stop request accepted | 0.003 s (M) | ≤ 30 s | L: G4 |
@@ -145,4 +145,8 @@ R2 never starts while R1 waits for its acknowledgement; a reservation-guard caus
    until the guard.
 6. **Before a stop request, a lost supervisor** is covered by the operator's monitor only (unchanged from V3). The closeout can
    no longer call such a run CLEAN, and the watcher never permits a deletion while the run is active.
-7. **The launch window is 470 s** against an expected launch age of about 360 s.
+7. **The launch window is 470 s and the driver now needs 161 – 167 s of it** (measured in 16 rehearsal launches; 78 s in V3,
+   110 – 116 s in revision 2): its preflight runs 795 tests and the arming follows. At V3's manual operator pace (236 s
+   before the driver) the launch age would be about 400 s, about 60 s inside the window; with the pre-launch steps scripted,
+   about 200 s. A refusal is safe (the watcher permits, the deleter deletes) and costs one reservation cycle. Not changed
+   here: no ceiling, no part of the driver's preflight.
