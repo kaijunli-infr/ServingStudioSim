@@ -172,7 +172,7 @@ gates G0 – G15. Early reservation release: not enabled.
    CLEAN, and the watcher does not permit a deletion while the run is active (the reservation then outlives its 90 minutes
    and fails G16, with the GPUs still reserved).
 6. **Memory growth over the longer capture** is unmeasured; 512 GiB covers the projection with about 20 GiB to spare.
-7. **Launch window.** The driver now needs 161 – 167 s from its start to the launch rule (31 rehearsal launches; 78 s in V3):
+7. **Launch window.** The driver now needs 161 – 167 s from its start to the launch rule (35 rehearsal launches in attempts a1 – a3: 160.7 – 167.5 s; 78 s in V3):
    its preflight runs 795 tests, then come the ownership check and the arming. At V3's manual operator pace (236 s before
    the driver) the launch age would be about 400 s of the 470 s; with the pre-launch steps scripted, about 200 s. A late
    start is refused and the mechanism deletes the reservation. No ceiling and no part of the driver's preflight was changed.
