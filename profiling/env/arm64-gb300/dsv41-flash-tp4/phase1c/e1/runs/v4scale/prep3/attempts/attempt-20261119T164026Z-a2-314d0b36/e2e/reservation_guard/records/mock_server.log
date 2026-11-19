@@ -1,0 +1,8 @@
+(APIServer pid=988060) INFO 11-19 17:12:47 [mock] API server starting
+(EngineCore pid=988061) INFO 11-19 17:12:47 [mock] engine ready
+(Worker_TP0 pid=988062) INFO 11-19 17:12:47 [mock] worker ready
+(Worker_TP1 pid=988063) INFO 11-19 17:12:47 [mock] worker ready
+INFO:     Application startup complete.
+(APIServer pid=988060) INFO 11-19 17:17:04 [launcher.py:128] [shutdown] API server: shutdown triggered
+INFO:     Shutting down
+INFO:     Application shutdown complete.

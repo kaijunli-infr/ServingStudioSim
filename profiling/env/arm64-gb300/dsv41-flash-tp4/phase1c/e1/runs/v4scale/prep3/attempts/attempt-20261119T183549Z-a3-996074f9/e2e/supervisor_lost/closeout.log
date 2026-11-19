@@ -1,0 +1,69 @@
+# closeout e1_v4_scale on pod4-gb300-10-tray16-f3 at 2026-11-19T19:58:38Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 1858860[bash] 2661994[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_process_census.sh: line 39: /proc/2661958/cmdline: No such file or directory
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T19:58:48Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 2675758, excluded ancestry [1, 1818885, 1858860, 2661994, 2662035, 2675758], own pipeline [1858860, 2661994, 2662035, 2675759]
+  GONE     pid 2610053 [driver:e1_v4_scale] start 311198001: no such process (already exited)
+  GONE     pid 2647404 [gpuwatch:e1_v4_scale] start 311214602: no such process (already exited)
+  GONE     pid 2647413 [importprobe:e1_v4_scale] start 311214605: no such process (already exited)
+  GONE     pid 2647421 [memwatch:e1_v4_scale] start 311214608: no such process (already exited)
+  GONE     pid 2647428 [storagewatch:e1_v4_scale] start 311214611: no such process (already exited)
+  summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-19T19:58:48Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T19:58:48Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 2675765, excluded ancestry [1, 1818885, 1858860, 2661994, 2675765], own pipeline [1858860, 2661994]
+GONE     pid 2610053 [driver:e1_v4_scale] start 311198001: no such process (already exited)
+GONE     pid 2647404 [gpuwatch:e1_v4_scale] start 311214602: no such process (already exited)
+GONE     pid 2647413 [importprobe:e1_v4_scale] start 311214605: no such process (already exited)
+GONE     pid 2647421 [memwatch:e1_v4_scale] start 311214608: no such process (already exited)
+GONE     pid 2647428 [storagewatch:e1_v4_scale] start 311214611: no such process (already exited)
+summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive (driver, GPU sampler, import probe, memory sampler, storage sampler)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T19:58:49Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/supervisor.tsv (1 records); cleanup pid 2675766, excluded ancestry [1, 1818885, 1858860, 2661994, 2675766], own pipeline [1858860, 2661994, 2675767]
+  GONE     pid 2647436 [supervisor:e1_v4_scale] start 311214615: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  supervisor registry plan: the supervisor is gone, no refusal
+PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)
+INFO  lifecycle final phase report_written nsys alive False server alive False gpu released 1795118239.4037075 preserved /tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.qdstrm
+PASS  lifecycle phase report_written is terminal (acceptance is decided by postrun_e1_v4scale.sh; V4 requires report_written)
+  GONE     pid 2647315 [closeout:e1_v4_scale] start 311213659: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  closeout watcher registry: the watcher is gone
+INFO  import_probe.json: COMPLETED: importer pid 2647864 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc
+INFO  mem_watch.json: complete=True samples=99 breaches=0
+INFO  storage_watch.json: complete=True samples=55 breaches=0
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve
+INFO  the preserved stream is never removed by a script; postrun_e1_v4scale.sh copies it to durable storage and verifies the copy first
+INFO  [e1_v4_scale] rc=0 end 2026-11-19T19:57:19Z
+INFO  [e1_v4_scale] shutdown trigger at server-log line 0; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+INFO  run root size 3.1M; nsys files: 1048576 dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep  1691648 dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.sqlite  7068 lifecycle.json  
+INFO  reservation age 348 s: delete the reservation by 2026-11-19T21:23:05Z (5052 s left of 5400 s)
+INFO  the reservation pod is deleted only by the registered deleter (the deleting mode of checks/e1_reservation_closeout.py, on the operator's laptop) after the watcher's permit; never by hand before a permit, never early
+## statements
+STATUS resource cleanup: CLEAN | no failing resource item
+STATUS supervision: INVALID | the supervisor's record is not complete: it did not end by itself (last check 19:55:59Z, 9 samples): supervisor lost
+STATUS run response: none | 
+STATUS reservation deletion: DELETED IN TIME | uid 04fb9c79-b067-4e80-a6cb-1f67c11991bd: watcher observed it gone 2026-11-19T19:58:34Z, deleter 2026-11-19T19:58:36Z (deadline 2026-11-19T21:23:05Z); GPU pods on the node afterwards 0
+STATUS frozen scientific gates: NOT EVALUATED | postrun_e1_v4scale.sh decides acceptance; no gate record yet
+# closeout result: NOT CLEAN (supervision)

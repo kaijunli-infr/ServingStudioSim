@@ -1,0 +1,28 @@
+{
+ "tool": "e1_reservation_closeout.py delete",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 2864677,
+ "started_at": 1795119417.0315251,
+ "started": "2026-11-19T20:16:57Z",
+ "permit_fetches": 35,
+ "permit_fetch_failures": 31,
+ "delete_requests_sent": 0,
+ "delete_requests_accepted": 0,
+ "attempts": [],
+ "verdict": null,
+ "signals_sent": 0,
+ "source": "checks/e1_reservation_closeout.py delete (kubectl with the deleting credential; DELETE with the recorded UID as precondition)",
+ "pod": "dsv41-gb300-reserve-e2e",
+ "namespace": "inference-bench",
+ "uid": "ec514621-fb64-4d07-abe2-d439b0bcab03",
+ "node": "pod4-gb300-10-tray16-f3",
+ "creation_timestamp": "2026-11-19T20:16:56Z",
+ "deadline": "2026-11-19T20:22:26Z",
+ "precondition_uid": "ec514621-fb64-4d07-abe2-d439b0bcab03",
+ "last_fetch": {
+  "at": "2026-11-19T20:19:47Z",
+  "decision": "WAIT",
+  "sequence": 3,
+  "watcher_verdict": null
+ }
+}

@@ -1,0 +1,264 @@
+{
+ "pods": [
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "name": "dsv41-gb300-reserve-e2e",
+    "namespace": "inference-bench",
+    "uid": "4563cead-aaba-41da-b24e-521ddd503ecc",
+    "creationTimestamp": "2026-11-19T20:06:38Z",
+    "labels": {
+     "app": "dsv41-gb300-reserve",
+     "owner": "kevin"
+    }
+   },
+   "spec": {
+    "restartPolicy": "Never",
+    "nodeName": "pod4-gb300-10-tray16-f3",
+    "containers": [
+     {
+      "name": "hold",
+      "image": "registry.k8s.io/pause:3.9",
+      "resources": {
+       "requests": {
+        "nvidia.com/gpu": "4"
+       },
+       "limits": {
+        "nvidia.com/gpu": "4"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "phase": "Running",
+    "startTime": "2026-11-19T20:06:38Z"
+   }
+  }
+ ],
+ "unreachable": false,
+ "delete_delay_s": 3.0,
+ "requests": [
+  {
+   "at": 1795118798.1876445,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795118798.209313,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": true,
+   "precondition_uid": "4563cead-aaba-41da-b24e-521ddd503ecc"
+  },
+  {
+   "at": 1795118798.2296517,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 1,
+   "message": "Error from server (Conflict): Operation cannot be fulfilled on pods \"dsv41-gb300-reserve-e2e\": Precondition failed: UID in precondition: 00000000-0000-0000-0000",
+   "dry_run": true,
+   "precondition_uid": "00000000-0000-0000-0000-000000000000"
+  },
+  {
+   "at": 1795118798.2500675,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795118952.6863096,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795118952.8303988,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795118953.6699407,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795118999.4679167,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119005.413826,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119011.4104922,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119017.4000444,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119023.3835955,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119029.3869758,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119035.3524215,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119041.2740917,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119047.2452857,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119053.212076,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795119059.1851318,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  }
+ ]
+}

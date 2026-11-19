@@ -1,0 +1,241 @@
+{
+ "pods": [],
+ "unreachable": false,
+ "delete_delay_s": 3.0,
+ "requests": [
+  {
+   "at": 1795103551.880923,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103551.9020085,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": true,
+   "precondition_uid": "c27aa8a2-31c7-4461-9e59-e93b50b7aeaf"
+  },
+  {
+   "at": 1795103551.921972,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 1,
+   "message": "Error from server (Conflict): Operation cannot be fulfilled on pods \"dsv41-gb300-reserve-e2e\": Precondition failed: UID in precondition: 00000000-0000-0000-0000",
+   "dry_run": true,
+   "precondition_uid": "00000000-0000-0000-0000-000000000000"
+  },
+  {
+   "at": 1795103551.9419994,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103552.262432,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103552.4095383,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103553.3030705,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103616.2301624,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103679.4397068,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103708.8805661,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103714.8804822,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103720.879494,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103722.7485118,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103722.7706,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": false,
+   "precondition_uid": "c27aa8a2-31c7-4461-9e59-e93b50b7aeaf"
+  },
+  {
+   "at": 1795103722.8147717,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103726.9703214,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 1,
+   "message": "Error from server (NotFound): pods \"dsv41-gb300-reserve-e2e\" not found"
+  },
+  {
+   "at": 1795103726.9996572,
+   "role": "reader",
+   "args": [
+    "get",
+    "pods",
+    "--all-namespaces",
+    "--field-selector"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795103727.8538043,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 1,
+   "message": "Error from server (NotFound): pods \"dsv41-gb300-reserve-e2e\" not found"
+  },
+  {
+   "at": 1795103727.8758595,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pods",
+    "--all-namespaces",
+    "--field-selector"
+   ],
+   "rc": 0,
+   "message": ""
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+[e1_v4_scale] inputs verified in 0s
+[e1_v4_scale] parsed.json: 4320 iterations, 206 kernel names, devices [0, 1, 2, 3]
+[e1_v4_scale] kernels: 24501664 rows sorted in 2s
+[e1_v4_scale] host_timeline: 7196841 api calls
+[e1_v4_scale] 0/4320 iterations, 7s
+[e1_v4_scale] 2000/4320 iterations, 9s
+[e1_v4_scale] 4000/4320 iterations, 12s
+[e1_v4_scale] done: 4320 iterations, 17280 rank rows, 2135960 collective rows, unaligned 0, 14s

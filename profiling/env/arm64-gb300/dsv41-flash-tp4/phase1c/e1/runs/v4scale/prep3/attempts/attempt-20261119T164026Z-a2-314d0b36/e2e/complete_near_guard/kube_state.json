@@ -1,0 +1,265 @@
+{
+ "pods": [],
+ "unreachable": false,
+ "delete_delay_s": 3.0,
+ "requests": [
+  {
+   "at": 1795109328.6973722,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109328.7184834,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": true,
+   "precondition_uid": "b9b3564b-fee6-489c-94b2-e75efc06eb91"
+  },
+  {
+   "at": 1795109328.7388778,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 1,
+   "message": "Error from server (Conflict): Operation cannot be fulfilled on pods \"dsv41-gb300-reserve-e2e\": Precondition failed: UID in precondition: 00000000-0000-0000-0000",
+   "dry_run": true,
+   "precondition_uid": "00000000-0000-0000-0000-000000000000"
+  },
+  {
+   "at": 1795109328.7591097,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109479.3384893,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109479.4844973,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109480.3261673,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109543.2123966,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109606.2481732,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109669.173938,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109732.2259948,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109761.1094184,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109767.0729816,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109773.0014098,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109775.507241,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109775.529065,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": false,
+   "precondition_uid": "b9b3564b-fee6-489c-94b2-e75efc06eb91"
+  },
+  {
+   "at": 1795109775.5710688,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109778.9428198,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 1,
+   "message": "Error from server (NotFound): pods \"dsv41-gb300-reserve-e2e\" not found"
+  },
+  {
+   "at": 1795109778.9715898,
+   "role": "reader",
+   "args": [
+    "get",
+    "pods",
+    "--all-namespaces",
+    "--field-selector"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795109780.5924246,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 1,
+   "message": "Error from server (NotFound): pods \"dsv41-gb300-reserve-e2e\" not found"
+  },
+  {
+   "at": 1795109780.6140523,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pods",
+    "--all-namespaces",
+    "--field-selector"
+   ],
+   "rc": 0,
+   "message": ""
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "tool": "e1_reservation_closeout.py watch",
+ "host": "pod4-gb300-10-tray16-f3",
+ "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+ "pid": 536460,
+ "started_at": 1795104132.0860057,
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale",
+ "registry": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+ "sequence": 79,
+ "limits": {
+  "ceiling_s": 5400.0,
+  "launch_latest_age_s": 220.0,
+  "never_launched_margin_s": 60.0,
+  "tail_s": 600.0,
+  "interval_s": 5.0
+ },
+ "decision": "PERMIT",
+ "reasons": [
+  "D1 registered tree gone, D2 no unregistered lookalike, D3 two consecutive clean GPU censuses, D4 pod ownership verified"
+ ],
+ "first_permit": {
+  "at": 1795104562.4093084,
+  "at_iso": "2026-11-19T16:09:22Z",
+  "sequence": 76,
+  "reservation_age_s": 431.4,
+  "evidence": {
+   "at": 1795104562.4093084,
+   "run": {
+    "driver_registered": true,
+    "records": 5,
+    "owned_alive": [],
+    "refused": [],
+    "stale": 0,
+    "unattributed_lookalikes": [],
+    "attributed_lookalikes": 0
+   },
+   "pod_read_at": 1795104562.4093084,
+   "pod_state": "found",
+   "nsight_processes_alive": [],
+   "run_ended": "registered tree gone",
+   "gpu_census": {
+    "at": 1795104563.187216,
+    "released": true,
+    "reason": "no compute process on any GPU; memory.used within the idle bound on every GPU",
+    "compute_pids": [],
+    "memory_used_mib": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "previous_evaluation_released": true
+   },
+   "ownership": {
+    "verified": true,
+    "uid": "ac008b02-96fc-48de-adf5-32d3886287f3",
+    "terminating": false
+   }
+  }
+ },
+ "permits": 3,
+ "deleted_observed_at": 1795104580.4337401,
+ "verdict": "DELETED_IN_TIME",
+ "signals_sent": 0,
+ "delete_requests_sent": 0,
+ "complete": true,
+ "updated_at": 1795104580.4337401,
+ "updated": "2026-11-19T16:09:40Z",
+ "deleter_heartbeat_age_s": 6.9,
+ "reservation": {
+  "pod": "dsv41-gb300-reserve-e2e",
+  "namespace": "inference-bench",
+  "uid": "ac008b02-96fc-48de-adf5-32d3886287f3",
+  "node": "pod4-gb300-10-tray16-f3",
+  "creation_timestamp": "2026-11-19T16:02:11Z"
+ },
+ "created_epoch": 1795104131.0,
+ "deadline_epoch": 1795109531.0,
+ "deadline": "2026-11-19T17:32:11Z",
+ "reservation_age_s": 449.4,
+ "seconds_to_deadline": 4950.6,
+ "evidence": {
+  "at": 1795104580.4337401,
+  "run": {
+   "driver_registered": true,
+   "records": 5,
+   "owned_alive": [],
+   "refused": [],
+   "stale": 0,
+   "unattributed_lookalikes": [],
+   "attributed_lookalikes": 0
+  },
+  "pod_read_at": 1795104580.4337401,
+  "pod_state": "absent",
+  "nsight_processes_alive": []
+ },
+ "deleted_observed": "2026-11-19T16:09:40Z",
+ "after_deletion": {
+  "pods_on_node": 0,
+  "gpu_pods_on_node": 0,
+  "gpu_pod_names": []
+ },
+ "verdict_reason": "observed gone 449.4 s after its creation (ceiling 5400 s); first permit at 431.4 s",
+ "ended_at": 1795104580.4337401
+}

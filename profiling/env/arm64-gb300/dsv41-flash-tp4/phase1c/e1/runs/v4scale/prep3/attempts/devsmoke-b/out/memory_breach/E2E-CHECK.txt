@@ -1,0 +1,25 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']; closeout registry ['closeout:e1_v4_scale'] (three separate registries)
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [378677, 378678, 378679, 378681, 378680]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0
+PASS  no_gpu_use: 58 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(378678, 'SIGTERM', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)'), (378678, 'SIGKILL', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)')]; recorded server pids [378678, 378679, 378680, 378681]; importer pid 378771 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  closeout.four_statements: closeout statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  breach.marker_and_cause: MEMORY-BREACH present True; supervisor causes [('MEMORY-BREACH', 'importer_rss_above_ceiling', 0.16, 0.0625)]
+PASS  breach.delivered_through_controller: supervisor step R1 control line, acknowledged True after 0.443 s (bound 10 s)
+PASS  breach.controller_record: control commands [('release-gpus V4 resource-limit abort (re', 'release requested', 'importing')]
+PASS  breach.bounded_response: breach sample → identity-verified SIGTERM to the API server 0.7 s (bound 15 s); SIGTERM → SIGKILL 60.0 s (grace 60 s)
+PASS  breach.importer_isolated: importer 378771 was not signalled and finished: probe final COMPLETED, lifecycle phase report_written
+PASS  breach.run_fails: verdict FAIL; not PASS {'G0.source_and_executable': 'FAIL', 'G2.one_stop_request_returned_ok': 'FAIL', 'G3.phases_in_order': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G11.storage_and_memory': 'FAIL', 'G12.closeout': 'FAIL', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+PASS  breach.closeout_statements: closeout exit code 1; statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  breach.release_completed_no_escalation: supervisor latch {'release_lines_written': 1, 'registry_cleanups_started': 0}; release after the response {'gpu_released_at': 1795102976.0900116, 'phase': 'report_written', 'seconds_since_acknowledgement': 82.2, 'stalled': False, 'limit_s': 90.0}; escalation False
+PASS  deletion.watcher_verdict: watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 174.5 s after its creation (ceiling 5400 s); first permit at 156.6 s; 3 permit(s) in 31 evaluations; signals / delete requests by the watcher 0 / 0
+PASS  deletion.deleter_verdict: deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 171.4 s after the pod's creation (ceiling 5400 s)
+PASS  deletion.one_request_with_the_recorded_uid: delete requests that were not dry runs: [('deleter', 0, '1c41d9d7-0606-4e36-9250-7ed833cf6af3')] (recorded uid 1c41d9d7-0606-4e36-9250-7ed833cf6af3); deleter accepted 1; pods left in the stand-in cluster 0
+PASS  deletion.permit_after_the_run_ended_with_evidence: first permit 44.3 s after the supervisor ended through the run's stop file; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 9.8 s after the permit
+PASS  deletion.in_time_on_both_sides: observed gone 174.5 s (watcher) / 171.4 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'
+PASS  deletion.tray_credential_never_asked_to_delete: delete requests with the tray's read-only stand-in credential: 0
+# scenario memory_breach: 24 of 24 checks pass → MET

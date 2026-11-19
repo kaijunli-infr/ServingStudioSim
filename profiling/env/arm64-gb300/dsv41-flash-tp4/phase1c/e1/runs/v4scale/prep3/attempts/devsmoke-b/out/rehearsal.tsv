@@ -1,0 +1,2 @@
+# pid	starttime	boot_id	uid	label	registered_at	host	registered_by	cmd
+378402	309687926	54a59f08-a7b0-4600-9560-2ca1e73c0e26	1000	rehearsal:e2e	2026-11-19T15:41:25Z	pod4-gb300-10-tray16-f3	378451	bash /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/devsmoke-b/reh.sh /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/devsmoke-b/out memory_breach deleter_not_armed reservation_replaced supervisor_lost deleter_lost breach_then_guard

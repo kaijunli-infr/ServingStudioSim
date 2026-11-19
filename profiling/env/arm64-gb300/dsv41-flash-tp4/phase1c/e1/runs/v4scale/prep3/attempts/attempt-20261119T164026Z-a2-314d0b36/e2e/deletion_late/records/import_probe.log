@@ -1,0 +1,8 @@
+[import-probe] start pid 1783288 importer /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12 report /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep 2026-11-19T18:29:39Z
+[import-probe] state NOT_FOUND: no process matches the importer criteria and there is no complete report 2026-11-19T18:29:39Z
+[import-probe] importer identified: pid 1783439 (--output-file is the session report) 2026-11-19T18:29:56Z
+[import-probe] state NO_PROGRESS: importer pid 1783439 alive, identity intact; only 0 consecutive qualifying interval(s) (need 2) 2026-11-19T18:29:56Z
+[import-probe] state ACTIVE: importer pid 1783439 alive; 2 consecutive interval(s) of its own CPU/I-O advance 2026-11-19T18:29:58Z
+[import-probe] state SETTLING: importer pid 1783439 no longer present; waiting 3 samples for the report to settle 2026-11-19T18:30:11Z
+[import-probe] state COMPLETED: importer pid 1783439 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc 2026-11-19T18:30:12Z
+[import-probe] COMPLETED: importer pid 1783439 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc 2026-11-19T18:30:12Z

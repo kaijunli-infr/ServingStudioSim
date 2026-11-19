@@ -1,0 +1,70 @@
+{
+ "ok": true,
+ "checks": [
+  {
+   "check": "method.v2_record_with_v3_names_is_the_actual_v3_record",
+   "ok": true,
+   "detail": "V2 launch record with the pass and run-root names substituted equals the actual V3 launch record in every field: True (182 compared fields)"
+  },
+  {
+   "check": "fixture.predicted_launch_record",
+   "ok": true,
+   "detail": "tests/fixtures/e1_v4_scale/launch.predicted.json = the V3 launch record with V3 \u2192 V4 names; name dsv41_flash_1017_gb300_tp4_e1_v4_scale"
+  },
+  {
+   "check": "config.is_the_generated_v4_config",
+   "ok": true,
+   "detail": "profile config configs_v4scale/e1_v4_scale/profile.json names the trace /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv (exists: True)"
+  },
+  {
+   "check": "v4_policy.actual_config_predicted_launch",
+   "ok": true,
+   "detail": "verdict PASS (expected PASS); failed fields []; normalized 30; trace rule exercised True"
+  },
+  {
+   "check": "v1_policy.same_records",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised None"
+  },
+  {
+   "check": "v3_policy.same_records",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path'), ('policy', 'applies_to')]; normalized 29; trace rule exercised True"
+  },
+  {
+   "check": "negative.v3_config_and_launch_record",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path'), ('policy', 'applies_to')]; normalized 29; trace rule exercised True"
+  },
+  {
+   "check": "negative.trace_two_rows_swapped",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True"
+  },
+  {
+   "check": "negative.trace_one_row_removed",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True"
+  },
+  {
+   "check": "negative.config_streaming_on",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.stream')]; normalized 30; trace rule exercised True"
+  },
+  {
+   "check": "negative.config_hard_deadline_changed",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'nsys.finalize_hard_deadline_s')]; normalized 29; trace rule exercised True"
+  },
+  {
+   "check": "negative.launch_server_argument_changed",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('launch', 'argv[44]')]; normalized 30; trace rule exercised True"
+  },
+  {
+   "check": "negative.trace_path_not_the_documented_location",
+   "ok": true,
+   "detail": "verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True"
+  }
+ ]
+}

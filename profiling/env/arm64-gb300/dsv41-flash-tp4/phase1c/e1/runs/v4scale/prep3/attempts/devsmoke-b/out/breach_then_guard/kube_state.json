@@ -1,0 +1,301 @@
+{
+ "pods": [],
+ "unreachable": false,
+ "delete_delay_s": 3.0,
+ "requests": [
+  {
+   "at": 1795104131.5734322,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104131.5952122,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": true,
+   "precondition_uid": "ac008b02-96fc-48de-adf5-32d3886287f3"
+  },
+  {
+   "at": 1795104131.616162,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 1,
+   "message": "Error from server (Conflict): Operation cannot be fulfilled on pods \"dsv41-gb300-reserve-e2e\": Precondition failed: UID in precondition: 00000000-0000-0000-0000",
+   "dry_run": true,
+   "precondition_uid": "00000000-0000-0000-0000-000000000000"
+  },
+  {
+   "at": 1795104131.636478,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104131.8713336,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104132.016697,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104132.881181,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104195.6438084,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104258.6177223,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104322.0710254,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104385.110883,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104448.2471838,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104511.2525017,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104557.2387698,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104563.1715891,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104569.1503968,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104573.6028047,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104573.6248844,
+   "role": "deleter",
+   "args": [
+    "delete",
+    "--raw",
+    "/api/v1/namespaces/inference-bench/pods/dsv41-gb300-reserve-e2e",
+    "-f"
+   ],
+   "rc": 0,
+   "message": "",
+   "dry_run": false,
+   "precondition_uid": "ac008b02-96fc-48de-adf5-32d3886287f3"
+  },
+  {
+   "at": 1795104573.6679802,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104575.1902866,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104578.6905334,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 1,
+   "message": "Error from server (NotFound): pods \"dsv41-gb300-reserve-e2e\" not found"
+  },
+  {
+   "at": 1795104578.7118497,
+   "role": "deleter",
+   "args": [
+    "get",
+    "pods",
+    "--all-namespaces",
+    "--field-selector"
+   ],
+   "rc": 0,
+   "message": ""
+  },
+  {
+   "at": 1795104581.203199,
+   "role": "reader",
+   "args": [
+    "get",
+    "pod",
+    "dsv41-gb300-reserve-e2e",
+    "-n"
+   ],
+   "rc": 1,
+   "message": "Error from server (NotFound): pods \"dsv41-gb300-reserve-e2e\" not found"
+  },
+  {
+   "at": 1795104581.2330961,
+   "role": "reader",
+   "args": [
+    "get",
+    "pods",
+    "--all-namespaces",
+    "--field-selector"
+   ],
+   "rc": 0,
+   "message": ""
+  }
+ ]
+}

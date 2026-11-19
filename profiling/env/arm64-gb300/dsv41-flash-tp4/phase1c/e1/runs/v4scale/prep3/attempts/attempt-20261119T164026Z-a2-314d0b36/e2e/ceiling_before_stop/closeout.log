@@ -1,0 +1,67 @@
+# closeout e1_v4_scale on pod4-gb300-10-tray16-f3 at 2026-11-19T17:28:34Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 1158064[bash] 680385[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T17:28:44Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 1171692, excluded ancestry [1, 640274, 680385, 1158064, 1158086, 1171692], own pipeline [680385, 1158064, 1158086, 1171693]
+  GONE     pid 1120695 [driver:e1_v4_scale] start 310307384: no such process (already exited)
+  GONE     pid 1157592 [gpuwatch:e1_v4_scale] start 310323613: no such process (already exited)
+  GONE     pid 1157601 [importprobe:e1_v4_scale] start 310323616: no such process (already exited)
+  GONE     pid 1157608 [memwatch:e1_v4_scale] start 310323618: no such process (already exited)
+  GONE     pid 1157615 [storagewatch:e1_v4_scale] start 310323621: no such process (already exited)
+  summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-19T17:28:44Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T17:28:44Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 1171698, excluded ancestry [1, 640274, 680385, 1158064, 1171698], own pipeline [680385, 1158064]
+GONE     pid 1120695 [driver:e1_v4_scale] start 310307384: no such process (already exited)
+GONE     pid 1157592 [gpuwatch:e1_v4_scale] start 310323613: no such process (already exited)
+GONE     pid 1157601 [importprobe:e1_v4_scale] start 310323616: no such process (already exited)
+GONE     pid 1157608 [memwatch:e1_v4_scale] start 310323618: no such process (already exited)
+GONE     pid 1157615 [storagewatch:e1_v4_scale] start 310323621: no such process (already exited)
+summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive (driver, GPU sampler, import probe, memory sampler, storage sampler)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T17:28:44Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/supervisor.tsv (1 records); cleanup pid 1171699, excluded ancestry [1, 640274, 680385, 1158064, 1171699], own pipeline [680385, 1158064, 1171700]
+  GONE     pid 1157625 [supervisor:e1_v4_scale] start 310323626: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  supervisor registry plan: the supervisor is gone, no refusal
+PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)
+INFO  lifecycle final phase capturing nsys alive True server alive True gpu released None preserved None
+FAIL  lifecycle phase capturing is not terminal (importer running or hung: stream stays preserved; verified registry cleanup only)
+  GONE     pid 1157522 [closeout:e1_v4_scale] start 310322669: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  closeout watcher registry: the watcher is gone
+INFO  import_probe.json: running
+INFO  mem_watch.json: complete=False samples=40 breaches=0
+INFO  storage_watch.json: complete=False samples=20 breaches=0
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve
+INFO  the preserved stream is never removed by a script; postrun_e1_v4scale.sh copies it to durable storage and verifies the copy first
+INFO  
+INFO  
+INFO  run root size 409K; nsys files: 4457 lifecycle.json  
+INFO  reservation age 249 s: delete the reservation by 2026-11-19T18:54:39Z (5151 s left of 5400 s)
+INFO  the reservation pod is deleted only by the registered deleter (the deleting mode of checks/e1_reservation_closeout.py, on the operator's laptop) after the watcher's permit; never by hand before a permit, never early
+## statements
+STATUS resource cleanup: NOT CLEAN | 1 failing resource item(s) above
+STATUS supervision: VALID | record complete, 47 samples, monitors effective; it gave an abort response (see run response)
+STATUS run response: ABORTED | ABORT RESPONSE registry cleanup rc 2 (steps ['R2 registry cleanup']) for [('gpu_held_ceiling_before_stop', 'lifecycle.json launch_started_at', 'no stop requested when the ceiling passed')]
+STATUS reservation deletion: DELETED IN TIME | uid 0774e2eb-92e8-42b3-934f-fafa27217ac0: watcher observed it gone 2026-11-19T17:28:33Z, deleter 2026-11-19T17:28:30Z (deadline 2026-11-19T18:54:39Z); GPU pods on the node afterwards 0
+STATUS frozen scientific gates: NOT EVALUATED | postrun_e1_v4scale.sh decides acceptance; no gate record yet
+# closeout result: NOT CLEAN (resource cleanup, run response)

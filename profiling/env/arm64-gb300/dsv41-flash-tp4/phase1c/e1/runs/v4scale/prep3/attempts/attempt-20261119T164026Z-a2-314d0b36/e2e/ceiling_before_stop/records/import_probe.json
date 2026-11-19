@@ -1,0 +1,35 @@
+{
+ "probe": "e1_import_probe.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "provenance": {
+  "importer.state/ticks/starttime/ppid": "/proc/<importer pid>/stat, read by this probe",
+  "importer.io": "/proc/<importer pid>/io, read by this probe",
+  "importer.exe": "readlink /proc/<importer pid>/exe",
+  "importer.argv": "/proc/<importer pid>/cmdline",
+  "importer.fds": "readlink /proc/<importer pid>/fd/*",
+  "agent": "/proc/<importer ppid>/{stat,cmdline,exe}",
+  "report_size": "stat() of the report path (file-level, NOT counted as importer progress)",
+  "reported_progress_pct": "lifecycle.json: the controller's reading of the Nsight log (NOT counted as importer progress)",
+  "phase": "lifecycle.json"
+ },
+ "importer_exe": "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12",
+ "stream": null,
+ "report": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep",
+ "recorded_nsys_cli_pid": 1157661,
+ "min_progress": 2,
+ "interval_s": 0.5,
+ "started_at": 1795109241.6144238,
+ "transitions": [
+  {
+   "at": 1795109241.6150053,
+   "state": "NOT_FOUND",
+   "reason": "no process matches the importer criteria and there is no complete report"
+  }
+ ],
+ "trigger": {
+  "requested": false,
+  "written": false
+ },
+ "result": "running",
+ "samples": 77
+}

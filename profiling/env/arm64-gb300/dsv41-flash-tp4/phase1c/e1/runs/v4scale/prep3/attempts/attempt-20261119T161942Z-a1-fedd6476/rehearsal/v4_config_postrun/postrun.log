@@ -1,0 +1,56 @@
+# postrun e1_v4_scale 2026-11-19T16:22:21Z on pod4-gb300-10-tray16-f3; CUDA_VISIBLE_DEVICES=''
+[e1_v3_scale] rc=0 end 2026-11-18T22:09:53Z
+[e1_v3_scale] shutdown trigger at server-log line 14742; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+## samplers for this post-run (own children of this script; stopped through a stop file; they signal nothing)
+## A. durable copy of the preserved stream (the tray original stays)
+PASS  durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/e1_v4_scale/preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm: 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3 = tray original (retained)
+## B. configuration identity under the V4 policy: four-copy trace proof; every other field as for V1/V2 (launch record + profile config vs the accepted e1_nsys_val run)
+identity rc=0 (30 normalized fields, 20 of 20 trace checks, listed in cpu/identity_v4scale_e1_v4_scale.txt)
+## C. scientific checkers on the in-session profile (lifecycle phase report_written)
+INFO         plan 'dry' (8 cells, 224 requests) selected by --plan dry; every planned cell is checked
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 400), ramp 30
+FAIL         cell b=8 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=8 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         cell b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 400), ramp 190
+FAIL         cell b=48 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=48 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+RESULT FAIL (4) [checker v2.0.0]
+completeness_v2 (eight-wave plan, routing records, checksum) rc=1
+[e1_v4_scale] 4000/4320 iterations, 12s
+[e1_v4_scale] done: 4320 iterations, 17280 rank rows, 2135960 collective rows, unaligned 0, 14s
+extract rc=0
+FAIL         cell b=8 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=8 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=48 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=48 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+RESULT FAIL (4) [checker v2.0.0]
+FAIL  completeness v2 on the same profile: 4 FAIL
+RESULT FAIL (1)
+nsys_validation rc=1
+## D. V4 gates
+PASS         G0.source_and_executable: launch commit e82c8df90e21, trees alignment 7b4df784a5b6 launcher 5acab28980ef, tracked changes 0; executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2: 16 of 16 binary checks pass
+PASS         G1.host_identity: launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 863 GPU observation(s); import probe, memory and storage samplers on pod4-gb300-10-tray16-f3
+PASS         G2.one_stop_request_returned_ok: requests_sent=1, stop_requested phases=1, http='ok' returned 21:59:34.44Z, server SIGTERM 21:59:37.37Z, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=1
+PASS         G3.phases_in_order: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']); times non-decreasing=True; final phase 'report_written'; escalations [] (soft_deadline is a recorded warning, any other kind fails); control lines []; forced release requested=False
+PASS         G4.phase_deadlines: stop_accepted 0.003 s (deadline 30); flush_stop_to_importing 111.997 s (deadline 300); import_importer_first_seen_to_gone 53.038 s (deadline 300); stop_to_report_written 166.227 s (deadline 600); session_close_after_server_sigterm 2.709 s (deadline 300); controller hard deadline 600.0 s after the stop request, extension 0.0 s, soft warnings recorded 0 (informational)
+PASS         G5.importer_observed: importer 3030970 (--input-file is the session stream; --output-file is the session report; holds the session stream open), parent 3016246 agent=True linked to the recorded CLI=True; states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; final COMPLETED; signals outside the server processes []
+PASS         G6.gpu_release_interval: 861 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM 21:59:37.37Z: last 'held' reading within [0.056, 0.399] s, first 'released' reading within [2.399, 2.86] s → released no later than 2.86 s after it (deadline 90 s; no tighter bound is claimed); held again afterwards=False; census files {'gpu_release_census_t0.json': True, 'gpu_release_census_t20.json': True}
+PASS         G7.stream_durable: controller's final record (taken 21:59:40Z, after session close): 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/e1_v4_scale/preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm: 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3; two full reads identical=True; equals the final record=True; tray original present and equal=True; 2 earlier observation(s) kept; this is not a completeness statement (FR8b decides)
+PASS         G8.offline_import: offline import of the durable stream rc 0 in 53 s → 792004233 B
+FAIL         G8b.recovered_trace_complete: recovered trace: 4320 iterations (band [8400, 9000]), NVTX forward ranges 17280, kernel rows 24501664 (band [46553161, 51453494]), kernels per process [6124336, 6124336, 6124336, 6128656], kernel boundaries [105540900, 130558977545] ns; absolute checks {'iterations_in_band': False, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': False, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; in-session export exists → equality checks {'kernel_rows': True, 'nvtx_forward_ranges': True, 'distinct_iterations': True, 'iteration_index_range': True, 'kernel_boundaries_ns': True, 'nvtx_forward_boundaries_ns': True, 'kernels_per_process': True, 'every_table_row_count': True, 'capture_metadata': True, 'export_product_and_schema': True}, differing table row counts {}
+FAIL         G9.scientific_completeness: exit codes {'completeness_v2': 1, 'extract': 0, 'nsys_validation': 1} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity PASS
+PASS         G10.bounds: GPU-held 1833 s by the controller, at most 1833 s by the sampler (ceiling 2700.0); server SIGTERM → session closed 2.7 s (limit 300.0); reservation 60.2 min (limit 90)
+PASS         G11.storage_and_memory: measured peaks {'temporary_peak_gb': 5.219, 'persistent_peak_gb': 6.311, 'min_mem_available_gb': 547.2, 'importer_peak_rss_gb_in_session': 15.61, 'importer_peak_rss_gb_offline': 15.63}; ceilings temporary 15 GB, persistent 18 GB, importer 128 GB, MemAvailable floor 64 GB
+PASS         G12.closeout: closeout exit code 0; reservation deleted record present (GPU pods left on the node: 0)
+PASS         G13.workload_and_recipe_identity: identity report by e1_launch_identity_v4scale.py under policy v4scale-1: verdict PASS, 30 normalized field(s), trace rule exercised=True, 20 of 20 trace checks hold
+PASS         G14.four_copy_trace_in_run: run trace.csv 63d79100e5f48285…: 224 requests = the accepted 56-row trace x 4 (re-derived here); run profile.json 4203d307eb53dd57… = the registered config; trace path /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv
+FAIL         G15.request_iteration_routing_rank_coverage: cells 4 (pure-decode iterations {'b48_kv32768_w0': 928, 'b48_kv32768_w1': 928, 'b8_kv32768_w0': 1008, 'b8_kv32768_w1': 1008}, floor 400); requests {'request timings': 112, 'token-accounting requests': 112, 'routing corpus segments': 112}; ranks [0, 1, 2, 3]; NVTX forward ranges 17280 = 4320 iterations x 4; join {'duplicate': 0, 'missing': 0, 'non_monotone': 0}; failed checks 4; ["cells ['b48_kv32768_w0', 'b48_kv32768_w1', 'b8_kv32768_w0', 'b8_kv32768_w1'] (planned ['b48_kv32768_w0', 'b48_kv32768_w1', 'b48_kv32768_w2', 'b48_kv32768_w3', 'b8_kv32768_w0', 'b8_kv32768_w1', 'b8_kv32768_w2', 'b8_kv32768_w3'])", "request counts {'request timings': 112, 'token-accounting requests': 112, 'routing corpus segments': 112} (registered 224)", 'NVTX forward ranges 17280 (registered 4 per iteration, iterations in [8400, 9000])', 'the completeness checker recorded 4 failed check(s)']
+FAIL         G16.reservation_deletion: reservation uid 79c054d5-c16d-4e1d-9d29-23d46055b5a8: watcher None, deleter None; first permit None s, delete request None s, observed gone None s (watcher) / None s (deleter) after the pod's creation = None min (ceiling 5400 s); ['no watcher record (reservation_closeout.json): the deletion cannot be verified', 'deleter verdict None: None', "deleter UID None / precondition None is not the recorded '79c054d5-c16d-4e1d-9d29-23d46055b5a8'", 'None accepted delete request(s), exactly one is required']
+# V4 gates e1_v4_scale: 18 results, 4 FAIL, 0 INCONCLUSIVE → FAIL
+post-run storage: 111 samples, max gap 2.0 s; {'temporary': 'peak 5.219 GB', 'persistent': 'peak 6.311 GB'}
+post-run memory: 199 samples; min MemAvailable 840.0 GB; offline importer peak 15.63 GB over 47 samples
+## verdict
+V4 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/cpu/V4S-GATES.txt). STOP: no retry, no advance; everything stays preserved.
+gpu memory after the post-run (MiB): 0 0 0 0 

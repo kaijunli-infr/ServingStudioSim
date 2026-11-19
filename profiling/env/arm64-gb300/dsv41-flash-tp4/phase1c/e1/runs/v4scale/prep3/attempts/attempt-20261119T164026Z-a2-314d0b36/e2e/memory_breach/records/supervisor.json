@@ -1,0 +1,92 @@
+{
+ "supervisor": "e1_supervisor_v4.py",
+ "helpers": "e1_supervisor.py (causes, acknowledgement, registry cleanup; unmodified)",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 861001,
+ "started_at": 1795107808.6777334,
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale",
+ "registry": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+ "control_line": "release-gpus V4 resource-limit abort (registered supervisor response)",
+ "limits": {
+  "ack_s": 10.0,
+  "stale_s": 60.0,
+  "cleanup_grace_s": 30.0,
+  "interval_s": 1.0,
+  "gpu_held_ceiling_s": 2700.0,
+  "reservation_guard_s": 4680.0,
+  "release_s": 150.0
+ },
+ "latch": {
+  "release_lines_written": 1,
+  "registry_cleanups_started": 0
+ },
+ "samples": 100,
+ "causes": [
+  {
+   "cause": "breach",
+   "source": "MEMORY-BREACH",
+   "kind": "importer_rss_above_ceiling",
+   "value_gb": 0.16,
+   "limit_gb": 0.0625,
+   "breach_at": 1795107826.3054504,
+   "marker_mtime": 1795107826.4061215,
+   "seen_at": 1795107826.7111766
+  }
+ ],
+ "response": {
+  "decided_at": 1795107826.7111766,
+  "phase": "importing",
+  "stop_requested": true,
+  "steps": [
+   {
+    "kind": "R1 control line",
+    "written_at": 1795107826.7117116,
+    "ack_deadline_s": 10.0,
+    "acknowledged": true,
+    "acknowledged_at": 1795107827.292153,
+    "latency_s": 0.58,
+    "controller_phase": "importing",
+    "evidence": "gpu.release_requested_at with this line as the reason",
+    "api_server_sigterm": {
+     "at": 1795107827.29265,
+     "pid": 861039,
+     "outcome": "signalled"
+    }
+   }
+  ],
+  "completed_at": 1795107827.713098,
+  "seconds_from_first_cause_seen": 1.002,
+  "outcome": "release requested through the controller"
+ },
+ "monitors_effective": true,
+ "signals_sent_by_supervisor": 0,
+ "complete": true,
+ "last_check_at": 1795107908.8783004,
+ "heartbeats": {
+  "memory sampler": {
+   "file": "mem_observations.jsonl",
+   "age_s": 0.52,
+   "required": true
+  },
+  "storage sampler": {
+   "file": "storage_observations.jsonl",
+   "age_s": 1.23,
+   "required": true
+  },
+  "GPU sampler": {
+   "file": "gpu_observations.jsonl",
+   "age_s": 1.9,
+   "required": false
+  }
+ },
+ "phase_seen": "report_written",
+ "release_after_response": {
+  "gpu_released_at": 1795107888.325975,
+  "phase": "report_written",
+  "seconds_since_acknowledgement": 81.6,
+  "stalled": false,
+  "limit_s": 150.0
+ },
+ "later_causes": [],
+ "ended_at": 1795107908.8796732
+}

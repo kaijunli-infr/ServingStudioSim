@@ -1,0 +1,2 @@
+# pid	starttime	boot_id	uid	label	registered_at	host	registered_by	cmd
+343642	309669254	54a59f08-a7b0-4600-9560-2ca1e73c0e26	1000	rehearsal:e2e	2026-11-19T15:38:18Z	pod4-gb300-10-tray16-f3	343692	bash /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/devsmoke-a/reh.sh /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/devsmoke-a/out success

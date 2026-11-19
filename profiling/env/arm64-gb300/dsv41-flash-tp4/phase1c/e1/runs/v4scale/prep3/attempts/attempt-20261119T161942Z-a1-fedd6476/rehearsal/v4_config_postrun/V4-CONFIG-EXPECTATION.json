@@ -1,0 +1,18 @@
+{
+ "verdict": "FAIL",
+ "not_pass": {
+  "G8b.recovered_trace_complete": "FAIL",
+  "G9.scientific_completeness": "FAIL",
+  "G15.request_iteration_routing_rank_coverage": "FAIL",
+  "G16.reservation_deletion": "FAIL"
+ },
+ "expected_verdict": "FAIL",
+ "expected_not_pass": {
+  "G8b.recovered_trace_complete": "FAIL",
+  "G9.scientific_completeness": "FAIL",
+  "G15.request_iteration_routing_rank_coverage": "FAIL",
+  "G16.reservation_deletion": "FAIL"
+ },
+ "met": true,
+ "problems": []
+}

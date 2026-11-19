@@ -1,0 +1,56 @@
+{
+ "tool": "e1_reservation_closeout.py delete",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 1305282,
+ "started_at": 1795110261.412524,
+ "started": "2026-11-19T17:44:21Z",
+ "permit_fetches": 89,
+ "permit_fetch_failures": 32,
+ "delete_requests_sent": 1,
+ "delete_requests_accepted": 1,
+ "attempts": [
+  {
+   "at": "2026-11-19T17:51:43Z",
+   "permit_sequence": 50,
+   "pod_state": "found",
+   "result": "accepted",
+   "server": "{\"apiVersion\": \"v1\", \"kind\": \"Pod\", \"metadata\": {\"name\": \"dsv41-gb300-reserve-e2e\", \"namespace\": \"inference-bench\", \"uid\": \"c7eef41c-1bdc-483e-b51a-a928f2a95ce8\", \"creationTimestamp\": \"2026-11-19T17:44:21Z\", \"labels\": {\"app\": \"dsv41-gb300-reserve\", \"owner\": \"kevin\"}, \"deletionTimestamp\": \"2026-11-19"
+  }
+ ],
+ "verdict": "DELETED_IN_TIME",
+ "signals_sent": 0,
+ "source": "checks/e1_reservation_closeout.py delete (kubectl with the deleting credential; DELETE with the recorded UID as precondition)",
+ "pod": "dsv41-gb300-reserve-e2e",
+ "namespace": "inference-bench",
+ "uid": "c7eef41c-1bdc-483e-b51a-a928f2a95ce8",
+ "node": "pod4-gb300-10-tray16-f3",
+ "creation_timestamp": "2026-11-19T17:44:21Z",
+ "deadline": "2026-11-19T19:14:21Z",
+ "precondition_uid": "c7eef41c-1bdc-483e-b51a-a928f2a95ce8",
+ "last_fetch": {
+  "at": "2026-11-19T17:51:43Z",
+  "decision": "PERMIT",
+  "sequence": 50,
+  "watcher_verdict": null
+ },
+ "permit": {
+  "sequence": 50,
+  "evaluated_at": 1795110698.844331,
+  "first_permit_at": 1795110692.8927662,
+  "watcher_pid": 1341962,
+  "watcher_host": "pod4-gb300-10-tray16-f3"
+ },
+ "ownership_verified_at": "2026-11-19T17:51:43Z",
+ "delete_requested_at": "2026-11-19T17:51:43Z",
+ "delete_requested_epoch": 1795110703.6852217,
+ "published": true,
+ "deleted_observed_at": "2026-11-19T17:51:48Z",
+ "deleted_observed_epoch": 1795110708.7508142,
+ "reservation_pod_still_listed": false,
+ "reservation_s": 447.8,
+ "gpu_pods_on_node": 0,
+ "gpu_pod_names": [],
+ "pods_on_node": 0,
+ "verdict_reason": "observed gone 447.8 s after the pod's creation (ceiling 5400 s)",
+ "ended": "2026-11-19T17:51:48Z"
+}

@@ -1,0 +1,26 @@
+{
+ "pod": "dsv41-gb300-reserve-e2e",
+ "namespace": "inference-bench",
+ "uid": "6b941a3b-983e-49ea-9506-0c0557a642e7",
+ "node": "pod4-gb300-10-tray16-f3",
+ "phase": "Running",
+ "gpu_request": "4",
+ "creation_timestamp": "2026-11-19T17:36:44Z",
+ "start_time": "2026-11-19T17:36:44Z",
+ "labels": {
+  "app": "dsv41-gb300-reserve",
+  "owner": "kevin"
+ },
+ "images": [
+  "registry.k8s.io/pause:3.9"
+ ],
+ "observed_at": "2026-11-19T17:36:44Z",
+ "deletion_path_proof": {
+  "dry_run_with_recorded_uid": "accepted",
+  "dry_run_with_other_uid": "conflict",
+  "pod_unchanged_afterwards": true,
+  "at": "2026-11-19T17:36:44Z",
+  "ok": true
+ },
+ "source": "checks/e1_reservation_closeout.py record (kubectl get pod -o json with the deleting credential)"
+}

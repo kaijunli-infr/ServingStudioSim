@@ -1,0 +1,7 @@
+targeted rc=0: 1052 passed, 1 skipped in 131.56s (0:02:11)
+full rc=1: 6 failed, 5967 passed, 78 skipped, 8 warnings in 208.95s (0:03:28)
+failing test sections identical to the 565206ee whole-tier run: 5
+/mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/regression-20261119T161952Z-fedd6476/pytest_targeted_cpu_only_fedd6476_tray14.log:1
+/mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/regression-20261119T161952Z-fedd6476/pytest_fullsuite_cpu_only_fedd6476_tray14.log:1
+7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+0 MiB 0 MiB 0 MiB 0 MiB 

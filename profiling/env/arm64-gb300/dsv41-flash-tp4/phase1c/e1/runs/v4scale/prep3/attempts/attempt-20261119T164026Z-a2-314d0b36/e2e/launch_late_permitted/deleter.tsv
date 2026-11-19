@@ -1,0 +1,2 @@
+# pid	starttime	boot_id	uid	label	registered_at	host	registered_by	cmd
+1008544	310265953	54a59f08-a7b0-4600-9560-2ca1e73c0e26	1000	deleter:e1_v4_scale	2026-11-19T17:17:44Z	pod4-gb300-10-tray16-f3	1008543	python3 -I /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4laptop_e2e/e1_reservation_closeout.py delete --reservation /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/attempt-20261119T164026Z-a2-314d0b36/e2e/launch_late_permitted/reservation.json --permit-cmd p

@@ -1,0 +1,12 @@
+PASS  refusal.exit_code: driver exit code 7 (7 = launch refused by the reservation budget)
+PASS  refusal.rule_and_reason_recorded: run.log: 'FAIL  launch eligibility: reservation age 546.4 s; 4133.6 s remain until the reservation guard (4680 s), fewer than the run budget 4210 s (latest permitted age 470 s): REFUSED, nothing is started'; age at the check 546.4 s, latest permitted 470 s (registered guard and run budget, not rehearsal values)
+PASS  refusal.nothing_started: owned registry labels ['driver:e1_v4_scale']; supervisor registry exists False; lifecycle record False; supervisor record False; launch source record False; observer files []; profile directory False; launcher start line False
+PASS  refusal.no_process_left: registered processes still alive: []; closeout registry ['closeout:e1_v4_scale'] (the watcher was armed before the launch rule and has ended)
+PASS  refusal.closeout_statements: closeout exit code 0; statements {'resource cleanup': 'CLEAN', 'supervision': 'NOT APPLICABLE', 'run response': 'none', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  deletion.watcher_verdict: watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 572.6 s after its creation (ceiling 5400 s); first permit at 554.7 s; 3 permit(s) in 7 evaluations; signals / delete requests by the watcher 0 / 0
+PASS  deletion.deleter_verdict: deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 571.4 s after the pod's creation (ceiling 5400 s)
+PASS  deletion.one_request_with_the_recorded_uid: delete requests that were not dry runs: [('deleter', 0, '6edbd2f9-6140-4509-8fc2-e3d4f9bc28d7')] (recorded uid 6edbd2f9-6140-4509-8fc2-e3d4f9bc28d7); deleter accepted 1; pods left in the stand-in cluster 0
+PASS  deletion.permit_after_the_run_ended_with_evidence: first permit 0.0 s after the refused driver had gone; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 11.6 s after the permit
+PASS  deletion.in_time_on_both_sides: observed gone 572.6 s (watcher) / 571.4 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'
+PASS  deletion.tray_credential_never_asked_to_delete: delete requests with the tray's read-only stand-in credential: 0
+# scenario launch_refused: 11 of 11 checks pass → MET

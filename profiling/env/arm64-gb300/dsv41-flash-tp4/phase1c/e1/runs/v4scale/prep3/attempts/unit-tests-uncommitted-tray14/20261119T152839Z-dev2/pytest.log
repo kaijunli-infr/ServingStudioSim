@@ -1,0 +1,52 @@
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+.........F.............................................................. [ 51%]
+........................................................................ [ 69%]
+........................................................................ [ 86%]
+.........................................................                [100%]
+=================================== FAILURES ===================================
+__________ test_registered_budget_adds_up_to_the_reservation_ceiling ___________
+
+    def test_registered_budget_adds_up_to_the_reservation_ceiling():
+        d = json.loads((E1 / "E1-V4-SCALE-INPUTS.json").read_text())
+        r, c, lim = d["reservation"], d["ceilings"], d["limits"]
+        b = r["run_budget_s"]
+        assert r["hard_ceiling_s"] == c["reservation_hard_min"] * 60 == 5400 and r["supervisor_guard_s"] == GUARD
+        assert r["supervisor_guard_s"] + r["closeout_and_deletion_budget_s"] == r["hard_ceiling_s"] and sum(r["closeout_and_deletion_parts_s"].values()) == r["closeout_and_deletion_budget_s"] == 720
+        # every part of the run budget is a registered limit or the registered stress prediction, and each is counted once
+        assert b == {"eligibility_check_to_launcher_start": 20, "gpu_held_ceiling": 2700, "gpu_release_after_ceiling": 90, "cpu_only_after_release": 1400}
+        assert b["gpu_held_ceiling"] == c["gpu_held_ceiling_s"] == d["lifecycle"]["gpu_held_ceiling_s"] and b["gpu_release_after_ceiling"] == lim["gpu_release_deadline_s"]
+        assert sum(r["cpu_only_after_release_s"].values()) == b["cpu_only_after_release"] and r["cpu_only_after_release_s"]["export_and_parse_stress_prediction"] == d["predictions"]["export_and_parse_after_release_s"][2]
+        assert r["run_budget_total_s"] == sum(b.values()) == BUDGET and r["launch_max_age_s"] == r["supervisor_guard_s"] - r["run_budget_total_s"] == LATEST
+        # the required worst-case path fits with an immediate launch, and a launch window exists
+        assert 0 + r["run_budget_total_s"] <= r["supervisor_guard_s"] and r["launch_max_age_s"] > r["measured_v3"]["age_at_launcher_start_s"]
+        # the latest launch, the ceiling and the release cannot reach the guard: the guard can only fall into the CPU-only phase
+        assert r["launch_max_age_s"] + b["eligibility_check_to_launcher_start"] + b["gpu_held_ceiling"] + b["gpu_release_after_ceiling"] < r["supervisor_guard_s"]
+        # the observers and the supervisor outlive the guard and the ceiling, counted from the earliest launch
+        for k in ("memory_sampler", "storage_sampler", "supervisor"):
+            assert lim["observer_max_s"][k] >= r["hard_ceiling_s"]
+        assert lim["observer_max_s"]["gpu_sampler"] >= c["gpu_held_ceiling_s"] + lim["gpu_release_deadline_s"] + d["phase_deadlines_s"]["session_close_after_server_sigterm"]
+        assert r["early_release_after_verified_gpu_release"]["enabled"] is False
+        for name in ("run_e1_v4scale.sh", "postrun_e1_v4scale.sh", "closeout_e1_v4scale.sh", "archive_e1_v4scale.sh", "monitor_e1_v4scale.sh", "preflight_e1_v4scale.sh", "arm_closeout_e1_v4scale.sh"):
+            text = (E1 / name).read_text()
+            # no V4 script on the tray deletes the reservation or calls the early-release check (the preflight only ASKS whether this host may delete: it may not)
+>           assert "checks/e1_reservation_release.py" not in text and "kubectl delete" not in text and "delete --raw" not in text and "e1_reservation_closeout.py delete" not in text, name
+E           AssertionError: preflight_e1_v4scale.sh
+E           assert ('checks/e1_r...n_release.py' not in '#!/usr/bin/...exit $fail\n'
+E             
+E             'checks/e1_reservation_release.py' is contained here:
+E               exit $fail and 'kubectl delete' not in '#!/usr/bin/...exit $fail\n'
+E             
+E             'kubectl delete' is contained here:
+E               te --raw\|kubectl delete\|e1_reservation_closeout.py delete" && ok "the arming script starts the watcher in its own registry (pids/closeout.tsv) and contains no delete request" || bad "arming script"
+E             ?           ++++++++++++++
+E               for v in "get pods -n inference-bench" "list pods --all-namespaces"; do a=$(timeout 25 kubectl --request-timeout=15s auth can-i $v 2>&1 | tail -1); [ "$a" = yes ] && ok "this host's credential may: $v (the watcher's read-only observations)" || bad "this host's credential: '$v' -> '$a'"; done
+E             ?                               ...
+E             
+E             ...Full output truncated, use '-vv' to show)
+
+tests/test_e1_reservation_guard.py:80: AssertionError
+cpu_only_guard: CUDA hidden (CUDA_VISIBLE_DEVICES='' set by the caller); no /dev/nvidia<N> opened; torch.cuda not initialised
+=========================== short test summary info ============================
+FAILED tests/test_e1_reservation_guard.py::test_registered_budget_adds_up_to_the_reservation_ceiling
+1 failed, 416 passed in 73.09s (0:01:13)

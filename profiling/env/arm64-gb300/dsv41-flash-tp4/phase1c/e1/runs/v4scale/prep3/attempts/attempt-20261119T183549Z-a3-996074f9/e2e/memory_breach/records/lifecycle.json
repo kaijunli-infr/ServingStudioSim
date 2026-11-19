@@ -1,0 +1,238 @@
+{
+ "schema_version": 2,
+ "name": "dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e",
+ "host": "pod4-gb300-10-tray16-f3",
+ "host_identity": {
+  "hostname": "pod4-gb300-10-tray16-f3",
+  "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+  "launcher_pid": 2038393,
+  "source": "launcher process: socket.gethostname() and /proc/sys/kernel/random/boot_id",
+  "recorded_at": 1795114724.719333
+ },
+ "phase": "report_written",
+ "phase_history": [
+  {
+   "phase": "stop_requested",
+   "at": 1795114735.602086,
+   "mono": 3108730.172407437
+  },
+  {
+   "phase": "stop_accepted",
+   "at": 1795114736.785985,
+   "mono": 3108731.356306476
+  },
+  {
+   "phase": "capture_ended",
+   "at": 1795114736.7869349,
+   "mono": 3108731.357255887
+  },
+  {
+   "phase": "stream_written",
+   "at": 1795114742.214785,
+   "mono": 3108736.785106036,
+   "path": "/tmp/nsys-report-e2e1f1a7d.qdstrm"
+  },
+  {
+   "phase": "importing",
+   "at": 1795114742.216029,
+   "mono": 3108736.786349912
+  },
+  {
+   "phase": "report_written",
+   "at": 1795114804.4551566,
+   "mono": 3108799.025477354,
+   "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep",
+   "note": "report present despite HTTP error"
+  }
+ ],
+ "launch_started_at": 1795114724.7192721,
+ "stop_requested_at": 1795114735.6014502,
+ "http": {
+  "status": "error: mock /stop_profile failed: Remote end closed connection without response",
+  "returned_at": 1795114803.6498802,
+  "requests_sent": 1
+ },
+ "stream": {
+  "path": "/tmp/nsys-report-e2e1f1a7d.qdstrm",
+  "size": 2097152,
+  "preserved_path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.qdstrm",
+  "preserved_size": 2097152,
+  "observations": [
+   {
+    "at": 1795114742.2177613,
+    "phase": "importing",
+    "path": "/tmp/nsys-report-e2e1f1a7d.qdstrm",
+    "size": 2097152,
+    "mtime_ns": 1795114741750937618
+   }
+  ],
+  "final": {
+   "taken_at": 1795114804.4602659,
+   "basis": "after the nsys session closed (no writer left)",
+   "session_closed_at": 1795114804.458229,
+   "phase": "report_written",
+   "completeness": "NOT established by a stable size or a matching checksum; requires an offline import and a semantic comparison (kernel rows, NVTX ranges, iterations, capture boundaries)",
+   "available": true,
+   "path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.qdstrm",
+   "size": 2097152,
+   "mtime_ns": 1795114741750937618,
+   "sha256": "ba26dfad663bc0c5ee4b35f17a5c8e9945acd319b18669c02fdd069c83d7f806",
+   "stable_during_read": true,
+   "changed_after_last_observation": false
+  },
+  "discovered_by": "log"
+ },
+ "import_progress_pct": 100,
+ "report": {
+  "path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep",
+  "size": 1048576,
+  "written_at": 1795114804.4551487
+ },
+ "deadlines": {
+  "soft_at": 1795115035.6014502,
+  "hard_at": 1795115335.6014502,
+  "hard_extension_s": 0.0,
+  "max_extension_s": 120.0,
+  "gpu_held_ceiling_at": 1795117424.7192721
+ },
+ "policy": {
+  "soft_deadline_s": 300.0,
+  "hard_deadline_s": 600.0,
+  "stall_timeout_s": 300.0,
+  "poll_interval_s": 1.0,
+  "on_hard_deadline": "release_gpus",
+  "preserve_raw_stream": true,
+  "raw_preserve_dir": null,
+  "min_free_bytes_stream": 53687091200,
+  "min_free_bytes_report": 21474836480,
+  "session_close_timeout_s": 300.0,
+  "server_term_grace_s": 60.0,
+  "max_extension_s": 120.0,
+  "gpu_held_ceiling_s": 2700.0,
+  "stream_dir": null
+ },
+ "escalations": [],
+ "control_commands": [
+  {
+   "at": 1795114743.425947,
+   "command": "release-gpus V4 resource-limit abort (registered supervisor response)",
+   "phase": "importing",
+   "result": "release requested"
+  }
+ ],
+ "warnings": [],
+ "nsys": {
+  "pid": 2038397,
+  "identity": {
+   "pid": 2038397,
+   "starttime": 310871928,
+   "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+   "uid": 1000,
+   "ppid": 2038393,
+   "name": "python3",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_launcher.py nsys /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/mock /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep"
+  },
+  "alive": false
+ },
+ "server": {
+  "api_server": {
+   "pid": 2038398,
+   "starttime": 310871931,
+   "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+   "uid": 1000,
+   "ppid": 2038397,
+   "name": "python3",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_launcher.py apiserver /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/mock"
+  },
+  "engine_processes": [
+   {
+    "pid": 2038399,
+    "starttime": 310871933,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 2038398,
+    "name": "python3",
+    "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_launcher.py engine"
+   },
+   {
+    "pid": 2038401,
+    "starttime": 310871935,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 2038399,
+    "name": "python3",
+    "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_launcher.py worker 1"
+   },
+   {
+    "pid": 2038400,
+    "starttime": 310871935,
+    "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+    "uid": 1000,
+    "ppid": 2038399,
+    "name": "python3",
+    "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_launcher.py worker 0"
+   }
+  ],
+  "alive": false
+ },
+ "gpu": {
+  "release_requested_at": 1795114743.4259524,
+  "released_at": 1795114804.4582653,
+  "compute_pids": [],
+  "release_reason": "operator: release-gpus V4 resource-limit abort (registered supervisor response)",
+  "release_context": {
+   "phase": "importing",
+   "import_progress_pct": 7,
+   "nsys_alive": true,
+   "stream_size": 2097152,
+   "report_written": false
+  },
+  "api_server_sigterm": {
+   "at": 1795114743.4264152,
+   "pid": 2038398,
+   "outcome": "signalled"
+  },
+  "importer_after_signal": [
+   {
+    "at": 1795114743.426419,
+    "label": "after the API-server SIGTERM",
+    "phase": "importing",
+    "import_progress_pct": 7,
+    "nsys_pid": 2038397,
+    "identity_matches": true,
+    "proc_state": "S"
+   },
+   {
+    "at": 1795114803.449713,
+    "label": "after the server termination pass",
+    "phase": "importing",
+    "import_progress_pct": 7,
+    "nsys_pid": 2038397,
+    "identity_matches": true,
+    "proc_state": "S"
+   }
+  ]
+ },
+ "session_closed_at": 1795114804.458229,
+ "actions": [
+  {
+   "at": 1795114743.4264152,
+   "reason": "operator: release-gpus V4 resource-limit abort (registered supervisor response)",
+   "pid": 2038398,
+   "action": "SIGTERM",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-life",
+   "starttime": 310871931
+  },
+  {
+   "at": 1795114803.4496317,
+   "reason": "operator: release-gpus V4 resource-limit abort (registered supervisor response)",
+   "pid": 2038398,
+   "action": "SIGKILL",
+   "cmd": "/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin/python3 /mnt/shared/home/dc/workspace/serving-studio/wt-life",
+   "starttime": 310871931
+  }
+ ],
+ "server_log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/vllm/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e_server.log",
+ "control_path": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/lifecycle.control",
+ "updated_at": 1795114804.46584
+}

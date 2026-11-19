@@ -1,0 +1,34 @@
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/E1-V4-SCALE-INPUTS.json
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_identity_policy_v4scale.json
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_supervisor_v4.py
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_v4scale_gates.py
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/closeout_e1_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_e2e_check.py
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_rehearsal.py
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/feasibility/E1-V4-MEMORY-BUDGET.json
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/feasibility/E1-V4-MEMORY-BUDGET.md
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/feasibility/e1_v4_memory_budget.py
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/hash_scripts_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/make_e1_inputs_v4scale.py
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/monitor_e1_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/pin_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/preflight_e1_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e1_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/rehearse_e2e_v4scale.sh
+ M profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/run_e1_v4scale.sh
+ M tests/test_e1_preflight_memory.py
+ M tests/test_e1_reservation_guard.py
+ M tests/test_e1_supervisor_v4.py
+ M tests/test_e1_v4scale_gates.py
+ M tests/test_e1_v4scale_reservation_scenarios.py
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/arm_closeout_e1_v4scale.sh
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_closeout_verdict.py
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_reservation_closeout.py
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/e1_v4scale_mock_kubectl.py
+?? tests/fixtures/e1_v4_scale/meminfo_511GiB.txt
+?? tests/fixtures/e1_v4_scale/meminfo_512GiB.txt
+?? tests/fixtures/e1_v4_scale/meminfo_512GiB_minus_1kB.txt
+?? tests/fixtures/e1_v4_scale/meminfo_512GiB_plus_1kB.txt
+?? tests/fixtures/e1_v4_scale/meminfo_513GiB.txt
+?? tests/test_e1_closeout_verdict.py
+?? tests/test_e1_reservation_closeout.py

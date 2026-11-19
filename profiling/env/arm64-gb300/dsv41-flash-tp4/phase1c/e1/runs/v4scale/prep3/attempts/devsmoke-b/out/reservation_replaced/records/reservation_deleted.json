@@ -1,0 +1,30 @@
+{
+ "tool": "e1_reservation_closeout.py delete",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 433098,
+ "started_at": 1795103361.9585798,
+ "started": "2026-11-19T15:49:21Z",
+ "permit_fetches": 14,
+ "permit_fetch_failures": 1,
+ "delete_requests_sent": 0,
+ "delete_requests_accepted": 0,
+ "attempts": [],
+ "verdict": "GONE_NOT_BY_DELETER",
+ "signals_sent": 0,
+ "source": "checks/e1_reservation_closeout.py delete (kubectl with the deleting credential; DELETE with the recorded UID as precondition)",
+ "pod": "dsv41-gb300-reserve-e2e",
+ "namespace": "inference-bench",
+ "uid": "cca5324d-f992-46df-a094-a7a3f2cb9668",
+ "node": "pod4-gb300-10-tray16-f3",
+ "creation_timestamp": "2026-11-19T15:49:21Z",
+ "deadline": "2026-11-19T17:19:21Z",
+ "precondition_uid": "cca5324d-f992-46df-a094-a7a3f2cb9668",
+ "last_fetch": {
+  "at": "2026-11-19T15:50:27Z",
+  "decision": "WAIT",
+  "sequence": 12,
+  "watcher_verdict": "GONE_WITHOUT_PERMIT"
+ },
+ "verdict_reason": "the watcher ended with GONE_WITHOUT_PERMIT and the pod is found; this process sent no delete request",
+ "ended": "2026-11-19T15:50:27Z"
+}

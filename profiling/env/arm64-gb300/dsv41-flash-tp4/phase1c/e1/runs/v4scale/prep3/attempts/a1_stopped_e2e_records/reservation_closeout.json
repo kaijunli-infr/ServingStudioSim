@@ -1,0 +1,71 @@
+{
+ "tool": "e1_reservation_closeout.py watch",
+ "host": "pod4-gb300-10-tray16-f3",
+ "boot_id": "54a59f08-a7b0-4600-9560-2ca1e73c0e26",
+ "pid": 636964,
+ "started_at": 1795105928.4675298,
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale",
+ "registry": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+ "sequence": 60,
+ "limits": {
+  "ceiling_s": 5400.0,
+  "launch_latest_age_s": 470.0,
+  "never_launched_margin_s": 60.0,
+  "tail_s": 600.0,
+  "interval_s": 5.0
+ },
+ "decision": "WAIT",
+ "reasons": [
+  "the run has not ended: 3 registered process(es) alive (['gpuwatch', 'memwatch', 'storagewatch']); no early release"
+ ],
+ "first_permit": null,
+ "permits": 0,
+ "deleted_observed_at": null,
+ "verdict": null,
+ "signals_sent": 0,
+ "delete_requests_sent": 0,
+ "complete": false,
+ "updated_at": 1795106265.914802,
+ "updated": "2026-11-19T16:37:45Z",
+ "deleter_heartbeat_age_s": 281.4,
+ "reservation": {
+  "pod": "dsv41-gb300-reserve-e2e",
+  "namespace": "inference-bench",
+  "uid": "2f94ed61-cf8a-4680-9fc1-6f1421ccddd5",
+  "node": "pod4-gb300-10-tray16-f3",
+  "creation_timestamp": "2026-11-19T16:29:33Z"
+ },
+ "created_epoch": 1795105773.0,
+ "deadline_epoch": 1795111173.0,
+ "deadline": "2026-11-19T17:59:33Z",
+ "reservation_age_s": 492.9,
+ "seconds_to_deadline": 4907.1,
+ "evidence": {
+  "at": 1795106265.914802,
+  "run": {
+   "driver_registered": true,
+   "records": 5,
+   "owned_alive": [
+    {
+     "pid": 637033,
+     "label": "gpuwatch:e1_v4_scale"
+    },
+    {
+     "pid": 637049,
+     "label": "memwatch:e1_v4_scale"
+    },
+    {
+     "pid": 637056,
+     "label": "storagewatch:e1_v4_scale"
+    }
+   ],
+   "refused": [],
+   "stale": 0,
+   "unattributed_lookalikes": [],
+   "attributed_lookalikes": 1
+  },
+  "pod_read_at": 1795106242.9879205,
+  "pod_state": "unknown",
+  "nsight_processes_alive": []
+ }
+}

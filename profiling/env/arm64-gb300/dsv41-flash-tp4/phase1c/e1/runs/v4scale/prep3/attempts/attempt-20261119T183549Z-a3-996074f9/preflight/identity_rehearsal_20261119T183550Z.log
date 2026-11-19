@@ -1,0 +1,34 @@
+PASS  method.v2_record_with_v3_names_is_the_actual_v3_record: V2 launch record with the pass and run-root names substituted equals the actual V3 launch record in every field: True (182 compared fields)
+PASS  fixture.predicted_launch_record: tests/fixtures/e1_v4_scale/launch.predicted.json = the V3 launch record with V3 → V4 names; name dsv41_flash_1017_gb300_tp4_e1_v4_scale
+PASS  config.is_the_generated_v4_config: profile config configs_v4scale/e1_v4_scale/profile.json names the trace /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv (exists: True)
+PASS  v4_policy.actual_config_predicted_launch: verdict PASS (expected PASS); failed fields []; normalized 30; trace rule exercised True
+      TRACE PASS  paths.documented_locations
+      TRACE PASS  source.readable
+      TRACE PASS  derived.readable
+      TRACE PASS  source.sha256_is_pinned
+      TRACE PASS  derived.sha256_is_pinned
+      TRACE PASS  derived.sha256_in_input_manifest
+      TRACE PASS  derived.sha256_in_registered_inputs
+      TRACE PASS  format.header
+      TRACE PASS  format.no_blank_or_trailing_lines
+      TRACE PASS  rows.source_count
+      TRACE PASS  rows.derived_count
+      TRACE PASS  copy0.rows_in_order
+      TRACE PASS  copy1.rows_in_order
+      TRACE PASS  copy2.rows_in_order
+      TRACE PASS  copy3.rows_in_order
+      TRACE PASS  rows.no_other_rows
+      TRACE PASS  rows.ids_unique
+      TRACE PASS  waves.eight_waves_two_cells
+      TRACE PASS  rows.token_lengths
+      TRACE PASS  derivation.whole_file_equals_rederivation
+PASS  v1_policy.same_records: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised None
+PASS  v3_policy.same_records: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path'), ('policy', 'applies_to')]; normalized 29; trace rule exercised True
+PASS  negative.v3_config_and_launch_record: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path'), ('policy', 'applies_to')]; normalized 29; trace rule exercised True
+PASS  negative.trace_two_rows_swapped: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True
+PASS  negative.trace_one_row_removed: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True
+PASS  negative.config_streaming_on: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.stream')]; normalized 30; trace rule exercised True
+PASS  negative.config_hard_deadline_changed: verdict FAIL (expected FAIL); failed fields [('profile', 'nsys.finalize_hard_deadline_s')]; normalized 29; trace rule exercised True
+PASS  negative.launch_server_argument_changed: verdict FAIL (expected FAIL); failed fields [('launch', 'argv[44]')]; normalized 30; trace rule exercised True
+PASS  negative.trace_path_not_the_documented_location: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True
+# V4 identity rehearsal on the actual V4 configuration: 13 of 13 expectations hold → MET

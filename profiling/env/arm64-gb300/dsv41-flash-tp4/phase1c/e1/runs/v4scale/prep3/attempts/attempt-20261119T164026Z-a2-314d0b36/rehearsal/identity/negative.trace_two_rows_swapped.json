@@ -1,0 +1,784 @@
+{
+ "a": "/mnt/shared/home/dc/workspace/serving-studio/artifacts/phase1c-e1-stage15-dsv41-flash-gb300-tp4-20261115/run/e1_nsys_val",
+ "b": "/tmp/v4scale-identity-4minuqri",
+ "policy_version": "v4scale-1",
+ "verdict": "FAIL",
+ "normalized": [
+  {
+   "scope": "launch",
+   "field": "argv:-o",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "output_stem",
+   "reason": "<run dir>/profile/nsys/<name> under ServingStudioSim/logs/ on both sides",
+   "doc": "Nsight -o output stem: <run dir>/profile/nsys/<name>. Equal after replacing the run directory and the record's own name."
+  },
+  {
+   "scope": "launch",
+   "field": "env.PYTHONPATH",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm",
+   "status": "NORMALIZED",
+   "category": "worktree_source_path",
+   "rule": "worktree_path",
+   "reason": "equal after replacing the worktree root; pinned source identity: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True",
+   "doc": "vLLM fork checkout inside the launching worktree. Equal after replacing the worktree root; requires fork_git.head equal on both sides and equal to the pinned fork head, and a clean fork status on both sides."
+  },
+  {
+   "scope": "launch",
+   "field": "fork_git.path",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm",
+   "status": "NORMALIZED",
+   "category": "worktree_source_path",
+   "rule": "worktree_path",
+   "reason": "equal after replacing the worktree root; pinned source identity: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True",
+   "doc": "same as env.PYTHONPATH"
+  },
+  {
+   "scope": "launch",
+   "field": "name",
+   "a": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+   "b": "dsv41_flash_1017_gb300_tp4_e1_v4_scale",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "run_name",
+   "reason": "both are dsv41_flash_1017_gb300_tp4_<pass> run names",
+   "doc": "run name; names the output files only. Must be dsv41_flash_1017_gb300_tp4_<pass> on both sides."
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.capture_start_delay_seconds",
+   "a": 10.0,
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a=10.0 b=None",
+   "doc": "no-delay start, approved for e1_b8_recovery, e1_main_v3 and V1 (profiler armed before the first request). Changes when the capture starts, not how it is recorded."
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_hard_deadline_s",
+   "a": "<absent>",
+   "b": 600.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=600.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_max_extension_s",
+   "a": "<absent>",
+   "b": 120.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=120.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_on_hard_deadline",
+   "a": "<absent>",
+   "b": "release_gpus",
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b='release_gpus'",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_session_close_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_soft_deadline_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_stall_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.gpu_held_ceiling_s",
+   "a": "<absent>",
+   "b": 2700.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=2700.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.min_free_bytes_report",
+   "a": "<absent>",
+   "b": 21474836480,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=21474836480",
+   "doc": "lifecycle-controller disk floor at its default (20 GiB); a pre-stop check only"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.min_free_bytes_stream",
+   "a": "<absent>",
+   "b": 53687091200,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=53687091200",
+   "doc": "lifecycle-controller disk floor at its default (50 GiB); a pre-stop check only"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.preserve_raw_stream",
+   "a": "<absent>",
+   "b": true,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=True",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.qdstrm_importer",
+   "a": "<absent>",
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=None",
+   "doc": "must stay unset: the importer of the pinned Nsight install is used"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.raw_preserve_dir",
+   "a": "<absent>",
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=None",
+   "doc": "lifecycle-controller field at its default (preserve next to the stream)"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.tmp_dir",
+   "a": "<absent>",
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=None",
+   "doc": "must stay unset: no TMPDIR is added to the server environment"
+  },
+  {
+   "scope": "profile",
+   "field": "log_dir",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "output_dir",
+   "reason": "<run dir>/profile under ServingStudioSim/logs/ on both sides",
+   "doc": "run output directory under ServingStudioSim/logs/"
+  },
+  {
+   "scope": "profile",
+   "field": "name",
+   "a": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+   "b": "dsv41_flash_1017_gb300_tp4_e1_v4_scale",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "run_name",
+   "reason": "both are dsv41_flash_1017_gb300_tp4_<pass> run names",
+   "doc": "run name"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.capture_start_delay_seconds",
+   "a": 10.0,
+   "b": "<absent>",
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a=10.0 b='<absent>'",
+   "doc": "no-delay start (see launch rule)"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_hard_deadline_s",
+   "a": "<absent>",
+   "b": 600.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=600.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_max_extension_s",
+   "a": "<absent>",
+   "b": 120.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=120.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_on_hard_deadline",
+   "a": "<absent>",
+   "b": "release_gpus",
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b='release_gpus'",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_session_close_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_soft_deadline_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_stall_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.gpu_held_ceiling_s",
+   "a": "<absent>",
+   "b": 2700.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=2700.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.preserve_raw_stream",
+   "a": "<absent>",
+   "b": true,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=True",
+   "doc": "V1 packet section 4"
+  }
+ ],
+ "results": [
+  {
+   "scope": "source",
+   "status": "PASS",
+   "field": "fork_git.head",
+   "reason": "fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True"
+  },
+  {
+   "scope": "launch",
+   "field": "argv:-o",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "output_stem",
+   "reason": "<run dir>/profile/nsys/<name> under ServingStudioSim/logs/ on both sides",
+   "doc": "Nsight -o output stem: <run dir>/profile/nsys/<name>. Equal after replacing the run directory and the record's own name."
+  },
+  {
+   "scope": "launch",
+   "field": "env.PYTHONPATH",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm",
+   "status": "NORMALIZED",
+   "category": "worktree_source_path",
+   "rule": "worktree_path",
+   "reason": "equal after replacing the worktree root; pinned source identity: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True",
+   "doc": "vLLM fork checkout inside the launching worktree. Equal after replacing the worktree root; requires fork_git.head equal on both sides and equal to the pinned fork head, and a clean fork status on both sides."
+  },
+  {
+   "scope": "launch",
+   "field": "fork_git.path",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/profiler/vllm",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm",
+   "status": "NORMALIZED",
+   "category": "worktree_source_path",
+   "rule": "worktree_path",
+   "reason": "equal after replacing the worktree root; pinned source identity: fork head a=0ab187113357 b=0ab187113357 pinned=0ab187113357, status clean a=True b=True",
+   "doc": "same as env.PYTHONPATH"
+  },
+  {
+   "scope": "launch",
+   "field": "name",
+   "a": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+   "b": "dsv41_flash_1017_gb300_tp4_e1_v4_scale",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "run_name",
+   "reason": "both are dsv41_flash_1017_gb300_tp4_<pass> run names",
+   "doc": "run name; names the output files only. Must be dsv41_flash_1017_gb300_tp4_<pass> on both sides."
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.capture_start_delay_seconds",
+   "a": 10.0,
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a=10.0 b=None",
+   "doc": "no-delay start, approved for e1_b8_recovery, e1_main_v3 and V1 (profiler armed before the first request). Changes when the capture starts, not how it is recorded."
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_hard_deadline_s",
+   "a": "<absent>",
+   "b": 600.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=600.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_max_extension_s",
+   "a": "<absent>",
+   "b": 120.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=120.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_on_hard_deadline",
+   "a": "<absent>",
+   "b": "release_gpus",
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b='release_gpus'",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_session_close_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_soft_deadline_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.finalize_stall_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.gpu_held_ceiling_s",
+   "a": "<absent>",
+   "b": 2700.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=2700.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.min_free_bytes_report",
+   "a": "<absent>",
+   "b": 21474836480,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=21474836480",
+   "doc": "lifecycle-controller disk floor at its default (20 GiB); a pre-stop check only"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.min_free_bytes_stream",
+   "a": "<absent>",
+   "b": 53687091200,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=53687091200",
+   "doc": "lifecycle-controller disk floor at its default (50 GiB); a pre-stop check only"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.preserve_raw_stream",
+   "a": "<absent>",
+   "b": true,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=True",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.qdstrm_importer",
+   "a": "<absent>",
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=None",
+   "doc": "must stay unset: the importer of the pinned Nsight install is used"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.raw_preserve_dir",
+   "a": "<absent>",
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=None",
+   "doc": "lifecycle-controller field at its default (preserve next to the stream)"
+  },
+  {
+   "scope": "launch",
+   "field": "nsys_config.tmp_dir",
+   "a": "<absent>",
+   "b": null,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=None",
+   "doc": "must stay unset: no TMPDIR is added to the server environment"
+  },
+  {
+   "scope": "launch",
+   "status": "INFO",
+   "field": "*",
+   "reason": "182 fields compared; policy rules not triggered: []"
+  },
+  {
+   "scope": "profile",
+   "field": "log_dir",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_stage15/e1_nsys_val/profile",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "output_dir",
+   "reason": "<run dir>/profile under ServingStudioSim/logs/ on both sides",
+   "doc": "run output directory under ServingStudioSim/logs/"
+  },
+  {
+   "scope": "profile",
+   "field": "name",
+   "a": "dsv41_flash_1017_gb300_tp4_e1_nsys_val",
+   "b": "dsv41_flash_1017_gb300_tp4_e1_v4_scale",
+   "status": "NORMALIZED",
+   "category": "output_path",
+   "rule": "run_name",
+   "reason": "both are dsv41_flash_1017_gb300_tp4_<pass> run names",
+   "doc": "run name"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.capture_start_delay_seconds",
+   "a": 10.0,
+   "b": "<absent>",
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a=10.0 b='<absent>'",
+   "doc": "no-delay start (see launch rule)"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_hard_deadline_s",
+   "a": "<absent>",
+   "b": 600.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=600.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_max_extension_s",
+   "a": "<absent>",
+   "b": 120.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=120.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_on_hard_deadline",
+   "a": "<absent>",
+   "b": "release_gpus",
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b='release_gpus'",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_session_close_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_soft_deadline_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.finalize_stall_timeout_s",
+   "a": "<absent>",
+   "b": 300.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=300.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.gpu_held_ceiling_s",
+   "a": "<absent>",
+   "b": 2700.0,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=2700.0",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "nsys.preserve_raw_stream",
+   "a": "<absent>",
+   "b": true,
+   "status": "NORMALIZED",
+   "category": "approved_lifecycle_control",
+   "rule": "approved_value",
+   "reason": "approved values a='<absent>' b=True",
+   "doc": "V1 packet section 4"
+  },
+  {
+   "scope": "profile",
+   "field": "workload.frontend.path",
+   "a": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv",
+   "b": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv",
+   "status": "FAIL",
+   "category": "worktree_source_path",
+   "rule": "derived_trace",
+   "reason": "rule condition not met: trace-identity checks failed: ['derived.sha256_is_pinned', 'derived.sha256_in_input_manifest', 'derived.sha256_in_registered_inputs', 'copy2.rows_in_order', 'derivation.whole_file_equals_rederivation']",
+   "doc": "trace file: the reference is the accepted e1_dry.csv; the V4 trace must be proved to be that trace repeated exactly four times (rows, order, fields, wave index, +80 s per copy), with the V4 manifest's hash, at the documented path"
+  },
+  {
+   "scope": "profile",
+   "status": "INFO",
+   "field": "*",
+   "reason": "74 fields compared; policy rules not triggered: []"
+  }
+ ],
+ "checker": "e1_launch_identity_v4scale.py",
+ "trace_identity": {
+  "exercised": true,
+  "checks": [
+   {
+    "check": "paths.documented_locations",
+    "ok": true,
+    "detail": "reference path is \u2026/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_dry.csv: True; V4 path is <listed worktree root>/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv: True"
+   },
+   {
+    "check": "source.readable",
+    "ok": true,
+    "detail": "accepted trace readable"
+   },
+   {
+    "check": "derived.readable",
+    "ok": true,
+    "detail": "V4 trace readable"
+   },
+   {
+    "check": "source.sha256_is_pinned",
+    "ok": true,
+    "detail": "accepted trace sha256 c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158 (pinned c6d8e13b7229ffd40cfede127bd57ad345aa17213b7590d39f9b2ef697f60158)"
+   },
+   {
+    "check": "derived.sha256_is_pinned",
+    "ok": false,
+    "detail": "V4 trace sha256 ca9aa805d90f2c1006f70f5aabd5452ec32b0fdd08799e1ccdb28a344ccc01b8 (pinned 63d79100e5f482854fcc868bda859f206c611e194c18efec40749c8a31d76de1)"
+   },
+   {
+    "check": "derived.sha256_in_input_manifest",
+    "ok": false,
+    "detail": "INPUTS_v4scale.sha256 is the pinned manifest (965333fcc0455714\u2026); its entry for traces/e1_v4_scale.csv: 63d79100e5f482854fcc868bda859f206c611e194c18efec40749c8a31d76de1"
+   },
+   {
+    "check": "derived.sha256_in_registered_inputs",
+    "ok": false,
+    "detail": "E1-V4-SCALE-INPUTS.json is the pinned file; it declares trace sha256 63d79100e5f482854fcc868bda859f206c611e194c18efec40749c8a31d76de1, 224 requests, 4 copies"
+   },
+   {
+    "check": "format.header",
+    "ok": true,
+    "detail": "header source ['id,input_len,output_len,arrival_time'] V4 ['id,input_len,output_len,arrival_time'] (required 'id,input_len,output_len,arrival_time')"
+   },
+   {
+    "check": "format.no_blank_or_trailing_lines",
+    "ok": true,
+    "detail": "one row per line, single final newline, no blank line, no carriage return"
+   },
+   {
+    "check": "rows.source_count",
+    "ok": true,
+    "detail": "accepted trace rows 56 (required 56)"
+   },
+   {
+    "check": "rows.derived_count",
+    "ok": true,
+    "detail": "V4 trace rows 224 (required 224 = 4 x 56)"
+   },
+   {
+    "check": "copy0.rows_in_order",
+    "ok": true,
+    "detail": "rows 1-56: byte-identical to the accepted trace in order; rows not matching: []"
+   },
+   {
+    "check": "copy1.rows_in_order",
+    "ok": true,
+    "detail": "rows 57-112: the same rows in the same order with wave index 1 (id renamed once), input_len and output_len identical, arrival + 80000.0 ms; rows not matching: []"
+   },
+   {
+    "check": "copy2.rows_in_order",
+    "ok": false,
+    "detail": "rows 113-168: the same rows in the same order with wave index 2 (id renamed once), input_len and output_len identical, arrival + 160000.0 ms; rows not matching: [130, 131]"
+   },
+   {
+    "check": "copy3.rows_in_order",
+    "ok": true,
+    "detail": "rows 169-224: the same rows in the same order with wave index 3 (id renamed once), input_len and output_len identical, arrival + 240000.0 ms; rows not matching: []"
+   },
+   {
+    "check": "rows.no_other_rows",
+    "ok": true,
+    "detail": "rows beyond the 4 copies: 0; missing: 0"
+   },
+   {
+    "check": "rows.ids_unique",
+    "ok": true,
+    "detail": "224 request ids, 224 distinct"
+   },
+   {
+    "check": "waves.eight_waves_two_cells",
+    "ok": true,
+    "detail": "waves (id prefix, arrival ms, requests): [['e1_b8_kv32k_w0', 0.0, 8], ['e1_b48_kv32k_w0', 18627.2, 48], ['e1_b8_kv32k_w1', 80000.0, 8], ['e1_b48_kv32k_w1', 98627.2, 48], ['e1_b8_kv32k_w2', 160000.0, 8], ['e1_b48_kv32k_w2', 178627.2, 48], ['e1_b8_kv32k_w3', 240000.0, 8], ['e1_b48_kv32k_w3', 258627.2, 48]] (required [['e1_b8_kv32k_w0', 0.0, 8], ['e1_b48_kv32k_w0', 18627.2, 48], ['e1_b8_kv32k_w1', 80000.0, 8], ['e1_b48_kv32k_w1', 98627.2, 48], ['e1_b8_kv32k_w2', 160000.0, 8], ['e1_b48_kv32k_w2', 178627.2, 48], ['e1_b8_kv32k_w3', 240000.0, 8], ['e1_b48_kv32k_w3', 258627.2, 48]])"
+   },
+   {
+    "check": "rows.token_lengths",
+    "ok": true,
+    "detail": "(input_len, output_len) values: [('32768', '1024')] (required ['32768', '1024'])"
+   },
+   {
+    "check": "derivation.whole_file_equals_rederivation",
+    "ok": false,
+    "detail": "V4 trace equals the re-derivation from the accepted trace byte for byte: False (re-derivation sha256 63d79100e5f482854fcc868bda859f206c611e194c18efec40749c8a31d76de1)"
+   }
+  ],
+  "expected_checks": 20
+ }
+}

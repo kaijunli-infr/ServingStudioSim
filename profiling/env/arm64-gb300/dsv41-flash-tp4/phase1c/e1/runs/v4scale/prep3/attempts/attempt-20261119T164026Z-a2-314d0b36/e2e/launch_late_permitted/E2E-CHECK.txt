@@ -1,0 +1,25 @@
+FAIL  registry.records: owned registry labels ['driver']; supervisor registry []; closeout registry ['closeout:e1_v4_scale'] (three separate registries)
+PASS  registry.all_gone: registered processes still alive: []
+FAIL  mock_processes.gone: mock Nsight CLI / server pids []; alive []
+FAIL  launch.rehearsal_mode_recorded: launch_source.json mode None (gate G0 fails on it: never V4 evidence)
+FAIL  launch.real_controller_record: lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None
+FAIL  no_build_tool: build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None
+FAIL  no_gpu_use: 0 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids []; importer pid None never signalled
+FAIL  supervisor.sent_no_signal: signals sent by the supervisor itself: None
+PASS  closeout.four_statements: closeout statements {'resource cleanup': 'CLEAN', 'supervision': 'NOT APPLICABLE', 'run response': 'none', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+FAIL  driver.rc: driver exit code 7
+FAIL  lifecycle.phases: phases []; control lines 0; escalations 0
+FAIL  closeout.clean: closeout exit code 0; statements {'resource cleanup': 'CLEAN', 'supervision': 'NOT APPLICABLE', 'run response': 'none', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  deletion.watcher_verdict: watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 509.0 s after its creation (ceiling 5400 s); first permit at 491.3 s; 3 permit(s) in 7 evaluations; signals / delete requests by the watcher 0 / 0
+PASS  deletion.deleter_verdict: deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 506.6 s after the pod's creation (ceiling 5400 s)
+PASS  deletion.one_request_with_the_recorded_uid: delete requests that were not dry runs: [('deleter', 0, 'c60946a1-2d4f-4514-b134-a60b94d85226')] (recorded uid c60946a1-2d4f-4514-b134-a60b94d85226); deleter accepted 1; pods left in the stand-in cluster 0
+PASS  deletion.permit_after_the_run_ended_with_evidence: first permit 0.0 s after the supervisor ended through the run's stop file; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 10.3 s after the permit
+PASS  deletion.in_time_on_both_sides: observed gone 509.0 s (watcher) / 506.6 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'
+PASS  deletion.tray_credential_never_asked_to_delete: delete requests with the tray's read-only stand-in credential: 0
+FAIL  supervisor.no_response: response None; monitors effective None; complete None; samples None
+FAIL  stream.checksums: controller final record None…, preserved original None…, durable copy None…
+FAIL  samplers.measured: memory samples None, storage samples None, breaches None None
+FAIL  gates.as_registered: verdict None (post-run exit 1); not PASS {}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+FAIL  launch.permitted_late_under_the_registered_rule: run.log: 'FAIL  launch eligibility: reservation age 482.9 s; 4197.1 s remain until the reservation guard (4680 s), fewer than the run budget 4210 s (latest permitted age 470 s): REFUSED, nothing is started'; age at the check 482.9 s, latest permitted 470 s (registered guard and run budget)
+# scenario launch_late_permitted: 9 of 24 checks pass → NOT MET

@@ -1,0 +1,3 @@
+PASS  reservation pod inference-bench/dsv41-gb300-reserve-e2e uid 046e4f2f-7aec-4238-968a-3fa1af527c1a on pod4-gb300-10-tray16-f3, created 2026-11-19T16:55:38Z, 4 GPUs, pause containers only, labels {'app': 'dsv41-gb300-reserve', 'owner': 'kevin'}
+PASS  deletion path proof: dry run with the recorded UID accepted, with another UID refused by the server (Conflict), pod unchanged (uid 046e4f2f-7aec-4238-968a-3fa1af527c1a, not terminating)
+PASS  wrote /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/rev3/attempt-20261119T164026Z-a2-314d0b36/e2e/ambiguous/reservation.json

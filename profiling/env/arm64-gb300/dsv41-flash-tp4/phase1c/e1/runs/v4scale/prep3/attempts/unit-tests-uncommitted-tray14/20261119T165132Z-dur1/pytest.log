@@ -1,0 +1,32 @@
+........................................................................ [ 27%]
+........................................................................ [ 54%]
+........................................................................ [ 81%]
+.................................................                        [100%]
+cpu_only_guard: CUDA hidden (CUDA_VISIBLE_DEVICES='' set by the caller); no /dev/nvidia<N> opened; torch.cuda not initialised
+============================= slowest 25 durations =============================
+13.36s call     tests/test_e1_reservation_closeout.py::test_watcher_and_deleter_as_processes_end_to_end
+2.54s call     tests/test_e1_reservation_closeout.py::test_deletion_boundary_at_the_ceiling[6000.0-DELETED_LATE-1]
+1.59s call     tests/test_e1_reservation_closeout.py::test_run_state_attributes_only_processes_of_the_given_registries
+1.24s call     tests/test_e1_v4scale_gates.py::test_importer_states_are_distinguished
+1.01s call     tests/test_e1_reservation_closeout.py::test_not_deleted_after_the_tail_and_unverified_when_the_cluster_cannot_be_read
+0.80s call     tests/test_e1_reservation_closeout.py::test_a_live_importer_is_recorded_and_is_not_a_refusal
+0.78s call     tests/test_e1_reservation_closeout.py::test_no_permit_while_the_run_is_active_whatever_the_gpus_say
+0.62s call     tests/test_e1_v4scale_reservation_scenarios.py::test_earlier_release_acknowledged_but_stalled
+0.59s call     tests/test_e1_reservation_closeout.py::test_registry_refusal_or_unregistered_lookalike_refuses_until_the_end[refused-value0-D1 registry refusal]
+0.57s call     tests/test_e1_reservation_closeout.py::test_registry_refusal_or_unregistered_lookalike_refuses_until_the_end[lookalikes-value1-D2 process(es) that look like the experiment]
+0.56s call     tests/test_e1_reservation_closeout.py::test_ownership_must_be_exact[<lambda>-label owner]
+0.56s call     tests/test_e1_reservation_closeout.py::test_ownership_must_be_exact[<lambda>-creation_timestamp]
+0.56s call     tests/test_e1_reservation_closeout.py::test_ownership_must_be_exact[<lambda>-node]
+0.56s call     tests/test_e1_reservation_closeout.py::test_ownership_must_be_exact[<lambda>-pause]
+0.55s call     tests/test_e1_reservation_closeout.py::test_ownership_must_be_exact[<lambda>-terminating although no permit]
+0.55s call     tests/test_e1_v4scale_reservation_scenarios.py::test_sampler_failure_before_the_guard
+0.54s call     tests/test_e1_v4scale_reservation_scenarios.py::test_sampler_failure_together_with_the_guard
+0.53s call     tests/test_e1_v4scale_reservation_scenarios.py::test_earlier_release_acknowledged_and_completed_but_the_run_is_still_going_at_the_guard
+0.52s call     tests/test_e1_v4scale_reservation_scenarios.py::test_importer_still_active_when_the_guard_escalates_an_earlier_release
+0.52s call     tests/test_e1_v4scale_reservation_scenarios.py::test_guard_reached_after_an_earlier_breach_response
+0.52s call     tests/test_e1_v4scale_reservation_scenarios.py::test_import_still_running_after_a_forced_release_when_the_guard_passes
+0.52s call     tests/test_e1_v4scale_reservation_scenarios.py::test_gpu_held_ceiling_reached_before_any_stop_request
+0.51s call     tests/test_e1_v4scale_reservation_scenarios.py::test_export_still_running_when_the_guard_passes
+0.51s call     tests/test_e1_v4scale_reservation_scenarios.py::test_missing_acknowledgement_runs_the_cleanup_once_and_the_guard_adds_nothing
+0.51s call     tests/test_e1_v4scale_reservation_scenarios.py::test_guard_and_storage_breach_in_the_same_sample
+265 passed in 71.99s (0:01:11)

@@ -1,0 +1,143 @@
+{
+ "supervisor": "e1_supervisor_v4.py",
+ "helpers": "e1_supervisor.py (causes, acknowledgement, registry cleanup; unmodified)",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 2718195,
+ "started_at": 1795118505.228538,
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale",
+ "registry": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+ "control_line": "release-gpus V4 resource-limit abort (registered supervisor response)",
+ "limits": {
+  "ack_s": 10.0,
+  "stale_s": 60.0,
+  "cleanup_grace_s": 30.0,
+  "interval_s": 1.0,
+  "gpu_held_ceiling_s": 2700.0,
+  "reservation_guard_s": 420.0,
+  "release_s": 150.0
+ },
+ "latch": {
+  "release_lines_written": 1,
+  "registry_cleanups_started": 1
+ },
+ "samples": 255,
+ "causes": [
+  {
+   "cause": "breach",
+   "source": "MEMORY-BREACH",
+   "kind": "importer_rss_above_ceiling",
+   "value_gb": 0.16,
+   "limit_gb": 0.0625,
+   "breach_at": 1795118522.8124075,
+   "marker_mtime": 1795118522.9093044,
+   "seen_at": 1795118523.2597244
+  }
+ ],
+ "response": {
+  "decided_at": 1795118523.2597244,
+  "phase": "importing",
+  "stop_requested": true,
+  "steps": [
+   {
+    "kind": "R1 control line",
+    "written_at": 1795118523.2609167,
+    "ack_deadline_s": 10.0,
+    "acknowledged": true,
+    "acknowledged_at": 1795118524.2509835,
+    "latency_s": 0.99,
+    "controller_phase": "importing",
+    "evidence": "gpu.release_requested_at with this line as the reason",
+    "api_server_sigterm": {
+     "at": 1795118524.2514842,
+     "pid": 2718231,
+     "outcome": "signalled"
+    }
+   },
+   {
+    "kind": "R2 registry cleanup",
+    "why": "the reservation guard passed after the earlier release request and the run has not ended",
+    "decided_at": 1795118761.2635942,
+    "command": [
+     "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py",
+     "cleanup",
+     "--registry",
+     "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+     "--execute",
+     "--grace",
+     "30.0",
+     "--kill9",
+     "--log",
+     "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/supervisor_cleanup.jsonl"
+    ],
+    "started_at": 1795118761.2655752,
+    "ended_at": 1795118761.7011604,
+    "rc": 2,
+    "result_line": "RESULT NOT CLEAN: signalled 7, skipped 0, survivors 0, lookalikes 2 (never signalled)",
+    "log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/supervisor_cleanup.jsonl",
+    "state": "finished"
+   }
+  ],
+  "completed_at": 1795118524.7794619,
+  "seconds_from_first_cause_seen": 1.52,
+  "outcome": "registry cleanup rc 2 at the reservation guard, after the release requested through the controller",
+  "escalation": {
+   "decided_at": 1795118761.2635942,
+   "causes": [
+    {
+     "cause": "reservation_guard",
+     "source": "reservation.json creation_timestamp",
+     "kind": "run not ended when the reservation guard passed",
+     "reservation_age_s": 420.3,
+     "limit_s": 420.0,
+     "seen_at": 1795118761.2635942
+    }
+   ],
+   "earlier_step": "R1 control line",
+   "phase": "report_written",
+   "gpu_released_at": 1795118585.308347,
+   "release_requested_at": 1795118524.2509835,
+   "completed_at": 1795118761.7011719,
+   "seconds_from_guard_seen": 0.438
+  }
+ },
+ "monitors_effective": true,
+ "signals_sent_by_supervisor": 0,
+ "complete": true,
+ "last_check_at": 1795118761.2635942,
+ "heartbeats": {
+  "memory sampler": {
+   "file": "mem_observations.jsonl",
+   "age_s": 0.96,
+   "required": true
+  },
+  "storage sampler": {
+   "file": "storage_observations.jsonl",
+   "age_s": 0.89,
+   "required": true
+  },
+  "GPU sampler": {
+   "file": "gpu_observations.jsonl",
+   "age_s": 0.71,
+   "required": false
+  }
+ },
+ "phase_seen": "report_written",
+ "release_after_response": {
+  "gpu_released_at": 1795118585.308347,
+  "phase": "report_written",
+  "seconds_since_acknowledgement": 236.0,
+  "stalled": false,
+  "limit_s": 150.0
+ },
+ "later_causes": [
+  {
+   "cause": "reservation_guard",
+   "source": "reservation.json creation_timestamp",
+   "kind": "run not ended when the reservation guard passed",
+   "reservation_age_s": 420.3,
+   "limit_s": 420.0,
+   "seen_at": 1795118761.2635942
+  }
+ ],
+ "ended_at": 1795118761.7024038
+}

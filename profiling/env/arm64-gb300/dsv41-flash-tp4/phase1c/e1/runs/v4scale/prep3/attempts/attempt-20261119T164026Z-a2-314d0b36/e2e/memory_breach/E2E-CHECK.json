@@ -1,0 +1,127 @@
+{
+ "scenario": "memory_breach",
+ "ok": true,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": true,
+   "detail": "owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']; closeout registry ['closeout:e1_v4_scale'] (three separate registries)"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": true,
+   "detail": "mock Nsight CLI / server pids [861038, 861039, 861040, 861041, 861042]; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": true,
+   "detail": "launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": true,
+   "detail": "lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": true,
+   "detail": "build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": true,
+   "detail": "57 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals [(861039, 'SIGTERM', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)'), (861039, 'SIGKILL', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)')]; recorded server pids [861039, 861040, 861041, 861042]; importer pid 861130 never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": true,
+   "detail": "signals sent by the supervisor itself: 0"
+  },
+  {
+   "check": "closeout.four_statements",
+   "ok": true,
+   "detail": "closeout statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}"
+  },
+  {
+   "check": "breach.marker_and_cause",
+   "ok": true,
+   "detail": "MEMORY-BREACH present True; supervisor causes [('MEMORY-BREACH', 'importer_rss_above_ceiling', 0.16, 0.0625)]"
+  },
+  {
+   "check": "breach.delivered_through_controller",
+   "ok": true,
+   "detail": "supervisor step R1 control line, acknowledged True after 0.58 s (bound 10 s)"
+  },
+  {
+   "check": "breach.controller_record",
+   "ok": true,
+   "detail": "control commands [('release-gpus V4 resource-limit abort (re', 'release requested', 'importing')]"
+  },
+  {
+   "check": "breach.bounded_response",
+   "ok": true,
+   "detail": "breach sample \u2192 identity-verified SIGTERM to the API server 1.0 s (bound 15 s); SIGTERM \u2192 SIGKILL 60.0 s (grace 60 s)"
+  },
+  {
+   "check": "breach.importer_isolated",
+   "ok": true,
+   "detail": "importer 861130 was not signalled and finished: probe final COMPLETED, lifecycle phase report_written"
+  },
+  {
+   "check": "breach.run_fails",
+   "ok": true,
+   "detail": "verdict FAIL; not PASS {'G0.source_and_executable': 'FAIL', 'G2.one_stop_request_returned_ok': 'FAIL', 'G3.phases_in_order': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G11.storage_and_memory': 'FAIL', 'G12.closeout': 'FAIL', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}"
+  },
+  {
+   "check": "breach.closeout_statements",
+   "ok": true,
+   "detail": "closeout exit code 1; statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}"
+  },
+  {
+   "check": "breach.release_completed_no_escalation",
+   "ok": true,
+   "detail": "supervisor latch {'release_lines_written': 1, 'registry_cleanups_started': 0}; release after the response {'gpu_released_at': 1795107888.325975, 'phase': 'report_written', 'seconds_since_acknowledgement': 81.6, 'stalled': False, 'limit_s': 150.0}; escalation False"
+  },
+  {
+   "check": "deletion.watcher_verdict",
+   "ok": true,
+   "detail": "watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 325.1 s after its creation (ceiling 5400 s); first permit at 313.2 s; 2 permit(s) in 30 evaluations; signals / delete requests by the watcher 0 / 0"
+  },
+  {
+   "check": "deletion.deleter_verdict",
+   "ok": true,
+   "detail": "deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 327.3 s after the pod's creation (ceiling 5400 s)"
+  },
+  {
+   "check": "deletion.one_request_with_the_recorded_uid",
+   "ok": true,
+   "detail": "delete requests that were not dry runs: [('deleter', 0, '8380b3a4-d57a-4e71-8429-7b94daeccb36')] (recorded uid 8380b3a4-d57a-4e71-8429-7b94daeccb36); deleter accepted 1; pods left in the stand-in cluster 0"
+  },
+  {
+   "check": "deletion.permit_after_the_run_ended_with_evidence",
+   "ok": true,
+   "detail": "first permit 45.3 s after the supervisor ended through the run's stop file; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 9.0 s after the permit"
+  },
+  {
+   "check": "deletion.in_time_on_both_sides",
+   "ok": true,
+   "detail": "observed gone 325.1 s (watcher) / 327.3 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'"
+  },
+  {
+   "check": "deletion.tray_credential_never_asked_to_delete",
+   "ok": true,
+   "detail": "delete requests with the tray's read-only stand-in credential: 0"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

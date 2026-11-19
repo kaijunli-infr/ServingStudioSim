@@ -1,0 +1,127 @@
+{
+ "scenario": "launch_late_permitted",
+ "ok": false,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": false,
+   "detail": "owned registry labels ['driver']; supervisor registry []; closeout registry ['closeout:e1_v4_scale'] (three separate registries)"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": false,
+   "detail": "mock Nsight CLI / server pids []; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": false,
+   "detail": "launch_source.json mode None (gate G0 fails on it: never V4 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": false,
+   "detail": "lifecycle.json written by the real controller: schema None, policy soft/hard/grace None/None/None"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": false,
+   "detail": "build-tool guard installed/active None/None, blocked None; executable unchanged None (same inode/mtime/size True); compile lines None"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": false,
+   "detail": "0 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals []; recorded server pids []; importer pid None never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": false,
+   "detail": "signals sent by the supervisor itself: None"
+  },
+  {
+   "check": "closeout.four_statements",
+   "ok": true,
+   "detail": "closeout statements {'resource cleanup': 'CLEAN', 'supervision': 'NOT APPLICABLE', 'run response': 'none', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}"
+  },
+  {
+   "check": "driver.rc",
+   "ok": false,
+   "detail": "driver exit code 7"
+  },
+  {
+   "check": "lifecycle.phases",
+   "ok": false,
+   "detail": "phases []; control lines 0; escalations 0"
+  },
+  {
+   "check": "closeout.clean",
+   "ok": false,
+   "detail": "closeout exit code 0; statements {'resource cleanup': 'CLEAN', 'supervision': 'NOT APPLICABLE', 'run response': 'none', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}"
+  },
+  {
+   "check": "deletion.watcher_verdict",
+   "ok": true,
+   "detail": "watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 509.0 s after its creation (ceiling 5400 s); first permit at 491.3 s; 3 permit(s) in 7 evaluations; signals / delete requests by the watcher 0 / 0"
+  },
+  {
+   "check": "deletion.deleter_verdict",
+   "ok": true,
+   "detail": "deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 506.6 s after the pod's creation (ceiling 5400 s)"
+  },
+  {
+   "check": "deletion.one_request_with_the_recorded_uid",
+   "ok": true,
+   "detail": "delete requests that were not dry runs: [('deleter', 0, 'c60946a1-2d4f-4514-b134-a60b94d85226')] (recorded uid c60946a1-2d4f-4514-b134-a60b94d85226); deleter accepted 1; pods left in the stand-in cluster 0"
+  },
+  {
+   "check": "deletion.permit_after_the_run_ended_with_evidence",
+   "ok": true,
+   "detail": "first permit 0.0 s after the supervisor ended through the run's stop file; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 10.3 s after the permit"
+  },
+  {
+   "check": "deletion.in_time_on_both_sides",
+   "ok": true,
+   "detail": "observed gone 509.0 s (watcher) / 506.6 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'"
+  },
+  {
+   "check": "deletion.tray_credential_never_asked_to_delete",
+   "ok": true,
+   "detail": "delete requests with the tray's read-only stand-in credential: 0"
+  },
+  {
+   "check": "supervisor.no_response",
+   "ok": false,
+   "detail": "response None; monitors effective None; complete None; samples None"
+  },
+  {
+   "check": "stream.checksums",
+   "ok": false,
+   "detail": "controller final record None\u2026, preserved original None\u2026, durable copy None\u2026"
+  },
+  {
+   "check": "samplers.measured",
+   "ok": false,
+   "detail": "memory samples None, storage samples None, breaches None None"
+  },
+  {
+   "check": "gates.as_registered",
+   "ok": false,
+   "detail": "verdict None (post-run exit 1); not PASS {}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}"
+  },
+  {
+   "check": "launch.permitted_late_under_the_registered_rule",
+   "ok": false,
+   "detail": "run.log: 'FAIL  launch eligibility: reservation age 482.9 s; 4197.1 s remain until the reservation guard (4680 s), fewer than the run budget 4210 s (latest permitted age 470 s): REFUSED, nothing is started'; age at the check 482.9 s, latest permitted 470 s (registered guard and run budget)"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

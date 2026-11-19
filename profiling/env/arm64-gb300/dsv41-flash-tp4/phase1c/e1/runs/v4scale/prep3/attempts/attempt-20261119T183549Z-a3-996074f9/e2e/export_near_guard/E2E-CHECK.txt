@@ -1,0 +1,27 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']; closeout registry ['closeout:e1_v4_scale'] (three separate registries)
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [2475340, 2475341, 2475342, 2475344, 2475343]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True
+PASS  no_gpu_use: 119 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(2475341, 'SIGTERM', 'shutdown')]; recorded server pids [2475341, 2475342, 2475343, 2475344]; importer pid 2475435 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  closeout.four_statements: closeout statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  guard.cause: supervisor causes [('reservation_guard', 'run not ended when the reservation guard passed', 420.8, 420.0)]; no breach marker
+PASS  breach.marker_and_cause: STORAGE-BREACH present False; supervisor causes [('reservation.json creation_timestamp', 'run not ended when the reservation guard passed', None, None)]
+PASS  breach.registry_cleanup: supervisor steps ['R2 registry cleanup'] because the reservation guard requires the run to end; the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 7, skipped 0, survivors 0, lookalikes 2 (never signalled); stop requested 1795116975.1867292; control file written False
+PASS  breach.identity_verified_registry_only: cleanup signalled [2438511, 2475272, 2475288, 2475295, 2475332, 2475333, 2475336] ⊆ verified owned tree of 7 processes (registered roots [2438511, 2475272, 2475281, 2475288, 2475295]); refused 0; survivors []
+PASS  breach.bounded_response: first cause seen → cleanup finished 0.436 s (grace 30 s + SIGKILL pass)
+PASS  driver.did_not_finish: driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False
+PASS  closeout.registry_clean_not_clean_overall: closeout exit code 1 (NOT CLEAN is required after an abort); statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  latch.one_cleanup_no_release_line: supervisor latch {'release_lines_written': 0, 'registry_cleanups_started': 1}
+PASS  deletion.watcher_verdict: watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 439.5 s after its creation (ceiling 5400 s); first permit at 427.6 s; 2 permit(s) in 51 evaluations; signals / delete requests by the watcher 0 / 0
+PASS  deletion.deleter_verdict: deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 442.1 s after the pod's creation (ceiling 5400 s)
+PASS  deletion.one_request_with_the_recorded_uid: delete requests that were not dry runs: [('deleter', 0, '6fca8c63-97ba-485e-96aa-0a8f039a648a')] (recorded uid 6fca8c63-97ba-485e-96aa-0a8f039a648a); deleter accepted 1; pods left in the stand-in cluster 0
+PASS  deletion.permit_after_the_run_ended_with_evidence: first permit 6.4 s after the supervisor's registry cleanup finished; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 9.5 s after the permit
+PASS  deletion.in_time_on_both_sides: observed gone 439.5 s (watcher) / 442.1 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'
+PASS  deletion.tray_credential_never_asked_to_delete: delete requests with the tray's read-only stand-in credential: 0
+PASS  export.guard_fell_into_the_cpu_only_phase: lifecycle phase report_written; GPU release recorded 1795116997.9312396; guard response decided 1795117222.7764585; export started True, ended False
+PASS  export.importer_isolated_and_stream_kept: importer 2475435: probe final COMPLETED (finished before the guard; not in the registry, never signalled); preserved stream 5780c3db3f44e6d2… = controller's final record 5780c3db3f44e6d2…
+# scenario export_near_guard: 26 of 26 checks pass → MET

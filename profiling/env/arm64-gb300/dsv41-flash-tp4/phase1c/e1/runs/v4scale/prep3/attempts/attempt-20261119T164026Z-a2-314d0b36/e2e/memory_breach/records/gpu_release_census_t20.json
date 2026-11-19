@@ -1,0 +1,45 @@
+{
+ "schema_version": 1,
+ "host": "pod4-gb300-10-tray16-f3",
+ "at": 1795107932.8253288,
+ "at_iso": "2026-11-19T17:05:32Z",
+ "nvidia_smi_rc": {
+  "compute_apps": 0,
+  "gpu": 0
+ },
+ "nvidia_smi_stderr": "",
+ "max_used_mib": 64,
+ "compute_apps": [],
+ "gpus": [
+  {
+   "index": 0,
+   "uuid": "GPU-abbc4299-8500-54d7-2a37-3ccac762f30d",
+   "memory_used_mib": 0,
+   "memory_total_mib": 284208
+  },
+  {
+   "index": 1,
+   "uuid": "GPU-87e04b70-e9c6-0c59-7810-a2a4a6af4f12",
+   "memory_used_mib": 0,
+   "memory_total_mib": 284208
+  },
+  {
+   "index": 2,
+   "uuid": "GPU-71efe229-bc3a-a7fe-813c-db46c77eb9a0",
+   "memory_used_mib": 0,
+   "memory_total_mib": 284208
+  },
+  {
+   "index": 3,
+   "uuid": "GPU-6673a73f-3dc7-93b3-b06a-88ee44cbb25f",
+   "memory_used_mib": 0,
+   "memory_total_mib": 284208
+  }
+ ],
+ "verdict": {
+  "available": true,
+  "released": true,
+  "reason": "no compute process on any GPU; memory.used within the idle bound on every GPU"
+ },
+ "label": "t20"
+}

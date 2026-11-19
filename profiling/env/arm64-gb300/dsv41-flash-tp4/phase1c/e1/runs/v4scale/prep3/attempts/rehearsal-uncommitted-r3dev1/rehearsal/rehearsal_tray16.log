@@ -1,0 +1,109 @@
+# V4 gate rehearsal 2026-11-19T15:30:53Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at 76d9528955e9190c1192bd7ff6779ed5cb36a929 (23 modified tracked file(s)); CUDA_VISIBLE_DEVICES=''
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+check: 5 of 5 generated files on disk equal a fresh generation
+PASS  the V4 trace, config, inputs, manifest and identity policy on disk are what the generator produces
+## 1. V4 identity policy on the actual V4 configuration
+PASS  method.v2_record_with_v3_names_is_the_actual_v3_record: V2 launch record with the pass and run-root names substituted equals the actual V3 launch record in every field: True (182 compared fields)
+PASS  fixture.predicted_launch_record: tests/fixtures/e1_v4_scale/launch.predicted.json = the V3 launch record with V3 → V4 names; name dsv41_flash_1017_gb300_tp4_e1_v4_scale
+PASS  config.is_the_generated_v4_config: profile config configs_v4scale/e1_v4_scale/profile.json names the trace /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv (exists: True)
+PASS  v4_policy.actual_config_predicted_launch: verdict PASS (expected PASS); failed fields []; normalized 30; trace rule exercised True
+PASS  v1_policy.same_records: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised None
+PASS  v3_policy.same_records: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path'), ('policy', 'applies_to')]; normalized 29; trace rule exercised True
+PASS  negative.v3_config_and_launch_record: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path'), ('policy', 'applies_to')]; normalized 29; trace rule exercised True
+PASS  negative.trace_two_rows_swapped: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True
+PASS  negative.trace_one_row_removed: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True
+PASS  negative.config_streaming_on: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.stream')]; normalized 30; trace rule exercised True
+PASS  negative.config_hard_deadline_changed: verdict FAIL (expected FAIL); failed fields [('profile', 'nsys.finalize_hard_deadline_s')]; normalized 29; trace rule exercised True
+PASS  negative.launch_server_argument_changed: verdict FAIL (expected FAIL); failed fields [('launch', 'argv[44]')]; normalized 30; trace rule exercised True
+PASS  negative.trace_path_not_the_documented_location: verdict FAIL (expected FAIL); failed fields [('profile', 'workload.frontend.path')]; normalized 29; trace rule exercised True
+# V4 identity rehearsal on the actual V4 configuration: 13 of 13 expectations hold → MET
+PASS  identity rehearsal: every expectation met
+## 2. the complete V4 post-run on a V4-shaped run directory (V3 capture data, actual V4 config, V4 trace, predicted V4 launch record)
+PASS  retained V3 stream present (sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3)
+PASS  fixture: 5.3G; profile.json = the actual V4 config (sha256 4203d307eb53dd57…), trace.csv = the V4 trace, one launch record = the predicted V4 one; lifecycle record, logs, in-session report and export are the V3 originals
+registered expectation: verdict FAIL; not PASS exactly: G8b.recovered_trace_complete=FAIL,G9.scientific_completeness=FAIL,G15.request_iteration_routing_rank_coverage=FAIL,G16.reservation_deletion=FAIL
+postrun exit code 1 (0 = PASS, 1 = FAIL, 3 = INCONCLUSIVE)
+[e1_v3_scale] rc=0 end 2026-11-18T22:09:53Z
+## samplers for this post-run (own children of this script; stopped through a stop file; they signal nothing)
+## A. durable copy of the preserved stream (the tray original stays)
+PASS  durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/e1_v4_scale/preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm: 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3 = tray original (retained)
+## B. configuration identity under the V4 policy: four-copy trace proof; every other field as for V1/V2 (launch record + profile config vs the accepted e1_nsys_val run)
+identity rc=0 (30 normalized fields, 20 of 20 trace checks, listed in cpu/identity_v4scale_e1_v4_scale.txt)
+## C. scientific checkers on the in-session profile (lifecycle phase report_written)
+INFO         plan 'dry' (8 cells, 224 requests) selected by --plan dry; every planned cell is checked
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 400), ramp 30
+FAIL         cell b=8 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=8 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         cell b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 400), ramp 190
+FAIL         cell b=48 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=48 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+RESULT FAIL (4) [checker v2.0.0]
+completeness_v2 (eight-wave plan, routing records, checksum) rc=1
+extract rc=0
+FAIL         cell b=8 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=8 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=48 kv=32768 wave=2: pure-decode iterations 0 (need >= 400), ramp 0
+FAIL         cell b=48 kv=32768 wave=3: pure-decode iterations 0 (need >= 400), ramp 0
+RESULT FAIL (4) [checker v2.0.0]
+FAIL  completeness v2 on the same profile: 4 FAIL
+RESULT FAIL (1)
+nsys_validation rc=1
+## D. V4 gates
+PASS         G0.source_and_executable: launch commit e82c8df90e21, trees alignment 7b4df784a5b6 launcher 5acab28980ef, tracked changes 0; executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2: 16 of 16 binary checks pass
+PASS         G1.host_identity: launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 863 GPU observation(s); import probe, memory and storage samplers on pod4-gb300-10-tray16-f3
+PASS         G2.one_stop_request_returned_ok: requests_sent=1, stop_requested phases=1, http='ok' returned 21:59:34.44Z, server SIGTERM 21:59:37.37Z, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=1
+PASS         G3.phases_in_order: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']); times non-decreasing=True; final phase 'report_written'; escalations [] 
+PASS         G4.phase_deadlines: stop_accepted 0.003 s (deadline 30); flush_stop_to_importing 111.997 s (deadline 300); import_importer_first_seen_to_gone 53.038 s (deadline 300); stop_to_report_written 166.227 s (deadline 600); session_close_after_server_sigterm 2.709 s (deadline 300); controller hard deadline 600.0 s after the
+PASS         G5.importer_observed: importer 3030970 (--input-file is the session stream; --output-file is the session report; holds the session stream open), parent 3016246 agent=True linked to the recorded CLI=True; states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; final COMPLETED; signals outside the serv
+PASS         G6.gpu_release_interval: 861 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM 21:59:37.37Z: last 'held' reading within [0.056, 0.399] s, first 'released' reading within [2.399, 2.86] s → released no later than 2.86 s after it (deadline 90 s; no tighter bound is claimed); held again
+PASS         G7.stream_durable: controller's final record (taken 21:59:40Z, after session close): 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/e1_v4_scale/preserved/ds
+PASS         G8.offline_import: offline import of the durable stream rc 0 in 52 s → 792004583 B
+FAIL         G8b.recovered_trace_complete: recovered trace: 4320 iterations (band [8400, 9000]), NVTX forward ranges 17280, kernel rows 24501664 (band [46553161, 51453494]), kernels per process [6124336, 6124336, 6124336, 6128656], kernel boundaries [105540900, 130558977545] ns; absolute checks {'iterations_in_band': False, 'nvt
+FAIL         G9.scientific_completeness: exit codes {'completeness_v2': 1, 'extract': 0, 'nsys_validation': 1} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity PASS
+PASS         G10.bounds: GPU-held 1833 s by the controller, at most 1833 s by the sampler (ceiling 2700.0); server SIGTERM → session closed 2.7 s (limit 300.0); reservation 60.2 min (limit 90)
+PASS         G11.storage_and_memory: measured peaks {'temporary_peak_gb': 5.219, 'persistent_peak_gb': 6.311, 'min_mem_available_gb': 547.2, 'importer_peak_rss_gb_in_session': 15.61, 'importer_peak_rss_gb_offline': 15.63}; ceilings temporary 15 GB, persistent 18 GB, importer 128 GB, MemAvailable floor 64 GB
+PASS         G12.closeout: closeout exit code 0; reservation deleted record present (GPU pods left on the node: 0)
+PASS         G13.workload_and_recipe_identity: identity report by e1_launch_identity_v4scale.py under policy v4scale-1: verdict PASS, 30 normalized field(s), trace rule exercised=True, 20 of 20 trace checks hold
+PASS         G14.four_copy_trace_in_run: run trace.csv 63d79100e5f48285…: 224 requests = the accepted 56-row trace x 4 (re-derived here); run profile.json 4203d307eb53dd57… = the registered config; trace path /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces
+FAIL         G15.request_iteration_routing_rank_coverage: cells 4 (pure-decode iterations {'b48_kv32768_w0': 928, 'b48_kv32768_w1': 928, 'b8_kv32768_w0': 1008, 'b8_kv32768_w1': 1008}, floor 400); requests {'request timings': 112, 'token-accounting requests': 112, 'routing corpus segments': 112}; ranks [0, 1, 2, 3]; NVTX forward 
+FAIL         G16.reservation_deletion: reservation uid 79c054d5-c16d-4e1d-9d29-23d46055b5a8: watcher None, deleter None; first permit None s, delete request None s, observed gone None s (watcher) / None s (deleter) after the pod's creation = None min (ceiling 5400 s); ['no watcher record (reservation_closeout.json): the deletion
+# V4 gates e1_v4_scale: 18 results, 4 FAIL, 0 INCONCLUSIVE → FAIL
+post-run storage: 111 samples, max gap 2.3 s; {'temporary': 'peak 5.219 GB', 'persistent': 'peak 6.311 GB'}
+post-run memory: 199 samples; min MemAvailable 841.6 GB; offline importer peak 15.63 GB over 47 samples
+## verdict
+V4 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/cpu/V4S-GATES.txt). STOP: no retry, no advance; everything stays preserved.
+gpu memory after the post-run (MiB): 0 0 0 0 
+# configuration identity v4scale: PASS (30 normalized field(s), every one listed above with its original values; trace rule exercised: True)
+trace checks passing: 20 of 20
+verdict FAIL; not PASS {'G8b.recovered_trace_complete': 'FAIL', 'G9.scientific_completeness': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'FAIL', 'G16.reservation_deletion': 'FAIL'}; expectation MET
+PASS  V4 post-run on the V4 configuration: identity PASS under the V4 policy; verdict FAIL with exactly the registered size-dependent gates not passing
+fixture copy removed
+PASS  no post-run scratch left in /tmp
+PASS  retained V3 stream unchanged (sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3)
+PASS  V3 archive re-verified against its SHA256SUMS
+## 3. synthetic fixtures through the command-line validator
+# V4 gate rehearsal, synthetic fixtures through e1_v4scale_gates.py (CPU-only; not V4 evidence) 2026-11-19T15:35:19Z
+# 133 fixtures ({'positive': 3, 'boundary': 6, 'negative': 124}); verdicts {'PASS': 9, 'FAIL': 93, 'INCONCLUSIVE': 31}; expectations met 133 of 133
+PASS  synthetic fixtures: every expectation met
+## 4. eight-wave completeness and routing records (synthetic eight-wave structure from the V2 capture)
+# eight-wave completeness and routing-record check through e1_completeness_v2.py (synthetic structure from the V2 capture; CPU-only) 2026-11-19T15:38:12Z
+# 10 fixtures; expectations met 10 of 10
+MET     eight_waves                  exit 0 (expected 0); cells passing 8: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 40'
+MET     v3_four_waves_only           exit 1 (expected 1); cells passing 4: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40', 'b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 40'
+MET     v2_two_waves_only            exit 1 (expected 1); cells passing 2: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40']; FAIL lines 6: ['FAIL         cell b=8 kv=32768 wave=1: pure-decode iterations 0 (need >= 400), ramp 0', 'FAIL         cell b=
+MET     wave3_b8_missing             exit 1 (expected 1); cells passing 7: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 40'
+MET     wave2_b48_missing            exit 1 (expected 1); cells passing 7: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 40'
+MET     routing_file_missing         exit 1 (expected 1); cells passing 8: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 40'
+MET     routing_array_altered        exit 1 (expected 1); cells passing 8: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 40'
+MET     corpus_checksum_wrong        exit 1 (expected 1); cells passing 8: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 40'
+MET     waves_overlap                exit 1 (expected 1); cells passing 8: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 968 (need >= 400'
+MET     request_short_by_one_token   exit 1 (expected 1); cells passing 8: ['b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 40', 'b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 40'
+PASS  eight-wave fixtures: every expectation met
+## 5. state after the rehearsal
+PASS  load-generator executable after the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+gpu after (MiB / compute processes): 0 0 0 0 / 0
+# result: REHEARSAL EXPECTATIONS MET
+rehearsal exit 0 at 76d95289

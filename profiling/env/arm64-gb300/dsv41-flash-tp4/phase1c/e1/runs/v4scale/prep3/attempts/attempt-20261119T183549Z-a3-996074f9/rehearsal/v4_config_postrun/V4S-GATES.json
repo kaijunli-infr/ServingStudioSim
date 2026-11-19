@@ -1,0 +1,576 @@
+{
+ "verdict": "FAIL",
+ "counts": {
+  "PASS": 14,
+  "FAIL": 4,
+  "INCONCLUSIVE": 0
+ },
+ "gates": [
+  {
+   "gate": "G0.source_and_executable",
+   "status": "PASS",
+   "detail": "launch commit e82c8df90e21, trees alignment 7b4df784a5b6 launcher 5acab28980ef, tracked changes 0; executable 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2: 16 of 16 binary checks pass",
+   "data": {
+    "binary_checks": [
+     {
+      "check": "pin.present",
+      "ok": true,
+      "detail": "pinned sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.record_present",
+      "ok": true,
+      "detail": "driver record (binary_check.json) readable"
+     },
+     {
+      "check": "driver.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "before the launcher: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.sha256_after_is_pinned",
+      "ok": true,
+      "detail": "after the launcher: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "driver.unchanged",
+      "ok": true,
+      "detail": "unchanged=True"
+     },
+     {
+      "check": "driver.file_identity_unchanged",
+      "ok": true,
+      "detail": "inode/mtime/size before '1100019664799 1794730282 28759968', after '1100019664799 1794730282 28759968'"
+     },
+     {
+      "check": "driver.no_compiling_lines",
+      "ok": true,
+      "detail": "cargo 'Compiling' lines in the run log: 0"
+     },
+     {
+      "check": "launcher.record_present",
+      "ok": true,
+      "detail": "launcher record (frontend_binary.json) readable"
+     },
+     {
+      "check": "launcher.prebuilt_mode",
+      "ok": true,
+      "detail": "mode 'prebuilt (no compilation in this launch path)'"
+     },
+     {
+      "check": "launcher.sha256_before_is_pinned",
+      "ok": true,
+      "detail": "verified before the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 (record's pin 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2)"
+     },
+     {
+      "check": "launcher.sha256_after_is_pinned",
+      "ok": true,
+      "detail": "verified after the launch: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     },
+     {
+      "check": "launcher.unchanged",
+      "ok": true,
+      "detail": "unchanged=True"
+     },
+     {
+      "check": "launcher.cargo_not_consulted",
+      "ok": true,
+      "detail": "cargo_consulted=False"
+     },
+     {
+      "check": "launcher.build_tool_guard_installed",
+      "ok": true,
+      "detail": "guard installed=True active=True"
+     },
+     {
+      "check": "launcher.no_build_tool_requested",
+      "ok": true,
+      "detail": "blocked build-tool requests: []"
+     },
+     {
+      "check": "binary.now_is_pinned",
+      "ok": true,
+      "detail": "executable at post-run time: 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2"
+     }
+    ]
+   }
+  },
+  {
+   "gate": "G1.host_identity",
+   "status": "PASS",
+   "detail": "launch host pod4-gb300-10-tray16-f3 (boot 54a59f08) agrees with the run log, the reservation node and 863 GPU observation(s); import probe, memory and storage samplers on pod4-gb300-10-tray16-f3",
+   "data": {
+    "sources": {
+     "lifecycle.host": "pod4-gb300-10-tray16-f3",
+     "lifecycle.host_identity.hostname": "pod4-gb300-10-tray16-f3",
+     "run_log": "pod4-gb300-10-tray16-f3",
+     "reservation.node": "pod4-gb300-10-tray16-f3",
+     "gpu_observations": [
+      "pod4-gb300-10-tray16-f3"
+     ],
+     "import probe": "pod4-gb300-10-tray16-f3",
+     "supervisor": "pod4-gb300-10-tray16-f3",
+     "memory sampler": "pod4-gb300-10-tray16-f3",
+     "storage sampler": "pod4-gb300-10-tray16-f3"
+    }
+   }
+  },
+  {
+   "gate": "G2.one_stop_request_returned_ok",
+   "status": "PASS",
+   "detail": "requests_sent=1, stop_requested phases=1, http='ok' returned 21:59:34.44Z, server SIGTERM 21:59:37.37Z, API-server 'Stopping profiler' lines=1, 'Profiler stopped.' lines=1"
+  },
+  {
+   "gate": "G3.phases_in_order",
+   "status": "PASS",
+   "detail": "phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written'] (registered ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']); times non-decreasing=True; final phase 'report_written'; escalations [] (soft_deadline is a recorded warning, any other kind fails); control lines []; forced release requested=False"
+  },
+  {
+   "gate": "G4.phase_deadlines",
+   "status": "PASS",
+   "detail": "stop_accepted 0.003 s (deadline 30); flush_stop_to_importing 111.997 s (deadline 300); import_importer_first_seen_to_gone 53.038 s (deadline 300); stop_to_report_written 166.227 s (deadline 600); session_close_after_server_sigterm 2.709 s (deadline 300); controller hard deadline 600.0 s after the stop request, extension 0.0 s, soft warnings recorded 0 (informational)",
+   "data": {
+    "phases": {
+     "stop_accepted": {
+      "from": "t_stop",
+      "to": "t_accepted",
+      "seconds": 0.003,
+      "deadline_s": 30
+     },
+     "flush_stop_to_importing": {
+      "from": "t_stop",
+      "to": "t_importing",
+      "seconds": 111.997,
+      "deadline_s": 300
+     },
+     "import_importer_first_seen_to_gone": {
+      "from": "t_imp_first",
+      "to": "t_imp_gone",
+      "seconds": 53.038,
+      "deadline_s": 300
+     },
+     "stop_to_report_written": {
+      "from": "t_stop",
+      "to": "t_report",
+      "seconds": 166.227,
+      "deadline_s": 600
+     },
+     "session_close_after_server_sigterm": {
+      "from": "t_sigterm",
+      "to": "t_closed",
+      "seconds": 2.709,
+      "deadline_s": 300
+     }
+    },
+    "clocks": {
+     "t_stop": 1795039009.0453963,
+     "t_accepted": 1795039009.0481603,
+     "t_importing": 1795039121.0427556,
+     "t_report": 1795039175.2727623,
+     "t_imp_first": 1795039121.4829402,
+     "t_imp_gone": 1795039174.5211377,
+     "t_sigterm": 1795039177.365283,
+     "t_closed": 1795039180.0738032
+    },
+    "hard_deadline": {
+     "hard_at_minus_stop_s": 600.0,
+     "hard_extension_s": 0.0,
+     "policy_hard_deadline_s": 600.0,
+     "soft_warnings": 0
+    }
+   }
+  },
+  {
+   "gate": "G5.importer_observed",
+   "status": "PASS",
+   "detail": "importer 3030970 (--input-file is the session stream; --output-file is the session report; holds the session stream open), parent 3016246 agent=True linked to the recorded CLI=True; states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; final COMPLETED; signals outside the server processes []",
+   "data": {
+    "summary": {
+     "identified": true,
+     "verified_activity": true,
+     "temporarily_inactive_intervals": 1,
+     "ambiguous": false,
+     "completed": true,
+     "terminated": false,
+     "final_state": "COMPLETED"
+    }
+   }
+  },
+  {
+   "gate": "G6.gpu_release_interval",
+   "status": "PASS",
+   "detail": "861 sampler observation(s) on pod4-gb300-10-tray16-f3; relative to the server SIGTERM 21:59:37.37Z: last 'held' reading within [0.056, 0.399] s, first 'released' reading within [2.399, 2.86] s \u2192 released no later than 2.86 s after it (deadline 90 s; no tighter bound is claimed); held again afterwards=False; census files {'gpu_release_census_t0.json': True, 'gpu_release_census_t20.json': True}",
+   "data": {
+    "interval": {
+     "observations": 861,
+     "problem": null,
+     "held_again": false,
+     "last_held_window": [
+      0.056,
+      0.399
+     ],
+     "first_released_window": [
+      2.399,
+      2.86
+     ],
+     "stamp_gap_s": 2.343,
+     "unavailable_between": 0,
+     "upper_edge_s": 2.86,
+     "note": "the last 'held' reading is itself after the SIGTERM"
+    },
+    "census": {
+     "gpu_release_census_t0.json": true,
+     "gpu_release_census_t20.json": true
+    }
+   }
+  },
+  {
+   "gate": "G7.stream_durable",
+   "status": "PASS",
+   "detail": "controller's final record (taken 21:59:40Z, after session close): 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3; durable copy /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_rehearsal/e1_v4_scale/preserved/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm: 661640958 B sha256 764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3; two full reads identical=True; equals the final record=True; tray original present and equal=True; 2 earlier observation(s) kept; this is not a completeness statement (FR8b decides)",
+   "data": {
+    "sha256": "764d063d951d4c4683f1b4bea8336652846459de6b73ffb953a49d30744f8ba3",
+    "size": 661640958,
+    "observations": [
+     {
+      "at": 1795039121.0444126,
+      "phase": "importing",
+      "path": "/tmp/nsys-report-e577.qdstrm",
+      "size": 661640928,
+      "mtime_ns": 1795039121030830770
+     },
+     {
+      "at": 1795039175.272658,
+      "phase": "importing",
+      "path": "/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v3_scale.qdstrm",
+      "size": 661640958,
+      "mtime_ns": 1795039174358010657
+     }
+    ]
+   }
+  },
+  {
+   "gate": "G8.offline_import",
+   "status": "PASS",
+   "detail": "offline import of the durable stream rc 0 in 53 s \u2192 792004631 B"
+  },
+  {
+   "gate": "G8b.recovered_trace_complete",
+   "status": "FAIL",
+   "detail": "recovered trace: 4320 iterations (band [8400, 9000]), NVTX forward ranges 17280, kernel rows 24501664 (band [46553161, 51453494]), kernels per process [6124336, 6124336, 6124336, 6128656], kernel boundaries [105540900, 130558977545] ns; absolute checks {'iterations_in_band': False, 'nvtx_is_per_iteration_multiple': True, 'kernel_rows_in_band': False, 'four_processes_with_kernels': True, 'capture_boundaries_present': True}; in-session export exists \u2192 equality checks {'kernel_rows': True, 'nvtx_forward_ranges': True, 'distinct_iterations': True, 'iteration_index_range': True, 'kernel_boundaries_ns': True, 'nvtx_forward_boundaries_ns': True, 'kernels_per_process': True, 'every_table_row_count': True, 'capture_metadata': True, 'export_product_and_schema': True}, differing table row counts {}",
+   "data": {
+    "absolute": {
+     "iterations_in_band": false,
+     "nvtx_is_per_iteration_multiple": true,
+     "kernel_rows_in_band": false,
+     "four_processes_with_kernels": true,
+     "capture_boundaries_present": true
+    },
+    "relative": {
+     "kernel_rows": true,
+     "nvtx_forward_ranges": true,
+     "distinct_iterations": true,
+     "iteration_index_range": true,
+     "kernel_boundaries_ns": true,
+     "nvtx_forward_boundaries_ns": true,
+     "kernels_per_process": true,
+     "every_table_row_count": true,
+     "capture_metadata": true,
+     "export_product_and_schema": true
+    },
+    "table_row_differences": {},
+    "recovered": {
+     "nvtx_forward_ranges": 17280,
+     "kernel_rows": 24501664,
+     "kernel_span_ms": 130453.436645,
+     "ok": true,
+     "distinct_iterations": 4320,
+     "iteration_index_range": [
+      293,
+      4618
+     ],
+     "nvtx_forward_boundaries_ns": [
+      113127264,
+      130555464480
+     ],
+     "kernel_boundaries_ns": [
+      105540900,
+      130558977545
+     ],
+     "kernels_per_process": [
+      6124336,
+      6124336,
+      6124336,
+      6128656
+     ],
+     "metadata": {
+      "ANALYSIS_DETAILS": [
+       "[281474976710656, 131120006368, 3033050452212864, 3033181572219232]"
+      ],
+      "META_DATA_CAPTURE": [
+       "[\"ALLOW_SEND_ONLY_MODE\", \"false\"]",
+       "[\"APPLICATION_PID\", \"0\"]",
+       "[\"BANDWIDTH_RATE_HZ\", \"0\"]",
+       "[\"BANDWIDTH_VERSION\", \"0\"]",
+       "[\"CAPTURE_EVENT_TYPE\", \"Cuda\"]",
+       "[\"CAPTURE_EVENT_TYPE\", \"NvtxEvents\"]",
+       "[\"COLLECT_GPU_CTX_SW_TRACE\", \"false\"]",
+       "[\"COLLECT_GPU_MEMORY_USAGE\", \"false\"]",
+       "[\"COLLECT_OPENSHMEM_TRACE\", \"false\"]",
+       "[\"COLLECT_SLI_EVENTS\", \"false\"]",
+       "[\"COLLECT_THREAD_STATE_TRACE\", \"false\"]",
+       "[\"COLLECT_UVM_CPU_PAGE_FAULTS\", \"false\"]",
+       "[\"COLLECT_UVM_GPU_PAGE_FAULTS\", \"false\"]",
+       "[\"COLLECT_VSYNC\", \"false\"]",
+       "[\"COLLECT_WDDM_EVENTS\", \"false\"]",
+       "[\"CUDA_FLUSH_ON_CUDA_PROFILER_STOP\", \"false\"]",
+       "[\"CUDA_FLUSH_PERIOD\", \"0\"]",
+       "[\"CUDA_FLUSH_PERIODICALLY\", \"true\"]",
+       "[\"CUDA_GRAPH_TRACE_OPTIONS:MODE\", \"Node\"]",
+       "[\"CUDA_GRAPH_TRACE_OPTIONS:TRACE_DEVICE_GRAPH_LAUNCH\", \"false\"]",
+       "[\"CUDA_SKIP_SOME_API_CALLS\", \"true\"]",
+       "[\"CUDA_TRACE_SCOPE\", \"ProcessTree\"]",
+       "[\"DEVICE_DISPLAY_NAME\", \"pod4-gb300-10-tray16-f3\"]",
+       "[\"DEVICE_ID\", \"Local (CLI)\"]",
+       "[\"DEVICE_TYPE\", \"Unix\"]",
+       "[\"DISABLE_TIME_SYNC\", \"false\"]",
+       "[\"FORCE_ARCH_TIMER\", \"false\"]",
+       "[\"HAS_ANNOTATIONS\", \"false\"]",
+       "[\"HOTKEY_ENABLED\", \"false\"]",
+       "[\"HOTKEY_VALUE\", \"0\"]",
+       "[\"INCLUDE_CHILDREN\", \"true\"]",
+       "[\"IN_APP_FREQ_MODE\", \"false\"]",
+       "[\"LAUNCH_AS_ROOT\", \"false\"]",
+       "[\"NVTX_OPTIONS:NVTX_DOMAIN_FILTER_MODE_INCLUDE\", \"false\"]",
+       "[\"NVTX_OPTIONS:NVTX_DOMAIN_FILTER_STRING\", \"\"]",
+       "[\"NVTX_OPTIONS:TRACE_NVTX_RANGE_HOT_KEY\", \"false\"]",
+       "[\"NVTX_OPTIONS:TRACE_NVTX_RANGE_HOT_KEY_VALUE\", \"0\"]",
+       "[\"PACKAGE_NAME\", \"\"]",
+       "[\"POWER_RATE_SCAN_FREQ\", \"50\"]",
+       "[\"PROCESS_0:ARGUMENT_0\", \"-m\"]",
+       "[\"PROCESS_0:ARGUMENT_1\", \"vllm.entrypoints.cli.main\"]",
+       "[\"PROCESS_0:ARGUMENT_10\", \"--tensor-parallel-size\"]",
+       "[\"PROCESS_0:ARGUMENT_11\", \"4\"]",
+       "[\"PROCESS_0:ARGUMENT_12\", \"--data-parallel-size\"]",
+       "[\"PROCESS_0:ARGUMENT_13\", \"1\"]",
+       "[\"PROCESS_0:ARGUMENT_14\", \"--max-num-batched-tokens\"]",
+       "[\"PROCESS_0:ARGUMENT_15\", \"16384\"]",
+       "[\"PROCESS_0:ARGUMENT_16\", \"--enable-chunked-prefill\"]",
+       "[\"PROCESS_0:ARGUMENT_17\", \"--enable-prompt-tokens-details\"]",
+       "[\"PROCESS_0:ARGUMENT_18\", \"--gpu-memory-utilization\"]",
+       "[\"PROCESS_0:ARGUMENT_19\", \"0.9\"]",
+       "[\"PROCESS_0:ARGUMENT_2\", \"serve\"]",
+       "[\"PROCESS_0:ARGUMENT_20\", \"--enable-server-load-tracking\"]",
+       "[\"PROCESS_0:ARGUMENT_21\", \"--enable-logging-iteration-details\"]",
+       "[\"PROCESS_0:ARGUMENT_22\", \"--served-model-name\"]",
+       "[\"PROCESS_0:ARGUMENT_23\", \"dsv41-flash-1017\"]",
+       "[\"PROCESS_0:ARGUMENT_24\", \"--tokenizer-mode\"]",
+       "[\"PROCESS_0:ARGUMENT_25\", \"deepseek_v41\"]",
+       "[\"PROCESS_0:ARGUMENT_26\", \"--attention-config\"]",
+       "[\"PROCESS_0:ARGUMENT_27\", \"{\\\"backend\\\":\\\"FLASHINFER_MLA_SPARSE_DSV41\\\",\\\"indexer_kv_dtype\\\":\\\"mxfp4\\\",\\\"indexer_sparse_logits\\\":true}\"]",
+       "[\"PROCESS_0:ARGUMENT_28\", \"--kv-cache-dtype\"]",
+       "[\"PROCESS_0:ARGUMENT_29\", \"fp8\"]",
+       "[\"PROCESS_0:ARGUMENT_3\", \"/mnt/shared/weights/DeepSeek-V4.1-Flash-1017\"]",
+       "[\"PROCESS_0:ARGUMENT_30\", \"--max-num-seqs\"]",
+       "[\"PROCESS_0:ARGUMENT_31\", \"128\"]",
+       "[\"PROCESS_0:ARGUMENT_32\", \"--engram-config\"]",
+       "[\"PROCESS_0:ARGUMENT_33\", \"{\\\"cpu_offload\\\":true}\"]",
+       "[\"PROCESS_0:ARGUMENT_34\", \"--max-model-len\"]",
+       "[\"PROCESS_0:ARGUMENT_35\", \"131072\"]",
+       "[\"PROCESS_0:ARGUMENT_36\", \"--language-model-only\"]",
+       "[\"PROCESS_0:ARGUMENT_37\", \"--enable-return-routed-experts\"]",
+       "[\"PROCESS_0:ARGUMENT_38\", \"--profiler-config.profiler=cuda\"]",
+       "[\"PROCESS_0:ARGUMENT_4\", \"--api-server-count\"]",
+       "[\"PROCESS_0:ARGUMENT_5\", \"1\"]",
+       "[\"PROCESS_0:ARGUMENT_6\", \"--host\"]",
+       "[\"PROCESS_0:ARGUMENT_7\", \"127.0.0.1\"]",
+       "[\"PROCESS_0:ARGUMENT_8\", \"--port\"]",
+       "[\"PROCESS_0:ARGUMENT_9\", \"8000\"]",
+       "[\"PROCESS_0:COLLECT_CPU_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_CUDA_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_DX11_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_DX12_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_GL_WORKLOAD\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_GPU_MEMORY_USAGE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_NVMEDIA_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_NVTX_TRACE\", \"true\"]",
+       "[\"PROCESS_0:COLLECT_UVM_CPU_PAGE_FAULTS\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_UVM_GPU_PAGE_FAULTS\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_VIDEO_API_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COLLECT_VULKAN_TRACE\", \"false\"]",
+       "[\"PROCESS_0:COMMAND\", \"/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python\"]",
+       "[\"PROCESS_0:CUDA_FLUSH_ON_CUDA_PROFILER_STOP\", \"false\"]",
+       "[\"PROCESS_0:CUDA_FLUSH_PERIOD\", \"0\"]",
+       "[\"PROCESS_0:CUDA_FLUSH_PERIODICALLY\", \"false\"]",
+       "[\"PROCESS_0:CUDA_SKIP_SOME_API_CALLS\", \"false\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_CACHE_PATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/nv-compute\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_DEVICE_ORDER=\\\"PCI_BUS_ID\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_HOME=\\\"/usr/local/cuda-13.1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"CUDA_VISIBLE_DEVICES=\\\"0,1,2,3\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"DBUS_SESSION_BUS_ADDRESS=\\\"unix:path=/run/user/1000/bus\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"DG_JIT_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/deepgemm\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"E1_REPO=\\\"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"FLASHINFER_WORKSPACE_BASE=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"GB300_ROOT=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"HF_HOME=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/huggingface\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"HF_HUB_OFFLINE=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"HOME=\\\"/mnt/shared/home/dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LANG=\\\"C.UTF-8\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LD_LIBRARY_PATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/lib/python3.12/site-packages/torch/lib:\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LD_PRELOAD=\\\"{}\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"LOGNAME=\\\"dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"MOESIM_CUPTI_BUILD_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/cupti-ext\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"OLDPWD=\\\"/home/dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"PATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin:/mnt/shared/home/dc/workspace/serving-studio/gb300/venv/bin:/usr/local/cuda-13.1/bin:/mnt/shared/home/dc/.local/bin:/mnt/shared/home/dc/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"PWD=\\\"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"PYTHONPATH=\\\"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SHELL=\\\"/bin/bash\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SHLVL=\\\"3\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SSH_CLIENT=\\\"10.13.84.2 48470 22\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"SSH_CONNECTION=\\\"10.13.84.2 48470 10.13.84.37 22\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TERM=\\\"tmux-256color\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TERM_PROGRAM=\\\"tmux\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TERM_PROGRAM_VERSION=\\\"3.4\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TMUX=\\\"/tmp/tmux-1000/default,2980844,0\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TMUX_PANE=\\\"%0\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TORCHINDUCTOR_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/inductor\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TORCH_CUDA_ARCH_LIST=\\\"10.3\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TORCH_EXTENSIONS_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/torch-extensions\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"TRITON_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/triton\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"USER=\\\"dc\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV=\\\"/mnt/shared/home/dc/.local/bin/uv\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/uv\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV_NO_SYNC=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"UV_RUN_RECURSION_DEPTH=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_PROFILE_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vibesim-profiler\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_PROFILE_DB=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/db/profile-gb300.db\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_PROFILE_RUNTIME=\\\"host\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VIBESIM_VLLM_FORK_ROOT=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/vllm-shim\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_CACHE_ROOT=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/vllm\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_ENGINE_READY_TIMEOUT_S=\\\"3600\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_FLASHINFER_AUTOTUNE_CACHE_DIR=\\\"/mnt/shared/home/dc/workspace/serving-studio/gb300/cache/flashinfer-autotune\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_LOGGING_LEVEL=\\\"INFO\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_NVTX_SCOPES_FOR_PROFILING=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"VLLM_SERVER_DEV_MODE=\\\"1\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_RUNTIME_DIR=\\\"/run/user/1000\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_SESSION_CLASS=\\\"user\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_SESSION_ID=\\\"12528\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"XDG_SESSION_TYPE=\\\"tty\\\"\"]",
+       "[\"PROCESS_0:ENVIRONMENT_VARIABLE\", \"_=\\\"/mnt/shared/home/dc/.local/bin/uv\\\"\"]",
+       "[\"PROCESS_0:HOW_TO_ATTACH\", \"LaunchAnother\"]",
+       "[\"PROCESS_0:LAUNCH_AS_ROOT\", \"false\"]",
+       "[\"PROCESS_0:PID\", \"0\"]",
+       "[\"PROCESS_0:USER_NAME\", \"\"]",
+       "[\"PROCESS_0:WORKING_DIR\", \"/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle\"]",
+       "[\"PROFILING_SESSION_ID\", \"\"]",
+       "[\"PROFILING_SESSION_UUID\", \"6a6d3516-da0e-49f5-b8cf-81dfbd702d1a\"]",
+       "[\"RATE_HZ\", \"0\"]",
+       "[\"RESUME\", \"false\"]",
+       "[\"RUN_DURATION_FRAMES\", \"0\"]",
+       "[\"RUN_DURATION_MS\", \"131121\"]",
+       "[\"SAMPLE_ALL_TASKS\", \"false\"]",
+       "[\"SHOW_BACKTRACE\", \"false\"]",
+       "[\"START_DELAY_MS\", \"0\"]",
+       "[\"START_FRAME_VALUE\", \"0\"]",
+       "[\"START_TRIGGER\", \"Immediate\"]",
+       "[\"STOP_TRIGGER\", \"Delayed\"]",
+       "[\"SYMBOL_RESOLUTION_OPTIONS:RESOLVE_SYMBOLS\", \"true\"]",
+       "[\"THREAD_STATE_SCAN_FREQ\", \"50\"]",
+       "[\"TRACE_AFTER_FORK_BEFORE_EXEC\", \"true\"]",
+       "[\"TRACE_ALL_TASKS\", \"false\"]",
+       "[\"USE_DWARF\", \"false\"]",
+       "[\"USE_FRAME_POINTERS\", \"false\"]",
+       "[\"USE_LBRS\", \"false\"]",
+       "[\"USE_LINUX_PERF\", \"false\"]",
+       "[\"USE_UNWIND_TABLES\", \"false\"]"
+      ],
+      "TARGET_INFO_SESSION_START_TIME": [
+       "[1795038878116402129, \"2026-11-18T21:54:38\", \"2026-11-18T21:54:38\", 3033050452212864]"
+      ],
+      "META_DATA_EXPORT": [
+       "[\"EXPORT_ARCH\", \"a64\"]",
+       "[\"EXPORT_CONFIG_TIME_SHIFT\", \"0\"]",
+       "[\"EXPORT_HOST\", \"pod4-gb300-10-tray16-f3\"]",
+       "[\"EXPORT_PARAM_APPEND\", \"false\"]",
+       "[\"EXPORT_PARAM_INPUT_FILE\", \"recovery.nsys-rep\"]",
+       "[\"EXPORT_PARAM_INPUT_PATH\", \"/tmp/v4scale-recovery-e1_v4_scale/recovery.nsys-rep\"]",
+       "[\"EXPORT_PARAM_INPUT_PATH_ABS\", \"/tmp/v4scale-recovery-e1_v4_scale/recovery.nsys-rep\"]",
+       "[\"EXPORT_PARAM_LAZY\", \"true\"]",
+       "[\"EXPORT_PARAM_OUTPUT_FILE\", \"recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OUTPUT_PATH\", \"/tmp/v4scale-recovery-e1_v4_scale/recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OUTPUT_PATH_ABS\", \"/tmp/v4scale-recovery-e1_v4_scale/recovery.sqlite\"]",
+       "[\"EXPORT_PARAM_OVERWRITE\", \"true\"]",
+       "[\"EXPORT_PARAM_TABLES_TO_EXPORT\", \"\"]",
+       "[\"EXPORT_PARAM_TIMES_TO_EXPORT\", \"\"]",
+       "[\"EXPORT_PARAM_TIME_NORMALIZE\", \"false\"]",
+       "[\"EXPORT_PARAM_TIME_SHIFT\", \"0\"]",
+       "[\"EXPORT_PLATFORM\", \"linux-desktop\"]",
+       "[\"EXPORT_PRODUCT_DATE\", \"2025.6\"]",
+       "[\"EXPORT_PRODUCT_NAME\", \"NVIDIA Nsight Systems\"]",
+       "[\"EXPORT_PRODUCT_VERSION\", \"2025.6.3.541\"]",
+       "[\"EXPORT_SCHEMA_VERSION\", \"3.24.8\"]",
+       "[\"EXPORT_SCHEMA_VERSION_CKSUM\", \"1897586836 176483\"]",
+       "[\"EXPORT_SCHEMA_VERSION_MAJOR\", \"3\"]",
+       "[\"EXPORT_SCHEMA_VERSION_MICRO\", \"8\"]",
+       "[\"EXPORT_SCHEMA_VERSION_MINOR\", \"24\"]",
+       "[\"EXPORT_TIME\", \"121.54 sec\"]",
+       "[\"EXPORT_TIME_LOCAL\", \"2026-11-19T18:39:53 +0000 UTC\"]",
+       "[\"EXPORT_TIME_UTC\", \"2026-11-19T18:39:53\"]",
+       "[\"EXPORT_USER\", \"dc\"]"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "gate": "G9.scientific_completeness",
+   "status": "FAIL",
+   "detail": "exit codes {'completeness_v2': 1, 'extract': 0, 'nsys_validation': 1} (completeness_v2 runs the four-wave plan and the routing-record checks); configuration identity PASS"
+  },
+  {
+   "gate": "G10.bounds",
+   "status": "PASS",
+   "detail": "GPU-held 1833 s by the controller, at most 1833 s by the sampler (ceiling 2700.0); server SIGTERM \u2192 session closed 2.7 s (limit 300.0); reservation 60.2 min (limit 90)"
+  },
+  {
+   "gate": "G11.storage_and_memory",
+   "status": "PASS",
+   "detail": "measured peaks {'temporary_peak_gb': 5.219, 'persistent_peak_gb': 6.311, 'min_mem_available_gb': 547.2, 'importer_peak_rss_gb_in_session': 15.61, 'importer_peak_rss_gb_offline': 15.61}; ceilings temporary 15 GB, persistent 18 GB, importer 128 GB, MemAvailable floor 64 GB",
+   "data": {
+    "measured": {
+     "temporary_peak_gb": 5.219,
+     "persistent_peak_gb": 6.311,
+     "min_mem_available_gb": 547.2,
+     "importer_peak_rss_gb_in_session": 15.61,
+     "importer_peak_rss_gb_offline": 15.61
+    },
+    "unmeasured": {}
+   }
+  },
+  {
+   "gate": "G12.closeout",
+   "status": "PASS",
+   "detail": "closeout exit code 0; reservation deleted record present (GPU pods left on the node: 0)"
+  },
+  {
+   "gate": "G13.workload_and_recipe_identity",
+   "status": "PASS",
+   "detail": "identity report by e1_launch_identity_v4scale.py under policy v4scale-1: verdict PASS, 30 normalized field(s), trace rule exercised=True, 20 of 20 trace checks hold"
+  },
+  {
+   "gate": "G14.four_copy_trace_in_run",
+   "status": "PASS",
+   "detail": "run trace.csv 63d79100e5f48285\u2026: 224 requests = the accepted 56-row trace x 4 (re-derived here); run profile.json 4203d307eb53dd57\u2026 = the registered config; trace path /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/traces/e1_v4_scale.csv"
+  },
+  {
+   "gate": "G15.request_iteration_routing_rank_coverage",
+   "status": "FAIL",
+   "detail": "cells 4 (pure-decode iterations {'b48_kv32768_w0': 928, 'b48_kv32768_w1': 928, 'b8_kv32768_w0': 1008, 'b8_kv32768_w1': 1008}, floor 400); requests {'request timings': 112, 'token-accounting requests': 112, 'routing corpus segments': 112}; ranks [0, 1, 2, 3]; NVTX forward ranges 17280 = 4320 iterations x 4; join {'duplicate': 0, 'missing': 0, 'non_monotone': 0}; failed checks 4; [\"cells ['b48_kv32768_w0', 'b48_kv32768_w1', 'b8_kv32768_w0', 'b8_kv32768_w1'] (planned ['b48_kv32768_w0', 'b48_kv32768_w1', 'b48_kv32768_w2', 'b48_kv32768_w3', 'b8_kv32768_w0', 'b8_kv32768_w1', 'b8_kv32768_w2', 'b8_kv32768_w3'])\", \"request counts {'request timings': 112, 'token-accounting requests': 112, 'routing corpus segments': 112} (registered 224)\", 'NVTX forward ranges 17280 (registered 4 per iteration, iterations in [8400, 9000])', 'the completeness checker recorded 4 failed check(s)']"
+  },
+  {
+   "gate": "G16.reservation_deletion",
+   "status": "FAIL",
+   "detail": "reservation uid 79c054d5-c16d-4e1d-9d29-23d46055b5a8: watcher None, deleter None; first permit None s, delete request None s, observed gone None s (watcher) / None s (deleter) after the pod's creation = None min (ceiling 5400 s); ['no watcher record (reservation_closeout.json): the deletion cannot be verified', 'deleter verdict None: None', \"deleter UID None / precondition None is not the recorded '79c054d5-c16d-4e1d-9d29-23d46055b5a8'\", 'None accepted delete request(s), exactly one is required']"
+  }
+ ]
+}

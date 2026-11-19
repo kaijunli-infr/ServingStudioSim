@@ -1,0 +1,26 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']; closeout registry ['closeout:e1_v4_scale'] (three separate registries)
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [536601, 536602, 536603, 536605, 536604]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True
+PASS  no_gpu_use: 188 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(536602, 'SIGTERM', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)'), (536602, 'SIGKILL', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)')]; recorded server pids [536602, 536603, 536604, 536605]; importer pid 536690 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  closeout.four_statements: closeout statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  latch.release_then_cleanup: supervisor steps ['R1 control line', 'R2 registry cleanup']; release line acknowledged True after 0.826 s; latch {'release_lines_written': 1, 'registry_cleanups_started': 1}; outcome 'registry cleanup rc 2 at the reservation guard, after the release requested through the controller'
+PASS  latch.first_cause_and_guard: first causes [('breach', 'importer_rss_above_ceiling')]; escalation causes [('reservation_guard', 420.5, 420.0)]; later causes ['reservation_guard']
+PASS  latch.release_had_completed_before_the_guard: GPU release recorded 1795104221.5546482, guard seen 1795104551.5276594, phase at the guard report_written (the earlier release request was acknowledged and had completed; the run was in its CPU-only export)
+PASS  latch.guard_enforced_within_bound: guard seen → cleanup finished 0.416 s; 420.9 s after the reservation's creation (rehearsal guard 420 s)
+PASS  latch.one_control_line: control commands recorded by the controller [('release-gpus V4 resource-limit abort (re', 'release requested')]; control file holds exactly the one registered line
+PASS  latch.identity_verified_registry_only: one cleanup; signalled [536413, 536532, 536548, 536555, 536592, 536593, 536596] ⊆ verified owned tree of 7; refused 0; survivors []
+PASS  latch.importer_and_agent_never_signalled: importer 536690 and agent 536689: not in the cleanup's signals, not in the controller's signals [(536602, 'SIGTERM', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)'), (536602, 'SIGKILL', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)')]; probe final COMPLETED; preserved stream = the controller's final record f1682d4c6719570a…
+PASS  driver.did_not_finish: driver exit code 143; export started True, ended False
+PASS  closeout.not_clean_after_the_abort: closeout exit code 1; statements {'resource cleanup': 'CLEAN', 'supervision': 'VALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  deletion.watcher_verdict: watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 449.4 s after its creation (ceiling 5400 s); first permit at 431.4 s; 3 permit(s) in 79 evaluations; signals / delete requests by the watcher 0 / 0
+PASS  deletion.deleter_verdict: deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 447.7 s after the pod's creation (ceiling 5400 s)
+PASS  deletion.one_request_with_the_recorded_uid: delete requests that were not dry runs: [('deleter', 0, 'ac008b02-96fc-48de-adf5-32d3886287f3')] (recorded uid ac008b02-96fc-48de-adf5-32d3886287f3); deleter accepted 1; pods left in the stand-in cluster 0
+PASS  deletion.permit_after_the_run_ended_with_evidence: first permit 401.7 s after the supervisor's registry cleanup finished; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 11.2 s after the permit
+PASS  deletion.in_time_on_both_sides: observed gone 449.4 s (watcher) / 447.7 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'
+PASS  deletion.tray_credential_never_asked_to_delete: delete requests with the tray's read-only stand-in credential: 0
+# scenario breach_then_guard: 25 of 25 checks pass → MET

@@ -1,0 +1,48 @@
+{
+ "probe": "e1_import_probe.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "provenance": {
+  "importer.state/ticks/starttime/ppid": "/proc/<importer pid>/stat, read by this probe",
+  "importer.io": "/proc/<importer pid>/io, read by this probe",
+  "importer.exe": "readlink /proc/<importer pid>/exe",
+  "importer.argv": "/proc/<importer pid>/cmdline",
+  "importer.fds": "readlink /proc/<importer pid>/fd/*",
+  "agent": "/proc/<importer ppid>/{stat,cmdline,exe}",
+  "report_size": "stat() of the report path (file-level, NOT counted as importer progress)",
+  "reported_progress_pct": "lifecycle.json: the controller's reading of the Nsight log (NOT counted as importer progress)",
+  "phase": "lifecycle.json"
+ },
+ "importer_exe": "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12",
+ "stream": "/tmp/nsys-report-e2ec0f22.qdstrm",
+ "report": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/profile/nsys/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep",
+ "recorded_nsys_cli_pid": 790306,
+ "min_progress": 2,
+ "interval_s": 0.5,
+ "started_at": 1795107499.5963688,
+ "transitions": [
+  {
+   "at": 1795107499.5969143,
+   "state": "NOT_FOUND",
+   "reason": "no process matches the importer criteria and there is no complete report"
+  },
+  {
+   "at": 1795107517.2542715,
+   "state": "AMBIGUOUS",
+   "reason": "more than one process matched the importer criteria during this session; none is singled out, then or later"
+  }
+ ],
+ "trigger": {
+  "requested": false,
+  "written": false
+ },
+ "ambiguity_first_seen_at": 1795107517.2542715,
+ "result": "NOT ESTABLISHED (AMBIGUOUS): more than one process matched the importer criteria during this session",
+ "ended_at": 1795107537.4662676,
+ "samples_file": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/import_probe.jsonl",
+ "samples": 63,
+ "final": {
+  "state": "AMBIGUOUS",
+  "reason": "more than one process matched the importer criteria during this session; none is singled out, then or later",
+  "importer_seen": false
+ }
+}

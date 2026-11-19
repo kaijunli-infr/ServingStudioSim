@@ -1,0 +1,23 @@
+check: 5 of 5 generated files on disk equal a fresh generation
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/V4S-PIN-identities.preflight.json
+10272704 E1 V4 safety closure: preflight finds kubectl in the shared home; the rehearsal ends a deleter whose driver never armed a watcher
+## pin
+ "gitlinks": {
+  "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
+  "alignment/profiler/vllm": "0ab18711335780e062d65994a3243da0281d2081"
+ },
+ "note": "tree ids are what preflight_e1_v4scale.sh and gate G0 compare (a later documentation-only commit keeps them); the launching commit must be a descendant of `commit` with these trees"
+}
+SCRIPTS_v4scale.sha256: 101 files, sha256 20160524da422cf4
+FREEZE_v4scale.sha256: 7 entries, sha256 edda26f3b466553a
+M  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/FREEZE_v4scale.sha256
+M  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/SCRIPTS_v4scale.sha256
+M  profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/V4S-PIN.json
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/V4S-PIN-identities.preflight.json
+314d0b36 E1 V4: proposed pins and manifests regenerated after the preflight PATH correction (not approved, not frozen)
+10272704 E1 V4 safety closure: preflight finds kubectl in the shared home; the rehearsal ends a deleter whose driver never armed a watcher
+fedd6476 E1 V4: PROPOSED packet revision 3, source pins, script and input manifests, proposed freeze manifest (not approved, not frozen)
+?? profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/V4S-PIN-identities.preflight.json
+frozen V3 / V2 / V1 manifests verify
+proposed V4 manifests verify; 101 script entries
+files changed since 76d95289 that existed before: E1-V4-SCALE-INPUTS.json E1-V4-SCALE-PACKET.md E1-V4-TIMELINE.md FREEZE_v4scale.sha256 README.md SCRIPTS_v4scale.sha256 V4S-PIN.json e1_identity_policy_v4scale.json e1_supervisor_v4.py e1_v4scale_gates.py closeout_e1_v4scale.sh e1_v4scale_e2e_check.py e1_v4scale_rehearsal.py E1-V4-MEMORY-BUDGET.json E1-V4-MEMORY-BUDGET.md e1_v4_memory_budget.py hash_scripts_v4scale.sh make_e1_inputs_v4scale.py monitor_e1_v4scale.sh pin_v4scale.sh preflight_e1_v4scale.sh rehearse_e1_v4scale.sh rehearse_e2e_v4scale.sh run_e1_v4scale.sh test_e1_preflight_memory.py test_e1_reservation_guard.py test_e1_supervisor_v4.py test_e1_v4scale_gates.py test_e1_v4scale_reservation_scenarios.py 

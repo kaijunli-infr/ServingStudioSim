@@ -1,0 +1,127 @@
+{
+ "scenario": "sampler_lost",
+ "ok": true,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": true,
+   "detail": "owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']; closeout registry ['closeout:e1_v4_scale'] (three separate registries)"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": true,
+   "detail": "mock Nsight CLI / server pids [1400548, 1400550, 1400551, 1400552, 1400553]; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": true,
+   "detail": "launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": true,
+   "detail": "lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": true,
+   "detail": "launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": true,
+   "detail": "32 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals []; recorded server pids [1400550, 1400551, 1400552, 1400553]; importer pid None never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": true,
+   "detail": "signals sent by the supervisor itself: 0"
+  },
+  {
+   "check": "closeout.four_statements",
+   "ok": true,
+   "detail": "closeout statements {'resource cleanup': 'NOT CLEAN', 'supervision': 'INVALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}"
+  },
+  {
+   "check": "breach.marker_and_cause",
+   "ok": true,
+   "detail": "STORAGE-BREACH present False; supervisor causes [('storage sampler', 'last sample too old', None, None)]"
+  },
+  {
+   "check": "breach.registry_cleanup",
+   "ok": true,
+   "detail": "supervisor steps ['R2 registry cleanup'] because the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 12, skipped 0, survivors 0, lookalikes 2 (never signalled); stop requested None; control file written False"
+  },
+  {
+   "check": "breach.identity_verified_registry_only",
+   "ok": true,
+   "detail": "cleanup signalled [1362941, 1400480, 1400489, 1400496, 1400540, 1400541, 1400544, 1400548, 1400550, 1400551, 1400552, 1400553] \u2286 verified owned tree of 12 processes (registered roots [1362941, 1400480, 1400489, 1400496, 1400503]); refused 0; survivors []"
+  },
+  {
+   "check": "breach.bounded_response",
+   "ok": true,
+   "detail": "first cause seen \u2192 cleanup finished 0.434 s (grace 30 s + SIGKILL pass)"
+  },
+  {
+   "check": "driver.did_not_finish",
+   "ok": true,
+   "detail": "driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False"
+  },
+  {
+   "check": "closeout.registry_clean_not_clean_overall",
+   "ok": true,
+   "detail": "closeout exit code 1 (NOT CLEAN is required after an abort); statements {'resource cleanup': 'NOT CLEAN', 'supervision': 'INVALID', 'run response': 'ABORTED', 'reservation deletion': 'DELETED IN TIME', 'frozen scientific gates': 'NOT EVALUATED'}"
+  },
+  {
+   "check": "latch.one_cleanup_no_release_line",
+   "ok": true,
+   "detail": "supervisor latch {'release_lines_written': 0, 'registry_cleanups_started': 1}"
+  },
+  {
+   "check": "deletion.watcher_verdict",
+   "ok": true,
+   "detail": "watcher verdict DELETED_IN_TIME (registered for this scenario: DELETED_IN_TIME): observed gone 251.1 s after its creation (ceiling 5400 s); first permit at 239.3 s; 2 permit(s) in 18 evaluations; signals / delete requests by the watcher 0 / 0"
+  },
+  {
+   "check": "deletion.deleter_verdict",
+   "ok": true,
+   "detail": "deleter verdict DELETED_IN_TIME (registered: DELETED_IN_TIME): observed gone 251.6 s after the pod's creation (ceiling 5400 s)"
+  },
+  {
+   "check": "deletion.one_request_with_the_recorded_uid",
+   "ok": true,
+   "detail": "delete requests that were not dry runs: [('deleter', 0, 'ab4649fc-4b10-4a99-adf0-8c11e71c5a7f')] (recorded uid ab4649fc-4b10-4a99-adf0-8c11e71c5a7f); deleter accepted 1; pods left in the stand-in cluster 0"
+  },
+  {
+   "check": "deletion.permit_after_the_run_ended_with_evidence",
+   "ok": true,
+   "detail": "first permit 7.4 s after the supervisor's registry cleanup finished; evidence: run registered tree gone, owned alive [], GPU census released True twice True, ownership verified True; delete request 7.3 s after the permit"
+  },
+  {
+   "check": "deletion.in_time_on_both_sides",
+   "ok": true,
+   "detail": "observed gone 251.1 s (watcher) / 251.6 s (deleter) after the pod's creation (ceiling 5400 s); GPU pods on the node afterwards 0; closeout statement 'DELETED IN TIME'"
+  },
+  {
+   "check": "deletion.tray_credential_never_asked_to_delete",
+   "ok": true,
+   "detail": "delete requests with the tray's read-only stand-in credential: 0"
+  },
+  {
+   "check": "sampler.heartbeat_cause",
+   "ok": true,
+   "detail": "supervisor causes [('monitor_lost', 'storage sampler', 'last sample too old')], age 60.6 s (limit 60 s); monitors effective False"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

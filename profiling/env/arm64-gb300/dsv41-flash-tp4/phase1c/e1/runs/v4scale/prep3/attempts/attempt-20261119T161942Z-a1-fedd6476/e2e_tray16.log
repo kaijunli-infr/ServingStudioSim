@@ -1,0 +1,8 @@
+# V4 end-to-end rehearsal 2026-11-19T16:29:33Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at fedd647634343a392061e5984a1961ecb1084bdc (0 modified tracked file(s)); scenarios: success ambiguous memory_breach storage_breach reservation_guard launch_late_permitted launch_refused ceiling_before_stop complete_near_guard export_near_guard guard_and_storage sampler_lost supervisor_lost breach_then_guard deleter_not_armed reservation_replaced deleter_lost deletion_late
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+PASS  laptop role: deleting side runs a byte-identical copy of checks/e1_reservation_closeout.py from /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4laptop_e2e
+PASS  project interpreter /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12 (no virtual environment created in the worktree)
+PASS  stand-in importer / exporter and rehearsal inputs written (kernel-row band scaled to the stand-in exporter; every other limit is the registered one)
+## scenario success (16:29:33)
+e2e exit 143 at fedd6476

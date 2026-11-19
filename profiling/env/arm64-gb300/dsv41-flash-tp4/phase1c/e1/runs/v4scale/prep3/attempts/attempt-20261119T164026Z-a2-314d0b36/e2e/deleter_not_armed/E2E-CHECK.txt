@@ -1,0 +1,10 @@
+PASS  not_armed.exit_code: driver exit code 8 (8 = closeout not armed); run.log: "FAIL  closeout watcher not armed: ['deleter heartbeat missing (limit 60 s): the deleting side is not armed']"
+PASS  not_armed.nothing_started: owned registry labels ['driver:e1_v4_scale']; supervisor registry exists False; lifecycle / supervisor / launch source records False / False / False; launch rule evaluated False; launcher start line False
+PASS  not_armed.no_process_left: registered processes still alive: []
+PASS  not_armed.watcher_permitted_and_nobody_deleted: watcher permits 11; run ended: registered tree gone
+PASS  not_armed.closeout_not_clean: closeout exit code 1; statements {'resource cleanup': 'CLEAN', 'supervision': 'NOT APPLICABLE', 'run response': 'none', 'reservation deletion': 'FAIL', 'frozen scientific gates': 'NOT EVALUATED'}
+PASS  deletion.watcher_verdict: watcher verdict NOT_DELETED (registered for this scenario: NOT_DELETED): the reservation pod was still present 23 s after the ceiling; last decision PERMIT: ['D1 registered tree gone, D2 no unregistered lookalike, D3 two co; 11 permit(s) in 20 evaluations; signals / delete requests by the watcher 0 / 0
+PASS  deletion.deleter_verdict: deleter verdict None (registered: None): no final record
+PASS  deletion.nothing_deleted: delete requests that were not dry runs: 0; pods left in the stand-in cluster [('dsv41-gb300-reserve-e2e', '51fe7d3a', 'kevin')]; closeout statement 'FAIL'
+PASS  deletion.tray_credential_never_asked_to_delete: delete requests with the tray's read-only stand-in credential: 0
+# scenario deleter_not_armed: 9 of 9 checks pass → MET

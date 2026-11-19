@@ -1,0 +1,67 @@
+# closeout e1_v4_scale on pod4-gb300-10-tray16-f3 at 2026-11-19T19:48:21Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 1858860[bash] 2534113[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T19:48:32Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 2547925, excluded ancestry [1, 1818885, 1858860, 2534113, 2534134, 2547925], own pipeline [1858860, 2534113, 2534134, 2547926]
+  GONE     pid 2495590 [driver:e1_v4_scale] start 311125466: no such process (already exited)
+  GONE     pid 2532526 [gpuwatch:e1_v4_scale] start 311141861: no such process (already exited)
+  GONE     pid 2532535 [importprobe:e1_v4_scale] start 311141864: no such process (already exited)
+  GONE     pid 2532542 [memwatch:e1_v4_scale] start 311141867: no such process (already exited)
+  GONE     pid 2532549 [storagewatch:e1_v4_scale] start 311141870: no such process (already exited)
+  summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-19T19:48:32Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T19:48:32Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 2547931, excluded ancestry [1, 1818885, 1858860, 2534113, 2547931], own pipeline [1858860, 2534113]
+GONE     pid 2495590 [driver:e1_v4_scale] start 311125466: no such process (already exited)
+GONE     pid 2532526 [gpuwatch:e1_v4_scale] start 311141861: no such process (already exited)
+GONE     pid 2532535 [importprobe:e1_v4_scale] start 311141864: no such process (already exited)
+GONE     pid 2532542 [memwatch:e1_v4_scale] start 311141867: no such process (already exited)
+GONE     pid 2532549 [storagewatch:e1_v4_scale] start 311141870: no such process (already exited)
+summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive (driver, GPU sampler, import probe, memory sampler, storage sampler)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T19:48:32Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/supervisor.tsv (1 records); cleanup pid 2547932, excluded ancestry [1, 1818885, 1858860, 2534113, 2547932], own pipeline [1858860, 2534113, 2547933]
+  GONE     pid 2532559 [supervisor:e1_v4_scale] start 311141875: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  supervisor registry plan: the supervisor is gone, no refusal
+PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)
+INFO  lifecycle final phase capturing nsys alive True server alive True gpu released None preserved None
+FAIL  lifecycle phase capturing is not terminal (importer running or hung: stream stays preserved; verified registry cleanup only)
+  GONE     pid 2532455 [closeout:e1_v4_scale] start 311140812: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  closeout watcher registry: the watcher is gone
+INFO  import_probe.json: running
+INFO  mem_watch.json: complete=False samples=230 breaches=0
+INFO  storage_watch.json: complete=False samples=120 breaches=0
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve
+INFO  the preserved stream is never removed by a script; postrun_e1_v4scale.sh copies it to durable storage and verifies the copy first
+INFO  
+INFO  
+INFO  run root size 65M; nsys files: 4458 lifecycle.json  
+INFO  reservation age 458 s: delete the reservation by 2026-11-19T21:10:59Z (4942 s left of 5400 s)
+INFO  the reservation pod is deleted only by the registered deleter (the deleting mode of checks/e1_reservation_closeout.py, on the operator's laptop) after the watcher's permit; never by hand before a permit, never early
+## statements
+STATUS resource cleanup: NOT CLEAN | 1 failing resource item(s) above
+STATUS supervision: VALID | record complete, 256 samples, monitors effective; it gave an abort response (see run response)
+STATUS run response: ABORTED | ABORT RESPONSE registry cleanup rc 2 (steps ['R2 registry cleanup']) for [('reservation_guard', 'reservation.json creation_timestamp', 'run not ended when the reservation guard passed')]
+STATUS reservation deletion: DELETED IN TIME | uid d8e26e3e-d4dc-4285-8454-526f3d64748d: watcher observed it gone 2026-11-19T19:48:20Z, deleter 2026-11-19T19:48:21Z (deadline 2026-11-19T21:10:59Z); GPU pods on the node afterwards 0
+STATUS frozen scientific gates: NOT EVALUATED | postrun_e1_v4scale.sh decides acceptance; no gate record yet
+# closeout result: NOT CLEAN (resource cleanup, run response)
