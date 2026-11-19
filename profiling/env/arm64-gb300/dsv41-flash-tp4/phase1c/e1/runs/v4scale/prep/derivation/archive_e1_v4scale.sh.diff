@@ -1,0 +1,9 @@
+--- archive_e1_v3scale.sh (V3, names changed to V4 only)
++++ archive_e1_v4scale.sh
+@@ -6 +6 @@
+-# SHA-256 with the controller's final record; makes the archive read-only; measures run root + archive against the 16 GB ceiling.
++# SHA-256 with the controller's final record; makes the archive read-only; measures run root + archive against the 38 GB ceiling (checks/e1_archive_size.py).
+@@ -30 +30,2 @@
+-python3 -I - "$RUN" "$A" <<'PY' && ok "persistent storage including the archive within 16 GB" || bad "persistent storage including the archive exceeds 16 GB"
++python3 -I $(dirname "${BASH_SOURCE[0]}")/checks/e1_archive_size.py --run "$RUN" --archive "$A" --ceiling-gb 38 && ok "persistent storage including the archive within 38 GB" || bad "persistent storage including the archive exceeds 38 GB (or could not be measured)"
++: <<'PY'

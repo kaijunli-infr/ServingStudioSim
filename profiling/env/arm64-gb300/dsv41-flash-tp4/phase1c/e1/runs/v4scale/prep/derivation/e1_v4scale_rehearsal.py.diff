@@ -1,0 +1,122 @@
+--- e1_v3scale_rehearsal.py (V3, names changed to V4 only)
++++ e1_v4scale_rehearsal.py
+@@ -14 +14 @@
+-exactly at the ceilings, temporary lack of importer progress, soft-deadline warning with every phase in time. Negative fixtures: one registered defect each.
++exactly at the ceilings (storage, memory, reservation 90 min, GPU-held 2700 s), temporary lack of importer progress, soft-deadline warning with every phase in time. Negative fixtures: one registered defect each.
+@@ -46 +46,21 @@
+-       "G8.offline_import", "G8b.recovered_trace_complete", "G9.scientific_completeness", "G10.bounds", "G11.storage_and_memory", "G12.closeout"]
++       "G8.offline_import", "G8b.recovered_trace_complete", "G9.scientific_completeness", "G10.bounds", "G11.storage_and_memory", "G12.closeout",
++       "G13.workload_and_recipe_identity", "G14.four_copy_trace_in_run", "G15.request_iteration_routing_rank_coverage"]
++
++
++TRACE_BYTES = (E1 / "traces" / "e1_v4_scale.csv").read_bytes()
++CONFIG_BYTES = (E1 / "configs_v4scale" / "e1_v4_scale" / "profile.json").read_bytes()
++V3_TRACE_BYTES = (E1 / "traces" / "e1_v3_scale.csv").read_bytes()
++
++
++def identity_ok() -> dict:
++    """A complete, passing report of the V4 identity checker (the fields gate G13 reads)."""
++    return {"verdict": "PASS", "checker": "e1_launch_identity_v4scale.py", "policy_version": "v4scale-1", "normalized": [], "results": [],
++            "trace_identity": {"exercised": True, "expected_checks": 20, "checks": [{"check": f"check{i}", "ok": True} for i in range(20)]}}
++
++
++def completeness_ok() -> dict:
++    """The completeness checker's record for a complete eight-wave capture (the fields gate G15 reads)."""
++    d = json.loads(INPUTS.read_text())
++    return {"fails": 0, "cells": {f"b{p['b']}_kv{p['kv']}_w{p['wave']}": {"pure": p["pure_decode_iters_min"], "ramp": 30} for p in d["dry"]["plan"]},
++            "profile_result": {"request_timing_count": 224, "parsed_device_ids": [0, 1, 2, 3], "validation": {"nvtx_forward_ranges": 34560, "kernel_rows": 49003328, "ok": True}},
++            "token_accounting": {"requests": 224}, "corpus": {"segments": 224, "bad_len": 0, "npy_mismatch": 0, "dup_topk": 0}, "join": {"duplicate": 0, "missing": 0, "non_monotone": 0}}
+@@ -57 +77 @@
+-def fake_tools(tmp: Path, *, kernel_rows: int = 2450, nvtx: int = 17280, importer_rc: int = 0) -> tuple[Path, Path]:
++def fake_tools(tmp: Path, *, kernel_rows: int = 4900, nvtx: int = 34560, importer_rc: int = 0) -> tuple[Path, Path]:
+@@ -117 +137,4 @@
+-    identity: dict | None = field(default_factory=lambda: {"verdict": "PASS", "normalized": []})
++    identity: dict | None = field(default_factory=identity_ok)
++    completeness: dict | None = field(default_factory=completeness_ok)
++    trace_bytes: bytes | None = TRACE_BYTES
++    config_bytes: bytes | None = CONFIG_BYTES
+@@ -123,2 +146,2 @@
+-    in_session: dict = field(default_factory=lambda: {"kernel_rows": 2450, "nvtx": 17280})
+-    tools: dict = field(default_factory=lambda: {"kernel_rows": 2450, "nvtx": 17280, "importer_rc": 0})
++    in_session: dict = field(default_factory=lambda: {"kernel_rows": 4900, "nvtx": 34560})
++    tools: dict = field(default_factory=lambda: {"kernel_rows": 4900, "nvtx": 34560, "importer_rc": 0})
+@@ -127,4 +150,4 @@
+-    temp_gb: float = 1.4
+-    persistent_gb: float = 6.0
+-    scratch_gb: float = 4.7
+-    importer_rss_gb: float = 17.0
++    temp_gb: float = 2.7
++    persistent_gb: float = 12.6
++    scratch_gb: float = 8.6
++    importer_rss_gb: float = 31.0
+@@ -177 +200 @@
+-        self.storage = [{"at": T0 + t, "host": HOST, "groups": {"temporary": {"bytes": int((0.67 + (self.temp_gb - 0.67) * min(1.0, max(0.0, (t - self.t_stop) / max(1.0, self.flush)))) * 1e9), "files": 3, "free_bytes": 10**12},
++        self.storage = [{"at": T0 + t, "host": HOST, "groups": {"temporary": {"bytes": int((1.36 + (self.temp_gb - 1.36) * min(1.0, max(0.0, (t - self.t_stop) / max(1.0, self.flush)))) * 1e9), "files": 3, "free_bytes": 10**12},
+@@ -181 +204 @@
+-        self.post_storage = [{"at": now + t, "host": HOST, "groups": {"temporary": {"bytes": int((0.67 + 0.7 + self.scratch_gb * min(1.0, max(0.0, t / 20))) * 1e9), "files": 5, "free_bytes": 10**12}, "persistent": {"bytes": int(self.persistent_gb * 1e9), "files": 320, "free_bytes": 10**13}}}
++        self.post_storage = [{"at": now + t, "host": HOST, "groups": {"temporary": {"bytes": int((1.36 + 1.32 + self.scratch_gb * min(1.0, max(0.0, t / 20))) * 1e9), "files": 5, "free_bytes": 10**12}, "persistent": {"bytes": int(self.persistent_gb * 1e9), "files": 320, "free_bytes": 10**13}}}
+@@ -234,0 +258,3 @@
++    for name, data in (("trace.csv", w.trace_bytes), ("profile.json", w.config_bytes)):
++        if data is not None:
++            (run / name).write_bytes(data)
+@@ -261 +287 @@
+-    for key, name, obj in (("identity", "identity.json", w.identity), ("deleted", "reservation_deleted.json", w.deleted)):
++    for key, name, obj in (("identity", "identity.json", w.identity), ("completeness", "completeness.json", w.completeness), ("deleted", "reservation_deleted.json", w.deleted)):
+@@ -416,2 +442,2 @@
+-        Fixture("peaks_exactly_at_ceilings", "boundary", "temporary 10.0 GB, persistent 8.0 GB, importer 128 GiB, MemAvailable exactly at the floor", "PASS", {},
+-                mutate=_both(_scale_rows("post_storage", "temporary", 10.0), _scale_rows("storage", "persistent", 8.0), _scale_rows("post_storage", "persistent", 8.0), _scale_rows("mem", None, 128.0), _mem_available(64.0))),
++        Fixture("peaks_exactly_at_ceilings", "boundary", "temporary 15.0 GB, persistent 18.0 GB, importer 128 GiB, MemAvailable exactly at the floor", "PASS", {},
++                mutate=_both(_scale_rows("post_storage", "temporary", 15.0), _scale_rows("storage", "persistent", 18.0), _scale_rows("post_storage", "persistent", 18.0), _scale_rows("mem", None, 128.0), _mem_available(64.0))),
+@@ -479,3 +505,3 @@
+-        Fixture("recovered_iterations_below_band", "negative", "4000 iterations recovered (band 4200–4500)", F, np(G8b=F), mutate=_both(_set("tools.nvtx", 16000), _set("in_session.nvtx", 16000))),
+-        Fixture("recovered_rows_below_band", "negative", "kernel rows 5 % below the band", F, np(G8b=F), mutate=_both(_set("tools.kernel_rows", 2200), _set("in_session.kernel_rows", 2200))),
+-        Fixture("recovered_differs_from_in_session", "negative", "offline trace has fewer kernel rows than the in-session export", F, np(G8b=F), mutate=_set("tools.kernel_rows", 2440)),
++        Fixture("recovered_iterations_below_band", "negative", "8000 iterations recovered (band 8400–9000)", F, np(G8b=F), mutate=_both(_set("tools.nvtx", 32000), _set("in_session.nvtx", 32000))),
++        Fixture("recovered_rows_below_band", "negative", "kernel rows 5 % below the band", F, np(G8b=F), mutate=_both(_set("tools.kernel_rows", 4400), _set("in_session.kernel_rows", 4400))),
++        Fixture("recovered_differs_from_in_session", "negative", "offline trace has fewer kernel rows than the in-session export", F, np(G8b=F), mutate=_set("tools.kernel_rows", 4880)),
+@@ -485 +511 @@
+-        Fixture("completeness_fails", "negative", "four-wave completeness checker exit 1", F, np(G9=F), mutate=_set("extras.completeness_v2", 1)),
++        Fixture("completeness_fails", "negative", "eight-wave completeness checker exit 1", F, np(G9=F), mutate=_set("extras.completeness_v2", 1)),
+@@ -488,2 +514,2 @@
+-        Fixture("config_identity_fails", "negative", "configuration identity report FAIL", F, np(G9=F), mutate=_set("identity.verdict", "FAIL")),
+-        Fixture("config_identity_missing", "negative", "no configuration identity report", INC, np(G9=INC), mutate=_attr("identity", None)),
++        Fixture("config_identity_fails", "negative", "configuration identity report FAIL", F, np(G9=F, G13=F), mutate=_set("identity.verdict", "FAIL")),
++        Fixture("config_identity_missing", "negative", "no configuration identity report", INC, np(G9=INC, G13=INC), mutate=_attr("identity", None)),
+@@ -506,2 +532,2 @@
+-        Fixture("temporary_storage_over_ceiling", "negative", "post-run scratch peak makes temporary storage 10.05 GB", F, np(G11=F), mutate=_scale_rows("post_storage", "temporary", 10.05)),
+-        Fixture("persistent_storage_over_ceiling", "negative", "run directory peak 8.05 GB", F, np(G11=F), mutate=_scale_rows("storage", "persistent", 8.05)),
++        Fixture("temporary_storage_over_ceiling", "negative", "post-run scratch peak makes temporary storage 15.05 GB", F, np(G11=F), mutate=_scale_rows("post_storage", "temporary", 15.05)),
++        Fixture("persistent_storage_over_ceiling", "negative", "run directory peak 18.05 GB", F, np(G11=F), mutate=_scale_rows("storage", "persistent", 18.05)),
+@@ -531,0 +558,22 @@
++        # V4: boundaries of the reservation and the GPU-held ceiling
++        Fixture("reservation_exactly_90_min", "boundary", "reservation held exactly 90.0 min", "PASS", {}, mutate=_set("deleted.deleted_observed_at", "2026-11-19T01:30:00Z")),
++        Fixture("gpu_held_exactly_2700s", "boundary", "GPUs released exactly 2700.0 s after the launch (controller record); sampler upper edge 2699.5 s", "PASS", {}, clocks={"t_stop": 2535.5}),
++        # V4: workload and recipe identity (G13)
++        Fixture("identity_report_from_the_v1_policy", "negative", "a PASS identity report written by the V1/V2 checker and policy (the V3 defect)", F, np(G13=F), mutate=_both(_set("identity.checker", "e1_launch_identity_v2.py"), _set("identity.policy_version", "v1"))),
++        Fixture("identity_trace_rule_not_exercised", "negative", "V4 report, verdict PASS, but the derived-trace rule was not exercised", F, np(G13=F), mutate=_set("identity.trace_identity.exercised", False)),
++        Fixture("identity_trace_check_not_holding", "negative", "one trace-identity check does not hold although the report says PASS", F, np(G13=F), mutate=_set("identity.trace_identity.checks.7.ok", False)),
++        Fixture("identity_trace_proof_incomplete", "negative", "19 of the 20 trace-identity checks are in the report", F, np(G13=F), mutate=lambda w: w.identity["trace_identity"]["checks"].pop()),
++        Fixture("identity_report_inconclusive", "negative", "the identity checker could not read the launch record", INC, np(G9=INC, G13=INC), mutate=_set("identity.verdict", "INCONCLUSIVE")),
++        # V4: the trace and config in the run directory (G14)
++        Fixture("run_trace_is_the_v3_trace", "negative", "the run used the two-copy V3 trace (112 requests)", F, np(G14=F), mutate=_attr("trace_bytes", V3_TRACE_BYTES)),
++        Fixture("run_trace_rows_reordered", "negative", "two rows of the third copy swapped in the run's trace", F, np(G14=F), mutate=lambda w: setattr(w, "trace_bytes", _swap_rows(w.trace_bytes, 130, 131))),
++        Fixture("run_trace_missing", "negative", "no trace copy in the run directory", INC, np(G14=INC), mutate=_attr("trace_bytes", None)),
++        Fixture("run_config_not_the_registered_one", "negative", "the run's profile config differs from the registered V4 config in one field", F, np(G14=F), mutate=lambda w: setattr(w, "config_bytes", w.config_bytes.replace(b'"stream": false', b'"stream": true'))),
++        # V4: request, iteration, routing and rank coverage (G15)
++        Fixture("coverage_cell_missing", "negative", "the b=8 cell of the fourth copy is absent from the completeness record", F, np(G15=F), mutate=lambda w: w.completeness["cells"].pop("b8_kv32768_w3")),
++        Fixture("coverage_unplanned_cell", "negative", "a cell that is not in the plan appears", F, np(G15=F), mutate=_set("completeness.cells.b16_kv32768_w0", {"pure": 1000, "ramp": 60})),
++        Fixture("coverage_pure_decode_below_floor", "negative", "one cell has 399 pure-decode iterations", F, np(G15=F), mutate=_set("completeness.cells.b48_kv32768_w2.pure", 399)),
++        Fixture("coverage_one_request_short", "negative", "223 request timings", F, np(G15=F), mutate=_set("completeness.profile_result.request_timing_count", 223)),
++        Fixture("coverage_three_ranks", "negative", "kernels from three ranks only", F, np(G15=F), mutate=_set("completeness.profile_result.parsed_device_ids", [0, 1, 2])),
++        Fixture("coverage_routing_array_defect", "negative", "one routing array differs from its corpus segment", F, np(G15=F), mutate=_set("completeness.corpus.npy_mismatch", 1)),
++        Fixture("coverage_record_missing", "negative", "the completeness checker wrote no record", INC, np(G15=INC), mutate=_attr("completeness", None)),
+@@ -533,0 +582,6 @@
++
++
++def _swap_rows(data: bytes, i: int, j: int) -> bytes:
++    lines = data.decode().split("\n")
++    lines[i], lines[j] = lines[j], lines[i]
++    return "\n".join(lines).encode()
+@@ -546 +600 @@
+-    for flag, key in (("--importer", "importer"), ("--nsys", "nsys"), ("--identity", "identity"), ("--postrun-storage", "post_storage"), ("--postrun-memory", "post_memory"), ("--reservation-deleted", "deleted")):
++    for flag, key in (("--importer", "importer"), ("--nsys", "nsys"), ("--identity", "identity"), ("--completeness", "completeness"), ("--postrun-storage", "post_storage"), ("--postrun-memory", "post_memory"), ("--reservation-deleted", "deleted")):

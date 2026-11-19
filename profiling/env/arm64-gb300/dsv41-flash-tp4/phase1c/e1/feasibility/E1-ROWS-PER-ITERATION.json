@@ -1,0 +1,397 @@
+{
+ "waves": [
+  {
+   "pass": "e1_v2_forced_release",
+   "batch": 8,
+   "first_t0_s": 0.12,
+   "duration_s": 9.04,
+   "iterations": 1040,
+   "kernel_rows": 5887244,
+   "rows_per_iteration_all": 5660.81,
+   "pure_decode": {
+    "iterations": 1008,
+    "rows_per_iteration_mean": 5638.98,
+    "min": 5637,
+    "max": 5645,
+    "distinct_values": {
+     "5637": 759,
+     "5645": 249
+    }
+   },
+   "partial_batch_decode": {
+    "iterations": 15,
+    "rows_per_iteration_mean": 5615.4
+   },
+   "prefill_or_mixed": {
+    "iterations": 17,
+    "rows_per_iteration_mean": 6995.59,
+    "min": 6229,
+    "max": 7233
+   },
+   "rows_per_rank": {
+    "0": 1472591,
+    "1": 1471551,
+    "2": 1471551,
+    "3": 1471551
+   },
+   "pure_decode_rows_per_iteration_per_rank": {
+    "0": {
+     "1410": 759,
+     "1412": 249
+    },
+    "1": {
+     "1409": 759,
+     "1411": 249
+    },
+    "2": {
+     "1409": 759,
+     "1411": 249
+    },
+    "3": {
+     "1409": 759,
+     "1411": 249
+    }
+   },
+   "iteration_sequence_sha256": "9ae0203f434fc55783b24b3db11aacdf859e4fb86732ef99a6367463079d0843"
+  },
+  {
+   "pass": "e1_v2_forced_release",
+   "batch": 48,
+   "first_t0_s": 18.75,
+   "duration_s": 32.11,
+   "iterations": 1120,
+   "kernel_rows": 6363588,
+   "rows_per_iteration_all": 5681.77,
+   "pure_decode": {
+    "iterations": 928,
+    "rows_per_iteration_mean": 5537.25,
+    "min": 5533,
+    "max": 5541,
+    "distinct_values": {
+     "5533": 435,
+     "5541": 493
+    }
+   },
+   "partial_batch_decode": {
+    "iterations": 95,
+    "rows_per_iteration_mean": 5567.65
+   },
+   "prefill_or_mixed": {
+    "iterations": 97,
+    "rows_per_iteration_mean": 7176.22,
+    "min": 6229,
+    "max": 7301
+   },
+   "rows_per_rank": {
+    "0": 1591737,
+    "1": 1590617,
+    "2": 1590617,
+    "3": 1590617
+   },
+   "pure_decode_rows_per_iteration_per_rank": {
+    "0": {
+     "1384": 435,
+     "1386": 493
+    },
+    "1": {
+     "1383": 435,
+     "1385": 493
+    },
+    "2": {
+     "1383": 435,
+     "1385": 493
+    },
+    "3": {
+     "1383": 435,
+     "1385": 493
+    }
+   },
+   "iteration_sequence_sha256": "25e30130c0242814ed2611f735d11df0e8b3542d302fa163a13fe711a94175d0"
+  },
+  {
+   "pass": "e1_v3_scale",
+   "batch": 8,
+   "first_t0_s": 0.11,
+   "duration_s": 9.08,
+   "iterations": 1040,
+   "kernel_rows": 5887244,
+   "rows_per_iteration_all": 5660.81,
+   "pure_decode": {
+    "iterations": 1008,
+    "rows_per_iteration_mean": 5638.98,
+    "min": 5637,
+    "max": 5645,
+    "distinct_values": {
+     "5637": 759,
+     "5645": 249
+    }
+   },
+   "partial_batch_decode": {
+    "iterations": 15,
+    "rows_per_iteration_mean": 5615.4
+   },
+   "prefill_or_mixed": {
+    "iterations": 17,
+    "rows_per_iteration_mean": 6995.59,
+    "min": 6229,
+    "max": 7233
+   },
+   "rows_per_rank": {
+    "0": 1472591,
+    "1": 1471551,
+    "2": 1471551,
+    "3": 1471551
+   },
+   "pure_decode_rows_per_iteration_per_rank": {
+    "0": {
+     "1410": 759,
+     "1412": 249
+    },
+    "1": {
+     "1409": 759,
+     "1411": 249
+    },
+    "2": {
+     "1409": 759,
+     "1411": 249
+    },
+    "3": {
+     "1409": 759,
+     "1411": 249
+    }
+   },
+   "iteration_sequence_sha256": "9ae0203f434fc55783b24b3db11aacdf859e4fb86732ef99a6367463079d0843"
+  },
+  {
+   "pass": "e1_v3_scale",
+   "batch": 48,
+   "first_t0_s": 18.74,
+   "duration_s": 31.99,
+   "iterations": 1120,
+   "kernel_rows": 6363588,
+   "rows_per_iteration_all": 5681.77,
+   "pure_decode": {
+    "iterations": 928,
+    "rows_per_iteration_mean": 5537.25,
+    "min": 5533,
+    "max": 5541,
+    "distinct_values": {
+     "5533": 435,
+     "5541": 493
+    }
+   },
+   "partial_batch_decode": {
+    "iterations": 95,
+    "rows_per_iteration_mean": 5567.65
+   },
+   "prefill_or_mixed": {
+    "iterations": 97,
+    "rows_per_iteration_mean": 7176.22,
+    "min": 6229,
+    "max": 7301
+   },
+   "rows_per_rank": {
+    "0": 1591737,
+    "1": 1590617,
+    "2": 1590617,
+    "3": 1590617
+   },
+   "pure_decode_rows_per_iteration_per_rank": {
+    "0": {
+     "1384": 435,
+     "1386": 493
+    },
+    "1": {
+     "1383": 435,
+     "1385": 493
+    },
+    "2": {
+     "1383": 435,
+     "1385": 493
+    },
+    "3": {
+     "1383": 435,
+     "1385": 493
+    }
+   },
+   "iteration_sequence_sha256": "25e30130c0242814ed2611f735d11df0e8b3542d302fa163a13fe711a94175d0"
+  },
+  {
+   "pass": "e1_v3_scale",
+   "batch": 8,
+   "first_t0_s": 80.1,
+   "duration_s": 8.94,
+   "iterations": 1040,
+   "kernel_rows": 5887244,
+   "rows_per_iteration_all": 5660.81,
+   "pure_decode": {
+    "iterations": 1008,
+    "rows_per_iteration_mean": 5638.98,
+    "min": 5637,
+    "max": 5645,
+    "distinct_values": {
+     "5637": 759,
+     "5645": 249
+    }
+   },
+   "partial_batch_decode": {
+    "iterations": 15,
+    "rows_per_iteration_mean": 5615.4
+   },
+   "prefill_or_mixed": {
+    "iterations": 17,
+    "rows_per_iteration_mean": 6995.59,
+    "min": 6229,
+    "max": 7233
+   },
+   "rows_per_rank": {
+    "0": 1472591,
+    "1": 1471551,
+    "2": 1471551,
+    "3": 1471551
+   },
+   "pure_decode_rows_per_iteration_per_rank": {
+    "0": {
+     "1410": 759,
+     "1412": 249
+    },
+    "1": {
+     "1409": 759,
+     "1411": 249
+    },
+    "2": {
+     "1409": 759,
+     "1411": 249
+    },
+    "3": {
+     "1409": 759,
+     "1411": 249
+    }
+   },
+   "iteration_sequence_sha256": "9ae0203f434fc55783b24b3db11aacdf859e4fb86732ef99a6367463079d0843"
+  },
+  {
+   "pass": "e1_v3_scale",
+   "batch": 48,
+   "first_t0_s": 98.74,
+   "duration_s": 31.82,
+   "iterations": 1120,
+   "kernel_rows": 6363588,
+   "rows_per_iteration_all": 5681.77,
+   "pure_decode": {
+    "iterations": 928,
+    "rows_per_iteration_mean": 5537.25,
+    "min": 5533,
+    "max": 5541,
+    "distinct_values": {
+     "5533": 435,
+     "5541": 493
+    }
+   },
+   "partial_batch_decode": {
+    "iterations": 95,
+    "rows_per_iteration_mean": 5567.65
+   },
+   "prefill_or_mixed": {
+    "iterations": 97,
+    "rows_per_iteration_mean": 7176.22,
+    "min": 6229,
+    "max": 7301
+   },
+   "rows_per_rank": {
+    "0": 1591737,
+    "1": 1590617,
+    "2": 1590617,
+    "3": 1590617
+   },
+   "pure_decode_rows_per_iteration_per_rank": {
+    "0": {
+     "1384": 435,
+     "1386": 493
+    },
+    "1": {
+     "1383": 435,
+     "1385": 493
+    },
+    "2": {
+     "1383": 435,
+     "1385": 493
+    },
+    "3": {
+     "1383": 435,
+     "1385": 493
+    }
+   },
+   "iteration_sequence_sha256": "25e30130c0242814ed2611f735d11df0e8b3542d302fa163a13fe711a94175d0"
+  }
+ ],
+ "totals": {
+  "e1_v2_forced_release": 12250832,
+  "e1_v3_scale": 24501664
+ },
+ "checks": {
+  "sum_of_waves_equals_recovered_trace_rows": {
+   "e1_v2_forced_release": true,
+   "e1_v3_scale": true
+  },
+  "waves_of_a_cell_identical_in_rows_iterations_and_sequence": {
+   "b8": true,
+   "b48": true
+  },
+  "waves_per_cell": {
+   "b8": [
+    "e1_v2_forced_release @ 0.12 s",
+    "e1_v3_scale @ 0.11 s",
+    "e1_v3_scale @ 80.1 s"
+   ],
+   "b48": [
+    "e1_v2_forced_release @ 18.75 s",
+    "e1_v3_scale @ 18.74 s",
+    "e1_v3_scale @ 98.74 s"
+   ]
+  }
+ },
+ "full_e1_consistency": {
+  "basis": "ASSUMPTION: every cell's pure-decode iterations have between the lowest and the highest measured rows per iteration (b=48 and b=8 at 32k), and its prefill-carrying iterations between the lowest and highest measured for such iterations; iterations per wave = OUT_LEN + b x prefill chunks (1, 2, 6 for 4k, 32k, 96k), which reproduces the two measured cells",
+  "iteration_formula_check_on_measured_cells": {
+   "b8": {
+    "formula_iterations": 1040,
+    "measured_iterations": 1040
+   },
+   "b48": {
+    "formula_iterations": 1120,
+    "measured_iterations": 1120
+   }
+  },
+  "decode_rows_per_iteration_bracket": [
+   5537.25,
+   5638.98
+  ],
+  "prefill_rows_per_iteration_bracket": [
+   6229,
+   7301
+  ],
+  "waves": 36,
+  "iterations": 38214,
+  "kernel_rows_low": 212534334,
+  "kernel_rows_high": 217731709,
+  "earlier_estimate": 216000000,
+  "by_kv": {
+   "4096": {
+    "iterations": 12438,
+    "rows_low": 68976078,
+    "rows_high": 70386936
+   },
+   "32768": {
+    "iterations": 12588,
+    "rows_low": 69910428,
+    "rows_high": 71482086
+   },
+   "98304": {
+    "iterations": 13188,
+    "rows_low": 73647828,
+    "rows_high": 75862686
+   }
+  }
+ }
+}

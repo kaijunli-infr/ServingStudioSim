@@ -1,0 +1,16 @@
+--- monitor_e1_v3scale.sh (V3, names changed to V4 only)
++++ monitor_e1_v4scale.sh
+@@ -4 +4 @@
+-#   bash monitor_e1_v4scale.sh [run root] [pass] [startup_limit_min=30] [capture_limit_min=10] [run_ceiling_GB=8] [tmp_floor_GB=50]
++#   bash monitor_e1_v4scale.sh [run root] [pass] [startup_limit_min=30] [capture_limit_min=10] [run_ceiling_GB=18] [tmp_floor_GB=50]
+@@ -7 +7 @@
+-SUL=${3:-30}; CL=${4:-10}; CEIL=${5:-8}; TFLOOR=${6:-50}
++SUL=${3:-30}; CL=${4:-10}; CEIL=${5:-18}; TFLOOR=${6:-50}
+@@ -49,0 +50,7 @@
++r=load(run+"/reservation.json") or {}
++try:
++    import calendar
++    res_age = time.time() - calendar.timegm(time.strptime(r["creation_timestamp"], "%Y-%m-%dT%H:%M:%SZ"))
++    print(f"reservation: age {res_age / 60:.1f} min (supervisor guard 78 min, ceiling 90 min)")
++    if res_age > 4680 and not (u or {}).get("complete"): print("ABORT-CONDITION the reservation is older than 78 min and the run has not ended (the supervisor's reservation guard should have responded)")
++except (KeyError, ValueError, TypeError): print("reservation: age unknown (record missing or unreadable)")

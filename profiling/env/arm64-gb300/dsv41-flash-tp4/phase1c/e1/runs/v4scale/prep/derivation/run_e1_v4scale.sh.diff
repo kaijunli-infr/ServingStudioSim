@@ -1,0 +1,36 @@
+--- run_e1_v3scale.sh (V3, names changed to V4 only)
++++ run_e1_v4scale.sh
+@@ -28 +28 @@
+-NAME=dsv41_flash_1017_gb300_tp4_$PASS; RSS_CEIL=128; TMP_CEIL=10; PERS_CEIL=8
++NAME=dsv41_flash_1017_gb300_tp4_$PASS; RSS_CEIL=128; TMP_CEIL=15; PERS_CEIL=18; RES_AGE=600; RES_GUARD=4680
+@@ -34,2 +34,2 @@
+-  RSS_CEIL=${E1_V4S_REHEARSAL_IMPORTER_RSS_GB:-$RSS_CEIL}; TMP_CEIL=${E1_V4S_REHEARSAL_TEMPORARY_GB:-$TMP_CEIL}; PERS_CEIL=${E1_V4S_REHEARSAL_PERSISTENT_GB:-$PERS_CEIL}
+-  echo "REHEARSAL MODE: run root $RUN, CUDA hidden, mock launcher, importer executable $IMPORTER, ceilings importer $RSS_CEIL GiB / temporary $TMP_CEIL GB / persistent $PERS_CEIL GB"
++  RSS_CEIL=${E1_V4S_REHEARSAL_IMPORTER_RSS_GB:-$RSS_CEIL}; TMP_CEIL=${E1_V4S_REHEARSAL_TEMPORARY_GB:-$TMP_CEIL}; PERS_CEIL=${E1_V4S_REHEARSAL_PERSISTENT_GB:-$PERS_CEIL}; RES_GUARD=${E1_V4S_REHEARSAL_RESERVATION_GUARD_S:-$RES_GUARD}
++  echo "REHEARSAL MODE: run root $RUN, CUDA hidden, mock launcher, importer executable $IMPORTER, ceilings importer $RSS_CEIL GiB / temporary $TMP_CEIL GB / persistent $PERS_CEIL GB; reservation guard $RES_GUARD s"
+@@ -41 +41 @@
+-# defence in depth, immediately before launch: pinned executable, frozen 112-row trace, no delayed start, explicit GPU-held ceiling
++# defence in depth, immediately before launch: pinned executable, registered 224-row trace, no delayed start, explicit GPU-held ceiling
+@@ -43 +43 @@
+-[ "$(tail -n +2 $TRACE | grep -c .)" = 112 ] && [ "$(sha256sum $TRACE | cut -d' ' -f1)" = "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['trace']['sha256'])" $INP)" ] && grep -q "\"path\": \"$TRACE\"" $CFG && ! grep -q capture_start_delay_seconds $CFG && grep -q '"gpu_held_ceiling_s": 2700.0' $CFG || { echo "trace/config guard failed; not starting"; exit 4; }
++[ "$(tail -n +2 $TRACE | grep -c .)" = 224 ] && [ "$(sha256sum $TRACE | cut -d' ' -f1)" = "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['trace']['sha256'])" $INP)" ] && grep -q "\"path\": \"$TRACE\"" $CFG && ! grep -q capture_start_delay_seconds $CFG && grep -q '"gpu_held_ceiling_s": 2700.0' $CFG || { echo "trace/config guard failed; not starting"; exit 4; }
+@@ -48,0 +49,3 @@
++# reservation budget, first part: no launch later than $RES_AGE s after the reservation's creation (the end of the run would not fit the 90 min ceiling)
++python3 -I $E1/checks/e1_reservation_guard.py age --reservation $RUN/$PASS/reservation.json --max-age-s $RES_AGE | tee -a $RUN/$PASS/run.log
++[ "${PIPESTATUS[0]}" = 0 ] || { echo "reservation too old (or its age unknown) for a launch; not starting"; exit 7; }
+@@ -69 +72 @@
+-spawn memwatch:$PASS python3 -I $E1/checks/e1_mem_watch.py --out $RUN/$PASS/mem_observations.jsonl --summary $RUN/$PASS/mem_watch.json --importer-exe $IMPORTER --nsys-dir $RUN/$PASS/profile/nsys --report $REP --min-available-gb 64 --max-importer-rss-gb $RSS_CEIL --breach-file $RUN/$PASS/MEMORY-BREACH --interval 1 --max-s 3400 --stop-file $STOPF; MPID=$(lastpid)
++spawn memwatch:$PASS python3 -I $E1/checks/e1_mem_watch.py --out $RUN/$PASS/mem_observations.jsonl --summary $RUN/$PASS/mem_watch.json --importer-exe $IMPORTER --nsys-dir $RUN/$PASS/profile/nsys --report $REP --min-available-gb 64 --max-importer-rss-gb $RSS_CEIL --breach-file $RUN/$PASS/MEMORY-BREACH --interval 1 --max-s 5400 --stop-file $STOPF; MPID=$(lastpid)
+@@ -71 +74 @@
+-spawn storagewatch:$PASS python3 -I $E1/checks/e1_storage_watch.py --out $RUN/$PASS/storage_observations.jsonl --summary $RUN/$PASS/storage_watch.json --group "temporary=/tmp/nsys-report-*.qdstrm,/tmp/*.raw-preserve,/tmp/v4scale-recovery-*" --group "persistent=$RUN" --ceiling-gb temporary=$TMP_CEIL --ceiling-gb persistent=$PERS_CEIL --breach-file $RUN/$PASS/STORAGE-BREACH --interval 2 --max-s 3400 --stop-file $STOPF; SPID=$(lastpid)
++spawn storagewatch:$PASS python3 -I $E1/checks/e1_storage_watch.py --out $RUN/$PASS/storage_observations.jsonl --summary $RUN/$PASS/storage_watch.json --group "temporary=/tmp/nsys-report-*.qdstrm,/tmp/*.raw-preserve,/tmp/v4scale-recovery-*" --group "persistent=$RUN" --ceiling-gb temporary=$TMP_CEIL --ceiling-gb persistent=$PERS_CEIL --breach-file $RUN/$PASS/STORAGE-BREACH --interval 2 --max-s 5400 --stop-file $STOPF; SPID=$(lastpid)
+@@ -73 +76,2 @@
+-# MEMORY-BREACH / STORAGE-BREACH and the samplers' heartbeats; one response; sends no signal itself
++# MEMORY-BREACH / STORAGE-BREACH and the samplers' heartbeats, and enforces the GPU-held ceiling before the stop request and the
++# reservation guard ($RES_GUARD s after the reservation's creation); one response; sends no signal itself
+@@ -75 +79 @@
+-python3 -I $E1/checks/e1_pids.py spawn --registry $SREG --label supervisor:$PASS -- python3 -I $E1/checks/e1_supervisor.py --run $RUN/$PASS --registry $REG --out $RUN/$PASS/supervisor.json --control-line "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['supervisor']['control_line'])" $INP)" --gpu-held-ceiling-s 2700 --ack-s 10 --stale-s 60 --cleanup-grace 30 --interval 1 --max-s 3400 --stop-file $STOPF | tee -a $RUN/$PASS/run.log; UPID=$(lastpid)
++python3 -I $E1/checks/e1_pids.py spawn --registry $SREG --label supervisor:$PASS -- python3 -I $E1/checks/e1_supervisor_v4.py --run $RUN/$PASS --registry $REG --out $RUN/$PASS/supervisor.json --reservation $RUN/$PASS/reservation.json --reservation-guard-s $RES_GUARD --control-line "$(python3 -I -c "import json,sys; print(json.load(open(sys.argv[1]))['supervisor']['control_line'])" $INP)" --gpu-held-ceiling-s 2700 --ack-s 10 --stale-s 60 --cleanup-grace 30 --interval 1 --max-s 5400 --stop-file $STOPF | tee -a $RUN/$PASS/run.log; UPID=$(lastpid)
+@@ -107,0 +112,2 @@
++# (the launcher's export and parse after the GPU release take about 20 min at this size: the memory and storage samplers and the
++# supervisor run for up to 5400 s, the reservation guard ends a run that is still going 4680 s after the reservation's creation)

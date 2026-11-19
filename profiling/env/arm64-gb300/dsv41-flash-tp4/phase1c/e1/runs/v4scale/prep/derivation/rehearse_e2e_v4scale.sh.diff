@@ -1,0 +1,13 @@
+--- rehearse_e2e_v3scale.sh (V3, names changed to V4 only)
++++ rehearse_e2e_v4scale.sh
+@@ -13,0 +14,2 @@
++#   reservation_guard  the (rehearsal) reservation guard, 420 s after the reservation record's creation, passes during a 900 s mock
++#                   capture: supervisor → pinned registry cleanup (the driver's preflight must have finished within those 420 s)
+@@ -20 +22 @@
+-SCENARIOS=${*:-success ambiguous memory_breach storage_breach}
++SCENARIOS=${*:-success ambiguous memory_breach storage_breach reservation_guard}
+@@ -44,0 +47 @@
++    reservation_guard) envs="E1_V4S_MOCK_SCENARIO=success E1_V4S_MOCK_CAPTURE_S=900 E1_V4S_REHEARSAL_RESERVATION_GUARD_S=420";;
+@@ -53 +56 @@
+-  if [ $sc != storage_breach ]; then
++  if [ $sc != storage_breach ] && [ $sc != reservation_guard ]; then

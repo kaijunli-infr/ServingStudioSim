@@ -1,0 +1,19 @@
+--- postrun_e1_v3scale.sh (V3, names changed to V4 only)
++++ postrun_e1_v4scale.sh
+@@ -7 +7 @@
+-# the normalization policy. (C) scientific checkers on the in-session profile: four-wave completeness and routing records, extract,
++# the V4-specific normalization policy (four-copy trace proof). (C) scientific checkers on the in-session profile: eight-wave completeness and routing records, extract,
+@@ -39 +39 @@
+-python3 -I $E1/checks/e1_storage_watch.py --out $CPU/storage_postrun.jsonl --summary $CPU/storage_postrun.json --group "temporary=/tmp/nsys-report-*.qdstrm,/tmp/*.raw-preserve,/tmp/v4scale-recovery-*" --group "persistent=$RUN,$TAB" --ceiling-gb temporary=10 --ceiling-gb persistent=8 --interval 2 --max-s 7200 --stop-file $STOPF & SW=$!
++python3 -I $E1/checks/e1_storage_watch.py --out $CPU/storage_postrun.jsonl --summary $CPU/storage_postrun.json --group "temporary=/tmp/nsys-report-*.qdstrm,/tmp/*.raw-preserve,/tmp/v4scale-recovery-*" --group "persistent=$RUN,$TAB" --ceiling-gb temporary=15 --ceiling-gb persistent=18 --interval 2 --max-s 7200 --stop-file $STOPF & SW=$!
+@@ -52,2 +52,2 @@
+-echo "## B. configuration identity under the normalization policy (launch record + profile config vs the accepted e1_nsys_val run)"
+-python3 -I $E1/checks/e1_launch_identity_v2.py --a $AR15 --b $RUN/$PASS --policy $E1/checks/e1_identity_policy_v1.json --out $CPU/identity_v2_$PASS.json > $CPU/identity_v2_$PASS.txt 2>&1; echo "identity rc=$? ($(grep -c '^NORMALIZED' $CPU/identity_v2_$PASS.txt) normalized fields listed in cpu/identity_v2_$PASS.txt)"
++echo "## B. configuration identity under the V4 policy: four-copy trace proof; every other field as for V1/V2 (launch record + profile config vs the accepted e1_nsys_val run)"
++python3 -I $E1/checks/e1_launch_identity_v4scale.py --a $AR15 --b $RUN/$PASS --policy $E1/checks/e1_identity_policy_v4scale.json --out $CPU/identity_v4scale_$PASS.json > $CPU/identity_v4scale_$PASS.txt 2>&1; echo "identity rc=$? ($(grep -c '^NORMALIZED' $CPU/identity_v4scale_$PASS.txt) normalized fields, $(grep -c '^TRACE PASS' $CPU/identity_v4scale_$PASS.txt) of $(grep -c '^TRACE ' $CPU/identity_v4scale_$PASS.txt) trace checks, listed in cpu/identity_v4scale_$PASS.txt)"
+@@ -56 +56 @@
+-grep -E "^FAIL|^RESULT|cell b=|plan '" $CPU/v2_$PASS.txt | head -12 | cut -c1-200; echo "completeness_v2 (four-wave plan, routing records, checksum) rc=$v2"
++grep -E "^FAIL|^RESULT|cell b=|plan '" $CPU/v2_$PASS.txt | head -16 | cut -c1-200; echo "completeness_v2 (eight-wave plan, routing records, checksum) rc=$v2"
+@@ -65 +65 @@
+-  --identity $CPU/identity_v2_$PASS.json --postrun-storage $CPU/storage_postrun.jsonl --postrun-memory $CPU/mem_postrun.jsonl \
++  --identity $CPU/identity_v4scale_$PASS.json --completeness $CPU/v2_$PASS.json --postrun-storage $CPU/storage_postrun.jsonl --postrun-memory $CPU/mem_postrun.jsonl \

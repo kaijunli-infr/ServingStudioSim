@@ -1,0 +1,15 @@
+{
+ "_note": "Reservation pod specification in the shape of `kubectl get pod -o json`, constructed from k8s/dsv41-gb300/reserve-tray16.yaml (the manifest used for V1, V2 and V3); not a capture from the cluster. Used by tests/test_e1_reservation_release.py.",
+ "apiVersion": "v1",
+ "kind": "Pod",
+ "metadata": {"name": "dsv41-gb300-reserve-tray16", "namespace": "inference-bench", "labels": {"app": "dsv41-gb300-reserve", "owner": "kevin"}},
+ "spec": {
+  "restartPolicy": "Never",
+  "runtimeClassName": "nvidia",
+  "nodeSelector": {"kubernetes.io/hostname": "pod4-gb300-10-tray16-f3"},
+  "nodeName": "pod4-gb300-10-tray16-f3",
+  "tolerations": [{"key": "nvidia.com/gpu", "operator": "Exists", "effect": "NoSchedule"}],
+  "containers": [{"name": "hold", "image": "registry.k8s.io/pause:3.9", "resources": {"requests": {"nvidia.com/gpu": "4"}, "limits": {"nvidia.com/gpu": "4"}}}],
+  "volumes": [{"name": "kube-api-access-x", "projected": {"sources": [{"serviceAccountToken": {"path": "token"}}]}}]
+ }
+}

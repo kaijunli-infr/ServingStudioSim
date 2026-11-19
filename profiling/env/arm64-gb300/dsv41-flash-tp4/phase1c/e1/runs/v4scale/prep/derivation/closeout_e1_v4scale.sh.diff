@@ -1,0 +1,5 @@
+--- closeout_e1_v3scale.sh (V3, names changed to V4 only)
++++ closeout_e1_v4scale.sh
+@@ -44 +44 @@
+-echo "INFO  reservation pod (from the laptop): delete only with the GPUs idle, then write $RUN/$PASS/reservation_deleted.json {pod, deleted_observed_at (UTC, %Y-%m-%dT%H:%M:%SZ), gpu_pods_on_node} from kubectl; gate G10/G12 read it"
++echo "INFO  reservation pod (from the laptop): delete immediately after a CLEAN closeout and only with the GPUs idle (budget: 12 min from the supervisor guard at 78 min to the 90 min ceiling), then write $RUN/$PASS/reservation_deleted.json {pod, deleted_observed_at (UTC, %Y-%m-%dT%H:%M:%SZ), gpu_pods_on_node} from kubectl; gate G10/G12 read it"

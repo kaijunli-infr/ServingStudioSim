@@ -1,0 +1,22 @@
+--- e1_v3scale_e2e_check.py (V3, names changed to V4 only)
++++ e1_v4scale_e2e_check.py
+@@ -22 +22,2 @@
+-BASE = {"G0.source_and_executable": F, "G6.gpu_release_interval": INC, "G9.scientific_completeness": F, "G10.bounds": INC}  # a rehearsal launch; no GPU was held; no scientific profile
++BASE = {"G0.source_and_executable": F, "G6.gpu_release_interval": INC, "G9.scientific_completeness": F, "G10.bounds": INC,  # a rehearsal launch; no GPU was held; no scientific profile
++        "G13.workload_and_recipe_identity": INC, "G14.four_copy_trace_in_run": F, "G15.request_iteration_routing_rank_coverage": INC}  # no launch record (mock launcher); the rehearsal copy of the config is renamed; no completeness record
+@@ -68 +69 @@
+-    ap.add_argument("--scenario", required=True, choices=["success", "ambiguous", "memory_breach", "storage_breach"])
++    ap.add_argument("--scenario", required=True, choices=["success", "ambiguous", "memory_breach", "storage_breach", "reservation_guard"])
+@@ -100 +101 @@
+-    if a.scenario == "storage_breach":  # the driver was terminated before it wrote its after-launch records; the rehearsal script compares the executable before and after instead
++    if a.scenario in ("storage_breach", "reservation_guard"):  # the driver was terminated before it wrote its after-launch records; the rehearsal script compares the executable before and after instead
+@@ -156 +157,5 @@
+-    if a.scenario == "storage_breach":
++    if a.scenario == "reservation_guard":
++        c0 = (sup.get("causes") or [{}])[0]
++        check("guard.cause", [c.get("cause") for c in sup.get("causes", [])] == ["reservation_guard"] and c0.get("kind") == "run not ended when the reservation guard passed" and (c0.get("reservation_age_s") or 0) > c0.get("limit_s", 1e9) and not (run / "STORAGE-BREACH").exists() and not (run / "MEMORY-BREACH").exists(),
++              f"supervisor causes {[(c.get('cause'), c.get('kind'), c.get('reservation_age_s'), c.get('limit_s')) for c in sup.get('causes', [])]}; no breach marker")
++    if a.scenario in ("storage_breach", "reservation_guard"):
+@@ -158 +163 @@
+-        check("breach.marker_and_cause", (run / "STORAGE-BREACH").exists() and [c.get("kind") for c in sup.get("causes", [])] == ["persistent_storage_above_ceiling"], f"STORAGE-BREACH present {(run / 'STORAGE-BREACH').exists()}; supervisor causes {[(c.get('source'), c.get('kind'), c.get('value_gb'), c.get('limit_gb')) for c in sup.get('causes', [])]}")
++        check("breach.marker_and_cause", a.scenario == "reservation_guard" or (run / "STORAGE-BREACH").exists() and [c.get("kind") for c in sup.get("causes", [])] == ["persistent_storage_above_ceiling"], f"STORAGE-BREACH present {(run / 'STORAGE-BREACH').exists()}; supervisor causes {[(c.get('source'), c.get('kind'), c.get('value_gb'), c.get('limit_gb')) for c in sup.get('causes', [])]}")
