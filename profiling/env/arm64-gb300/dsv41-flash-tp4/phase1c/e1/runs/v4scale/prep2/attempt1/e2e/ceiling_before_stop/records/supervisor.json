@@ -1,0 +1,81 @@
+{
+ "supervisor": "e1_supervisor.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "pid": 4117709,
+ "started_at": 1795073424.899195,
+ "run": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale",
+ "registry": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+ "control_line": "release-gpus V4 resource-limit abort (registered supervisor response)",
+ "limits": {
+  "ack_s": 10.0,
+  "stale_s": 60.0,
+  "cleanup_grace_s": 30.0,
+  "interval_s": 1.0,
+  "gpu_held_ceiling_s": 45.0
+ },
+ "samples": 46,
+ "causes": [
+  {
+   "cause": "gpu_held_ceiling_before_stop",
+   "source": "lifecycle.json launch_started_at",
+   "kind": "no stop requested when the ceiling passed",
+   "held_s": 45.2,
+   "limit_s": 45.0,
+   "seen_at": 1795073470.1826355
+  }
+ ],
+ "response": {
+  "decided_at": 1795073470.1826355,
+  "phase": "capturing",
+  "stop_requested": false,
+  "steps": [
+   {
+    "kind": "R2 registry cleanup",
+    "why": "the controller is not in its finalisation loop",
+    "command": [
+     "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_pids.py",
+     "cleanup",
+     "--registry",
+     "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv",
+     "--execute",
+     "--grace",
+     "30.0",
+     "--kill9",
+     "--log",
+     "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/supervisor_cleanup.jsonl"
+    ],
+    "started_at": 1795073470.1838598,
+    "ended_at": 1795073470.6204052,
+    "rc": 2,
+    "result_line": "RESULT NOT CLEAN: signalled 13, skipped 0, survivors 0, lookalikes 1 (never signalled)",
+    "log": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/supervisor_cleanup.jsonl"
+   }
+  ],
+  "completed_at": 1795073470.620415,
+  "seconds_from_first_cause_seen": 0.438,
+  "outcome": "registry cleanup rc 2"
+ },
+ "monitors_effective": true,
+ "signals_sent_by_supervisor": 0,
+ "complete": true,
+ "last_check_at": 1795073470.1826355,
+ "heartbeats": {
+  "memory sampler": {
+   "file": "mem_observations.jsonl",
+   "age_s": 0.81,
+   "required": true
+  },
+  "storage sampler": {
+   "file": "storage_observations.jsonl",
+   "age_s": 1.23,
+   "required": true
+  },
+  "GPU sampler": {
+   "file": "gpu_observations.jsonl",
+   "age_s": 1.08,
+   "required": true
+  }
+ },
+ "phase_seen": "capturing",
+ "ended_at": 1795073470.6222556
+}

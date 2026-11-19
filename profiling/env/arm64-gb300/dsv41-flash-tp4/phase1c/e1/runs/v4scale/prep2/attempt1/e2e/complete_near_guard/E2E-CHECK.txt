@@ -1,0 +1,18 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [4173026, 4173027, 4173028, 4173029, 4173030]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0
+PASS  no_gpu_use: 138 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(4173027, 'SIGTERM', 'shutdown')]; recorded server pids [4173027, 4173028, 4173029, 4173030]; importer pid 4173112 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  driver.rc: driver exit code 0
+PASS  lifecycle.phases: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; control lines 0; escalations 0
+PASS  closeout.clean: closeout exit code 0
+PASS  supervisor.no_response: response None; monitors effective True; complete True; samples 275
+PASS  stream.checksums: controller final record 49dd25386313e74b…, preserved original 49dd25386313e74b…, durable copy 49dd25386313e74b…
+PASS  samplers.measured: memory samples 250, storage samples 139, breaches [] []
+PASS  gates.as_registered: verdict FAIL (post-run exit 1); not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+PASS  near_guard.ended_before_the_guard_without_a_response: supervisor ended through its stop file 396.0 s after the reservation's creation (rehearsal guard 420 s); response None; causes []
+# scenario complete_near_guard: 17 of 17 checks pass → MET

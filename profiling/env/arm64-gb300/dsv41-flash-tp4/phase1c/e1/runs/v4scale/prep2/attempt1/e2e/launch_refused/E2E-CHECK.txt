@@ -1,0 +1,5 @@
+PASS  refusal.exit_code: driver exit code 7 (7 = launch refused by the reservation budget)
+PASS  refusal.rule_and_reason_recorded: run.log: 'FAIL  launch eligibility: reservation age 500.6 s; 4179.4 s remain until the reservation guard (4680 s), fewer than the run budget 4210 s (latest permitted age 470 s): REFUSED, nothing is started'; age at the check 500.6 s, latest permitted 470 s (registered guard and run budget, not rehearsal values)
+PASS  refusal.nothing_started: owned registry labels ['driver:e1_v4_scale']; supervisor registry exists False; lifecycle record False; supervisor record False; launch source record False; observer files []; profile directory False; launcher start line False
+PASS  refusal.no_process_left: registered processes still alive: []
+# scenario launch_refused: 4 of 4 checks pass → MET

@@ -1,0 +1,2050 @@
+{
+ "fixtures": 118,
+ "kinds": {
+  "positive": 3,
+  "boundary": 6,
+  "negative": 109
+ },
+ "verdicts": {
+  "PASS": 9,
+  "FAIL": 77,
+  "INCONCLUSIVE": 32
+ },
+ "met": 118,
+ "rows": [
+  {
+   "index": 1,
+   "name": "nominal",
+   "kind": "positive",
+   "what": "normal stop, importer observed active and completed, all peaks measured",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 2,
+   "name": "phases_exactly_at_deadlines",
+   "kind": "boundary",
+   "what": "stop accepted 30 s, flush 300 s, import 300 s, stop\u2192report 600 s, session close 300 s",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 3,
+   "name": "release_upper_edge_exactly_90s",
+   "kind": "boundary",
+   "what": "first 'released' reading window ends 90.0 s after the SIGTERM",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 4,
+   "name": "peaks_exactly_at_ceilings",
+   "kind": "boundary",
+   "what": "temporary 15.0 GB, persistent 18.0 GB, importer 128 GiB, MemAvailable exactly at the floor",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 5,
+   "name": "soft_warning_total_exactly_600s",
+   "kind": "boundary",
+   "what": "flush 300 s + import 300 s = stop \u2192 report 600.0 s, with the controller's soft warning recorded at 300 s",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 6,
+   "name": "soft_deadline_warning_recorded",
+   "kind": "positive",
+   "what": "stop \u2192 report 400 s (flush 250 s, import 140 s): the controller's soft-deadline warning is recorded, every phase is inside its deadline",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 7,
+   "name": "importer_temporarily_inactive",
+   "kind": "positive",
+   "what": "ACTIVE, then NO_PROGRESS, then ACTIVE again, then completed",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 8,
+   "name": "stop_accepted_late",
+   "kind": "negative",
+   "what": "stop accepted after 30.5 s",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 9,
+   "name": "flush_over_deadline",
+   "kind": "negative",
+   "what": "flush 300.5 s",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 10,
+   "name": "import_over_deadline",
+   "kind": "negative",
+   "what": "importer first seen \u2192 gone 300.5 s",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 11,
+   "name": "stop_to_report_over_deadline",
+   "kind": "negative",
+   "what": "stop \u2192 report 600.5 s with each phase inside its own deadline",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 12,
+   "name": "soft_warning_then_total_over_deadline",
+   "kind": "negative",
+   "what": "soft warning recorded; flush 300 s and import 290 s are inside their deadlines but stop \u2192 report is 600.5 s",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 13,
+   "name": "phases_inside_but_total_over",
+   "kind": "negative",
+   "what": "flush 299 s and import 299 s, each inside its deadline; with the gaps between them stop \u2192 report is 601 s",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 14,
+   "name": "flush_over_while_total_inside",
+   "kind": "negative",
+   "what": "flush 300.5 s, import 30 s: stop \u2192 report 340.5 s is inside the total, the flush is not inside its own deadline",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 15,
+   "name": "hard_deadline_extended",
+   "kind": "negative",
+   "what": "an operator `extend` moved the controller's hard deadline by 60 s",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL",
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL",
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 16,
+   "name": "hard_deadline_not_the_registered_total",
+   "kind": "negative",
+   "what": "the controller ran with a 900 s hard deadline",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 17,
+   "name": "hard_deadline_record_missing",
+   "kind": "negative",
+   "what": "the lifecycle record has no deadline block",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 18,
+   "name": "session_close_over_deadline",
+   "kind": "negative",
+   "what": "session closed 300.5 s after the SIGTERM",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "FAIL",
+    "G10.bounds": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G4.phase_deadlines": "FAIL",
+    "G10.bounds": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 19,
+   "name": "phase_boundary_unobserved",
+   "kind": "negative",
+   "what": "the probe never recorded the importer leaving",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 20,
+   "name": "phase_missing",
+   "kind": "negative",
+   "what": "capture_ended missing from the phase history",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 21,
+   "name": "stop_failed",
+   "kind": "negative",
+   "what": "final phase stop_failed",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL",
+    "G4.phase_deadlines": "INCONCLUSIVE"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL",
+    "G4.phase_deadlines": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 22,
+   "name": "hard_deadline_escalation",
+   "kind": "negative",
+   "what": "a hard-deadline escalation is recorded",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 23,
+   "name": "gpu_held_ceiling_escalation",
+   "kind": "negative",
+   "what": "a GPU-held-ceiling escalation is recorded",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 24,
+   "name": "operator_control_line",
+   "kind": "negative",
+   "what": "an `extend` control line was accepted",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 25,
+   "name": "forced_release",
+   "kind": "negative",
+   "what": "a GPU release was requested (hard deadline)",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G3.phases_in_order": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 26,
+   "name": "stop_request_error",
+   "kind": "negative",
+   "what": "the stop request returned an error",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 27,
+   "name": "two_stop_requests",
+   "kind": "negative",
+   "what": "two stop requests left the launcher",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 28,
+   "name": "stop_returned_after_sigterm",
+   "kind": "negative",
+   "what": "the stop request returned after the server was signalled",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 29,
+   "name": "server_log_missing",
+   "kind": "negative",
+   "what": "no server log to count the API-server lines",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G2.one_stop_request_returned_ok": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G2.one_stop_request_returned_ok": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 30,
+   "name": "profiler_stopped_line_missing",
+   "kind": "negative",
+   "what": "the API server never logged 'Profiler stopped.'",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G2.one_stop_request_returned_ok": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 31,
+   "name": "probe_record_missing",
+   "kind": "negative",
+   "what": "no import-probe record",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 32,
+   "name": "importer_not_found",
+   "kind": "negative",
+   "what": "the probe never identified an importer",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 33,
+   "name": "importer_ambiguous",
+   "kind": "negative",
+   "what": "two processes matched the importer criteria",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 34,
+   "name": "importer_present_never_active",
+   "kind": "negative",
+   "what": "importer identified, activity never established from its own counters",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 35,
+   "name": "import_finished_before_observation",
+   "kind": "negative",
+   "what": "report complete but the importer was never seen",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G5.importer_observed": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 36,
+   "name": "importer_terminated",
+   "kind": "negative",
+   "what": "importer gone without a report",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 37,
+   "name": "signal_to_importer",
+   "kind": "negative",
+   "what": "a SIGTERM to the importer pid is recorded",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 38,
+   "name": "signal_to_agent",
+   "kind": "negative",
+   "what": "a SIGKILL to the Nsight agent is recorded",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 39,
+   "name": "signal_to_cli_before_report",
+   "kind": "negative",
+   "what": "the Nsight CLI was signalled before the report",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 40,
+   "name": "signal_to_unrecorded_pid",
+   "kind": "negative",
+   "what": "a signal to a pid that is not a recorded server process",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G5.importer_observed": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 41,
+   "name": "release_upper_edge_over_90s",
+   "kind": "negative",
+   "what": "first 'released' reading window ends 90.5 s after the SIGTERM",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 42,
+   "name": "gpu_held_again",
+   "kind": "negative",
+   "what": "a 'held' observation after the first 'released' one",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 43,
+   "name": "gpu_never_released",
+   "kind": "negative",
+   "what": "no 'released' observation after the last 'held' one",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE",
+    "G10.bounds": "INCONCLUSIVE",
+    "G12.closeout": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE",
+    "G10.bounds": "INCONCLUSIVE",
+    "G12.closeout": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 44,
+   "name": "gpu_samples_missing_across_release",
+   "kind": "negative",
+   "what": "no sampler observation for 12 s around the release",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 45,
+   "name": "gpu_sampler_unavailable_at_release",
+   "kind": "negative",
+   "what": "nvidia-smi unavailable in the observation between held and released",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 46,
+   "name": "gpu_sampler_file_missing",
+   "kind": "negative",
+   "what": "no sampler file",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE",
+    "G10.bounds": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE",
+    "G10.bounds": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 47,
+   "name": "census_shows_held",
+   "kind": "negative",
+   "what": "the t20 census still shows memory held",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 48,
+   "name": "census_missing",
+   "kind": "negative",
+   "what": "no census file",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G6.gpu_release_interval": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 49,
+   "name": "sigterm_not_recorded",
+   "kind": "negative",
+   "what": "the controller recorded no SIGTERM to the API server",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G2.one_stop_request_returned_ok": "INCONCLUSIVE",
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G6.gpu_release_interval": "INCONCLUSIVE",
+    "G10.bounds": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G2.one_stop_request_returned_ok": "INCONCLUSIVE",
+    "G4.phase_deadlines": "INCONCLUSIVE",
+    "G6.gpu_release_interval": "INCONCLUSIVE",
+    "G10.bounds": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 50,
+   "name": "released_before_sigterm",
+   "kind": "negative",
+   "what": "the GPUs read free before the server was signalled",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G6.gpu_release_interval": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 51,
+   "name": "durable_copy_differs",
+   "kind": "negative",
+   "what": "the durable copy is not the recorded stream",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G7.stream_durable": "FAIL",
+    "G8.offline_import": "FAIL",
+    "G8b.recovered_trace_complete": "FAIL",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G7.stream_durable": "FAIL",
+    "G8.offline_import": "FAIL",
+    "G8b.recovered_trace_complete": "FAIL",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 52,
+   "name": "final_stream_record_missing",
+   "kind": "negative",
+   "what": "the controller wrote no final stream record",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G7.stream_durable": "FAIL",
+    "G8.offline_import": "FAIL",
+    "G8b.recovered_trace_complete": "FAIL",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G7.stream_durable": "FAIL",
+    "G8.offline_import": "FAIL",
+    "G8b.recovered_trace_complete": "FAIL",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 53,
+   "name": "offline_import_fails",
+   "kind": "negative",
+   "what": "the importer exits non-zero on the durable stream",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G8.offline_import": "FAIL",
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G8.offline_import": "FAIL",
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 54,
+   "name": "recovered_iterations_below_band",
+   "kind": "negative",
+   "what": "8000 iterations recovered (band 8400\u20139000)",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 55,
+   "name": "recovered_rows_below_band",
+   "kind": "negative",
+   "what": "kernel rows 5 % below the band",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 56,
+   "name": "recovered_differs_from_in_session",
+   "kind": "negative",
+   "what": "offline trace has fewer kernel rows than the in-session export",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G8b.recovered_trace_complete": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 57,
+   "name": "half_trace_two_waves_only",
+   "kind": "negative",
+   "what": "only four of the eight waves in the trace (4320 iterations)",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G8b.recovered_trace_complete": "FAIL",
+    "G9.scientific_completeness": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G8b.recovered_trace_complete": "FAIL",
+    "G9.scientific_completeness": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 58,
+   "name": "recovery_tools_not_supplied",
+   "kind": "negative",
+   "what": "importer / exporter not given to the validator",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G8.offline_import": "INCONCLUSIVE",
+    "G8b.recovered_trace_complete": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G8.offline_import": "INCONCLUSIVE",
+    "G8b.recovered_trace_complete": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 59,
+   "name": "completeness_fails",
+   "kind": "negative",
+   "what": "eight-wave completeness checker exit 1",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G9.scientific_completeness": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G9.scientific_completeness": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 60,
+   "name": "nsys_validation_fails",
+   "kind": "negative",
+   "what": "Nsight validation exit 1",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G9.scientific_completeness": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G9.scientific_completeness": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 61,
+   "name": "extract_not_run",
+   "kind": "negative",
+   "what": "extract exit code not supplied",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G9.scientific_completeness": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G9.scientific_completeness": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 62,
+   "name": "config_identity_fails",
+   "kind": "negative",
+   "what": "configuration identity report FAIL",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G9.scientific_completeness": "FAIL",
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G9.scientific_completeness": "FAIL",
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 63,
+   "name": "config_identity_missing",
+   "kind": "negative",
+   "what": "no configuration identity report",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G9.scientific_completeness": "INCONCLUSIVE",
+    "G13.workload_and_recipe_identity": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G9.scientific_completeness": "INCONCLUSIVE",
+    "G13.workload_and_recipe_identity": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 64,
+   "name": "executable_changed_during_run",
+   "kind": "negative",
+   "what": "driver hashed another executable after the launcher",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 65,
+   "name": "executable_rebuilt_in_place",
+   "kind": "negative",
+   "what": "same bytes recorded but inode/mtime changed and a compile line logged",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 66,
+   "name": "build_tool_requested",
+   "kind": "negative",
+   "what": "the guard blocked a cargo request",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 67,
+   "name": "guard_not_armed",
+   "kind": "negative",
+   "what": "launcher record without an armed guard",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 68,
+   "name": "launcher_binary_record_missing",
+   "kind": "negative",
+   "what": "no launcher record of the executable",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G0.source_and_executable": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G0.source_and_executable": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 69,
+   "name": "executable_differs_at_postrun",
+   "kind": "negative",
+   "what": "the executable on disk at post-run time is not the pinned one",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 70,
+   "name": "launch_tree_not_pinned",
+   "kind": "negative",
+   "what": "launch tree `alignment` differs from the pin",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 71,
+   "name": "launch_tree_dirty",
+   "kind": "negative",
+   "what": "tracked changes in the launch tree",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 72,
+   "name": "submodule_not_pinned",
+   "kind": "negative",
+   "what": "vLLM gitlink differs from the pin",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 73,
+   "name": "rehearsal_mode_launch",
+   "kind": "negative",
+   "what": "the launch record says the driver ran in rehearsal mode",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G0.source_and_executable": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 74,
+   "name": "launch_source_record_missing",
+   "kind": "negative",
+   "what": "no launch source record",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G0.source_and_executable": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G0.source_and_executable": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 75,
+   "name": "reservation_other_node",
+   "kind": "negative",
+   "what": "reservation record names another node",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G1.host_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G1.host_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 76,
+   "name": "memory_sampler_other_host",
+   "kind": "negative",
+   "what": "memory samples carry another host",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G1.host_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G1.host_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 77,
+   "name": "temporary_storage_over_ceiling",
+   "kind": "negative",
+   "what": "post-run scratch peak makes temporary storage 15.05 GB",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 78,
+   "name": "persistent_storage_over_ceiling",
+   "kind": "negative",
+   "what": "run directory peak 18.05 GB",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 79,
+   "name": "importer_memory_over_ceiling",
+   "kind": "negative",
+   "what": "in-session importer 128.5 GiB",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 80,
+   "name": "offline_importer_memory_over_ceiling",
+   "kind": "negative",
+   "what": "offline importer 128.5 GiB",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 81,
+   "name": "supervisor_record_missing",
+   "kind": "negative",
+   "what": "no supervisor record",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 82,
+   "name": "supervisor_record_incomplete",
+   "kind": "negative",
+   "what": "the supervisor did not end through its stop file",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 83,
+   "name": "supervisor_gave_abort_response",
+   "kind": "negative",
+   "what": "the supervisor wrote its release line for a memory breach",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 84,
+   "name": "supervisor_lost_a_monitor",
+   "kind": "negative",
+   "what": "the storage sampler stopped producing samples; the supervisor responded",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 85,
+   "name": "host_memory_below_floor",
+   "kind": "negative",
+   "what": "MemAvailable 63.5 GB in one sample",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 86,
+   "name": "breach_file_present",
+   "kind": "negative",
+   "what": "the memory sampler wrote its breach file",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G11.storage_and_memory": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 87,
+   "name": "run_storage_unmeasured",
+   "kind": "negative",
+   "what": "no storage samples during the run",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 88,
+   "name": "postrun_storage_unmeasured",
+   "kind": "negative",
+   "what": "no storage samples during the post-run (scratch peak unmeasured, as in V2)",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 89,
+   "name": "storage_samples_gap",
+   "kind": "negative",
+   "what": "60 s without a storage sample during the run",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 90,
+   "name": "memory_samples_missing",
+   "kind": "negative",
+   "what": "no memory samples during the run",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G1.host_identity": "INCONCLUSIVE",
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 91,
+   "name": "memory_samples_gap",
+   "kind": "negative",
+   "what": "60 s without a memory sample during the run",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 92,
+   "name": "importer_memory_unmeasured",
+   "kind": "negative",
+   "what": "the memory sampler never identified the importer",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 93,
+   "name": "offline_importer_memory_unmeasured",
+   "kind": "negative",
+   "what": "the post-run memory sampler never identified the importer",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G11.storage_and_memory": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 94,
+   "name": "gpu_held_over_ceiling",
+   "kind": "negative",
+   "what": "GPUs held 2 704 s from the launch",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G10.bounds": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G10.bounds": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 95,
+   "name": "reservation_over_90_min",
+   "kind": "negative",
+   "what": "reservation held 91 min",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G10.bounds": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G10.bounds": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 96,
+   "name": "reservation_deleted_record_missing",
+   "kind": "negative",
+   "what": "no record of the reservation's deletion",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G10.bounds": "INCONCLUSIVE",
+    "G12.closeout": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G10.bounds": "INCONCLUSIVE",
+    "G12.closeout": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 97,
+   "name": "gpu_pod_left_on_node",
+   "kind": "negative",
+   "what": "a GPU pod is still on the node after the deletion",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G12.closeout": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G12.closeout": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 98,
+   "name": "closeout_not_clean",
+   "kind": "negative",
+   "what": "closeout exit 1",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G12.closeout": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G12.closeout": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 99,
+   "name": "closeout_not_run",
+   "kind": "negative",
+   "what": "closeout exit code not supplied",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G12.closeout": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G12.closeout": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 100,
+   "name": "reservation_exactly_90_min",
+   "kind": "boundary",
+   "what": "reservation held exactly 90.0 min",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 101,
+   "name": "reservation_deleted_1s_late",
+   "kind": "negative",
+   "what": "deletion observed 1 s after the 90 min ceiling (delayed closeout or deletion)",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G10.bounds": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G10.bounds": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 102,
+   "name": "gpu_held_exactly_2700s",
+   "kind": "boundary",
+   "what": "GPUs released exactly 2700.0 s after the launch (controller record); sampler upper edge 2699.5 s",
+   "expected_verdict": "PASS",
+   "expected_not_pass": {},
+   "verdict": "PASS",
+   "exit_code": 0,
+   "not_pass": {},
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 103,
+   "name": "identity_report_from_the_v1_policy",
+   "kind": "negative",
+   "what": "a PASS identity report written by the V1/V2 checker and policy (the V3 defect)",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 104,
+   "name": "identity_trace_rule_not_exercised",
+   "kind": "negative",
+   "what": "V4 report, verdict PASS, but the derived-trace rule was not exercised",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 105,
+   "name": "identity_trace_check_not_holding",
+   "kind": "negative",
+   "what": "one trace-identity check does not hold although the report says PASS",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 106,
+   "name": "identity_trace_proof_incomplete",
+   "kind": "negative",
+   "what": "19 of the 20 trace-identity checks are in the report",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G13.workload_and_recipe_identity": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 107,
+   "name": "identity_report_inconclusive",
+   "kind": "negative",
+   "what": "the identity checker could not read the launch record",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G9.scientific_completeness": "INCONCLUSIVE",
+    "G13.workload_and_recipe_identity": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G9.scientific_completeness": "INCONCLUSIVE",
+    "G13.workload_and_recipe_identity": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 108,
+   "name": "run_trace_is_the_v3_trace",
+   "kind": "negative",
+   "what": "the run used the two-copy V3 trace (112 requests)",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G14.four_copy_trace_in_run": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G14.four_copy_trace_in_run": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 109,
+   "name": "run_trace_rows_reordered",
+   "kind": "negative",
+   "what": "two rows of the third copy swapped in the run's trace",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G14.four_copy_trace_in_run": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G14.four_copy_trace_in_run": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 110,
+   "name": "run_trace_missing",
+   "kind": "negative",
+   "what": "no trace copy in the run directory",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G14.four_copy_trace_in_run": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G14.four_copy_trace_in_run": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 111,
+   "name": "run_config_not_the_registered_one",
+   "kind": "negative",
+   "what": "the run's profile config differs from the registered V4 config in one field",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G14.four_copy_trace_in_run": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G14.four_copy_trace_in_run": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 112,
+   "name": "coverage_cell_missing",
+   "kind": "negative",
+   "what": "the b=8 cell of the fourth copy is absent from the completeness record",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 113,
+   "name": "coverage_unplanned_cell",
+   "kind": "negative",
+   "what": "a cell that is not in the plan appears",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 114,
+   "name": "coverage_pure_decode_below_floor",
+   "kind": "negative",
+   "what": "one cell has 399 pure-decode iterations",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 115,
+   "name": "coverage_one_request_short",
+   "kind": "negative",
+   "what": "223 request timings",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 116,
+   "name": "coverage_three_ranks",
+   "kind": "negative",
+   "what": "kernels from three ranks only",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 117,
+   "name": "coverage_routing_array_defect",
+   "kind": "negative",
+   "what": "one routing array differs from its corpus segment",
+   "expected_verdict": "FAIL",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "verdict": "FAIL",
+   "exit_code": 1,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "FAIL"
+   },
+   "met": true,
+   "problems": []
+  },
+  {
+   "index": 118,
+   "name": "coverage_record_missing",
+   "kind": "negative",
+   "what": "the completeness checker wrote no record",
+   "expected_verdict": "INCONCLUSIVE",
+   "expected_not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "INCONCLUSIVE"
+   },
+   "verdict": "INCONCLUSIVE",
+   "exit_code": 3,
+   "not_pass": {
+    "G15.request_iteration_routing_rank_coverage": "INCONCLUSIVE"
+   },
+   "met": true,
+   "problems": []
+  }
+ ]
+}

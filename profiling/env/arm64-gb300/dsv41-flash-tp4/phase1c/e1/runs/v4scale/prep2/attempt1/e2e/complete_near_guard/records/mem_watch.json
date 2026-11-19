@@ -1,0 +1,31 @@
+{
+ "sampler": "e1_mem_watch.py",
+ "host": "pod4-gb300-10-tray16-f3",
+ "samples": 250,
+ "first_at": 1795073605.9471145,
+ "last_at": 1795073882.659218,
+ "interval_s": 1.0,
+ "max_gap_s": 1.1351842880249023,
+ "mem_total_kb": 1004636800,
+ "samples_without_meminfo": 0,
+ "min_available_kb": 899274176,
+ "min_available_at": 1795073610.3799233,
+ "importer_samples": 13,
+ "importer_identities": [
+  [
+   4173112,
+   306761777
+  ]
+ ],
+ "importer_first_at": 1795073623.643823,
+ "importer_last_at": 1795073636.901005,
+ "importer_peak_rss_kb": 0,
+ "ambiguous_samples": 0,
+ "policy": {
+  "min_available_gb": 64.0,
+  "max_importer_rss_gb": 128.0,
+  "action": "record + breach file only; the sampler signals nothing"
+ },
+ "breaches": [],
+ "complete": true
+}

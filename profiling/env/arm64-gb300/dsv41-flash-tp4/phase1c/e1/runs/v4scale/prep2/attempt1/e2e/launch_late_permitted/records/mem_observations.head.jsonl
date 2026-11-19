@@ -1,0 +1,50 @@
+{"at": 1795073063.70997, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900163200, "importer": null, "candidates": 0}
+{"at": 1795073064.819676, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900170496, "importer": null, "candidates": 0}
+{"at": 1795073065.9248705, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900182208, "importer": null, "candidates": 0}
+{"at": 1795073067.0258007, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900195392, "importer": null, "candidates": 0}
+{"at": 1795073068.126519, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900186176, "importer": null, "candidates": 0}
+{"at": 1795073069.2349675, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900215104, "importer": null, "candidates": 0}
+{"at": 1795073070.3336143, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900212864, "importer": null, "candidates": 0}
+{"at": 1795073071.446534, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900214272, "importer": null, "candidates": 0}
+{"at": 1795073072.5523436, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900187264, "importer": null, "candidates": 0}
+{"at": 1795073073.6670797, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900176192, "importer": null, "candidates": 0}
+{"at": 1795073074.7744071, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900148032, "importer": null, "candidates": 0}
+{"at": 1795073075.8753042, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900136384, "importer": null, "candidates": 0}
+{"at": 1795073076.9804022, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900121280, "importer": null, "candidates": 0}
+{"at": 1795073078.093329, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900113024, "importer": null, "candidates": 0}
+{"at": 1795073079.2014096, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900079872, "importer": null, "candidates": 0}
+{"at": 1795073080.3216412, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900099136, "importer": null, "candidates": 0}
+{"at": 1795073081.4344625, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900093696, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073082.5348923, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900078720, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073083.640623, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900097024, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073084.7582502, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900103616, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073085.8758519, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900067392, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073086.9808707, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900068736, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073088.08993, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900054016, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073089.2016678, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900033472, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073090.3111327, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900036928, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073091.419786, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900049408, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073092.5347319, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900035584, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073093.6418269, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900048896, "importer": {"pid": 3994307, "starttime": 306707533, "rss_kb": 0, "hwm_kb": 0, "matched_by": ["--input-file is the session stream", "--output-file is the session report", "holds the session stream open"]}, "candidates": 1}
+{"at": 1795073094.7451346, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900078912, "importer": null, "candidates": 0}
+{"at": 1795073095.8576171, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900063488, "importer": null, "candidates": 0}
+{"at": 1795073096.9692996, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900112896, "importer": null, "candidates": 0}
+{"at": 1795073098.088949, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900115136, "importer": null, "candidates": 0}
+{"at": 1795073099.208912, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900150976, "importer": null, "candidates": 0}
+{"at": 1795073100.323855, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900153920, "importer": null, "candidates": 0}
+{"at": 1795073101.43089, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900159296, "importer": null, "candidates": 0}
+{"at": 1795073102.5405943, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900166720, "importer": null, "candidates": 0}
+{"at": 1795073103.651429, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900142464, "importer": null, "candidates": 0}
+{"at": 1795073104.7661347, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900149888, "importer": null, "candidates": 0}
+{"at": 1795073105.872294, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900175168, "importer": null, "candidates": 0}
+{"at": 1795073106.9798064, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900177728, "importer": null, "candidates": 0}
+{"at": 1795073108.1007693, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900178944, "importer": null, "candidates": 0}
+{"at": 1795073109.2139902, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900183360, "importer": null, "candidates": 0}
+{"at": 1795073110.3241756, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900201984, "importer": null, "candidates": 0}
+{"at": 1795073111.4376304, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900208960, "importer": null, "candidates": 0}
+{"at": 1795073112.5493844, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900223424, "importer": null, "candidates": 0}
+{"at": 1795073113.6616662, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900223360, "importer": null, "candidates": 0}
+{"at": 1795073114.7801716, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900209152, "importer": null, "candidates": 0}
+{"at": 1795073115.8899872, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900211264, "importer": null, "candidates": 0}
+{"at": 1795073116.9994755, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900227008, "importer": null, "candidates": 0}
+{"at": 1795073118.1173675, "host": "pod4-gb300-10-tray16-f3", "mem_total_kb": 1004636800, "mem_available_kb": 900242752, "importer": null, "candidates": 0}

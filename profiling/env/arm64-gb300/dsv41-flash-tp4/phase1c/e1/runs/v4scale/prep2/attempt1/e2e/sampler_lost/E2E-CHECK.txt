@@ -1,0 +1,17 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [165258, 165259, 165260, 165261, 165262]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True
+PASS  no_gpu_use: 32 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids [165259, 165260, 165261, 165262]; importer pid None never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  breach.marker_and_cause: STORAGE-BREACH present False; supervisor causes [('storage sampler', 'last sample too old', None, None)]
+PASS  breach.registry_cleanup: supervisor steps ['R2 registry cleanup'] because the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 12, skipped 0, survivors 0, lookalikes 1 (never signalled); stop requested None; control file written False
+PASS  breach.identity_verified_registry_only: cleanup signalled [128737, 165189, 165198, 165205, 165250, 165251, 165254, 165258, 165259, 165260, 165261, 165262] ⊆ verified owned tree of 12 processes (registered roots [128737, 165189, 165198, 165205, 165212]); refused 0; survivors []
+PASS  breach.bounded_response: first cause seen → cleanup finished 0.449 s (grace 30 s + SIGKILL pass)
+PASS  driver.did_not_finish: driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False
+PASS  closeout.registry_clean_not_clean_overall: closeout exit code 1 (NOT CLEAN is required after an abort: non-terminal phase, breach marker, supervisor response)
+PASS  sampler.heartbeat_cause: supervisor causes [('monitor_lost', 'storage sampler', 'last sample too old')], age 60.2 s (limit 60 s); monitors effective False
+# scenario sampler_lost: 16 of 16 checks pass → MET

@@ -1,0 +1,39 @@
+PASS         export validation ok=True nvtx_forward_ranges=34560 kernel_rows=49003328
+PASS         parsed devices [0, 1, 2, 3]
+INFO         profile_kind=nsys request_timing_count=224 corpus_tokens=57288
+PASS         metrics records: 8640
+INFO         ramp iterations (prefill present or decode_requests != b inside a cell): 880
+PASS         iterations carrying requests of two cells (overrun): 0
+INFO         plan 'dry' (8 cells, 224 requests) selected by --plan dry; every planned cell is checked
+PASS         cell b=8 kv=32768 wave=0: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=8 kv=32768 wave=1: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=8 kv=32768 wave=2: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=8 kv=32768 wave=3: pure-decode iterations 1008 (need >= 400), ramp 30
+PASS         cell b=48 kv=32768 wave=0: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         cell b=48 kv=32768 wave=1: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         cell b=48 kv=32768 wave=2: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         cell b=48 kv=32768 wave=3: pure-decode iterations 928 (need >= 400), ramp 190
+PASS         observed cells not in the plan: []
+PASS         request ids without an E1 tag: 0 []
+PASS         requests seen 224; requests whose emitted tokens != 1024: 0 []
+PASS         progress entries with emitted_tokens not in {0,1}: 0
+PASS         per request, positions 1..1023 emitted in pure + ramp iterations == 1023: all; ramp-emitted per request min/median/max = 15/95/95
+PASS         (request, position) pairs emitted in more than one iteration (duplicate join): 0
+PASS         (request, position) pairs never emitted (missing join): 0
+PASS         requests whose position->iteration map is not strictly increasing: 0
+PASS         routed_experts files 224 vs requests 224; missing [] extra []
+PASS         .npy files with shape != (1024, 40, 6): 0
+PASS         .npy files with dtype != uint16: 0
+PASS         .npy files with an expert id >= 384: 0
+PASS         (token, layer) rows with a duplicate expert in the top-6: 0
+PASS         corpus num_tokens 229152 vs 224 x (1024-1) = 229152
+PASS         corpus file size 109992960 vs num_tokens*L*K*2 = 109992960
+PASS         corpus max expert id 383 < 384
+PASS         segments 224, unique request names 224
+PASS         segments with length != 1023: 0
+PASS         segments contiguous, non-overlapping and covering [0, num_tokens)
+PASS         segment names == metrics request ids: missing [] extra []
+PASS         requests whose corpus segment != npy[1:] (row 0 = last prompt token's forward): 0
+PASS         segments whose every row maps to exactly one iteration: 224 of 224
+FAIL         corpus checksum_fnv1a64 10451651748718701349 vs manifest 10451651748718701350
+RESULT FAIL (1) [checker v2.0.0]

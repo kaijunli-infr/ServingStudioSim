@@ -1,0 +1,97 @@
+{
+ "scenario": "export_near_guard",
+ "ok": true,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": true,
+   "detail": "owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": true,
+   "detail": "mock Nsight CLI / server pids [51370, 51371, 51373, 51375, 51374]; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": true,
+   "detail": "launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": true,
+   "detail": "lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": true,
+   "detail": "launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": true,
+   "detail": "138 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals [(51371, 'SIGTERM', 'shutdown')]; recorded server pids [51371, 51373, 51374, 51375]; importer pid 51453 never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": true,
+   "detail": "signals sent by the supervisor itself: 0"
+  },
+  {
+   "check": "guard.cause",
+   "ok": true,
+   "detail": "supervisor causes [('reservation_guard', 'run not ended when the reservation guard passed', 420.7, 420.0)]; no breach marker"
+  },
+  {
+   "check": "breach.marker_and_cause",
+   "ok": true,
+   "detail": "STORAGE-BREACH present False; supervisor causes [('reservation.json creation_timestamp', 'run not ended when the reservation guard passed', None, None)]"
+  },
+  {
+   "check": "breach.registry_cleanup",
+   "ok": true,
+   "detail": "supervisor steps ['R2 registry cleanup'] because the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 7, skipped 0, survivors 0, lookalikes 1 (never signalled); stop requested 1795074071.087509; control file written False"
+  },
+  {
+   "check": "breach.identity_verified_registry_only",
+   "ok": true,
+   "detail": "cleanup signalled [15295, 51301, 51317, 51324, 51362, 51363, 51366] \u2286 verified owned tree of 7 processes (registered roots [15295, 51301, 51309, 51317, 51324]); refused 0; survivors []"
+  },
+  {
+   "check": "breach.bounded_response",
+   "ok": true,
+   "detail": "first cause seen \u2192 cleanup finished 0.447 s (grace 30 s + SIGKILL pass)"
+  },
+  {
+   "check": "driver.did_not_finish",
+   "ok": true,
+   "detail": "driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False"
+  },
+  {
+   "check": "closeout.registry_clean_not_clean_overall",
+   "ok": true,
+   "detail": "closeout exit code 1 (NOT CLEAN is required after an abort: non-terminal phase, breach marker, supervisor response)"
+  },
+  {
+   "check": "export.guard_fell_into_the_cpu_only_phase",
+   "ok": true,
+   "detail": "lifecycle phase report_written; GPU release recorded 1795074093.9625344; guard response decided 1795074361.6953182; export started True, ended False"
+  },
+  {
+   "check": "export.importer_isolated_and_stream_kept",
+   "ok": true,
+   "detail": "importer 51453: probe final COMPLETED (finished before the guard; not in the registry, never signalled); preserved stream e0644966dcd275b7\u2026 = controller's final record e0644966dcd275b7\u2026"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

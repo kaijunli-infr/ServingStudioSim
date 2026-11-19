@@ -1,0 +1,32 @@
+{
+ "schema_version": 1,
+ "mode": "prebuilt (no compilation in this launch path)",
+ "path": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/session_runner",
+ "sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "pinned_sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "size": 28759968,
+ "mtime_ns": 1794730282465787858,
+ "source_commit": "5c20a259618976ecc360bda84abcc3653a04006e",
+ "source_clean": true,
+ "provenance_file": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/BINARY-PROVENANCE.json",
+ "build_state": {
+  "schema_version": 1,
+  "sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+  "source_commit": "5c20a259618976ecc360bda84abcc3653a04006e",
+  "origin": "restored 2026-11-18 by cp -p from /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/load_generator/req-frontend/target/release/session_runner (built 2026-11-15 on tray14 per BINARY-PROVENANCE.json; sha256 equal to the pin, cmp-identical). Cargo's own build state in this path is NOT compatible with these bytes: a development 'cargo build' here recompiles req-frontend and replaces the executable with sha256 95a1526c\u2026 (shown twice on 2026-11-18, runs/v2/binary/). Only the prebuilt launch path may be used; it never runs cargo. The executable the V1 launcher rebuilt is preserved in artifacts/phase1c-e1-v1-dsv41-flash-gb300-tp4-20261118-incident-session-runner.",
+  "provenance_file": "profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/BINARY-PROVENANCE.json",
+  "recorded_at": 1794990538.4277701,
+  "recorded_by": "alignment.load_generator.runner record-build-state"
+ },
+ "cargo_fingerprints_present": true,
+ "cargo_consulted": false,
+ "verified_before_launch_at": 1795075139.8145094,
+ "sha256_after_launch": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "verified_after_launch_at": 1795075227.1304379,
+ "unchanged": true,
+ "build_tool_guard": {
+  "installed": true,
+  "active": true,
+  "blocked": []
+ }
+}

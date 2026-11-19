@@ -1,0 +1,62 @@
+# closeout e1_v4_scale on pod4-gb300-10-tray16-f3 at 2026-11-19T08:01:22Z
+PASS  GPU0 memory used 0 MiB
+PASS  GPU1 memory used 0 MiB
+PASS  GPU2 memory used 0 MiB
+PASS  GPU3 memory used 0 MiB
+INFO  own invocation pipeline (excluded from candidates): 235869[bash] 3598119[bash] 3637001[bash]
+PASS  vllm server processes: none
+PASS  nsys profiler sessions: none
+PASS  req-frontend session_runner: none
+PASS  launcher (alignment profile): none
+PASS  E1 driver / preflight / postrun shells: none
+PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+PASS  nvidia-smi loops / watch: none
+PASS  python monitors/checkers of the experiment: none
+PASS  other processes whose cmdline references the experiment dirs: none
+PASS  processes whose cwd is inside the experiment dirs: none
+INFO  own tmux session (excluded): v4r2 
+PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+INFO  other tmux sessions on this tray (not experiment-owned): v4r2 
+PASS  GPU compute apps: none
+INFO  GPU memory used MiB per GPU: 0 0 0 0 
+## registry plan (/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T08:01:32Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 249700, excluded ancestry [1, 235869, 235890, 249700, 3598118, 3598119, 3637001], own pipeline [235869, 235890, 249701, 3598119, 3637001]
+  GONE     pid 184700 [driver:e1_v4_scale] start 306901359: no such process (already exited)
+  GONE     pid 221231 [gpuwatch:e1_v4_scale] start 306913410: no such process (already exited)
+  GONE     pid 221238 [importprobe:e1_v4_scale] start 306913413: no such process (already exited)
+  GONE     pid 221247 [memwatch:e1_v4_scale] start 306913416: no such process (already exited)
+  GONE     pid 221254 [storagewatch:e1_v4_scale] start 306913419: no such process (already exited)
+  summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+# process discovery on pod4-gb300-10-tray16-f3 at 2026-11-19T08:01:32Z: CLEAN
+## termination plan (dry-run; nothing is signalled here)
+# e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T08:01:33Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/owned.tsv (5 records); cleanup pid 249706, excluded ancestry [1, 235869, 249706, 3598118, 3598119, 3637001], own pipeline [235869, 3598119, 3637001]
+GONE     pid 184700 [driver:e1_v4_scale] start 306901359: no such process (already exited)
+GONE     pid 221231 [gpuwatch:e1_v4_scale] start 306913410: no such process (already exited)
+GONE     pid 221238 [importprobe:e1_v4_scale] start 306913413: no such process (already exited)
+GONE     pid 221247 [memwatch:e1_v4_scale] start 306913416: no such process (already exited)
+GONE     pid 221254 [storagewatch:e1_v4_scale] start 306913419: no such process (already exited)
+summary: owned 0, stale 0, gone 5, refused 0, lookalikes 0
+RESULT DRY-RUN: 0 process(es) would receive SIGTERM (deepest first); run with --execute to terminate; lookalikes 0 would never be touched
+PASS  registry plan: nothing owned is alive (driver, GPU sampler, import probe, memory sampler, storage sampler)
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T08:01:33Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/pids/supervisor.tsv (1 records); cleanup pid 249708, excluded ancestry [1, 235869, 249708, 3598118, 3598119, 3637001], own pipeline [235869, 249709, 3598119, 3637001]
+  GONE     pid 221264 [supervisor:e1_v4_scale] start 306913423: no such process (already exited)
+  summary: owned 0, stale 0, gone 1, refused 0, lookalikes 0
+PASS  supervisor registry plan: the supervisor is gone, no refusal
+PASS  no Nsight CLI, agent or importer of this user is alive (by executable path)
+INFO  lifecycle final phase report_written nsys alive False server alive False gpu released 1795075225.984822 preserved /tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.qdstrm
+PASS  lifecycle phase report_written is terminal (acceptance is decided by postrun_e1_v4scale.sh; V4 requires report_written)
+PASS  supervisor: no abort response; monitors effective=True; complete=False; samples=9; signals sent by the supervisor itself=0
+INFO  import_probe.json: COMPLETED: importer pid 221666 is gone; report 1048576 B, stable; no Nsight log given; exit status not observable from /proc
+INFO  mem_watch.json: complete=True samples=99 breaches=0
+INFO  storage_watch.json: complete=True samples=55 breaches=0
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve
+INFO  stream artefact in /tmp: /tmp/dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.raw-preserve
+INFO  the preserved stream is never removed by a script; postrun_e1_v4scale.sh copies it to durable storage and verifies the copy first
+INFO  [e1_v4_scale] rc=0 end 2026-11-19T08:00:27Z
+INFO  [e1_v4_scale] shutdown trigger at server-log line 0; EngineDeadError-family lines: none; before shutdown: 0 (accepted)
+INFO  run root size 3.1M; nsys files: 1048576 dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.nsys-rep  1691648 dsv41_flash_1017_gb300_tp4_e1_v4_scale_e2e.sqlite  7054 lifecycle.json  
+INFO  reservation age 278 s: delete the reservation by 2026-11-19T09:26:59Z (5122 s left of 5400 s)
+INFO  reservation pod (from the laptop): delete immediately after a CLEAN closeout and only with the GPUs idle (budget: 12 min from the supervisor guard at 78 min to the 90 min ceiling), then write /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale/reservation_deleted.json {pod, deleted_observed_at (UTC, %Y-%m-%dT%H:%M:%SZ), gpu_pods_on_node} from kubectl; gate G10/G12 read it
+# closeout result: CLEAN

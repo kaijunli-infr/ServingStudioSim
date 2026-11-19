@@ -1,0 +1,2 @@
+# pid	starttime	boot_id	uid	label	registered_at	host	registered_by	cmd
+4027436	306716852	54a59f08-a7b0-4600-9560-2ca1e73c0e26	1000	driver:e1_v4_scale	2026-11-19T07:28:13Z	pod4-gb300-10-tray16-f3	4063170	bash /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/run_e1_v4scale.sh

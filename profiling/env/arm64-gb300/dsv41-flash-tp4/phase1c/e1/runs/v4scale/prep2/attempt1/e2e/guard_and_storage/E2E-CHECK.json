@@ -1,0 +1,87 @@
+{
+ "scenario": "guard_and_storage",
+ "ok": true,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": true,
+   "detail": "owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": true,
+   "detail": "mock Nsight CLI / server pids [107756, 107758, 107759, 107760, 107761]; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": true,
+   "detail": "launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": true,
+   "detail": "lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": true,
+   "detail": "launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": true,
+   "detail": "137 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals []; recorded server pids [107758, 107759, 107760, 107761]; importer pid None never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": true,
+   "detail": "signals sent by the supervisor itself: 0"
+  },
+  {
+   "check": "breach.marker_and_cause",
+   "ok": true,
+   "detail": "STORAGE-BREACH present True; supervisor causes [('STORAGE-BREACH', 'persistent_storage_above_ceiling', 0.068, 0.032), ('reservation.json creation_timestamp', 'run not ended when the reservation guard passed', None, None)]"
+  },
+  {
+   "check": "breach.registry_cleanup",
+   "ok": true,
+   "detail": "supervisor steps ['R2 registry cleanup'] because the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 13, skipped 0, survivors 0, lookalikes 1 (never signalled); stop requested None; control file written False"
+  },
+  {
+   "check": "breach.identity_verified_registry_only",
+   "ok": true,
+   "detail": "cleanup signalled [71466, 107688, 107697, 107704, 107711, 107748, 107749, 107752, 107756, 107758, 107759, 107760, 107761] \u2286 verified owned tree of 13 processes (registered roots [71466, 107688, 107697, 107704, 107711]); refused 0; survivors []"
+  },
+  {
+   "check": "breach.bounded_response",
+   "ok": true,
+   "detail": "first cause seen \u2192 cleanup finished 0.437 s (grace 30 s + SIGKILL pass)"
+  },
+  {
+   "check": "driver.did_not_finish",
+   "ok": true,
+   "detail": "driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False"
+  },
+  {
+   "check": "closeout.registry_clean_not_clean_overall",
+   "ok": true,
+   "detail": "closeout exit code 1 (NOT CLEAN is required after an abort: non-terminal phase, breach marker, supervisor response)"
+  },
+  {
+   "check": "simultaneous.one_response_for_whatever_was_present",
+   "ok": true,
+   "detail": "causes at the decision [('breach', 'STORAGE-BREACH', 'persistent_storage_above_ceiling'), ('reservation_guard', 'reservation.json creation_timestamp', 'run not ended when the reservation guard passed')]; recorded later []; steps ['R2 registry cleanup']; both present at the decision: True"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

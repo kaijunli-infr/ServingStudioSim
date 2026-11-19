@@ -1,0 +1,27 @@
+{
+ "scenario": "launch_refused",
+ "ok": true,
+ "checks": [
+  {
+   "check": "refusal.exit_code",
+   "ok": true,
+   "detail": "driver exit code 7 (7 = launch refused by the reservation budget)"
+  },
+  {
+   "check": "refusal.rule_and_reason_recorded",
+   "ok": true,
+   "detail": "run.log: 'FAIL  launch eligibility: reservation age 500.6 s; 4179.4 s remain until the reservation guard (4680 s), fewer than the run budget 4210 s (latest permitted age 470 s): REFUSED, nothing is started'; age at the check 500.6 s, latest permitted 470 s (registered guard and run budget, not rehearsal values)"
+  },
+  {
+   "check": "refusal.nothing_started",
+   "ok": true,
+   "detail": "owned registry labels ['driver:e1_v4_scale']; supervisor registry exists False; lifecycle record False; supervisor record False; launch source record False; observer files []; profile directory False; launcher start line False"
+  },
+  {
+   "check": "refusal.no_process_left",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}

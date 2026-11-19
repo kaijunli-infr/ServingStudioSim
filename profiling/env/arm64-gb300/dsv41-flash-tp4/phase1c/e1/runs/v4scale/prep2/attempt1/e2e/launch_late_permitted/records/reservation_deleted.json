@@ -1,0 +1,6 @@
+{
+ "pod": "e2e-rehearsal-no-pod",
+ "deleted_observed_at": "2026-11-19T07:26:05Z",
+ "gpu_pods_on_node": 0,
+ "note": "REHEARSAL"
+}

@@ -1,0 +1,2 @@
+# pid	starttime	boot_id	uid	label	registered_at	host	registered_by	cmd
+4117709	306741944	54a59f08-a7b0-4600-9560-2ca1e73c0e26	1000	supervisor:e1_v4_scale	2026-11-19T07:30:24Z	pod4-gb300-10-tray16-f3	4117706	python3 -I /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/profiling/env/arm64-gb300/dsv41-flash-tp4/phase1c/e1/checks/e1_supervisor_v4.py --run /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/e1_v4_scale --registry /mnt/shared/home/d

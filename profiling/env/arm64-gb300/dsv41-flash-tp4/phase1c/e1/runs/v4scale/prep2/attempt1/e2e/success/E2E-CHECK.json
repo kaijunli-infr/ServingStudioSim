@@ -1,0 +1,102 @@
+{
+ "scenario": "success",
+ "ok": true,
+ "checks": [
+  {
+   "check": "registry.records",
+   "ok": true,
+   "detail": "owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']"
+  },
+  {
+   "check": "registry.all_gone",
+   "ok": true,
+   "detail": "registered processes still alive: []"
+  },
+  {
+   "check": "mock_processes.gone",
+   "ok": true,
+   "detail": "mock Nsight CLI / server pids [3673964, 3673965, 3673966, 3673968, 3673967]; alive []"
+  },
+  {
+   "check": "launch.rehearsal_mode_recorded",
+   "ok": true,
+   "detail": "launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)"
+  },
+  {
+   "check": "launch.real_controller_record",
+   "ok": true,
+   "detail": "lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0"
+  },
+  {
+   "check": "no_build_tool",
+   "ok": true,
+   "detail": "build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0"
+  },
+  {
+   "check": "no_gpu_use",
+   "ok": true,
+   "detail": "36 sampler observations during the run; with a compute process or memory above the idle bound: 0"
+  },
+  {
+   "check": "signals.server_only",
+   "ok": true,
+   "detail": "controller signals [(3673965, 'SIGTERM', 'shutdown')]; recorded server pids [3673965, 3673966, 3673967, 3673968]; importer pid 3674050 never signalled"
+  },
+  {
+   "check": "supervisor.sent_no_signal",
+   "ok": true,
+   "detail": "signals sent by the supervisor itself: 0"
+  },
+  {
+   "check": "driver.rc",
+   "ok": true,
+   "detail": "driver exit code 0"
+  },
+  {
+   "check": "lifecycle.phases",
+   "ok": true,
+   "detail": "phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; control lines 0; escalations 0"
+  },
+  {
+   "check": "closeout.clean",
+   "ok": true,
+   "detail": "closeout exit code 0"
+  },
+  {
+   "check": "supervisor.no_response",
+   "ok": true,
+   "detail": "response None; monitors effective True; complete True; samples 55"
+  },
+  {
+   "check": "stream.checksums",
+   "ok": true,
+   "detail": "controller final record 9756ee9f23d0d592\u2026, preserved original 9756ee9f23d0d592\u2026, durable copy 9756ee9f23d0d592\u2026"
+  },
+  {
+   "check": "archive.verified",
+   "ok": true,
+   "detail": "archive script exit code 0"
+  },
+  {
+   "check": "samplers.measured",
+   "ok": true,
+   "detail": "memory samples 49, storage samples 28, breaches [] []"
+  },
+  {
+   "check": "gates.as_registered",
+   "ok": true,
+   "detail": "verdict FAIL (post-run exit 1); not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}"
+  },
+  {
+   "check": "importer.unique_active_completed",
+   "ok": true,
+   "detail": "probe importer 3674050, matched by ['--output-file is the session report'], parent pid 1 (detached), states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; memory sampler importer samples 12"
+  },
+  {
+   "check": "recovery_failure.detected",
+   "ok": true,
+   "detail": "second post-run with a failing importer: verdict FAIL, not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G8.offline_import': 'FAIL', 'G8b.recovered_trace_complete': 'FAIL', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}"
+  }
+ ],
+ "pid_namespace_note": "pod4-gb300-10-tray16-f3"
+}
