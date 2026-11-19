@@ -1,0 +1,286 @@
+{
+ "checks": [
+  {
+   "name": "profiler.nsys",
+   "status": "INFO",
+   "detail": "no pins supplied; recorded only",
+   "data": {
+    "path": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
+    "version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0",
+    "sha256": "2d53d710fead2076f4e13617b6c6f8b7976965508e82901bc2db5b42f4c30dc4"
+   }
+  },
+  {
+   "name": "profiler.importer",
+   "status": "INFO",
+   "detail": "no pins supplied; recorded only",
+   "data": {
+    "path": "/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter",
+    "sha256": "b30312a66165fdf1aee0da6469c4800fa792e385c74f93d04ce9a188375abb8b"
+   }
+  },
+  {
+   "name": "profiler.importer_matches_cli",
+   "status": "PASS",
+   "detail": "importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter and CLI /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys share the install root",
+   "data": null
+  },
+  {
+   "name": "server.vllm_import",
+   "status": "PASS",
+   "detail": "vllm 0.31.1.dev17+g0ab187113 from /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py",
+   "data": null
+  },
+  {
+   "name": "server.identity",
+   "status": "INFO",
+   "detail": "no pins supplied; recorded only",
+   "data": {
+    "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
+    "python_realpath": "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12",
+    "python_sha256": "1b3b0c6017252761abf8f14dfd14a889c690a0dd473e199fcf81766ddc1c379d",
+    "fork_head": "0ab18711335780e062d65994a3243da0281d2081",
+    "fork_source_root": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm",
+    "vllm_version": "0.31.1.dev17+g0ab187113",
+    "vllm_file": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py"
+   }
+  },
+  {
+   "name": "server.model_path",
+   "status": "PASS",
+   "detail": "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017/config.json present",
+   "data": null
+  },
+  {
+   "name": "recipe.server_argv",
+   "status": "PASS",
+   "detail": "server argv identical to the reference launch",
+   "data": null
+  },
+  {
+   "name": "recipe.nsys_prefix",
+   "status": "PASS",
+   "detail": "nsys flags identical to the reference launch (output stem excepted)",
+   "data": null
+  },
+  {
+   "name": "recipe.nsys_executable",
+   "status": "PASS",
+   "detail": "/usr/local/bin/nsys resolves to the reference launch's /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
+   "data": null
+  },
+  {
+   "name": "recipe.env",
+   "status": "PASS",
+   "detail": "no environment variable added relative to the reference launch",
+   "data": null
+  },
+  {
+   "name": "cleanup.identity",
+   "status": "PASS",
+   "detail": "pid 3134178 starttime 304720529 boot 54a59f08 uid 1000",
+   "data": null
+  },
+  {
+   "name": "cleanup.ancestry",
+   "status": "PASS",
+   "detail": "descendant test resolves this process under its parent",
+   "data": null
+  },
+  {
+   "name": "cleanup.refuses_self",
+   "status": "PASS",
+   "detail": "signal_verified(own pid) -> refused",
+   "data": {
+    "log": [
+     {
+      "pid": 3134178,
+      "action": "refuse",
+      "reason": "own process or ancestry"
+     }
+    ]
+   }
+  },
+  {
+   "name": "cleanup.refuses_pid1",
+   "status": "PASS",
+   "detail": "-> refused",
+   "data": {
+    "log": [
+     {
+      "pid": 1,
+      "action": "refuse",
+      "reason": "own process or ancestry"
+     }
+    ]
+   }
+  },
+  {
+   "name": "cleanup.detects_identity_change",
+   "status": "PASS",
+   "detail": "stale starttime on the parent pid -> changed (nothing signalled)",
+   "data": {
+    "log": [
+     {
+      "pid": 3134174,
+      "action": "skip",
+      "reason": "identity changed before signal (pid reuse)",
+      "live": "uv run --no-sync python -m alignment.profiler.preflight --config /mnt/shared/home/dc/workspace/serving-studio/wt-lifecyc"
+     }
+    ]
+   }
+  },
+  {
+   "name": "cleanup.gpu_query",
+   "status": "PASS",
+   "detail": "nvidia-smi compute-app query works; 0 compute pid(s) now",
+   "data": {
+    "pids": []
+   }
+  },
+  {
+   "name": "parsers.pids",
+   "status": "PASS",
+   "detail": "API server pid(s) ['32200'], engine roles ['EngineCore', 'Worker'], 5 distinct engine/worker pids",
+   "data": null
+  },
+  {
+   "name": "parsers.phases",
+   "status": "PASS",
+   "detail": "every phase line matched in order: stop_accepted@8584, capture_ended@8589, stream_written@8590, import_start@8592, import_progress@8592, stop_returned@8651",
+   "data": null
+  },
+  {
+   "name": "policy.valid",
+   "status": "PASS",
+   "detail": "soft 300 s, hard 600 s, stall 300 s, max extension 120 s, GPU-held ceiling 2700.0, action release_gpus, preserve stream True",
+   "data": null
+  },
+  {
+   "name": "policy.ceiling_set",
+   "status": "PASS",
+   "detail": "gpu_held_ceiling_s is explicit",
+   "data": null
+  },
+  {
+   "name": "locations.lifecycle.json",
+   "status": "PASS",
+   "detail": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile/nsys/lifecycle.json absent",
+   "data": null
+  },
+  {
+   "name": "locations.lifecycle.control",
+   "status": "PASS",
+   "detail": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile/nsys/lifecycle.control absent",
+   "data": null
+  },
+  {
+   "name": "locations.log_dir",
+   "status": "PASS",
+   "detail": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile absent",
+   "data": null
+  },
+  {
+   "name": "locations.stream_dir",
+   "status": "PASS",
+   "detail": "/tmp: 1162 GiB free (floor 50)",
+   "data": null
+  },
+  {
+   "name": "locations.stream_leftovers",
+   "status": "PASS",
+   "detail": "own raw streams / preserve dirs in /tmp: no active or conflicting one; retained inactive recovery stream(s), left untouched: ['/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve (dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle: 347628953 B, sha256 8f5905d95c61c8e0\u2026, session closed, not open, record by operator adoption (alignment.profiler.preflight --adopt-retained))', '/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve (dsv41_flash_1017_gb300_tp4_e1_v2_forced_release: 348288111 B, sha256 4739d6581d1b035b\u2026, session closed, not open, record by lifecycle controller)', '/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve (dsv41_flash_1017_gb300_tp4_e1_v3_scale: 661640958 B, sha256 764d063d951d4c46\u2026, session closed, not open, record by lifecycle controller)']",
+   "data": null
+  },
+  {
+   "name": "locations.retained_streams",
+   "status": "INFO",
+   "detail": "3 retained inactive recovery stream(s) in /tmp; not a profiler session, not deleted, checksum-verified against the retention record (which does not establish trace completeness)",
+   "data": null
+  },
+  {
+   "name": "locations.report_dir",
+   "status": "PASS",
+   "detail": "/mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs: 20770 GiB free (floor 20)",
+   "data": null
+  }
+ ],
+ "facts": {
+  "nsys": {
+   "path": "/opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys",
+   "version": "NVIDIA Nsight Systems version 2025.6.3.541-256337736014v0",
+   "sha256": "2d53d710fead2076f4e13617b6c6f8b7976965508e82901bc2db5b42f4c30dc4"
+  },
+  "importer": {
+   "path": "/opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter",
+   "sha256": "b30312a66165fdf1aee0da6469c4800fa792e385c74f93d04ce9a188375abb8b"
+  },
+  "server": {
+   "fork_python": "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
+   "python_realpath": "/mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12",
+   "python_sha256": "1b3b0c6017252761abf8f14dfd14a889c690a0dd473e199fcf81766ddc1c379d",
+   "fork_head": "0ab18711335780e062d65994a3243da0281d2081",
+   "fork_source_root": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm",
+   "vllm_version": "0.31.1.dev17+g0ab187113",
+   "vllm_file": "/mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py"
+  },
+  "recipe": {
+   "server_argv": [
+    "/mnt/shared/home/dc/workspace/serving-studio/gb300/fork-env-v0.31.0/venv/bin/python",
+    "-m",
+    "vllm.entrypoints.cli.main",
+    "serve",
+    "/mnt/shared/weights/DeepSeek-V4.1-Flash-1017",
+    "--api-server-count",
+    "1",
+    "--host",
+    "127.0.0.1",
+    "--port",
+    "8000",
+    "--tensor-parallel-size",
+    "4",
+    "--data-parallel-size",
+    "1",
+    "--max-num-batched-tokens",
+    "16384",
+    "--enable-chunked-prefill",
+    "--enable-prompt-tokens-details",
+    "--gpu-memory-utilization",
+    "0.9",
+    "--enable-server-load-tracking",
+    "--enable-logging-iteration-details",
+    "--served-model-name",
+    "dsv41-flash-1017",
+    "--tokenizer-mode",
+    "deepseek_v41",
+    "--attention-config",
+    "{\"backend\":\"FLASHINFER_MLA_SPARSE_DSV41\",\"indexer_kv_dtype\":\"mxfp4\",\"indexer_sparse_logits\":true}",
+    "--kv-cache-dtype",
+    "fp8",
+    "--max-num-seqs",
+    "128",
+    "--engram-config",
+    "{\"cpu_offload\":true}",
+    "--max-model-len",
+    "131072",
+    "--language-model-only",
+    "--enable-return-routed-experts",
+    "--profiler-config.profiler=cuda"
+   ],
+   "nsys_prefix_without_output": [
+    "/usr/local/bin/nsys",
+    "profile",
+    "--trace-fork-before-exec=true",
+    "--trace=cuda,nvtx",
+    "--sample=none",
+    "--cpuctxsw=none",
+    "--cuda-graph-trace=node",
+    "--cuda-event-trace=false",
+    "--force-overwrite=true",
+    "--capture-range=cudaProfilerApi",
+    "--capture-range-end=stop"
+   ],
+   "tmp_dir": null
+  }
+ }
+}

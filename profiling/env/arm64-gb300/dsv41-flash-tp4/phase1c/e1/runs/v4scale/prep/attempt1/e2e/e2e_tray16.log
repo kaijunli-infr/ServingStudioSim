@@ -1,0 +1,129 @@
+# V4 end-to-end rehearsal 2026-11-19T02:03:56Z on pod4-gb300-10-tray16-f3; tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle at 2fbf06c4408099b56b2d94511749675c065ebdb7 (0 modified tracked file(s)); scenarios: success ambiguous memory_breach storage_breach reservation_guard
+gpu before (MiB / compute processes): 0 0 0 0 / 0
+PASS  load-generator executable before the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2
+PASS  project interpreter /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12 (no virtual environment created in the worktree)
+PASS  stand-in importer / exporter and rehearsal inputs written (kernel-row band scaled to the stand-in exporter; every other limit is the registered one)
+## scenario success (02:03:57)
+driver exit code 0; 74 PASS / 0 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 0: # closeout result: CLEAN;
+post-run exit code 1: # V4 gates e1_v4_scale: 17 results, 3 FAIL, 4 INCONCLUSIVE → FAIL;V4 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/V4S-GATES.txt). STOP: no retry, no advance; everything stays preserved.;
+archive exit code 0: # archive result: VERIFIED;
+second post-run with a failing importer: exit code 1: # V4 gates e1_v4_scale: 17 results, 5 FAIL, 4 INCONCLUSIVE → FAIL
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [3210282, 3210283, 3210284, 3210285, 3210286]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0
+PASS  no_gpu_use: 36 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(3210283, 'SIGTERM', 'shutdown')]; recorded server pids [3210283, 3210284, 3210285, 3210286]; importer pid 3210365 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  driver.rc: driver exit code 0
+PASS  lifecycle.phases: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; control lines 0; escalations 0
+PASS  closeout.clean: closeout exit code 0
+PASS  supervisor.no_response: response None; monitors effective True; complete True; samples 56
+PASS  stream.checksums: controller final record 35b7ad168980eda9…, preserved original 35b7ad168980eda9…, durable copy 35b7ad168980eda9…
+PASS  archive.verified: archive script exit code 0
+PASS  samplers.measured: memory samples 50, storage samples 29, breaches [] []
+PASS  gates.as_registered: verdict FAIL (post-run exit 1); not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+PASS  importer.unique_active_completed: probe importer 3210365, matched by ['--output-file is the session report'], parent pid 1 (detached), states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; memory sampler importer samples 13
+PASS  recovery_failure.detected: second post-run with a failing importer: verdict FAIL, not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G8.offline_import': 'FAIL', 'G8b.recovered_trace_complete': 'FAIL', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+# scenario success: 19 of 19 checks pass → MET
+PASS  scenario success: every registered expectation met
+## scenario ambiguous (02:07:55)
+driver exit code 0; 74 PASS / 0 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 0: # closeout result: CLEAN;
+post-run exit code 1: # V4 gates e1_v4_scale: 17 results, 3 FAIL, 7 INCONCLUSIVE → FAIL;V4 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/V4S-GATES.txt). STOP: no retry, no advance; everything stays preserved.;
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [3280434, 3280435, 3280436, 3280438, 3280437]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0
+PASS  no_gpu_use: 37 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(3280435, 'SIGTERM', 'shutdown')]; recorded server pids [3280435, 3280436, 3280437, 3280438]; importer pid None never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  driver.rc: driver exit code 0
+PASS  lifecycle.phases: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; control lines 0; escalations 0
+PASS  closeout.clean: closeout exit code 0
+PASS  supervisor.no_response: response None; monitors effective True; complete True; samples 57
+PASS  stream.checksums: controller final record 4e7e82a03f1b2a7b…, preserved original 4e7e82a03f1b2a7b…, durable copy 4e7e82a03f1b2a7b…
+PASS  samplers.measured: memory samples 52, storage samples 29, breaches [] []
+PASS  gates.as_registered: verdict FAIL (post-run exit 1); not PASS {'G0.source_and_executable': 'FAIL', 'G4.phase_deadlines': 'INCONCLUSIVE', 'G5.importer_observed': 'INCONCLUSIVE', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G11.storage_and_memory': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE', 'G4.phase_deadlines': 'INCONCLUSIVE', 'G5.importer_observed': 'INCONCLUSIVE', 'G11.storage_and_memory': 'INCONCLUSIVE'}
+PASS  importer.ambiguity_recorded: probe states ['NOT_FOUND', 'AMBIGUOUS'], final AMBIGUOUS, no importer singled out even after one of the two exited; memory sampler ambiguous samples 13, importer samples 0
+PASS  importer.run_continued_under_monitors: final phase report_written; supervisor response None; monitors effective True
+# scenario ambiguous: 18 of 18 checks pass → MET
+PASS  scenario ambiguous: every registered expectation met
+## scenario memory_breach (02:11:50)
+driver exit code 0; 74 PASS / 0 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 0.0625 GiB 
+closeout exit code 1: FAIL  supervisor: ABORT RESPONSE release requested through the controller for [('breach', 'MEMORY-BREACH', 'importer_rss_above_ceiling')]; monitors effective=True; complete=True; samples=102; signals sent by the supervisor itself=0;FAIL  MEMORY-BREACH was written during the run: {"at": 1795054448.7264729, "kind": "importer_rss_above_ceiling", "value_gb": 0.16, "limit_gb": 0.0625, "pid": 3350236} ;
+post-run exit code 1: # V4 gates e1_v4_scale: 17 results, 7 FAIL, 4 INCONCLUSIVE → FAIL;V4 ACCEPTANCE: FAIL (see /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e/cpu/V4S-GATES.txt). STOP: no retry, no advance; everything stays preserved.;
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [3350103, 3350104, 3350105, 3350106, 3350107]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0
+PASS  no_gpu_use: 58 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(3350104, 'SIGTERM', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)'), (3350104, 'SIGKILL', 'operator: release-gpus V4 resource-limit abort (registered supervisor response)')]; recorded server pids [3350104, 3350105, 3350106, 3350107]; importer pid 3350236 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  breach.marker_and_cause: MEMORY-BREACH present True; supervisor causes [('MEMORY-BREACH', 'importer_rss_above_ceiling', 0.16, 0.0625)]
+PASS  breach.delivered_through_controller: supervisor step R1 control line, acknowledged True after 0.281 s (bound 10 s)
+PASS  breach.controller_record: control commands [('release-gpus V4 resource-limit abort (re', 'release requested', 'importing')]
+PASS  breach.bounded_response: breach sample → identity-verified SIGTERM to the API server 0.6 s (bound 15 s); SIGTERM → SIGKILL 60.0 s (grace 60 s)
+PASS  breach.importer_isolated: importer 3350236 was not signalled and finished: probe final COMPLETED, lifecycle phase report_written
+PASS  breach.run_fails: verdict FAIL; not PASS {'G0.source_and_executable': 'FAIL', 'G2.one_stop_request_returned_ok': 'FAIL', 'G3.phases_in_order': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G11.storage_and_memory': 'FAIL', 'G12.closeout': 'FAIL', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+# scenario memory_breach: 15 of 15 checks pass → MET
+PASS  scenario memory_breach: every registered expectation met
+## scenario storage_breach (02:16:29)
+Terminated
+driver exit code 143; 74 PASS / 0 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 1: FAIL  lifecycle phase capturing is not terminal (importer running or hung: stream stays preserved; verified registry cleanup only);FAIL  supervisor: ABORT RESPONSE registry cleanup rc 2 for [('breach', 'STORAGE-BREACH', 'persistent_storage_above_ceiling')]; monitors effective=True; complete=True; samples=9; signals sent by the supervisor itself=0;FAIL  STORAGE-BREACH was written during the run: {"
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [3420263, 3420264, 3420265, 3420266, 3420267]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True
+PASS  no_gpu_use: 4 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids [3420264, 3420265, 3420266, 3420267]; importer pid None never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  breach.marker_and_cause: STORAGE-BREACH present True; supervisor causes [('STORAGE-BREACH', 'persistent_storage_above_ceiling', 0.067, 0.032)]
+PASS  breach.registry_cleanup: supervisor steps ['R2 registry cleanup'] because the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 13, skipped 0, survivors 0, lookalikes 1 (never signalled); stop requested None; control file written False
+PASS  breach.identity_verified_registry_only: cleanup signalled [3384120, 3420195, 3420204, 3420211, 3420218, 3420255, 3420256, 3420259, 3420263, 3420264, 3420265, 3420266, 3420267] ⊆ verified owned tree of 13 processes (registered roots [3384120, 3420195, 3420204, 3420211, 3420218]); refused 0; survivors []
+PASS  breach.bounded_response: first cause seen → cleanup finished 0.428 s (grace 30 s + SIGKILL pass)
+PASS  driver.did_not_finish: driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False
+PASS  closeout.registry_clean_not_clean_overall: closeout exit code 1 (NOT CLEAN is required after an abort: non-terminal phase, breach marker, supervisor response)
+# scenario storage_breach: 15 of 15 checks pass → MET
+PASS  scenario storage_breach: every registered expectation met
+## scenario reservation_guard (02:18:49)
+Terminated
+driver exit code 143; 74 PASS / 0 FAIL in the driver's preflight; REHEARSAL MODE: run root /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale_e2e, CUDA hidden, mock launcher, importer executable /mnt/shared/home/dc/.local/share/uv/python/cpython-3.12.13-linux-aarch64-gnu/bin/python3.12, ceilings importer 128 GiB / t
+closeout exit code 1: FAIL  lifecycle phase capturing is not terminal (importer running or hung: stream stays preserved; verified registry cleanup only);FAIL  supervisor: ABORT RESPONSE registry cleanup rc 2 for [('reservation_guard', 'reservation.json creation_timestamp', 'run not ended when the reservation guard passed')]; monitors effective=True; complete=True; samples=311; signals sent by the supervisor itself=0;# 
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [3475212, 3475213, 3475214, 3475215, 3475216]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: launcher record before the launch: mode 'prebuilt (no compilation in this launch path)', cargo consulted False, executable = pinned True
+PASS  no_gpu_use: 142 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals []; recorded server pids [3475213, 3475214, 3475215, 3475216]; importer pid None never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  guard.cause: supervisor causes [('reservation_guard', 'run not ended when the reservation guard passed', 420.9, 420.0)]; no breach marker
+PASS  breach.marker_and_cause: STORAGE-BREACH present False; supervisor causes [('reservation.json creation_timestamp', 'run not ended when the reservation guard passed', None, None)]
+PASS  breach.registry_cleanup: supervisor steps ['R2 registry cleanup'] because the controller is not in its finalisation loop; cleanup rc 2: RESULT NOT CLEAN: signalled 13, skipped 0, survivors 0, lookalikes 1 (never signalled); stop requested None; control file written False
+PASS  breach.identity_verified_registry_only: cleanup signalled [3439261, 3475144, 3475153, 3475160, 3475167, 3475204, 3475205, 3475208, 3475212, 3475213, 3475214, 3475215, 3475216] ⊆ verified owned tree of 13 processes (registered roots [3439261, 3475144, 3475153, 3475160, 3475167]); refused 0; survivors []
+PASS  breach.bounded_response: first cause seen → cleanup finished 0.428 s (grace 30 s + SIGKILL pass)
+PASS  driver.did_not_finish: driver exit code 143 (terminated by the cleanup); launcher started True; launcher result line present False
+PASS  closeout.registry_clean_not_clean_overall: closeout exit code 1 (NOT CLEAN is required after an abort: non-terminal phase, breach marker, supervisor response)
+# scenario reservation_guard: 16 of 16 checks pass → MET
+PASS  scenario reservation_guard: every registered expectation met
+## state after the rehearsal
+PASS  load-generator executable after the rehearsal = pinned 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2, same inode/mtime/size
+PASS  no file under the load generator's build directory was written during the rehearsal (no build tool ran)
+gpu after (MiB / compute processes): 0 0 0 0 / 0
+PASS  no GPU compute process after the rehearsal
+PASS  no mock process left
+PASS  rehearsal run root, mock preserve directory and scratch removed
+# result: E2E REHEARSAL EXPECTATIONS MET
+e2e exit 0 at 2fbf06c4

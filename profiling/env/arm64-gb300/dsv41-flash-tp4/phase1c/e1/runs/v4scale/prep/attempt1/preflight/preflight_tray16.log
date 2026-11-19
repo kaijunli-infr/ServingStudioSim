@@ -1,0 +1,181 @@
+# V4 preflight on pod4-gb300-10-tray16-f3 at 2026-11-19T01:54:37Z; launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle
+  # Stage 1.5 preflight on pod4-gb300-10-tray16-f3 at 2026-11-19T01:54:37Z
+    # E1 host preflight on pod4-gb300-10-tray16-f3 at 2026-11-19T01:54:37Z
+    PASS  not an off-limits tray
+    PASS  no compute apps on GPUs
+    PASS  GPU memory used total 0 MiB
+    PASS  4 GPUs visible
+    PASS  driver 595.71.05 (Phase 0)
+    PASS  no leftover vllm/nsys/req-frontend processes
+    PASS  fork submodule at 0ab18711
+    PASS  venv 0.31.1.dev17+g0ab187113 2.13.0+cu130
+    PASS  nsys 2025.6.3.541
+    PASS  weights present
+    PASS  enwik9 corpus 1e9 bytes
+    PASS  cache warm: deepgemm
+    PASS  cache warm: triton
+    PASS  cache warm: nv-compute
+    PASS  cache warm: flashinfer-autotune
+    INFO  launcher tree /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle HEAD 2fbf06c4408099b56b2d94511749675c065ebdb7 (exp/profiler-lifecycle)
+    PASS  launcher tree fork submodule at 0ab18711
+    PASS  repo tree clean (tracked files)
+    PASS  E1 traces/configs match INPUTS.sha256
+    PASS  nsys delayed start 10 s, no bounded stop
+    PASS  no capture_duration_seconds (Phase 0 lesson)
+    PASS  CephFS free 20771 GB (> 500)
+    PASS  root disk free 1163 GB (> 100)
+    PASS  no previous e1_main output dir
+    PASS  launcher dry-run e1_main
+    # result: PREFLIGHT PASS
+  PASS  Stage 1 host preflight
+  PASS  configs_v2 / trace match INPUTS_v2.sha256
+  PASS  e1_dry_off_v2: stream=false explicit
+  PASS  e1_dry_on_v2: stream=false explicit
+  PASS  e1_dry_off2_v2: stream=false explicit
+  PASS  e1_nsys_val: stream=false explicit
+  PASS  no previous output dir for e1_v4_scale
+  PASS  e1_nsys_val: nsys delayed start 10 s
+  PASS  e1_nsys_val: no bounded stop
+  PASS  config identity off_v2/on_v2 and off_v2/off2_v2
+  PASS  launcher: workload.stream opt-out applied
+  PASS  submodule gitlink pinned to 5c20a259618976ecc360bda84abcc3653a04006e
+  PASS  req-frontend checkout HEAD == pinned commit
+  PASS  req-frontend checkout clean
+  PASS  session_runner sha256 == provenance (7f6eb81d45e6b98f)
+  PASS  session_runner supports --stream
+  PASS  launcher dry-run e1_dry_off_v2
+  PASS  launcher dry-run e1_dry_on_v2
+  PASS  launcher dry-run e1_dry_off2_v2
+  PASS  launcher dry-run e1_nsys_val
+  INFO  flashinfer-autotune cache: 2 hash dirs, newest 2026-11-18 21:51:46; expect ~19 min of tuning per launch regardless
+  # result: PREFLIGHT PASS
+PASS  Stage 1.5 preflight (incl. Stage 1 host preflight)
+PASS  FREEZE_v4scale.sha256: all 7 entries verify (manifest sha256 6a7d21094507628b…)
+PASS  V4 trace and config, the V2 config and the accepted trace they derive from match INPUTS_v4scale.sha256
+PASS  source trace is the frozen dry-run trace e1_dry.csv (sha c6d8e13b…)
+PASS  trace = the 56 accepted rows four times: 224 requests, 8 waves (b=8 at 0 / 80 / 160 / 240 s, b=48 at 18.627 s after each), copy i = the accepted rows with wave index i and + i x 80 s
+PASS  the input generator reproduces the trace, config, inputs, manifest and identity policy on disk byte for byte (deterministic)
+PASS  config = the V2 config with only name, log_dir and the trace path changed (backend openai, hook on, stream false, model, server arguments, Nsight flags and lifecycle bounds identical)
+PASS  stream=false, routing hook on, openai backend explicit
+PASS  no bounded stop, no delayed start (all eight waves in the capture)
+PASS  lifecycle bounds explicit: soft 300 s, hard 600 s, session close 300 s, GPU-held ceiling 2700 s, stream preserved
+PASS  no nsys.tmp_dir; server grace not overridden (controller default 60 s)
+PASS  nsys capture flags == Phase 0 quadrant_nsys nsys block (lifecycle keys excepted)
+PASS  config identity vs accepted e1_nsys_val: only name, log_dir, trace path, delayed start and the lifecycle bounds differ
+PASS  E1-V4-SCALE-INPUTS.json: 224 requests, 8 waves, 8640 iterations (8400–9000), 34 560 NVTX ranges, 49 003 328 rows ± 5 %, phase deadlines 30/300/300/600/300 s, release 90 s, controller hard deadline = the 600 s total, ceilings 2700 s / 90 min / 15 / 18 / 38 GB / 64 GiB floor / 128 GiB importer, supervisor limits 10 / 60 / 30 s, reservation budget 600 + 4080 + 720 s = 90 min with early release disabled, V4 identity policy registered, eight-wave plan
+PASS  the driver starts the import probe in observer mode (no control file, no trigger line)
+PASS  the driver registers four observers: GPU sampler, import probe, host-memory sampler, storage sampler
+PASS  the driver registers the V4 run supervisor in its own registry with the reservation guard (4680 s), refuses a launch later than 600 s after the reservation's creation, and passes the registered ceilings (importer 128 GiB, temporary 15 GB, persistent 18 GB) to the samplers
+PASS  the supervisor and its V4 wrapper contain no signalling call; the only child is the pinned registry cleanup
+PASS  E1_V4S_MODE is not set: a launch from this context is a real launch
+  PASS  prebuilt session_runner /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/load_generator/req-frontend/target/release/session_runner: sha256 7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2 == pinned; source 5c20a259618976ecc360bda84abcc3653a04006e clean; build state recorded (restored 2026-11-18 by cp -p from /mnt/shared/home/dc/workspace/serving-studio/wt-e1stage1/alignment/load_generator/req-frontend/target/release/session_runner (built 2026-11-15 on tray14 per BINARY-PROVENANCE.json; sha256 equal to the pin, cmp-identical). Cargo's own build state in this path is NOT compatible with these bytes: a development 'cargo build' here recompiles req-frontend and replaces the executable with sha256 95a1526c… (shown twice on 2026-11-18, runs/v2/binary/). Only the prebuilt launch path may be used; it never runs cargo. The executable the V1 launcher rebuilt is preserved in artifacts/phase1c-e1-v1-dsv41-flash-gb300-tp4-20261118-incident-session-runner.); cargo not consulted
+PASS  prebuilt session_runner contract: exact pinned sha256, pinned clean source, build-state record; cargo not consulted
+PASS  the driver has exactly one launcher line and it passes --frontend-provenance (prebuilt path, build-tool guard armed)
+PASS  V4 identity policy on the ACTUAL V4 config and trace with the predicted V4 launch record: PASS with the full trace proof; the V1/V2 policy on the same records FAILs on the trace (the V3 defect is detected); negative controls fail (/mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/attempt1/preflight/identity_rehearsal_20261119T015437Z.log)
+PASS  launcher dry-run e1_v4_scale with the prebuilt contract (CUDA hidden; nothing compiled)
+PASS  no previous output dir for e1_v4_scale
+PASS  pinned tree alignment = 7b4df784a5b6
+PASS  pinned tree launcher = 5acab28980ef
+PASS  pinned tree tests/fixtures = 965b32384e5b
+PASS  pinned tree tests/cpu_only_guard.py = 5d2637224343
+PASS  pinned tree tests/cpu_only.sh = 9296518632ee
+PASS  pinned tree tests/test_profiler_lifecycle.py = 14dcbfd92b3f
+PASS  pinned tree tests/test_profiler_preflight.py = c5defd53c97b
+PASS  pinned tree tests/test_e1_lifecycle_gates.py = 24321e142afb
+PASS  pinned tree tests/test_e1_pids_cleanup.py = 92afc8b8f928
+PASS  pinned tree tests/test_cpu_only_guard.py = f46ce406349b
+PASS  pinned tree tests/test_e1_lifecycle_gates_v2.py = 251a64d37073
+PASS  pinned tree tests/test_e1_launch_identity_v2.py = 56294e0fe8e3
+PASS  pinned tree tests/test_profiler_lifecycle_stop_concurrency.py = 393ffd049930
+PASS  pinned tree tests/test_profiler_lifecycle_host_stream.py = 83f60e6b1010
+PASS  pinned tree tests/test_profiler_preflight_retained.py = 3a60ddaf8dd7
+PASS  pinned tree tests/test_e1_host_identity.py = ad9f83ef3936
+PASS  pinned tree tests/test_e1_forced_release_gates.py = 0d094f70b1cb
+PASS  pinned tree tests/test_load_generator_prebuilt.py = f291222745f1
+PASS  pinned tree tests/test_profiler_lifecycle_release_evidence.py = f4b1ed8831bf
+PASS  pinned tree tests/test_e1_frontend_binary_gate.py = 914f005e3cad
+PASS  pinned tree tests/test_e1_import_probe.py = 217f5895c4e7
+PASS  pinned tree tests/test_e1_mem_watch.py = 504416250993
+PASS  pinned tree tests/test_e1_storage_watch.py = 8068616b8a9d
+PASS  pinned tree tests/test_e1_v3scale_gates.py = 4ef45dd919d0
+PASS  pinned tree tests/test_e1_v4scale_gates.py = ea93a8a4f27a
+PASS  pinned tree tests/test_e1_launch_identity_v4scale.py = abd2f5da1593
+PASS  pinned tree tests/test_e1_supervisor_v4.py = 05e5ad90605c
+PASS  pinned tree tests/test_e1_reservation_guard.py = 70699b04d8c5
+PASS  pinned tree tests/test_e1_reservation_release.py = d36a5084c9fa
+PASS  pinned tree tests/test_e1_archive_size.py = 10e2add85a37
+PASS  pinned tree tests/test_e1_supervisor.py = 2aec7e037ba0
+PASS  pinned tree tests/test_profiler_lifecycle_v3_deadlines.py = 0b8ca686d41d
+PASS  pinned tree tests/test_e1_gpu_watch_v3.py = 2c53eef76fa6
+PASS  submodule alignment/load_generator/req-frontend: gitlink = checkout = pinned 5c20a2596189
+PASS  submodule alignment/profiler/vllm: gitlink = checkout = pinned 0ab187113357
+PASS  HEAD descends from the pinned code commit
+PASS  launcher tree clean (tracked files)
+INFO  launcher tree HEAD 2fbf06c4408099b56b2d94511749675c065ebdb7 (exp/profiler-lifecycle); pinned code commit d0677aaace9278558dacaf89c85d06947bd20a6b
+PASS  V4 scripts, checks, tests and fixtures match SCRIPTS_v4scale.sha256 (82 files)
+  PASS  profiler.nsys: matches pins: path, version, sha256
+  PASS  profiler.importer: matches pins: path, sha256
+  PASS  profiler.importer_matches_cli: importer /opt/nvidia/nsight-systems/2025.6.3/host-linux-armv8/QdstrmImporter and CLI /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys share the install root
+  PASS  server.vllm_import: vllm 0.31.1.dev17+g0ab187113 from /mnt/shared/home/dc/workspace/serving-studio/wt-lifecycle/alignment/profiler/vllm/vllm/__init__.py
+  PASS  server.identity: matches pins: fork_python, python_realpath, python_sha256, vllm_version, fork_head
+  PASS  server.model_path: /mnt/shared/weights/DeepSeek-V4.1-Flash-1017/config.json present
+  PASS  recipe.server_argv: server argv identical to the reference launch
+  PASS  recipe.nsys_prefix: nsys flags identical to the reference launch (output stem excepted)
+  PASS  recipe.nsys_executable: /usr/local/bin/nsys resolves to the reference launch's /opt/nvidia/nsight-systems/2025.6.3/target-linux-sbsa-armv8/nsys
+  PASS  recipe.env: no environment variable added relative to the reference launch
+  PASS  cleanup.identity: pid 3135786 starttime 304728019 boot 54a59f08 uid 1000
+  PASS  cleanup.ancestry: descendant test resolves this process under its parent
+  PASS  cleanup.refuses_self: signal_verified(own pid) -> refused
+  PASS  cleanup.refuses_pid1: -> refused
+  PASS  cleanup.detects_identity_change: stale starttime on the parent pid -> changed (nothing signalled)
+  PASS  cleanup.gpu_query: nvidia-smi compute-app query works; 0 compute pid(s) now
+  PASS  parsers.pids: API server pid(s) ['32200'], engine roles ['EngineCore', 'Worker'], 5 distinct engine/worker pids
+  PASS  parsers.phases: every phase line matched in order: stop_accepted@8584, capture_ended@8589, stream_written@8590, import_start@8592, import_progress@8592, stop_returned@8651
+  PASS  policy.valid: soft 300 s, hard 600 s, stall 300 s, max extension 120 s, GPU-held ceiling 2700.0, action release_gpus, preserve stream True
+  PASS  policy.ceiling_set: gpu_held_ceiling_s is explicit
+  PASS  locations.lifecycle.json: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile/nsys/lifecycle.json absent
+  PASS  locations.lifecycle.control: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile/nsys/lifecycle.control absent
+  PASS  locations.log_dir: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/profile absent
+  PASS  locations.stream_dir: /tmp: 1162 GiB free (floor 50)
+  PASS  locations.stream_leftovers: own raw streams / preserve dirs in /tmp: no active or conflicting one; retained inactive recovery stream(s), left untouched: ['/tmp/dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle.raw-preserve (dsv41_flash_1017_gb300_tp4_e1_v1_lifecycle: 347628953 B, sha256 8f5905d95c61c8e0…, session closed, not open, record by operator adoption (alignment.profiler.preflight --adopt-retained))', '/tmp/dsv41_flash_1017_gb300_tp4_e1_v2_forced_release.raw-preserve (dsv41_flash_1017_gb300_tp4_e1_v2_forced_release: 348288111 B, sha256 4739d6581d1b035b…, session closed, not open, record by lifecycle controller)', '/tmp/dsv41_flash_1017_gb300_tp4_e1_v3_scale.raw-preserve (dsv41_flash_1017_gb300_tp4_e1_v3_scale: 661640958 B, sha256 764d063d951d4c46…, session closed, not open, record by lifecycle controller)']
+  INFO  locations.retained_streams: 3 retained inactive recovery stream(s) in /tmp; not a profiler session, not deleted, checksum-verified against the retention record (which does not establish trace completeness)
+  PASS  locations.report_dir: /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs: 20770 GiB free (floor 20)
+  # identity preflight: 27 checks, 0 FAIL
+PASS  identity preflight (alignment.profiler.preflight): all checks PASS → /mnt/shared/home/dc/workspace/serving-studio/scratch/lifecycle/v4/attempt1/preflight/identity_20261119T015437Z.json
+PASS  the importer the observers are given is the pinned QdstrmImporter (path and sha256)
+PASS  controller / preflight / gates / observers / V4 gate test suites: 622 passed in 92.97s (0:01:32); cpu_only_guard: CUDA hidden 
+  INFO  own invocation pipeline (excluded from candidates): 3134772[bash] 3151400[sed]
+  PASS  vllm server processes: none
+  PASS  nsys profiler sessions: none
+  PASS  req-frontend session_runner: none
+  PASS  launcher (alignment profile): none
+  PASS  E1 driver / preflight / postrun shells: none
+  PASS  log watchers (tail -F/-f, less +F) on experiment logs: none
+  PASS  nvidia-smi loops / watch: none
+  PASS  python monitors/checkers of the experiment: none
+  PASS  other processes whose cmdline references the experiment dirs: none
+  PASS  processes whose cwd is inside the experiment dirs: none
+  PASS  experiment tmux sessions (e1-*/e15-*/e1b8-*) other than our own: none
+  PASS  GPU compute apps: none
+  INFO  GPU memory used MiB per GPU: 0 0 0 0 
+  # process discovery on pod4-gb300-10-tray16-f3 at 2026-11-19T01:56:33Z: CLEAN
+PASS  process discovery: no candidate alive
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T01:56:33Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/pids/owned.tsv (0 records); cleanup pid 3165063, excluded ancestry [1, 3134769, 3134772, 3165063], own pipeline [3134772, 3165064]
+  summary: owned 0, stale 0, gone 0, refused 0, lookalikes 0
+PASS  registry plan: no owned process alive, no lookalike, no refusal
+  # e1_pids plan on pod4-gb300-10-tray16-f3 at 2026-11-19T01:56:33Z: registry /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/pids/supervisor.tsv (0 records); cleanup pid 3165065, excluded ancestry [1, 3134769, 3134772, 3165065], own pipeline [3134772, 3165066]
+  summary: owned 0, stale 0, gone 0, refused 0, lookalikes 0
+PASS  supervisor registry plan: no supervisor alive, no refusal
+PASS  no Nsight process (CLI, agent, importer) of this user is running
+  # gpu release census preflight on pod4-gb300-10-tray16-f3 at 2026-11-19T01:56:37Z: RELEASED — no compute process on any GPU; memory.used within the idle bound on every GPU; compute pids []; memory.used MiB per GPU: 0 0 0 0
+PASS  GPU state: no compute process, memory.used within the idle bound on every GPU
+PASS  CephFS free 20771 GB (> 1000)
+PASS  /tmp (stream directory, tray root NVMe) free 1162 GB (> 100)
+INFO  host memory: MemTotal 958 GiB, MemAvailable 860 GiB, swap 0 GiB, cgroup memory.max on this session's path: max
+PASS  host MemAvailable 860 GiB >= 448 = importer ceiling 128 + floor 64 + 256 for the server; margin above that 412 GiB
+PASS  no cgroup memory limit below 448 GiB applies to this session (memory.max max)
+PASS  temporary storage now 1.358 GB (retained streams); with the predicted stream (at most 1.47 GB) and post-run scratch (at most 8.6 GB) it stays within 15 GB
+INFO  ceilings: reservation 90 min hard; GPU-held 2700 s (controller); GPU release upper edge <= 90 s after the server SIGTERM; stop -> report 600 s hard; temporary <= 15 GB; run root <= 18 GB (<= 38 GB with the archive); no launch later than 600 s after the reservation's creation; supervisor reservation guard at 4680 s; MemAvailable floor 64 GiB; importer <= 128 GiB
+INFO  reservation record /mnt/shared/home/dc/workspace/serving-studio/ServingStudioSim/logs/dsv41_flash_gb300_tp4_e1_v4scale/e1_v4_scale/reservation.json not present yet (written from kubectl before the launch; the driver refuses to start without it)
+# result: PREFLIGHT PASS
+preflight exit 0 at 2fbf06c4

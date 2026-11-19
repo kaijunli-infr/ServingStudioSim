@@ -1,0 +1,20 @@
+PASS  registry.records: owned registry labels ['driver', 'gpuwatch', 'importprobe', 'memwatch', 'storagewatch']; supervisor registry ['supervisor:e1_v4_scale']
+PASS  registry.all_gone: registered processes still alive: []
+PASS  mock_processes.gone: mock Nsight CLI / server pids [3210282, 3210283, 3210284, 3210285, 3210286]; alive []
+PASS  launch.rehearsal_mode_recorded: launch_source.json mode 'rehearsal' (gate G0 fails on it: never V4 evidence)
+PASS  launch.real_controller_record: lifecycle.json written by the real controller: schema 2, policy soft/hard/grace 300.0/600.0/60.0
+PASS  no_build_tool: build-tool guard installed/active True/True, blocked []; executable unchanged True (same inode/mtime/size True); compile lines 0
+PASS  no_gpu_use: 36 sampler observations during the run; with a compute process or memory above the idle bound: 0
+PASS  signals.server_only: controller signals [(3210283, 'SIGTERM', 'shutdown')]; recorded server pids [3210283, 3210284, 3210285, 3210286]; importer pid 3210365 never signalled
+PASS  supervisor.sent_no_signal: signals sent by the supervisor itself: 0
+PASS  driver.rc: driver exit code 0
+PASS  lifecycle.phases: phases ['stop_requested', 'stop_accepted', 'capture_ended', 'stream_written', 'importing', 'report_written']; control lines 0; escalations 0
+PASS  closeout.clean: closeout exit code 0
+PASS  supervisor.no_response: response None; monitors effective True; complete True; samples 56
+PASS  stream.checksums: controller final record 35b7ad168980eda9…, preserved original 35b7ad168980eda9…, durable copy 35b7ad168980eda9…
+PASS  archive.verified: archive script exit code 0
+PASS  samplers.measured: memory samples 50, storage samples 29, breaches [] []
+PASS  gates.as_registered: verdict FAIL (post-run exit 1); not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}; registered {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+PASS  importer.unique_active_completed: probe importer 3210365, matched by ['--output-file is the session report'], parent pid 1 (detached), states ['NOT_FOUND', 'NO_PROGRESS', 'ACTIVE', 'SETTLING', 'COMPLETED']; memory sampler importer samples 13
+PASS  recovery_failure.detected: second post-run with a failing importer: verdict FAIL, not PASS {'G0.source_and_executable': 'FAIL', 'G6.gpu_release_interval': 'INCONCLUSIVE', 'G8.offline_import': 'FAIL', 'G8b.recovered_trace_complete': 'FAIL', 'G9.scientific_completeness': 'FAIL', 'G10.bounds': 'INCONCLUSIVE', 'G13.workload_and_recipe_identity': 'INCONCLUSIVE', 'G14.four_copy_trace_in_run': 'FAIL', 'G15.request_iteration_routing_rank_coverage': 'INCONCLUSIVE'}
+# scenario success: 19 of 19 checks pass → MET
