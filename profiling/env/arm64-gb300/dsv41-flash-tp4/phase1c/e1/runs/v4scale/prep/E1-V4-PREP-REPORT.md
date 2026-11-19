@@ -23,10 +23,11 @@ then this evidence. All rehearsals ran at `2fbf06c4` with a clean tracked tree.
 
 | attempt | what | result | where |
 |---|---|---|---|
-| `preflight_dry0` | preflight on the uncommitted tree, before pins and manifests existed, to find script defects early | FAIL as expected: 41 FAIL lines, all of them the missing freeze manifest, pins, script manifest and the identity preflight that needs the pins; every V4-specific check PASS; 622 tests passed | `preflight_dry0/` |
+| `preflight_dry0` | preflight on the uncommitted tree, before pins and manifests existed, to find script defects early | FAIL as expected: 40 FAIL lines, all of them the missing freeze manifest, pins, script manifest and the identity preflight that needs the pins; every V4-specific check PASS; 622 tests passed | `preflight_dry0/` |
 | `attempt1/preflight` | read-only preflight at `2fbf06c4` | **PASS: 75 PASS, 0 FAIL**; 622 tests under the CPU-only guard | `attempt1/preflight/` |
 | `attempt1/rehearsal` | identity rehearsal, complete V4 post-run on the V4 configuration, synthetic fixtures, eight-wave fixtures | **expectations met** (§3) | `attempt1/rehearsal/` |
 | `attempt1/e2e` | end-to-end on mock processes, five scenarios | **expectations met** (§4) | `attempt1/e2e/` |
+| `preflight_final` | read-only preflight at the evidence commit `e418f668` | **PASS: 75 PASS, 0 FAIL** | `preflight_final/` |
 | `cpu/` | guarded tests on tray14 | targeted 879 passed, 1 skipped; whole tier 5794 passed, 78 skipped, 6 failed (the same six as in every earlier whole-tier run; unrelated to this work) | `cpu/` |
 
 Failures during development, before the first recorded attempt (not rehearsals; reported for completeness): two of my new unit
