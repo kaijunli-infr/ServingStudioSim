@@ -1,0 +1,51 @@
+{
+ "pass": "e1_v4_scale",
+ "pinned_at": "2026-11-19T01:53:36Z",
+ "host": "pod4-gb300-10-tray16-f3",
+ "code": {
+  "commit": "d0677aaace9278558dacaf89c85d06947bd20a6b",
+  "branch": "exp/profiler-lifecycle",
+  "tree": {
+   "alignment": "7b4df784a5b6daff7c792e81cbc6503ba2c806ec",
+   "launcher": "5acab28980ef9974bf4cb6dcd676481c357e655d",
+   "tests/fixtures": "965b32384e5b2b8e980a10b58c9a3ab6c78869ca",
+   "tests/cpu_only_guard.py": "5d2637224343ec4260f6d712235afc68f311e51b",
+   "tests/cpu_only.sh": "9296518632ee5037c91c7482b51c723dc7d9ea55",
+   "tests/test_profiler_lifecycle.py": "14dcbfd92b3feeb1459cd58dfb7a1ab5206fb1dd",
+   "tests/test_profiler_preflight.py": "c5defd53c97b2c435864402d2123af51a3594c8c",
+   "tests/test_e1_lifecycle_gates.py": "24321e142afbbf6604e4a8cfb46fb4dd44fb1805",
+   "tests/test_e1_pids_cleanup.py": "92afc8b8f92806a422df27001e48594c3c9f6bbd",
+   "tests/test_cpu_only_guard.py": "f46ce406349b31b5c395c81f39d4bc92bc204ac9",
+   "tests/test_e1_lifecycle_gates_v2.py": "251a64d37073d0ae559a56ca0c90335ff567d580",
+   "tests/test_e1_launch_identity_v2.py": "56294e0fe8e30b4d24426fbb4888154899aeb16f",
+   "tests/test_profiler_lifecycle_stop_concurrency.py": "393ffd049930bd3f129d9f30c2dab484147db6db",
+   "tests/test_profiler_lifecycle_host_stream.py": "83f60e6b1010d0c25f8d80ee12ef6b1ae1cc5508",
+   "tests/test_profiler_preflight_retained.py": "3a60ddaf8dd7549d8599a5cfefa41344c5561ccf",
+   "tests/test_e1_host_identity.py": "ad9f83ef39360fa528592778055c049a0a12b8aa",
+   "tests/test_e1_forced_release_gates.py": "0d094f70b1cbb17efe6566db5b55998e6aa96d50",
+   "tests/test_load_generator_prebuilt.py": "f291222745f167e1dcf64fb7403afcce9f11e839",
+   "tests/test_profiler_lifecycle_release_evidence.py": "f4b1ed8831bfe0181d991283c549183f6b9fbc0c",
+   "tests/test_e1_frontend_binary_gate.py": "914f005e3cad82f1318a587416719fa52f03cf66",
+   "tests/test_e1_import_probe.py": "217f5895c4e75030a94d985445507023c488aa12",
+   "tests/test_e1_mem_watch.py": "50441625099396e3fe7e4d480bfb5482c533236d",
+   "tests/test_e1_storage_watch.py": "8068616b8a9d1ccb22f02765186591257aa451a7",
+   "tests/test_e1_v3scale_gates.py": "4ef45dd919d0c4b6ff86265f58107939c126c7a4",
+   "tests/test_e1_v4scale_gates.py": "ea93a8a4f27a3ff7953446b4516265ced7bc40cc",
+   "tests/test_e1_launch_identity_v4scale.py": "abd2f5da1593842b7f4133e71d118872857fc887",
+   "tests/test_e1_supervisor_v4.py": "05e5ad90605c89176cb147af9643e807e45ada5e",
+   "tests/test_e1_reservation_guard.py": "70699b04d8c50ab594a76c7dab79eef340bec37a",
+   "tests/test_e1_reservation_release.py": "d36a5084c9faef4ffbf5410bfeb73be314a9d689",
+   "tests/test_e1_archive_size.py": "10e2add85a378cbca1acf3fe8a9ddf1d7472dbdf",
+   "tests/test_e1_supervisor.py": "2aec7e037ba0d00c8244325888990fd00aca9372",
+   "tests/test_profiler_lifecycle_v3_deadlines.py": "0b8ca686d41d55c966950662d5408b74f9a4e8a7",
+   "tests/test_e1_gpu_watch_v3.py": "2c53eef76fa645b99061581f3833d9e413908b26"
+  },
+  "gitlinks": {
+   "alignment/load_generator/req-frontend": "5c20a259618976ecc360bda84abcc3653a04006e",
+   "alignment/profiler/vllm": "0ab18711335780e062d65994a3243da0281d2081"
+  },
+  "note": "tree ids are what preflight_e1_v4scale.sh and gate G0 compare (a later documentation-only commit keeps them); the launching commit must be a descendant of `commit` with these trees"
+ },
+ "session_runner_sha256": "7f6eb81d45e6b98f3b6ebb56ab20b60ce8aaf4584aa3d4f25e3449b2d05a00c2",
+ "identities_file": "V4S-PIN-identities.json"
+}
